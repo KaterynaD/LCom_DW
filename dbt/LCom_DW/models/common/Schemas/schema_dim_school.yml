@@ -1,0 +1,107 @@
+---
+version: 2
+models:
+  - name: dim_school
+    description: Conformed DIM_SCHOOL dimension. Districts are included as schools
+      because they are used when school is unknown in some applications.
+    config: 
+      tags:
+        - dim
+    columns:
+      - name: school_id
+        description: Primary Key of DIM_SCHOOL (DIM_ACCOUNT.Account_Id)
+      - name: lcom_school_id
+        description: LCOM School Organization ID (DIM_ACCOUNT.LCOM_Organization_Id) Can
+          be skew with default values if an account does not exist in LCOM
+          Platform. Can be used in joins with LCOM related tables but better use
+          Organization_id as a distribution key
+      - name: lcom_school_name
+        description: LCOM School Organization Name (DIM_ACCOUNT.LCOM_Organization_Name)
+      - name: lcom_district_id
+        description: LCOM District Organization ID
+          (DIM_ACCOUNT.lcom_parent_organization_id) Can be skew with default
+          values if an account does not exist in LCOM Platform. Can be used in
+          joins with LCOM related tables but better use Organization_id as a
+          distribution key
+      - name: lcom_district_name
+        description: LCOM District Organization Name
+          (DIM_ACCOUNT.LCOM_Parent_Organization_Name)
+      - name: sfdc_school_id
+        description: Salesforce School ID (DIM_ACCOUNT.SFDC_Account_Id)
+      - name: sfdc_school_name
+        description: Salesforce School Name (DIM_ACCOUNT.SFDC_Name)
+      - name: sfdc_district_id
+        description: Salesforce District ID (DIM_ACCOUNT.SFDC_Parent_Id)
+      - name: sfdc_district_name
+        description: Salesforce District Name (DIM_ACCOUNT.SFDC_Parent_Name)
+      - name: sfdc_computer_os
+        description: Computer OS
+      - name: sfdc_district_presence
+        description: District Presence
+      - name: sfdc_education_climate_index
+        description: Education Climate Index
+      - name: sfdc_fiscal_title_i_eligible_school
+        description: Fiscal - Title I Eligible School
+      - name: sfdc_fiscal_title_i_school
+        description: Fiscal - Title I School
+      - name: sfdc_fiscal_title_i_school_yes_no
+        description: Fiscal - Title I School - Yes No
+      - name: sfdc_fiscal_title_i_schoolwide
+        description: Fiscal - Title I Schoolwide
+      - name: sfdc_fiscal_title_i_schoolwide_yes_no
+        description: Fiscal - Title I Schoolwide - Yes No
+      - name: sfdc_free_reduced_lunch
+        description: Free/Reduced Lunch %
+      - name: sfdc_hi_speed_classroom_internet
+        description: Hi Speed Classroom Internet
+      - name: sfdc_hi_speed_internet
+        description: Hi Speed Internet
+      - name: sfdc_k_8_district_presence
+        description: K-8 District Presence
+      - name: sfdc_migration_tool
+        description: Migration Tool
+      - name: sfdc_parent_id
+        description: Parent Account
+      - name: sfdc_parent_long_name
+        description: Parent Long Name
+      - name: sfdc_parent_mdr
+        description: Parent MDR
+      - name: sfdc_parent_name
+        description: Parent Name
+      - name: sfdc_parent_uid
+        description: Parent Agile ID
+      - name: sfdc_school_enrollment
+        description: School Enrollment
+      - name: sfdc_school_id_nces
+        description: School NCES  (DIM_ACCOUNT.sfdc_school_id)
+      - name: sfdc_school_type
+        description: School Type
+      - name: sfdc_teachers_in_building
+        description: Teachers in Building
+      - name: sfdc_ultimate_account_lifecycle_stage
+        description: Ultimate Account Lifecycle Stage
+      - name: sfdc_ultimate_parent_billing_state
+        description: Ultimate Parent Billing State
+      - name: sfdc_virtual_school
+        description: Virtual School
+      - name: sfdc_virtual_status_text
+        description: Virtual Status Text
+      - name: sfdc_state_initiative
+        description: State Initiative
+      - name: sfdc_district_state_initiative
+        description: District State Initiative
+      - name: sfdc_state_eligible_or_initiative_school
+        description: State Eligible or Initiative
+      - name: sfdc_urban_rural
+        description: "Urban Rural (Integrations: Gainsight.)"
+      - name: sfdc_state_initiative_district
+        description: State Initiative  from the parent(district) level. True if parent`s
+          attribute is True
+      - name: sfdc_district_state_initiative_district
+        description: District State Initiative  from the parent(district) level. True if
+          parent`s attribute is True
+      - name: sfdc_state_eligible_or_initiative_district
+        description: State Eligible or Initiative  from the parent(district) level. True
+          if parent`s attribute is True
+      - name: loaddate
+        description: The datetime the record was loaded

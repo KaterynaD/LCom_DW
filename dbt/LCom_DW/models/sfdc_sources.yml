@@ -1,0 +1,13 @@
+---
+sources:
+  - name: fivetran_salesforce_quickstart
+    database: rawdata
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+
+      - name: account
+      - name: opportunity
+      - name: lcom_organization_c      

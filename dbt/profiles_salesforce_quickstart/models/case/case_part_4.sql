@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","case") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","case"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["validation_account_name_c", "case_owner_email_c", "account_owner_email_c", "platform_name_c", "ultimate_parent_account_c", "entitlement_id", "jira_steps_to_reproduce_c", "location_of_issue_c", "contact_phone", "contact_id", "comments", "contact_mobile", "origin", "type", "created_by_id", "jira_troubleshooting_steps_attempt_c", "priority_c", "product_feedback_description_c", "contact_email", "priority", "messaging_session_c", "status", "xcase_number_c", "supplied_company", "supplied_phone", "codesters_support_url_c", "netsuite_id_c", "account_id", "record_type_id", "products_c", "product_feedback_short_c", "solutions_c", "supplied_name", "source_id", "parent_id", "jira_number_c", "last_modified_by_id", "issues_c", "location_of_issues_c", "subject", "owner_id", "description", "language", "reason", "sync_platform_c", "csat_response_c", "devices_c", "csat_comments_c", "asset_id", "case_number"] ) }}
+
+{% endif %}

@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","lead") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","lead"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["gong_current_flow_user_name_c", "agileed_connect_link_licensed_status_c", "agileed_connect_link_job_category_c", "bot_product_interest_c", "codesters_campaign_source_c", "codesters_id_c", "gong_flow_status_c", "lead_source", "country", "agileed_agile_ed_status_c", "middle_name", "deactivated_reason_c", "job_function_c", "converted_account_id", "state_code", "acct_education_type_c", "pronouns", "agile_job_title_c", "first_name", "territory_c", "grade_levels_c", "name", "training_notes_c", "website", "rating", "suffix", "converted_contact_id", "jigsaw_contact_id", "regional_services_district_c", "codesters_expected_account_c", "agileed_connect_link_account_id_c", "agileed_account_c", "job_category_c", "photo_url", "gong_flow_execution_id_c", "individual_id", "state", "last_modified_by_id", "contact_location_c", "company", "agileed_last_connect_link_account_id_c", "gong_current_flow_step_number_c", "owner_id", "description", "geocode_accuracy", "notes_c", "vidcode_org_id_c", "id", "country_code", "activity_metric_id"] ) }}
+
+{% endif %}

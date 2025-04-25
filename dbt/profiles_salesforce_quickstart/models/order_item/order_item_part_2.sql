@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","order_item") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","order_item"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["order_status_c", "quote_line_business_type_c", "pricebook_id_c", "order_id", "sbqq_pricing_method_c", "sbqq_charge_type_c", "sbqq_revised_order_product_c", "sbqq_subscription_type_c", "created_by_id", "sbqq_bundle_root_c", "sbqq_contract_action_c", "product_2_id", "sbqq_tax_code_c", "sbqq_contract_c", "sbqq_quote_line_c", "netsuite_id_c", "sbqq_price_schedule_c", "pricebook_entry_id", "sbqq_bookings_indicator_c", "sbqq_subscription_c", "sbqq_price_dimension_c", "sbqq_required_by_c", "quote_line_item_id", "sbqq_status_c", "sbqq_segment_key_c", "class_c", "sbqq_block_price_c", "sbqq_term_discount_schedule_c", "last_modified_by_id", "sbqq_discount_schedule_c", "sbqq_asset_c", "original_order_item_id", "description", "sbqq_product_subscription_type_c", "order_item_number", "sbqq_upgraded_subscription_c", "sbqq_billing_type_c", "id", "revrec_schedule_c", "sbqq_billing_frequency_c", "sbqq_shipping_account_c", "migration_tool_c", "sbqq_dimension_type_c", "sbqq_contracting_method_c", "sbqq_subscription_pricing_c"] ) }}
+
+{% endif %}

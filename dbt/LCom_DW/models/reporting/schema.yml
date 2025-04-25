@@ -1,0 +1,25 @@
+---
+version: 2
+models:
+  - name: get_monthly_snapshot_data_district_level
+    description: View to use in Monthly Year over Year dashboard
+    config:
+      tags:
+        - rep
+
+exposures:
+
+  - name: get_monthly_snapshot_data_district_level
+    label: Monthly Year over Year
+    type: dashboard
+    maturity: low
+    url: https://10ay.online.tableau.com/#/site/lcomreporting/views/YoyUsage-Final/YoYUsageReport
+    description: >
+      Provisioning Licensing metric for State Program is not ready
+
+    depends_on:
+      - ref('get_monthly_snapshot_data_district_level')
+
+    owner:
+      name: Callum McData
+      email: data@jaffleshop.com        

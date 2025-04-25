@@ -1,0 +1,9 @@
+---
+sources:
+  - name: common
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: dim_calendar

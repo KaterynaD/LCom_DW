@@ -1,0 +1,33 @@
+---
+sources:
+  - name: dbo
+    database: content_delivery_usage
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: context
+      - name: organization
+      - name: mv_teacher_account
+      - name: learning_object
+      - name: content_instruction_type
+      - name: content_topic
+      - name: content_subtopic
+      - name: learning_pathway
+      - name: fact_assignment_completion
+      - name: fact_assignment_launch
+      - name: state_province
+      - name: country
+      - name: mv_student_account
+      - name: user_account
+      
+  - name: staging
+    database: content_delivery_usage
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: license_order
+      - name: license_orderschool

@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","contact") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","contact"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["other_postal_code", "onboarding_type_c", "title_type", "salutation", "activity_metric_rollup_id", "prospect_notes_c", "other_street", "twitter_handle_c", "gender_identity", "codesters_codesters_member_c", "lead_status_c", "agileed_connect_link_title_c", "degree_earned_c", "grades_c", "mailing_geocode_accuracy", "account_id", "email_bounced_reason", "k_8_enrollment_c", "phone", "department_group", "onboarding_comments_c", "contact_source", "alt_email_c", "agileed_last_connect_link_title_c", "x_2020_house_account_quote_c", "other_state_code", "agileed_connect_link_licensed_status_c", "agileed_connect_link_job_category_c", "migration_tool_c", "codesters_id_c", "other_state", "gong_flow_status_c", "agileed_agile_ed_status_c", "contact_us_message_c", "net_suite_id_c", "job_function_c", "tx_proc_2024_product_interest_c", "mailing_street", "returned_c", "conference_c", "lcom_member_c", "name", "record_type_id", "suffix", "institution_type_c", "photo_url", "other_country", "tx_proc_2024_communication_preference_c", "reject_reason_c", "other_country_code"] ) }}
+
+{% endif %}

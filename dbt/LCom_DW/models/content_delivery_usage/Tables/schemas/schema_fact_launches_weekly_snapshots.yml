@@ -1,0 +1,119 @@
+---
+version: 2
+models:
+  - name: fact_launches_weekly_snapshots
+    description: >
+      Cumulative activity from the start of a school year (YTD) till week end (Sunday)
+      per student aggregated to the school level. It's populated with lc_load_launches_weekly_snapshots stored procedure
+    config:
+      contract:
+        enforced: false
+    tags:
+      - fact
+
+    columns:
+      - name: WeekEnd
+        data_type: date
+        description: "Sunday"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: organization_district_id
+        data_type: varchar(255)
+        description: >
+          Organization.Parent_Organization_ID because 
+          content_delivery_usage.dbo.fact_assignment_launch.organization_district_id 
+          can be different for the same school in the historical perspective. Some historical records loaded from csv files do not have districts in dim_account. The referrential integrity test is disabled.
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        data_tests:
+          - not_null
+          - relationships:
+              enabled: false          
+              to: ref('dim_account')
+              field: account_id 
+
+      - name: organization_school_id
+        data_type: varchar(255)
+        description: "content_delivery_usage.dbo.fact_assignment_launch.organization_school_id. Some historical records loaded from csv files do not have schools in dim_account. The referrential integrity test is disabled."
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        data_tests:
+          - not_null
+          - relationships:
+              enabled: false
+              to: ref('dim_account')
+              field: account_id 
+
+      - name: Active_Students_YTD
+        data_type: integer
+        description: >
+          Unique number of students for a specific school since the start of the 
+          current school year till WeekEnd.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: Launches_YTD
+        data_type: integer
+        description: >
+          Number of launches from a specific school since the start of the 
+          current school year till WeekEnd.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: DistinctItemsStudent_YTD
+        data_type: integer
+        description: >
+          Unique number of curriculum items loaded by users since the start of 
+          the current school year till WeekEnd, summarized at the school level.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: Active_Students_Week
+        data_type: integer
+        description: >
+          Difference between current and previous week Active_Students_YTD.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: Launches_Week
+        data_type: integer
+        description: >
+          Difference between current and previous week Launches_YTD.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: DistinctItemsStudent_Week
+        data_type: integer
+        description: >
+          Difference between current and previous week DistinctItemsStudent_YTD.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: LoadDate
+        data_type: timestamp
+        description: "Timestamp when the record was loaded."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null

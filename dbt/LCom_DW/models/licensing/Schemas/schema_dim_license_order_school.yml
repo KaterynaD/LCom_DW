@@ -1,0 +1,70 @@
+---
+version: 2
+models:
+  - name: dim_license_order_school
+    description: "Bridge table: Only valid (filter in the view) Schools in License
+      Orders based on
+      content_delivery_usage.staging.license_orderschool  (limited data from
+      LearningPlatform.dbo.OrderSchool) table See also comment for more details
+      in FACT_LICENSE_ORDER"
+    config:
+      contract:
+        enforced: true    
+      tags:
+        - dim
+
+    columns:
+      - name: order_id
+        data_type: varchar(100)
+        description: FACT_LICENSE_ORDER FK LearningPlatform.dbo.Order_School.OrderId
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('fact_license_order')
+            warn_unenforced: false
+
+
+      - name: organization_district_id
+        data_type: varchar(300)
+        description: Foreign key to DIM_ACCOUNT. Represents the district organization.
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: organization_school_id
+        data_type: varchar(300)
+        description: Foreign key to DIM_ACCOUNT. Represents the school organization.
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+
+      - name: auditcreatedate
+        data_type: timestamp
+        description: Timestamp when the record was created (audit field).
+        constraints:
+          - type: not_null
+
+      - name: auditupdatedate
+        data_type: timestamp
+        description: Timestamp when the record was last updated (audit field).
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: timestamp
+        description: Timestamp when the record was loaded into the data warehouse.
+        constraints:
+          - type: not_null

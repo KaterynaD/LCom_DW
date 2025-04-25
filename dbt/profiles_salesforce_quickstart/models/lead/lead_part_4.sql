@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","lead") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","lead"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["codesters_profile_city_c", "codesters_profile_school_code_c", "codesters_profile_state_c", "codesters_screen_name_c", "codesters_profile_country_c", "codesters_guid_c", "codesters_initial_medium_c", "codesters_profile_school_type_c", "codesters_user_name_c", "codesters_profile_school_c", "codesters_initial_campaign_c", "codesters_profile_zip_c", "codesters_initial_source_c", "codesters_social_auth_provider_c", "codesters_org_c", "postal_code", "sdr_c", "agileed_agile_ed_key_c", "salutation", "activity_metric_rollup_id", "sf_account_c", "persona_c", "twitter_handle_c", "mobile_phone", "source_campaign_c", "gender_identity", "title", "created_by_id", "codesters_codesters_member_c", "agileed_connect_link_title_c", "converted_opportunity_id", "status", "grades_c", "current_experience_c", "training_c", "fax", "email_bounced_reason", "gong_current_flow_name_c", "phone", "jigsaw", "email", "referred_by_c", "last_name", "agileed_last_connect_link_title_c", "street", "city", "learning_sbxid_c", "subject_c", "industry", "acct_gradel_level_c"] ) }}
+
+{% endif %}

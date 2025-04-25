@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","opportunity") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","opportunity"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["x_18_digit_salesforce_account_id_c", "csm_email_c", "x_18_digit_opportunity_id_c", "integration_indicator_c", "district_enrollment_c", "renewal_opportunity_c", "platform_name_c", "quote_name_c", "original_opp_owner_1_c", "quota_c", "csm_phone_number_c", "owner_s_manager_email_c", "pipe_bucket_c", "account_name_email_c", "quote_contract_type_c", "owner_role_c", "account_id_c", "school_year_c", "shipping_addressee_c", "shipping_state_c", "comments_c", "net_suite_order_num_c", "primary_contact_identified_c", "integration_error_c", "type", "shipping_street_c", "created_by_id", "purchasing_process_c", "meddpicc_decision_criteria_c", "x_3_rd_contact_email_c", "district_overview_c", "fulfilled_by_c", "initial_interest_c", "payment_terms_c", "school_list_c", "synced_quote_id", "force_update_c", "partner_1_c", "sku_c", "welcome_letter_c", "x_3_rd_contact_name_c", "introduction_of_quote_c", "usage_issues_c", "who_were_the_champions_c", "win_reason_c", "billing_status_c", "renewal_risk_c", "funding_source_c", "multi_year_orders_c", "sbqq_quote_pricebook_id_c"] ) }}
+
+{% endif %}

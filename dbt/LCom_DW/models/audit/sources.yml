@@ -1,0 +1,9 @@
+sources:
+
+- name: audit
+  quoting:
+    database: false
+    schema: false
+    identifier: false
+  tables:  
+  - name: dbt_run_log

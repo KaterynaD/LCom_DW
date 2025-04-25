@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","opportunity") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","opportunity"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["downsell_c", "churn_formula_c", "pipeline_needed_to_hit_quota_c", "owner_closed_won_c", "true_renewal_arr_c", "remaining_quota_c", "true_arr_formula_c", "owner_open_pipeline_c", "price_increase_arr_c", "quote_list_amount_c", "total_credit_from_opp_product_c", "expected_new_business_arr_c", "of_months_c", "purchase_level_number_c", "arr_c", "nnarr_c", "owner_quota_c", "quote_total_discount_c", "subscription_term_c", "no_of_accounts_in_hierarchy_c", "number_of_primary_quotes_c", "reject_counter_c", "probability", "total_opportunity_quantity", "students_with_licenses_c", "old_probability_c", "of_schools_using_c", "schools_with_licenses_c", "number_of_schools_c", "override_arr_c", "einstein_renewal_prediction_c", "number_of_students_c", "python_2_licenses_c", "python_1_licenses_c", "count_contact_roles_c", "count_of_won_csm_pilots_c", "override_price_increase_c", "progressive_term_c", "number_of_buildings_from_sales_c"] ) }}
+
+{% endif %}
