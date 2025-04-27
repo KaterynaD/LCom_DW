@@ -1,1780 +1,1742 @@
----
 version: 2
 models:
-  - name: dim_account
-    description: Conformed DIM_ACCOUNT dimension. Account (districts and schools)
-      data from all systems
-    config:
-      contract:
-        enforced: true   
-      tags:
-        - dim
-
-    columns:
-
-      - name: account_id
-        data_type: varchar(300)
-        description: "Primary and Distribution Key of DIM_ACCOUNT. It's organization_id (school or district) or Salesforce Id if not available in LCom Platform"
-        constraints:
-          - type: not_null
-          - type: primary_key
-            warn_unenforced: false          
-        data_tests:
-          - unique
-         
-      - name: lcom_organization_id
-        data_type: varchar(300)
-        description: "LCOM Organization ID Can be skew with default values if an account does not exist in LCOM Platform. Can be used in joins with LCOM related tables but better use Organization_id as a distribution key"
-        constraints:
-          - type: not_null
-
-      - name: lcom_organization_name
-        data_type: varchar(270)
-        description: "LCOM Organization Name"
-        constraints:
-          - type: not_null
-
-      - name: lcom_organization_type
-        data_type: varchar(270)
-        description: "LCOM Organization Type (school or district)"
-        constraints:
-          - type: not_null
-
-      - name: lcom_parent_organization_id
-        data_type: varchar(270)
-        description: "LCOM Parent Organization Id (district Id)"
-        constraints:
-          - type: not_null
-
-      - name: lcom_parent_organization_name
-        data_type: varchar(270)
-        description: "LCOM Parent Organization Name (district name)"
-        constraints:
-          - type: not_null      
-
-      - name: lcom_trial
-        data_type: boolean
-        description: "Trial use of LCOM products"
-        constraints:
-          - type: not_null                
-
-      - name: lcom_demo
-        data_type: boolean
-        description: "Demo use of LCOM products"
-        constraints:
-          - type: not_null 
-
-      - name: lcom_postal_code
-        data_type: varchar(20)
-        constraints:
-          - type: not_null           
-
-      - name: lcom_state_province_key
-        data_type: varchar(20)
-        constraints:
-          - type: not_null    
-
-      - name: lcom_state_province_code
-        data_type: varchar(20)
-        constraints:
-          - type: not_null
-
-      - name: lcom_state_province_name
-        data_type: varchar(50)
-        constraints:
-          - type: not_null
-
-      - name: lcom_country_code
-        data_type: varchar(20)
-        constraints:
-          - type: not_null
-
-      - name: lcom_country_name
-        data_type: varchar(70)
-        constraints:
-          - type: not_null
-
-      - name: lcom_alpha3_code
-        data_type: varchar(20)
-        constraints:
-          - type: not_null
-
-      - name: lcom_numeric_code
-        data_type: varchar(20)
-        constraints:
-          - type: not_null          
-
-      - name: lcom_external_sis_id
-        data_type: varchar(270)
-        constraints:
-          - type: not_null  
-
-      - name: lcom_nces_id
-        data_type: varchar(30)
-        constraints:
-          - type: not_null           
-
-      - name: lcom_created_datetime
-        data_type: timestamp
-        constraints:
-          - type: not_null  
-
-      - name: lcom_modified_datetime
-        data_type: timestamp
-        constraints:
-          - type: not_null  
-
-      - name: lcom_deleted_datetime
-        data_type: timestamp
-        constraints:
-          - type: not_null            
-
-      - name:  sfdc_account_id
-        data_type: varchar(300)
-        description: "Salesforce Account ID. It's unique Salesforce Account Id. If there are more then one LCom Organization related to teh same account, there is `dup-`prefix in the value. It's possible to have more then one Salesforce Id with `dup-' prefix added, but `clean` Salesforce Id is unique and safe to be used in the joins"
-        constraints:
-          - type: not_null
-        data_tests:
-          - unique:
-              where: "left(SFDC_account_id,4) != 'dup-' and SFDC_account_id!='{{ var('default_varchar') }}'" 
-
-      - name:  sfdc_name
-        data_type: varchar(780)
-        description: "Account Name"
-        constraints:
-          - type: not_null
-      - name:  sfdc_account_last_activity_date
-        data_type: date
-        description: "Account Last Activity Date"
-        constraints:
-          - type: not_null
-      - name:  sfdc_account_lifecycle_stage
-        data_type: varchar(780)
-        description: "Account Lifecycle Stage"
-        constraints:
-          - type: not_null
-      - name:  sfdc_account_management_type
-        data_type: varchar(20)
-        description: "Account Management Type"
-        constraints:
-          - type: not_null
-      - name:  sfdc_account_manager
-        data_type: boolean
-        description: "Account Manager"
-        constraints:
-          - type: not_null
-      - name:  sfdc_act_id
-        data_type: varchar(30)
-        description: "act id"
-        constraints:
-          - type: not_null
-      - name:  sfdc_actively_prospecting
-        data_type: boolean
-        description: "Actively Prospecting (Mark if this is a customer you are actively prospecting but not yet at an opportunity stage)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_activity_metric_id
-        data_type: varchar(30)
-        description: "Activity Metric"
-        constraints:
-          - type: not_null
-      - name:  sfdc_activity_metric_rollup_id
-        data_type: varchar(30)
-        description: "Activity Metric Rollup"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ae_or_isr
-        data_type: varchar(20)
-        description: "AE OR ISR"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agile_id
-        data_type: varchar(70)
-        description: "Agile ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agile_lms
-        data_type: varchar(4110)
-        description: "Agile LMS (Agile LMS)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_agile_ed_insert
-        data_type: boolean
-        description: "Created By ConnectLink"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_agile_ed_key
-        data_type: varchar(40)
-        description: "ConnectLink Key"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_agile_ed_latest_update_date
-        data_type: date
-        description: "ConnectLink Latest Update Date"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_agile_ed_parent_key
-        data_type: varchar(40)
-        description: "ConnectLink Parent Key"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_agile_ed_status
-        data_type: varchar(90)
-        description: "ConnectLink Status (The status of the record in the Agile-Ed database: A = Active, C = Closed, U = Unlicensed.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_agile_ed_up_to_date
-        data_type: boolean
-        description: "ConnectLink Up To Date (Deprecated)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_agileed_do_not_update
-        data_type: boolean
-        description: "ConnectLink Do Not Update (If this field is checked, then only the record's ConnectLink Status and ConnectLink Last Sync fields wil be updated when the record is synced.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_changed_person_hierarchies
-        data_type: double precision
-        description: "ConnectLink Changed Person Hierarchies (The number of Personnel Hierarchies changed by ConnectLink within the Institution.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_changed_personnel_titles
-        data_type: double precision
-        description: "ConnectLink Changed Personnel Titles (The number of changed Personnel ConnectLink Titles under the Institution.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_district_key
-        data_type: varchar(40)
-        description: "ConnectLink District Key"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_do_not_update_hierarchy
-        data_type: boolean
-        description: "ConnectLink Do Not Update Hierarchy (ConnectLink will not update the Parent Account of this record if the field is checked.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_file_type
-        data_type: varchar(250)
-        description: "ConnectLink File Type (The category of the Institution.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_hierarchized_personnel
-        data_type: double precision
-        description: "ConnectLink Hierarchized Personnel (The number of Personnel associated to the Institution by ConnectLink.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_inactivated_personnel_roles
-        data_type: double precision
-        description: "ConnectLink Inactivated Personnel Roles (The number of Inactivated Personnel ConnectLink Roles under the Institution.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_licensed_status
-        data_type: varchar(70)
-        description: "ConnectLink Licensed Status"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_metrics_run_start
-        data_type: timestamp
-        description: "ConnectLink Metrics Run Start (The Datetime when the Metrics job was started.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_new_personnel_roles
-        data_type: double precision
-        description: "ConnectLink New Personnel Roles (The number of new Personnel ConnectLink Roles under the Institution.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_personnel_roles
-        data_type: double precision
-        description: "ConnectLink Personnel Roles (The number of Personnel ConnectLink Roles under the Institution.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_connect_link_personnel_titles
-        data_type: double precision
-        description: "ConnectLink Personnel Titles (The number of Personnel ConnectLink Titles under the Institution.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_last_sync
-        data_type: timestamp
-        description: "ConnectLink Last Sync Date"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_parent_pending
-        data_type: boolean
-        description: "ConnectLink Parent Pending (If true, the parent record has not yet been inserted to create a hierarchy. Used in batch job to signal the need for parenting.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_agileed_personnel_last_sync
-        data_type: timestamp
-        description: "ConnectLink Personnel Last Sync (Timestamped after Contacts and/or Leads directly related to the Account are bulk-updated.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_alt_phone
-        data_type: varchar(130)
-        description: "Agile Phone"
-        constraints:
-          - type: not_null
-      - name:  sfdc_cares_act_allocation
-        data_type: double precision
-        description: "CARES Act Allocation"
-        constraints:
-          - type: not_null
-      - name:  sfdc_category
-        data_type: varchar(780)
-        description: "Category"
-        constraints:
-          - type: not_null
-      - name:  sfdc_check_national_id
-        data_type: boolean
-        description: "Check National ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_closed_district_tx_adoption
-        data_type: boolean
-        description: "Closed District - TX Adoption (If checked, the district is a known closed district and can not be prospected outside of the IMA coordinator.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_code_monkey_customer
-        data_type: boolean
-        description: "Code Monkey Customer (Converts the Number of Active Code Monkey Subscriptions field into a checkbox  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_codester_id
-        data_type: varchar(70)
-        description: "CodesterID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_codesters_account_to_be_migrated_to_prod
-        data_type: boolean
-        description: "Codesters Account to be Migrated to Prod (Denotes if a Codesters account has been flagged to be migrated to prod.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_codesters_customer_2
-        data_type: boolean
-        description: "Codesters Customer (Converts the Number of Active Codesters Subscriptions field into a checkbox  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_codesters_customer_dedupe_flag
-        data_type: boolean
-        description: "Codesters Customer Dedupe Flag (Denotes if an account has been flagged as an active customer and should be prioritized for dedupe during migration. This field should not be migrated to prod and should be deprecated after the migration is complete (will happen automatically after sandbox refresh))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_company_domain_name
-        data_type: varchar(780)
-        description: "Company Domain Name (Field that integrates with Hubspot for means of company identification and automatic contact association within Hubspot)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_completed_onboarding
-        data_type: boolean
-        description: "Completed Onboarding (Describes whether or not a new account has been onboarded.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_computer_os
-        data_type: varchar(780)
-        description: "Computer OS"
-        constraints:
-          - type: not_null
-      - name:  sfdc_contracted_roll_up
-        data_type: numeric(35,10)
-        description: "Contracted Roll Up"
-        constraints:
-          - type: not_null
-      - name:  sfdc_county_name
-        data_type: varchar(780)
-        description: "County Name (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_created_by_id
-        data_type: varchar(30)
-        description: "Created By"
-        constraints:
-          - type: not_null
-      - name:  sfdc_created_date
-        data_type: timestamp
-        description: "Created Date"
-        constraints:
-          - type: not_null
-      - name:  sfdc_csm_email
-        data_type: varchar(400)
-        description: "CSM Email"
-        constraints:
-          - type: not_null
-      - name:  sfdc_csm_name
-        data_type: varchar(380)
-        description: "CSM Name"
-        constraints:
-          - type: not_null
-      - name:  sfdc_current_renewal_arr
-        data_type: numeric(35,10)
-        description: "Current Renewal ARR (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_current_total_ultimate_parent
-        data_type: varchar(410)
-        description: "Current / Total / Ultimate Parent (Combined ARR Renewal values. A field which converts three currency fields (Current Renewal ARR, Total Renewal ARR, Ultimate Parent Total Renewal ARR) into text and concat them into one custom, text formula field. For Sys Admins and Sales Support)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_customer_type
-        data_type: varchar(20)
-        description: "Customer Type (Creates text value for Record Type field for easier user understanding  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_data_quality_description
-        data_type: varchar(70)
-        description: "Data Quality Description"
-        constraints:
-          - type: not_null
-      - name:  sfdc_data_quality_score
-        data_type: integer
-        description: "Data Quality Score"
-        constraints:
-          - type: not_null
-      - name:  sfdc_de_identified_district
-        data_type: boolean
-        description: "DeIdentified District?"
-        constraints:
-          - type: not_null
-      - name:  sfdc_description
-        data_type: varchar(max)
-        description: "Description (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_detailed_grade
-        data_type: varchar(780)
-        description: "Detailed Grade"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district
-        data_type: varchar(780)
-        description: "District Segment Size (to be populated by rule looking at enrollment)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_easy_code_tam
-        data_type: numeric(35,10)
-        description: "District EasyCode TAM (Total EasyCode TAM for a district based on sum of all children TAM values)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_easy_tech_tam
-        data_type: numeric(35,10)
-        description: "District EasyTech TAM (Total EasyTech TAM for a district based on sum of all children TAM values  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_elementary_teachers
-        data_type: varchar(110)
-        description: "District Elementary Teachers"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_enrollment
-        data_type: double precision
-        description: "District Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_expansion_potential
-        data_type: numeric(35,10)
-        description: "District Expansion Potential (If Total TAM is greater than current renewal ARR, display the delta, else display zero. System estimated upsell potential. Meant as a guideline only.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_faculty_library_media_fte
-        data_type: double precision
-        description: "District Faculty - Library/Media FTE"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_instructional_expenditures
-        data_type: varchar(310)
-        description: "District Instructional Expenditures"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_k_8_enrollment
-        data_type: double precision
-        description: "District K-8 Enrollment"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_kindergarten_teachers
-        data_type: varchar(110)
-        description: "District Kindergarten Teachers"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_local_revenue_cities
-        data_type: double precision
-        description: "District Local Revenue Cities (Local revenue from cities and counties.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_local_revenue_other_leas
-        data_type: varchar(70)
-        description: "District Local Revenue Other LEAs (Local revenue from other school systems.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_local_revenue_other_taxes
-        data_type: varchar(70)
-        description: "District Local Revenue Other Taxes (Local revenue all other taxes.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_local_revenue_property_taxes
-        data_type: varchar(70)
-        description: "District Local Revenue Property Taxes (Local revenue from property taxes.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_nces
-        data_type: varchar(780)
-        description: "District NCES"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_presence
-        data_type: double precision
-        description: "District Presence (Denotes, in percent, the number of provisioned buildings against the number of total buildings in the district.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_state_initiative
-        data_type: boolean
-        description: "District State Initiative"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_stem
-        data_type: varchar(780)
-        description: "District STEM"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_capital_outlay
-        data_type: varchar(780)
-        description: "District Total Capital Outlay"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_expenditures
-        data_type: varchar(780)
-        description: "District Total Expenditures"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_expense_per_student
-        data_type: varchar(110)
-        description: "District Total Expense Per Student"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_fed_revenue
-        data_type: varchar(780)
-        description: "District Total Fed Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_local_revenue
-        data_type: varchar(780)
-        description: "District Total Local Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_revenue
-        data_type: varchar(780)
-        description: "District Total Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_state_revenue
-        data_type: varchar(780)
-        description: "District Total State Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_total_tam
-        data_type: numeric(35,10)
-        description: "District Total TAM (Total TAM for a district based on sum of all children ET and EC TAM values. Source values for EC and ET are populated by Gainsight rule)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_district_type
-        data_type: varchar(780)
-        description: "District Type (This field is mapped and will sync with Agile/ConnectLink)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_dq_opportunities
-        data_type: bigint
-        description: "DQ - Opportunities (Roll up summary of all opportunities on the account)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_easy_tech_customer
-        data_type: boolean
-        description: "EasyTech Customer (Converts the Number of EasyTech Subscriptions field into a binary field  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_easy_tech_tam
-        data_type: numeric(35,10)
-        description: "EasyTech TAM (Contains the estimated size of the EasyTech opportunity based on current pricing. This field is populated manually via dataloader once per year. This TAM only includes TAM for K-8 Enrollment as of November 2022.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_easy_tech_tam_captured
-        data_type: double precision
-        description: "EasyTech TAM Captured (Ratio between Total Renewal ARR and total EasyTech TAM. This field is used to assign the sales owner based on the 33% threshold established during sales planning in November 2022)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ec_tam
-        data_type: double precision
-        description: "EC TAM (Calculates TAM for EasyCode (using just Codesters))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_education_climate_index
-        data_type: double precision
-        description: "Education Climate Index"
-        constraints:
-          - type: not_null
-      - name:  sfdc_education_type
-        data_type: varchar(4110)
-        description: "Education Type"
-        constraints:
-          - type: not_null
-      - name:  sfdc_eighth_grade_enrollment
-        data_type: double precision
-        description: "8th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_email_domain
-        data_type: varchar(780)
-        description: "Email Domain (Email domain field provided by Agile ed.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_enrollment_advanced_placement
-        data_type: varchar(780)
-        description: "Enrollment - Advanced Placement"
-        constraints:
-          - type: not_null
-      - name:  sfdc_enrollment_band
-        data_type: varchar(30)
-        description: "Enrollment Band (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_enrollment_tier
-        data_type: varchar(20)
-        description: "Enrollment Tier"
-        constraints:
-          - type: not_null
-      - name:  sfdc_esser_funding
-        data_type: varchar(210)
-        description: "ESSER Funding"
-        constraints:
-          - type: not_null
-      - name:  sfdc_et_tam
-        data_type: double precision
-        description: "ET TAM (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_exes_campaign
-        data_type: boolean
-        description: "Exes Campaign (For use in exes campaign 2022 - delete after use. Should be done by end of June 2022)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_expired_renewal
-        data_type: boolean
-        description: "Expired Renewal (If checked, this indicates that a customer has an expired renewal - this is mapped to Gainsight PX for segmenting. This is v1 and is manually populated and de-populated by data loader. A future version could look to automate this so that we could auto flag accounts that have expired renewals for messaging (we can dream...))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fifth_grade_enrollment
-        data_type: double precision
-        description: "5th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_first_grade_enrollment
-        data_type: double precision
-        description: "1st Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_first_name
-        data_type: varchar(1550)
-        description: "First Name (Used for NS Integration with Mulesoft - DO NOT EDIT)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_career_and_tech_federal
-        data_type: varchar(780)
-        description: "Fiscal - Career and Tech - Federal"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_career_and_tech_state
-        data_type: varchar(780)
-        description: "Fiscal - Career and Tech - State"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_career_and_tech_teacher_salar
-        data_type: varchar(780)
-        description: "Fiscal - Career and Tech - Teacher Salar"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_title_i_eligible_school
-        data_type: varchar(780)
-        description: "Fiscal - Title I Eligible School"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_title_i_funding
-        data_type: numeric(35,10)
-        description: "Fiscal - Title I Funding (Total Title I funding for the District)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_title_i_percentage
-        data_type: double precision
-        description: "Fiscal - Title I Percentage"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_title_i_school
-        data_type: varchar(780)
-        description: "Fiscal - Title I School (This is the appropriated district Title I funding that is based on the Title I population of a school)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_title_i_school_yes_no
-        data_type: varchar(780)
-        description: "Fiscal - Title I School - Yes No"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_title_i_schoolwide
-        data_type: varchar(780)
-        description: "Fiscal - Title I Schoolwide"
-        constraints:
-          - type: not_null
-      - name:  sfdc_fiscal_title_i_schoolwide_yes_no
-        data_type: varchar(780)
-        description: "Fiscal - Title I Schoolwide - Yes No"
-        constraints:
-          - type: not_null
-      - name:  sfdc_free_lunch_students
-        data_type: varchar(780)
-        description: "Free Lunch Students"
-        constraints:
-          - type: not_null
-      - name:  sfdc_free_reduced_lunch
-        data_type: double precision
-        description: "Free/Reduced Lunch % (% of Free + Reduced Lunch Students based on School Enrollment)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_gainsight_customer
-        data_type: boolean
-        description: "Gainsight Customer"
-        constraints:
-          - type: not_null
-      - name:  sfdc_gainsight_house
-        data_type: boolean
-        description: "Gainsight House (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_gong_gong_count
-        data_type: integer
-        description: "Gong Count"
-        constraints:
-          - type: not_null
-      - name:  sfdc_google_integration
-        data_type: boolean
-        description: "Google Integration (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_governor
-        data_type: varchar(780)
-        description: "Governor"
-        constraints:
-          - type: not_null
-      - name:  sfdc_governor_s_party_affiliation
-        data_type: varchar(780)
-        description: "Governor's Party Affiliation"
-        constraints:
-          - type: not_null
-      - name:  sfdc_grade_level_detail
-        data_type: varchar(880)
-        description: "Grade Level Detail"
-        constraints:
-          - type: not_null
-      - name:  sfdc_grade_levels
-        data_type: varchar(4110)
-        description: "Grade Levels"
-        constraints:
-          - type: not_null
-      - name:  sfdc_has_codesters_child_accounts
-        data_type: boolean
-        description: "Has Codesters Child Accounts (Denotes if an account has a migrated child customer of Codesters. This field should be deprecated by 12/31/2023)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_hi_speed_classroom_internet
-        data_type: varchar(780)
-        description: "Hi Speed Classroom Internet"
-        constraints:
-          - type: not_null
-      - name:  sfdc_hi_speed_internet
-        data_type: varchar(780)
-        description: "Hi Speed Internet"
-        constraints:
-          - type: not_null
-      - name:  sfdc_hml_title_i_funding
-        data_type: varchar(780)
-        description: "HML Title I Funding (Title I Allocation)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_hml_title_i_per_student
-        data_type: varchar(780)
-        description: "HML Title I Per Student (High Medium Low indicator of District Title I Allocation Per Student)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_house_account
-        data_type: boolean
-        description: "House Account (Check if Account is House Account)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_i_pad_schools_percent
-        data_type: double precision
-        description: "iPad Schools (Percent)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_i_pads_for_instruction
-        data_type: varchar(780)
-        description: "iPads for Instruction"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ima_coordinator_identified
-        data_type: boolean
-        description: "IMA Coordinator Identified (Formula field checks to see if the IMA Coordinator has been completed. If blank, returns false. Used for 2024 TX Adoption.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_inst_uid
-        data_type: varchar(780)
-        description: "Agile Inst UID (The field is used to hold the data provided by Agile link in the excel for upload to SF.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_is_deleted
-        data_type: boolean
-        description: "Deleted"
-        constraints:
-          - type: not_null
-      - name:  sfdc_is_is_current_user
-        data_type: boolean
-        description: "IS is Current User (Field that will allow filtering list views by the IS Owner from a single list rather than individual lists.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_is_priority_record
-        data_type: boolean
-        description: "Important"
-        constraints:
-          - type: not_null
-      - name:  sfdc_k_12_enrollment
-        data_type: double precision
-        description: "K-12 Enrollment (Sums the agile enrollment fields by grade level)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_k_5_enrollment
-        data_type: double precision
-        description: "K-5 Enrollment (Captures total enrollment figures for grades K-5 based on Agile data.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_k_8_district_presence
-        data_type: double precision
-        description: "K-8 District Presence (Denotes, in percent, the number of provisioned K-8 buildings against the number of total K-8 buildings in the district. This field is updated by Gainsight rule ADMIN - Set K-8 District Saturation child/no child 2.0 and refreshed nightly.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_k_8_enrollment
-        data_type: double precision
-        description: "K-8 Enrollment (Captures total enrollment figures for grades K-8 based on Agile data)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_key_account
-        data_type: boolean
-        description: "Key Account (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_kindergarten_enrollment
-        data_type: double precision
-        description: "Kindergarten Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_known_duplicate
-        data_type: boolean
-        description: "Known Duplicate (Use to flag duplicate accounts that need to be merged. Use this field to find duplicates with DuplicateCheck)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_last_activity_date
-        data_type: date
-        description: "Last Activity"
-        constraints:
-          - type: not_null
-      - name:  sfdc_last_activity_logged_on
-        data_type: date
-        description: "Last Activity Logged On"
-        constraints:
-          - type: not_null
-      - name:  sfdc_last_modified_by_id
-        data_type: varchar(30)
-        description: "Last Modified By"
-        constraints:
-          - type: not_null
-      - name:  sfdc_last_modified_date
-        data_type: timestamp
-        description: "Last Modified Date"
-        constraints:
-          - type: not_null
-      - name:  sfdc_last_name
-        data_type: varchar(780)
-        description: "Last Name (Used for NS Integration with Mulesoft - DO NOT EDIT)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_lcom_account
-        data_type: varchar(30)
-        description: "LCOM Account (The LCOM Account associated with this account)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_lcom_account_class
-        data_type: varchar(780)
-        description: "LCOM Account Class"
-        constraints:
-          - type: not_null
-      - name:  sfdc_lcom_account_count
-        data_type: bigint
-        description: "LCOM Account Count (Returns the count of LCOM Accounts associated with this account. This value should always be either zero or one.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_lcom_organization
-        data_type: varchar(30)
-        description: "LCOM Organization (The associated LCOM Organization record for this account)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_lcom_organization_count
-        data_type: bigint
-        description: "LCOM Organization Count (Count of associated LCOM Organizations for a given account. This field should only ever have values of 0 or 1.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_lcom_organization_has_parent
-        data_type: boolean
-        description: "LCOM Organization has Parent"
-        constraints:
-          - type: not_null
-      - name:  sfdc_learn_dash_code_sent
-        data_type: boolean
-        description: "LearnDash Code Sent"
-        constraints:
-          - type: not_null
-      - name:  sfdc_les_opp
-        data_type: boolean
-        description: "Les Opp (Denotes if an opp is part of Les Barnett's separation contractual obligation through 3/31/2021)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_license_consumption
-        data_type: double precision
-        description: "License Consumption (Current license consumption (based on Gainsight weekly usage))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_map_tracker
-        data_type: boolean
-        description: "Map Tracker (for manual use with maps to change colors of pins)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_mdr_number
-        data_type: varchar(60)
-        description: "MDR Number"
-        constraints:
-          - type: not_null
-      - name:  sfdc_mi_pilot
-        data_type: boolean
-        description: "MI Pilot"
-        constraints:
-          - type: not_null
-      - name:  sfdc_migration_tool
-        data_type: varchar(780)
-        description: "Migration Tool (Temporary field for data migration)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_multi_tiered_account
-        data_type: boolean
-        description: "Multi Tiered Account"
-        constraints:
-          - type: not_null
-      - name:  sfdc_name_with_lcom_organization_info
-        data_type: varchar(1280)
-        description: "Name with LCOM Organization Info (A descriptive name for the Account with related information from the LCOM Organization.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_national_district_id
-        data_type: varchar(780)
-        description: "National District ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_national_school_id
-        data_type: varchar(1540)
-        description: "National School ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_nc_tier_1
-        data_type: boolean
-        description: "NC Tier 1"
-        constraints:
-          - type: not_null
-      - name:  sfdc_nces_lea_id
-        data_type: varchar(780)
-        description: "NCES LEA ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_nces_unique_id
-        data_type: varchar(780)
-        description: "NCES Unique ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_net_suite_id
-        data_type: varchar(780)
-        description: "NetSuite ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_net_suite_link
-        data_type: varchar(880)
-        description: "NetSuite Link (Netsuite Link for related Accounts)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_netsuite_account_number
-        data_type: varchar(100)
-        description: "Netsuite Account Number (This will be mapped to Netsuite Customer ID for Customer object.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_no_of_child_account
-        data_type: double precision
-        description: "Number of Children"
-        constraints:
-          - type: not_null
-      - name:  sfdc_nps_count
-        data_type: bigint
-        description: "NPS Count (total number of NPS Surveys -to be used in NPS)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_nps_score
-        data_type: double precision
-        description: "NPS Score"
-        constraints:
-          - type: not_null
-      - name:  sfdc_nps_sum
-        data_type: numeric(35,10)
-        description: "NPS Sum (Combined sum NPS Survey Response object scores .   To be used in calculation of NPS)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_num_opps
-        data_type: bigint
-        description: "Number of opportunities (Number of opportunities)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_2020_opps
-        data_type: bigint
-        description: "Number of 2020 Opps"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_active_easy_tech_subscriptions
-        data_type: double precision
-        description: "Number of Active EasyTech Subscriptions (Number of active EasyTech subscriptions. This is populated by a flow.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_active_vidcode_subscriptions
-        data_type: double precision
-        description: "Number of Active Vidcode Subscriptions (Number of Active Vidcode Subscriptions. Populated by flow.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_elementary_schools
-        data_type: double precision
-        description: "Number of Elementary Schools (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_high_schools
-        data_type: double precision
-        description: "Number of High Schools (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_k_8_buildings
-        data_type: double precision
-        description: "Number of K-8 Buildings"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_middle_schools
-        data_type: double precision
-        description: "Number of Middle Schools (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_open_opportunities
-        data_type: bigint
-        description: "Number of Open Opportunities"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_open_opps
-        data_type: bigint
-        description: "Number of Open Opps"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_page_views
-        data_type: double precision
-        description: "Number of Page Views"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_renewal_opps
-        data_type: bigint
-        description: "Number of Renewal Opps (Roll up of the number of renewal opps associated with an account to be used for informing CSMs when a customer is approaching their first renewal with Learning.com)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_schools
-        data_type: double precision
-        description: "Number of Schools"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_sessions
-        data_type: double precision
-        description: "Number of Sessions"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_title_i_schools
-        data_type: double precision
-        description: "Number of Title I Schools"
-        constraints:
-          - type: not_null
-      - name:  sfdc_number_of_won_renewal_opportunities
-        data_type: bigint
-        description: "Number of Won Renewal Opportunities (Denotes the number of won renewal opportunities at a given account. This field can be used to drive the 'Former Customer' value as well as to determine if the Renewal History dynamic related list field is surfaced on the account layout of former customers.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_of_opps_at_renewal_identified
-        data_type: bigint
-        description: "# of Opps at Renewal Identified"
-        constraints:
-          - type: not_null
-      - name:  sfdc_open_opportunity_amount
-        data_type: numeric(35,10)
-        description: "Open Opportunity Amount (captures total amount of all open opps tied to an account)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_open_renewal_opportunities
-        data_type: bigint
-        description: "Open Renewal Opportunities (Denotes how many open renewal opportunities a given customer has. If count is >1, customer should be considered Active.  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_org_type
-        data_type: varchar(780)
-        description: "Org Type"
-        constraints:
-          - type: not_null
-      - name:  sfdc_otc_provisioned
-        data_type: boolean
-        description: "OTC Provisioned (checks the box if the otc provisioned date is not blank  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_owner
-        data_type: varchar(430)
-        description: "Owner"
-        constraints:
-          - type: not_null
-      - name:  sfdc_owner_id
-        data_type: varchar(30)
-        description: "Account Owner (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_owner_name_text
-        data_type: varchar(380)
-        description: "Owner Name (Text) (Text field for Owner Name for Zendesk integration)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_account_owner
-        data_type: varchar(380)
-        description: "Parent Account Owner"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_and_child_match
-        data_type: integer
-        description: "Parent and Child match"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_churned
-        data_type: boolean
-        description: "Parent Churned"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_et_tam
-        data_type: numeric(35,10)
-        description: "Parent ET TAM (Shows District ET TAM (used for building record customers)  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_gsid
-        data_type: varchar(160)
-        description: "Parent GSID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_id
-        data_type: varchar(30)
-        description: "Parent Account (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_long_name
-        data_type: varchar(370)
-        description: "Parent Long Name"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_mdr
-        data_type: varchar(60)
-        description: "Parent MDR"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_name
-        data_type: varchar(780)
-        description: "Parent Name"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_name_proper_case
-        data_type: varchar(370)
-        description: "Parent Name Proper Case"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_owner_id
-        data_type: varchar(30)
-        description: "Parent Owner ID (18-digit Salesforce ID of the record owner)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_parent_uid
-        data_type: varchar(20)
-        description: "Parent Agile ID"
-        constraints:
-          - type: not_null
-      - name:  sfdc_pct_afro_amer
-        data_type: double precision
-        description: "Enrollment - Black (Percent) (Enrollment - Black (Percent))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_pct_asian
-        data_type: double precision
-        description: "Enrollment - Asian (Percent) (Enrollment - Asian (Percent))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_pct_hisp
-        data_type: double precision
-        description: "Enrollment - Hispanic (Percent)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_pct_multi_racial
-        data_type: double precision
-        description: "Enrollment - Multi Racial (Percent)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_pct_native
-        data_type: double precision
-        description: "Enrollment - Native American (Percent)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_pct_white
-        data_type: double precision
-        description: "Enrollment - White (Percent)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_per_student_expenditures
-        data_type: varchar(310)
-        description: "Per Student Expenditures"
-        constraints:
-          - type: not_null
-      - name:  sfdc_percent_students_ell
-        data_type: double precision
-        description: "Enrollment - ELL (Percent) (Enrollment - ELL (Percent))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_phone
-        data_type: varchar(130)
-        description: "Phone (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_photo_url
-        data_type: varchar(780)
-        description: "Photo URL"
-        constraints:
-          - type: not_null
-      - name:  sfdc_platform_sync
-        data_type: boolean
-        description: "Platform Sync"
-        constraints:
-          - type: not_null
-      - name:  sfdc_po_1
-        data_type: integer
-        description: "PO1"
-        constraints:
-          - type: not_null
-      - name:  sfdc_poverty_percent_under_age_18
-        data_type: double precision
-        description: "Poverty Percent Under Age 18"
-        constraints:
-          - type: not_null
-      - name:  sfdc_pre_k_enrollment
-        data_type: double precision
-        description: "Pre-K Enrollment"
-        constraints:
-          - type: not_null
-      - name:  sfdc_priority_account
-        data_type: boolean
-        description: "Priority Account"
-        constraints:
-          - type: not_null
-      - name:  sfdc_record_type
-        data_type: varchar(780)
-        description: "Record Type (L is for district and B is for school  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_reduced_lunch_student
-        data_type: double precision
-        description: "Reduced Lunch Student (Number of students eligible for reduced price lunch)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_reference_customer
-        data_type: boolean
-        description: "Reference Customer"
-        constraints:
-          - type: not_null
-      - name:  sfdc_related_activity
-        data_type: varchar(880)
-        description: "Related Activity"
-        constraints:
-          - type: not_null
-      - name:  sfdc_related
-        data_type: boolean
-        description: "Related (Temporary. Indication that account has related Opportunity, Request, Case, or Activity.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_renewal_forecast_segment
-        data_type: varchar(30)
-        description: "Renewal Forecast Segment (Automatically assigns the correct renewal forecast segment based on current renewal ARR field.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_resa_name_proper
-        data_type: varchar(370)
-        description: "RESA Name Proper (Name of the RESA on Proper case. Populated by Agile)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_resa_uid
-        data_type: double precision
-        description: "RESA UID (Agile UID of the Regional Education Service Agency (RESA) associated with the district or school. Populated by Agile)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_rpm_user_id
-        data_type: integer
-        description: "RPM User ID (Used in conjunction with the RPM Owner field. This is used for territory management and commission management)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sales_owner_field
-        data_type: varchar(30)
-        description: "Sales Owner Field (Owner of upsell for an account  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sales_support_rep
-        data_type: varchar(30)
-        description: "Sales Support Rep (Sales Support Rep  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sbqq_asset_quantities_combined
-        data_type: boolean
-        description: "Combine Asset Quantities (Option to combine quantities of multiple assets for the same product into one line when renewal quote is generated.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sbqq_co_termed_contracts_combined
-        data_type: boolean
-        description: "Combine Co-Termed Contracts (Flag that controls whether assets and subscriptions from multiple co-teremed contracts are rolled up together. By default, each co-termed contract generates a separate group on renewal quote.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sbqq_contract_co_termination
-        data_type: varchar(780)
-        description: "Contract Co-Termination (Determines how service and subscription contracts for this customer are co-terminated.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sbqq_ignore_parent_contracted_prices
-        data_type: boolean
-        description: "Ignore Parent Contracted Prices (Select if contracted prices should not be inherited from the parent account.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sbqq_preserve_bundle
-        data_type: boolean
-        description: "Preserve Bundle Structure (Select to maintain bundle hierarchy on renewal quotes and amendments)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sbqq_renewal_model
-        data_type: varchar(780)
-        description: "Renewal Model (The option to distinguish between Subscription or Asset based renewal.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sbqq_renewal_pricing_method
-        data_type: varchar(780)
-        description: "Renewal Pricing Method (Method for pricing products on renewal.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_school_enrollment
-        data_type: double precision
-        description: "School Enrollment"
-        constraints:
-          - type: not_null
-      - name:  sfdc_school_id
-        data_type: varchar(780)
-        description: "School NCES"
-        constraints:
-          - type: not_null
-      - name:  sfdc_school_type
-        data_type: varchar(780)
-        description: "School Type (This field is mapped and will sync with Agile/ConnectLink)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_school_year_end
-        data_type: date
-        description: "School Year End (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_school_year_start
-        data_type: date
-        description: "School Year Start (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_schools_in_district
-        data_type: double precision
-        description: "Schools in District (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_state_eligible_or_initiative
-        data_type: boolean
-        description: "State Eligible or Initiative"
-        constraints:
-          - type: not_null
-      - name:  sfdc_state_initiative
-        data_type: boolean
-        description: "State Initiative (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_state_profile
-        data_type: varchar(30)
-        description: "State Profile"
-        constraints:
-          - type: not_null
-      - name:  sfdc_state_program_eligible
-        data_type: boolean
-        description: "State Program Eligible?"
-        constraints:
-          - type: not_null
-      - name:  sfdc_student_tam
-        data_type: double precision
-        description: "Student TAM"
-        constraints:
-          - type: not_null
-      - name:  sfdc_sync_district
-        data_type: boolean
-        description: "Syncing District? (Check this box if the customer syncs with Learning.com)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_syncing_district
-        data_type: boolean
-        description: "Syncing District"
-        constraints:
-          - type: not_null
-      - name:  sfdc_system_modstamp
-        data_type: timestamp
-        description: "System Modstamp"
-        constraints:
-          - type: not_null
-      - name:  sfdc_target_account
-        data_type: boolean
-        description: "Target Account (target account field that will denote if a district has been designated a priority account as part of the territory planning process)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_target_level
-        data_type: varchar(780)
-        description: "Target Level"
-        constraints:
-          - type: not_null
-      - name:  sfdc_teachers_in_building
-        data_type: double precision
-        description: "Teachers in Building"
-        constraints:
-          - type: not_null
-      - name:  sfdc_technology_equipment
-        data_type: varchar(780)
-        description: "Technology - Equipment"
-        constraints:
-          - type: not_null
-      - name:  sfdc_technology_index
-        data_type: double precision
-        description: "Technology Index"
-        constraints:
-          - type: not_null
-      - name:  sfdc_technology_measure
-        data_type: varchar(70)
-        description: "Technology Measure"
-        constraints:
-          - type: not_null
-      - name:  sfdc_technology_supplies_and_purchases
-        data_type: varchar(780)
-        description: "Technology - Supplies and Purchases"
-        constraints:
-          - type: not_null
-      - name:  sfdc_territory
-        data_type: varchar(780)
-        description: "Territory"
-        constraints:
-          - type: not_null
-      - name:  sfdc_territory_list
-        data_type: varchar(780)
-        description: "Territory"
-        constraints:
-          - type: not_null
-      - name:  sfdc_test_account
-        data_type: boolean
-        description: "Test Account (Denotes if the account should be excluded from business reporting and the account is only used for internal testing)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_tiered_service_level
-        data_type: varchar(780)
-        description: "Tiered Service Level (3/20/20 - Need to delete or fix the associated flow. Hiding from profiles.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_time_zone
-        data_type: double precision
-        description: "Time Zone (Numeric)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_time_zone_raw
-        data_type: double precision
-        description: "Time Zone (raw) (This is the non-summer time zone (i.e., not daylight savings))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_time_zone_transformed
-        data_type: varchar(30)
-        description: "Time Zone"
-        constraints:
-          - type: not_null
-      - name:  sfdc_title_iv_funding_21_st_century_grants
-        data_type: varchar(210)
-        description: "Title IV Funding (21st Century Grants)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_title_iv_funding_student_support
-        data_type: varchar(210)
-        description: "Title IV Funding (Student Support)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_top_75_account
-        data_type: boolean
-        description: "Top 75 Account"
-        constraints:
-          - type: not_null
-      - name:  sfdc_total_credits_purchased
-        data_type: double precision
-        description: "Total Credits Purchased (This is what they initially purchased for their subscription term. Manually decremented by the ECS team elsewhere.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_total_number_of_schools
-        data_type: double precision
-        description: "Total Number of Schools"
-        constraints:
-          - type: not_null
-      - name:  sfdc_total_renewal_arr
-        data_type: numeric(35,10)
-        description: "Total Renewal ARR (A total of all Renewal ARR from account and child accounts.  Populated via Gainsight using the rule Rollup Renewal ARR  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_trend_district_revenue
-        data_type: varchar(780)
-        description: "Trend District Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_trend_enrollment
-        data_type: varchar(780)
-        description: "Trend Enrollment"
-        constraints:
-          - type: not_null
-      - name:  sfdc_trend_federal_revenue
-        data_type: varchar(780)
-        description: "Trend Federal Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_trend_instructional_expenditures
-        data_type: varchar(780)
-        description: "Trend Instructional Expenditures"
-        constraints:
-          - type: not_null
-      - name:  sfdc_trend_local_revenue
-        data_type: varchar(780)
-        description: "Trend Local Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_trend_state_revenue
-        data_type: varchar(780)
-        description: "Trend State Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_trend_title_i_revenue
-        data_type: varchar(780)
-        description: "Trend Title I Revenue"
-        constraints:
-          - type: not_null
-      - name:  sfdc_type
-        data_type: varchar(780)
-        description: "Type"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ultimate_account_lifecycle_stage
-        data_type: varchar(780)
-        description: "Ultimate Account Lifecycle Stage"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ultimate_account_owner
-        data_type: varchar(380)
-        description: "Ultimate Account Owner"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ultimate_parent_account
-        data_type: varchar(780)
-        description: "ULTIMATE PARENT (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ultimate_parent_billing_state
-        data_type: varchar(250)
-        description: "Ultimate Parent Billing State"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ultimate_parent_id
-        data_type: varchar(30)
-        description: "Ultimate Parent"
-        constraints:
-          - type: not_null
-      - name:  sfdc_ultimate_parent_total_renewal_arr_2
-        data_type: numeric(35,10)
-        description: "Ultimate Parent Total Renewal ARR (this is a currency formula field to lookup to the parent's field value of the Total Renewal ARR)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_urban_rural
-        data_type: varchar(40)
-        description: "Urban Rural (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_user_is_nc_owner
-        data_type: boolean
-        description: "User is NC Owner"
-        constraints:
-          - type: not_null
-      - name:  sfdc_userid
-        data_type: integer
-        description: "userid"
-        constraints:
-          - type: not_null
-      - name:  sfdc_vidcode_customer_2
-        data_type: boolean
-        description: "Vidcode Customer (Converts the Number of Active Vidcode Subscriptions field into a checkbox  Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_virtual_school
-        data_type: varchar(780)
-        description: "Virtual School"
-        constraints:
-          - type: not_null
-      - name:  sfdc_virtual_status_text
-        data_type: varchar(780)
-        description: "Virtual Status Text"
-        constraints:
-          - type: not_null
-      - name:  sfdc_website
-        data_type: varchar(780)
-        description: "Website (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_1_1_computing
-        data_type: varchar(780)
-        description: "1:1 Computing"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_10_th_grade_enrollment
-        data_type: double precision
-        description: "10th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_11_th_grade_enrollment
-        data_type: double precision
-        description: "11th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_12_th_grade_enrollment
-        data_type: double precision
-        description: "12th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_2_nd_grade_enrollment
-        data_type: double precision
-        description: "2nd Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_2020_service_purchased
-        data_type: boolean
-        description: "2020 Service Purchased (Denotes if customer purchased training for 2020 school year)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_21_csa_eol
-        data_type: boolean
-        description: "21CSA EOL (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_3_plms
-        data_type: boolean
-        description: "3PLMS (Check this if the customer is using a third party learning managment system (LMS))"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_3_rd_grade_enrollment
-        data_type: double precision
-        description: "3rd Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_4_th_grade_enrollment
-        data_type: double precision
-        description: "4th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_6_th_grade_enrollment
-        data_type: double precision
-        description: "6th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_7_th_grade_enrollment
-        data_type: double precision
-        description: "7th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_x_9_th_grade_enrollment
-        data_type: double precision
-        description: "9th Grade Enrollment (Integrations: Gainsight.)"
-        constraints:
-          - type: not_null
-      - name:  sfdc_zendesk_domain
-        data_type: varchar(1550)
-        description: "Zendesk Domain (Concatenation of both email domain fields for optimum account matching for zendesk cases. Uses 'space' as the separating value)"
-        constraints:
-          - type: not_null
-
-      - name:  SFDC_lcom_organization_id
-        data_type: varchar(300)
-        description: "LCom Organization linked to Salesforce account in Salesforce (Licensing project)."
-        constraints:
-          - type: not_null
-
-      - name:  sfdc_state_initiative_school
-        data_type: boolean
-        description: "State Initiative from the child(school) level. True if any school has True attribute"
-        constraints:
-          - type: not_null
-
-      - name:  sfdc_district_state_initiative_school
-        data_type: boolean
-        description: "District State Initiative from the child(school) level. True if any school has True attribute"
-        constraints:
-          - type: not_null        
-
-      - name:  sfdc_state_eligible_or_initiative_school
-        data_type: boolean
-        description: "State Eligible or Initiative from the child(school) level. True if any school has True attribute"
-        constraints:
-          - type: not_null               
-
-
-      - name:  sfdc_state_initiative_district
-        data_type: boolean
-        description: "State Initiative from the parent(district) level. True if parent`s attribute is True"
-        constraints:
-          - type: not_null
-
-      - name:  sfdc_district_state_initiative_district
-        data_type: boolean
-        description: "District State Initiative from the parent(district) level. True if parent`s attribute is True"
-        constraints:
-          - type: not_null        
-
-      - name:  sfdc_state_eligible_or_initiative_district
-        data_type: boolean
-        description: "State Eligible or Initiative from the parent(district) level. True if parent`s attribute is True"
-        constraints:
-          - type: not_null
-
-      - name: ishighschool
-        data_type: boolean
-        description: For State progam reports where HS need to be excluded - Indicates if the school is a high school only. No middle or elementary grades. Salesforce Account grade_levels = 'High School' or (grade_levels is null and k_12_enrollment>0 and k_8_enrollment=0). For the most recent orders we should have all schools in the table linked to a Salesforce account if they have an order
-        constraints:
-          - type: not_null          
-
-      - name: loaddate
-        data_type: timestamp
-        description: "The datetime the record was loaded"
-        constraints:
-          - type: not_null
+- name: dim_account
+  description: Conformed DIM_ACCOUNT dimension. Account (districts and schools) data
+    from all systems
+  config:
+    contract:
+      enforced: true
+    tags:
+    - dim
+  columns:
+  - name: account_id
+    data_type: varchar(300)
+    description: Primary and Distribution Key of DIM_ACCOUNT. It's organization_id
+      (school or district) or Salesforce Id if not available in LCom Platform
+    constraints:
+    - type: not_null
+    - type: primary_key
+      warn_unenforced: false
+    data_tests:
+    - unique
+  - name: lcom_organization_id
+    data_type: varchar(300)
+    description: LCOM Organization ID Can be skew with default values if an account
+      does not exist in LCOM Platform. Can be used in joins with LCOM related tables
+      but better use Organization_id as a distribution key
+    constraints:
+    - type: not_null
+  - name: lcom_organization_name
+    data_type: varchar(270)
+    description: LCOM Organization Name
+    constraints:
+    - type: not_null
+  - name: lcom_organization_type
+    data_type: varchar(270)
+    description: LCOM Organization Type (school or district)
+    constraints:
+    - type: not_null
+  - name: lcom_parent_organization_id
+    data_type: varchar(270)
+    description: LCOM Parent Organization Id (district Id)
+    constraints:
+    - type: not_null
+  - name: lcom_parent_organization_name
+    data_type: varchar(270)
+    description: LCOM Parent Organization Name (district name)
+    constraints:
+    - type: not_null
+  - name: lcom_trial
+    data_type: boolean
+    description: Trial use of LCOM products
+    constraints:
+    - type: not_null
+  - name: lcom_demo
+    data_type: boolean
+    description: Demo use of LCOM products
+    constraints:
+    - type: not_null
+  - name: lcom_postal_code
+    data_type: varchar(20)
+    constraints:
+    - type: not_null
+  - name: lcom_state_province_key
+    data_type: varchar(20)
+    constraints:
+    - type: not_null
+  - name: lcom_state_province_code
+    data_type: varchar(20)
+    constraints:
+    - type: not_null
+  - name: lcom_state_province_name
+    data_type: varchar(50)
+    constraints:
+    - type: not_null
+  - name: lcom_country_code
+    data_type: varchar(20)
+    constraints:
+    - type: not_null
+  - name: lcom_country_name
+    data_type: varchar(70)
+    constraints:
+    - type: not_null
+  - name: lcom_alpha3_code
+    data_type: varchar(20)
+    constraints:
+    - type: not_null
+  - name: lcom_numeric_code
+    data_type: varchar(20)
+    constraints:
+    - type: not_null
+  - name: lcom_external_sis_id
+    data_type: varchar(270)
+    constraints:
+    - type: not_null
+  - name: lcom_nces_id
+    data_type: varchar(30)
+    constraints:
+    - type: not_null
+  - name: lcom_created_datetime
+    data_type: timestamp
+    constraints:
+    - type: not_null
+  - name: lcom_modified_datetime
+    data_type: timestamp
+    constraints:
+    - type: not_null
+  - name: lcom_deleted_datetime
+    data_type: timestamp
+    constraints:
+    - type: not_null
+  - name: sfdc_account_id
+    data_type: varchar(300)
+    description: Salesforce Account ID. It's unique Salesforce Account Id. If there
+      are more then one LCom Organization related to teh same account, there is `dup-`prefix
+      in the value. It's possible to have more then one Salesforce Id with `dup-'
+      prefix added, but `clean` Salesforce Id is unique and safe to be used in the
+      joins
+    constraints:
+    - type: not_null
+    data_tests:
+    - unique:
+        where: left(SFDC_account_id,4) != 'dup-' and SFDC_account_id!='{{ var('default_varchar')
+          }}'
+  - name: sfdc_name
+    data_type: varchar(780)
+    description: Account Name
+    constraints:
+    - type: not_null
+  - name: sfdc_account_last_activity_date
+    data_type: date
+    description: Account Last Activity Date
+    constraints:
+    - type: not_null
+  - name: sfdc_account_lifecycle_stage
+    data_type: varchar(780)
+    description: Account Lifecycle Stage
+    constraints:
+    - type: not_null
+  - name: sfdc_account_management_type
+    data_type: varchar(20)
+    description: Account Management Type
+    constraints:
+    - type: not_null
+  - name: sfdc_act_id
+    data_type: varchar(30)
+    description: act id
+    constraints:
+    - type: not_null
+  - name: sfdc_actively_prospecting
+    data_type: boolean
+    description: Actively Prospecting (Mark if this is a customer you are actively
+      prospecting but not yet at an opportunity stage)
+    constraints:
+    - type: not_null
+  - name: sfdc_activity_metric_id
+    data_type: varchar(30)
+    description: Activity Metric
+    constraints:
+    - type: not_null
+  - name: sfdc_activity_metric_rollup_id
+    data_type: varchar(30)
+    description: Activity Metric Rollup
+    constraints:
+    - type: not_null
+  - name: sfdc_ae_or_isr
+    data_type: varchar(20)
+    description: AE OR ISR
+    constraints:
+    - type: not_null
+  - name: sfdc_agile_id
+    data_type: varchar(70)
+    description: Agile ID
+    constraints:
+    - type: not_null
+  - name: sfdc_agile_lms
+    data_type: varchar(4110)
+    description: Agile LMS (Agile LMS)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_agile_ed_insert
+    data_type: boolean
+    description: Created By ConnectLink
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_agile_ed_key
+    data_type: varchar(40)
+    description: ConnectLink Key
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_agile_ed_latest_update_date
+    data_type: date
+    description: ConnectLink Latest Update Date
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_agile_ed_parent_key
+    data_type: varchar(40)
+    description: ConnectLink Parent Key
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_agile_ed_status
+    data_type: varchar(90)
+    description: 'ConnectLink Status (The status of the record in the Agile-Ed database:
+      A = Active, C = Closed, U = Unlicensed.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_agile_ed_up_to_date
+    data_type: boolean
+    description: ConnectLink Up To Date (Deprecated)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_agileed_do_not_update
+    data_type: boolean
+    description: ConnectLink Do Not Update (If this field is checked, then only the
+      record's ConnectLink Status and ConnectLink Last Sync fields wil be updated
+      when the record is synced.)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_connect_link_changed_personnel_titles
+    data_type: double precision
+    description: ConnectLink Changed Personnel Titles (The number of changed Personnel
+      ConnectLink Titles under the Institution.)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_connect_link_district_key
+    data_type: varchar(40)
+    description: ConnectLink District Key
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_connect_link_file_type
+    data_type: varchar(250)
+    description: ConnectLink File Type (The category of the Institution.)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_connect_link_hierarchized_personnel
+    data_type: double precision
+    description: ConnectLink Hierarchized Personnel (The number of Personnel associated
+      to the Institution by ConnectLink.)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_connect_link_licensed_status
+    data_type: varchar(70)
+    description: ConnectLink Licensed Status
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_connect_link_personnel_roles
+    data_type: double precision
+    description: ConnectLink Personnel Roles (The number of Personnel ConnectLink
+      Roles under the Institution.)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_connect_link_personnel_titles
+    data_type: double precision
+    description: ConnectLink Personnel Titles (The number of Personnel ConnectLink
+      Titles under the Institution.)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_last_sync
+    data_type: timestamp
+    description: ConnectLink Last Sync Date
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_parent_pending
+    data_type: boolean
+    description: ConnectLink Parent Pending (If true, the parent record has not yet
+      been inserted to create a hierarchy. Used in batch job to signal the need for
+      parenting.)
+    constraints:
+    - type: not_null
+  - name: sfdc_agileed_personnel_last_sync
+    data_type: timestamp
+    description: ConnectLink Personnel Last Sync (Timestamped after Contacts and/or
+      Leads directly related to the Account are bulk-updated.)
+    constraints:
+    - type: not_null
+  - name: sfdc_alt_phone
+    data_type: varchar(130)
+    description: Agile Phone
+    constraints:
+    - type: not_null
+  - name: sfdc_cares_act_allocation
+    data_type: double precision
+    description: CARES Act Allocation
+    constraints:
+    - type: not_null
+  - name: sfdc_category
+    data_type: varchar(780)
+    description: Category
+    constraints:
+    - type: not_null
+  - name: sfdc_check_national_id
+    data_type: boolean
+    description: Check National ID
+    constraints:
+    - type: not_null
+  - name: sfdc_closed_district_tx_adoption
+    data_type: boolean
+    description: Closed District - TX Adoption (If checked, the district is a known
+      closed district and can not be prospected outside of the IMA coordinator.)
+    constraints:
+    - type: not_null
+  - name: sfdc_code_monkey_customer
+    data_type: boolean
+    description: 'Code Monkey Customer (Converts the Number of Active Code Monkey
+      Subscriptions field into a checkbox  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_codester_id
+    data_type: varchar(70)
+    description: CodesterID
+    constraints:
+    - type: not_null
+  - name: sfdc_codesters_account_to_be_migrated_to_prod
+    data_type: boolean
+    description: Codesters Account to be Migrated to Prod (Denotes if a Codesters
+      account has been flagged to be migrated to prod.)
+    constraints:
+    - type: not_null
+  - name: sfdc_codesters_customer_2
+    data_type: boolean
+    description: 'Codesters Customer (Converts the Number of Active Codesters Subscriptions
+      field into a checkbox  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_codesters_customer_dedupe_flag
+    data_type: boolean
+    description: Codesters Customer Dedupe Flag (Denotes if an account has been flagged
+      as an active customer and should be prioritized for dedupe during migration.
+      This field should not be migrated to prod and should be deprecated after the
+      migration is complete (will happen automatically after sandbox refresh))
+    constraints:
+    - type: not_null
+  - name: sfdc_company_domain_name
+    data_type: varchar(780)
+    description: Company Domain Name (Field that integrates with Hubspot for means
+      of company identification and automatic contact association within Hubspot)
+    constraints:
+    - type: not_null
+  - name: sfdc_completed_onboarding
+    data_type: boolean
+    description: Completed Onboarding (Describes whether or not a new account has
+      been onboarded.)
+    constraints:
+    - type: not_null
+  - name: sfdc_computer_os
+    data_type: varchar(780)
+    description: Computer OS
+    constraints:
+    - type: not_null
+  - name: sfdc_contracted_roll_up
+    data_type: numeric(35,10)
+    description: Contracted Roll Up
+    constraints:
+    - type: not_null
+  - name: sfdc_county_name
+    data_type: varchar(780)
+    description: 'County Name (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_created_by_id
+    data_type: varchar(30)
+    description: Created By
+    constraints:
+    - type: not_null
+  - name: sfdc_created_date
+    data_type: timestamp
+    description: Created Date
+    constraints:
+    - type: not_null
+  - name: sfdc_csm_email
+    data_type: varchar(400)
+    description: CSM Email
+    constraints:
+    - type: not_null
+  - name: sfdc_csm_name
+    data_type: varchar(380)
+    description: CSM Name
+    constraints:
+    - type: not_null
+  - name: sfdc_current_renewal_arr
+    data_type: numeric(35,10)
+    description: 'Current Renewal ARR (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_current_total_ultimate_parent
+    data_type: varchar(410)
+    description: Current / Total / Ultimate Parent (Combined ARR Renewal values. A
+      field which converts three currency fields (Current Renewal ARR, Total Renewal
+      ARR, Ultimate Parent Total Renewal ARR) into text and concat them into one custom,
+      text formula field. For Sys Admins and Sales Support)
+    constraints:
+    - type: not_null
+  - name: sfdc_customer_type
+    data_type: varchar(20)
+    description: 'Customer Type (Creates text value for Record Type field for easier
+      user understanding  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_data_quality_description
+    data_type: varchar(70)
+    description: Data Quality Description
+    constraints:
+    - type: not_null
+  - name: sfdc_data_quality_score
+    data_type: integer
+    description: Data Quality Score
+    constraints:
+    - type: not_null
+  - name: sfdc_de_identified_district
+    data_type: boolean
+    description: DeIdentified District?
+    constraints:
+    - type: not_null
+  - name: sfdc_description
+    data_type: varchar(max)
+    description: 'Description (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_detailed_grade
+    data_type: varchar(780)
+    description: Detailed Grade
+    constraints:
+    - type: not_null
+  - name: sfdc_district
+    data_type: varchar(780)
+    description: District Segment Size (to be populated by rule looking at enrollment)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_easy_code_tam
+    data_type: numeric(35,10)
+    description: District EasyCode TAM (Total EasyCode TAM for a district based on
+      sum of all children TAM values)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_easy_tech_tam
+    data_type: numeric(35,10)
+    description: 'District EasyTech TAM (Total EasyTech TAM for a district based on
+      sum of all children TAM values  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_district_elementary_teachers
+    data_type: varchar(110)
+    description: District Elementary Teachers
+    constraints:
+    - type: not_null
+  - name: sfdc_district_enrollment
+    data_type: double precision
+    description: 'District Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_district_expansion_potential
+    data_type: numeric(35,10)
+    description: District Expansion Potential (If Total TAM is greater than current
+      renewal ARR, display the delta, else display zero. System estimated upsell potential.
+      Meant as a guideline only.)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_faculty_library_media_fte
+    data_type: double precision
+    description: District Faculty - Library/Media FTE
+    constraints:
+    - type: not_null
+  - name: sfdc_district_instructional_expenditures
+    data_type: varchar(310)
+    description: District Instructional Expenditures
+    constraints:
+    - type: not_null
+  - name: sfdc_district_k_8_enrollment
+    data_type: double precision
+    description: District K-8 Enrollment
+    constraints:
+    - type: not_null
+  - name: sfdc_district_kindergarten_teachers
+    data_type: varchar(110)
+    description: District Kindergarten Teachers
+    constraints:
+    - type: not_null
+  - name: sfdc_district_local_revenue_cities
+    data_type: double precision
+    description: District Local Revenue Cities (Local revenue from cities and counties.)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_local_revenue_other_leas
+    data_type: varchar(70)
+    description: District Local Revenue Other LEAs (Local revenue from other school
+      systems.)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_local_revenue_other_taxes
+    data_type: varchar(70)
+    description: District Local Revenue Other Taxes (Local revenue all other taxes.)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_local_revenue_property_taxes
+    data_type: varchar(70)
+    description: District Local Revenue Property Taxes (Local revenue from property
+      taxes.)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_nces
+    data_type: varchar(780)
+    description: District NCES
+    constraints:
+    - type: not_null
+  - name: sfdc_district_presence
+    data_type: double precision
+    description: District Presence (Denotes, in percent, the number of provisioned
+      buildings against the number of total buildings in the district.)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_state_initiative
+    data_type: boolean
+    description: District State Initiative
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_capital_outlay
+    data_type: varchar(780)
+    description: District Total Capital Outlay
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_expenditures
+    data_type: varchar(780)
+    description: District Total Expenditures
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_expense_per_student
+    data_type: varchar(110)
+    description: District Total Expense Per Student
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_fed_revenue
+    data_type: varchar(780)
+    description: District Total Fed Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_local_revenue
+    data_type: varchar(780)
+    description: District Total Local Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_revenue
+    data_type: varchar(780)
+    description: District Total Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_state_revenue
+    data_type: varchar(780)
+    description: District Total State Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_tam
+    data_type: numeric(35,10)
+    description: District Total TAM (Total TAM for a district based on sum of all
+      children ET and EC TAM values. Source values for EC and ET are populated by
+      Gainsight rule)
+    constraints:
+    - type: not_null
+  - name: sfdc_district_type
+    data_type: varchar(780)
+    description: District Type (This field is mapped and will sync with Agile/ConnectLink)
+    constraints:
+    - type: not_null
+  - name: sfdc_dq_opportunities
+    data_type: bigint
+    description: DQ - Opportunities (Roll up summary of all opportunities on the account)
+    constraints:
+    - type: not_null
+  - name: sfdc_easy_tech_customer
+    data_type: boolean
+    description: 'EasyTech Customer (Converts the Number of EasyTech Subscriptions
+      field into a binary field  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_easy_tech_tam
+    data_type: numeric(35,10)
+    description: EasyTech TAM (Contains the estimated size of the EasyTech opportunity
+      based on current pricing. This field is populated manually via dataloader once
+      per year. This TAM only includes TAM for K-8 Enrollment as of November 2022.)
+    constraints:
+    - type: not_null
+  - name: sfdc_easy_tech_tam_captured
+    data_type: double precision
+    description: EasyTech TAM Captured (Ratio between Total Renewal ARR and total
+      EasyTech TAM. This field is used to assign the sales owner based on the 33%
+      threshold established during sales planning in November 2022)
+    constraints:
+    - type: not_null
+  - name: sfdc_ec_tam
+    data_type: double precision
+    description: EC TAM (Calculates TAM for EasyCode (using just Codesters))
+    constraints:
+    - type: not_null
+  - name: sfdc_education_climate_index
+    data_type: double precision
+    description: Education Climate Index
+    constraints:
+    - type: not_null
+  - name: sfdc_education_type
+    data_type: varchar(4110)
+    description: Education Type
+    constraints:
+    - type: not_null
+  - name: sfdc_eighth_grade_enrollment
+    data_type: double precision
+    description: '8th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_email_domain
+    data_type: varchar(780)
+    description: Email Domain (Email domain field provided by Agile ed.)
+    constraints:
+    - type: not_null
+  - name: sfdc_enrollment_advanced_placement
+    data_type: varchar(780)
+    description: Enrollment - Advanced Placement
+    constraints:
+    - type: not_null
+  - name: sfdc_enrollment_band
+    data_type: varchar(30)
+    description: 'Enrollment Band (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_enrollment_tier
+    data_type: varchar(20)
+    description: Enrollment Tier
+    constraints:
+    - type: not_null
+  - name: sfdc_esser_funding
+    data_type: varchar(210)
+    description: ESSER Funding
+    constraints:
+    - type: not_null
+  - name: sfdc_et_tam
+    data_type: double precision
+    description: 'ET TAM (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_exes_campaign
+    data_type: boolean
+    description: Exes Campaign (For use in exes campaign 2022 - delete after use.
+      Should be done by end of June 2022)
+    constraints:
+    - type: not_null
+  - name: sfdc_fifth_grade_enrollment
+    data_type: double precision
+    description: '5th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_first_grade_enrollment
+    data_type: double precision
+    description: '1st Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_first_name
+    data_type: varchar(1550)
+    description: First Name (Used for NS Integration with Mulesoft - DO NOT EDIT)
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_career_and_tech_federal
+    data_type: varchar(780)
+    description: Fiscal - Career and Tech - Federal
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_career_and_tech_state
+    data_type: varchar(780)
+    description: Fiscal - Career and Tech - State
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_career_and_tech_teacher_salar
+    data_type: varchar(780)
+    description: Fiscal - Career and Tech - Teacher Salar
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_eligible_school
+    data_type: varchar(780)
+    description: Fiscal - Title I Eligible School
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_funding
+    data_type: numeric(35,10)
+    description: Fiscal - Title I Funding (Total Title I funding for the District)
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_percentage
+    data_type: double precision
+    description: Fiscal - Title I Percentage
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_school
+    data_type: varchar(780)
+    description: Fiscal - Title I School (This is the appropriated district Title
+      I funding that is based on the Title I population of a school)
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_school_yes_no
+    data_type: varchar(780)
+    description: Fiscal - Title I School - Yes No
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_schoolwide
+    data_type: varchar(780)
+    description: Fiscal - Title I Schoolwide
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_schoolwide_yes_no
+    data_type: varchar(780)
+    description: Fiscal - Title I Schoolwide - Yes No
+    constraints:
+    - type: not_null
+  - name: sfdc_free_lunch_students
+    data_type: varchar(780)
+    description: Free Lunch Students
+    constraints:
+    - type: not_null
+  - name: sfdc_free_reduced_lunch
+    data_type: double precision
+    description: Free/Reduced Lunch % (% of Free + Reduced Lunch Students based on
+      School Enrollment)
+    constraints:
+    - type: not_null
+  - name: sfdc_gainsight_customer
+    data_type: boolean
+    description: Gainsight Customer
+    constraints:
+    - type: not_null
+  - name: sfdc_gainsight_house
+    data_type: boolean
+    description: 'Gainsight House (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_google_integration
+    data_type: boolean
+    description: 'Google Integration (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_governor
+    data_type: varchar(780)
+    description: Governor
+    constraints:
+    - type: not_null
+  - name: sfdc_governor_s_party_affiliation
+    data_type: varchar(780)
+    description: Governor's Party Affiliation
+    constraints:
+    - type: not_null
+  - name: sfdc_grade_level_detail
+    data_type: varchar(880)
+    description: Grade Level Detail
+    constraints:
+    - type: not_null
+  - name: sfdc_grade_levels
+    data_type: varchar(4110)
+    description: Grade Levels
+    constraints:
+    - type: not_null
+  - name: sfdc_has_codesters_child_accounts
+    data_type: boolean
+    description: Has Codesters Child Accounts (Denotes if an account has a migrated
+      child customer of Codesters. This field should be deprecated by 12/31/2023)
+    constraints:
+    - type: not_null
+  - name: sfdc_hi_speed_classroom_internet
+    data_type: varchar(780)
+    description: Hi Speed Classroom Internet
+    constraints:
+    - type: not_null
+  - name: sfdc_hi_speed_internet
+    data_type: varchar(780)
+    description: Hi Speed Internet
+    constraints:
+    - type: not_null
+  - name: sfdc_hml_title_i_funding
+    data_type: varchar(780)
+    description: HML Title I Funding (Title I Allocation)
+    constraints:
+    - type: not_null
+  - name: sfdc_hml_title_i_per_student
+    data_type: varchar(780)
+    description: HML Title I Per Student (High Medium Low indicator of District Title
+      I Allocation Per Student)
+    constraints:
+    - type: not_null
+  - name: sfdc_house_account
+    data_type: boolean
+    description: House Account (Check if Account is House Account)
+    constraints:
+    - type: not_null
+  - name: sfdc_i_pad_schools_percent
+    data_type: double precision
+    description: iPad Schools (Percent)
+    constraints:
+    - type: not_null
+  - name: sfdc_i_pads_for_instruction
+    data_type: varchar(780)
+    description: iPads for Instruction
+    constraints:
+    - type: not_null
+  - name: sfdc_ima_coordinator_identified
+    data_type: boolean
+    description: IMA Coordinator Identified (Formula field checks to see if the IMA
+      Coordinator has been completed. If blank, returns false. Used for 2024 TX Adoption.)
+    constraints:
+    - type: not_null
+  - name: sfdc_inst_uid
+    data_type: varchar(780)
+    description: Agile Inst UID (The field is used to hold the data provided by Agile
+      link in the excel for upload to SF.)
+    constraints:
+    - type: not_null
+  - name: sfdc_k_12_enrollment
+    data_type: double precision
+    description: K-12 Enrollment (Sums the agile enrollment fields by grade level)
+    constraints:
+    - type: not_null
+  - name: sfdc_k_5_enrollment
+    data_type: double precision
+    description: K-5 Enrollment (Captures total enrollment figures for grades K-5
+      based on Agile data.)
+    constraints:
+    - type: not_null
+  - name: sfdc_k_8_district_presence
+    data_type: double precision
+    description: K-8 District Presence (Denotes, in percent, the number of provisioned
+      K-8 buildings against the number of total K-8 buildings in the district. This
+      field is updated by Gainsight rule ADMIN - Set K-8 District Saturation child/no
+      child 2.0 and refreshed nightly.)
+    constraints:
+    - type: not_null
+  - name: sfdc_k_8_enrollment
+    data_type: double precision
+    description: K-8 Enrollment (Captures total enrollment figures for grades K-8
+      based on Agile data)
+    constraints:
+    - type: not_null
+  - name: sfdc_key_account
+    data_type: boolean
+    description: 'Key Account (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_kindergarten_enrollment
+    data_type: double precision
+    description: 'Kindergarten Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_known_duplicate
+    data_type: boolean
+    description: Known Duplicate (Use to flag duplicate accounts that need to be merged.
+      Use this field to find duplicates with DuplicateCheck)
+    constraints:
+    - type: not_null
+  - name: sfdc_last_activity_date
+    data_type: date
+    description: Last Activity
+    constraints:
+    - type: not_null
+  - name: sfdc_last_activity_logged_on
+    data_type: date
+    description: Last Activity Logged On
+    constraints:
+    - type: not_null
+  - name: sfdc_last_modified_by_id
+    data_type: varchar(30)
+    description: Last Modified By
+    constraints:
+    - type: not_null
+  - name: sfdc_last_modified_date
+    data_type: timestamp
+    description: Last Modified Date
+    constraints:
+    - type: not_null
+  - name: sfdc_last_name
+    data_type: varchar(780)
+    description: Last Name (Used for NS Integration with Mulesoft - DO NOT EDIT)
+    constraints:
+    - type: not_null
+  - name: sfdc_lcom_account
+    data_type: varchar(30)
+    description: LCOM Account (The LCOM Account associated with this account)
+    constraints:
+    - type: not_null
+  - name: sfdc_lcom_account_class
+    data_type: varchar(780)
+    description: LCOM Account Class
+    constraints:
+    - type: not_null
+  - name: sfdc_lcom_account_count
+    data_type: bigint
+    description: LCOM Account Count (Returns the count of LCOM Accounts associated
+      with this account. This value should always be either zero or one.)
+    constraints:
+    - type: not_null
+  - name: sfdc_lcom_organization
+    data_type: varchar(30)
+    description: LCOM Organization (The associated LCOM Organization record for this
+      account)
+    constraints:
+    - type: not_null
+  - name: sfdc_lcom_organization_count
+    data_type: bigint
+    description: LCOM Organization Count (Count of associated LCOM Organizations for
+      a given account. This field should only ever have values of 0 or 1.)
+    constraints:
+    - type: not_null
+  - name: sfdc_lcom_organization_has_parent
+    data_type: boolean
+    description: LCOM Organization has Parent
+    constraints:
+    - type: not_null
+  - name: sfdc_learn_dash_code_sent
+    data_type: boolean
+    description: LearnDash Code Sent
+    constraints:
+    - type: not_null
+  - name: sfdc_les_opp
+    data_type: boolean
+    description: Les Opp (Denotes if an opp is part of Les Barnett's separation contractual
+      obligation through 3/31/2021)
+    constraints:
+    - type: not_null
+  - name: sfdc_license_consumption
+    data_type: double precision
+    description: License Consumption (Current license consumption (based on Gainsight
+      weekly usage))
+    constraints:
+    - type: not_null
+  - name: sfdc_map_tracker
+    data_type: boolean
+    description: Map Tracker (for manual use with maps to change colors of pins)
+    constraints:
+    - type: not_null
+  - name: sfdc_mdr_number
+    data_type: varchar(60)
+    description: MDR Number
+    constraints:
+    - type: not_null
+  - name: sfdc_mi_pilot
+    data_type: boolean
+    description: MI Pilot
+    constraints:
+    - type: not_null
+  - name: sfdc_multi_tiered_account
+    data_type: boolean
+    description: Multi Tiered Account
+    constraints:
+    - type: not_null
+  - name: sfdc_name_with_lcom_organization_info
+    data_type: varchar(1280)
+    description: Name with LCOM Organization Info (A descriptive name for the Account
+      with related information from the LCOM Organization.)
+    constraints:
+    - type: not_null
+  - name: sfdc_national_district_id
+    data_type: varchar(780)
+    description: National District ID
+    constraints:
+    - type: not_null
+  - name: sfdc_national_school_id
+    data_type: varchar(1540)
+    description: National School ID
+    constraints:
+    - type: not_null
+  - name: sfdc_nc_tier_1
+    data_type: boolean
+    description: NC Tier 1
+    constraints:
+    - type: not_null
+  - name: sfdc_nces_lea_id
+    data_type: varchar(780)
+    description: NCES LEA ID
+    constraints:
+    - type: not_null
+  - name: sfdc_nces_unique_id
+    data_type: varchar(780)
+    description: NCES Unique ID
+    constraints:
+    - type: not_null
+  - name: sfdc_net_suite_id
+    data_type: varchar(780)
+    description: NetSuite ID
+    constraints:
+    - type: not_null
+  - name: sfdc_net_suite_link
+    data_type: varchar(880)
+    description: NetSuite Link (Netsuite Link for related Accounts)
+    constraints:
+    - type: not_null
+  - name: sfdc_netsuite_account_number
+    data_type: varchar(100)
+    description: Netsuite Account Number (This will be mapped to Netsuite Customer
+      ID for Customer object.)
+    constraints:
+    - type: not_null
+  - name: sfdc_no_of_child_account
+    data_type: double precision
+    description: Number of Children
+    constraints:
+    - type: not_null
+  - name: sfdc_nps_count
+    data_type: bigint
+    description: NPS Count (total number of NPS Surveys -to be used in NPS)
+    constraints:
+    - type: not_null
+  - name: sfdc_nps_score
+    data_type: double precision
+    description: NPS Score
+    constraints:
+    - type: not_null
+  - name: sfdc_nps_sum
+    data_type: numeric(35,10)
+    description: NPS Sum (Combined sum NPS Survey Response object scores .   To be
+      used in calculation of NPS)
+    constraints:
+    - type: not_null
+  - name: sfdc_num_opps
+    data_type: bigint
+    description: Number of opportunities (Number of opportunities)
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_2020_opps
+    data_type: bigint
+    description: Number of 2020 Opps
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_active_easy_tech_subscriptions
+    data_type: double precision
+    description: Number of Active EasyTech Subscriptions (Number of active EasyTech
+      subscriptions. This is populated by a flow.)
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_active_vidcode_subscriptions
+    data_type: double precision
+    description: Number of Active Vidcode Subscriptions (Number of Active Vidcode
+      Subscriptions. Populated by flow.)
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_elementary_schools
+    data_type: double precision
+    description: 'Number of Elementary Schools (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_high_schools
+    data_type: double precision
+    description: 'Number of High Schools (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_k_8_buildings
+    data_type: double precision
+    description: Number of K-8 Buildings
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_middle_schools
+    data_type: double precision
+    description: 'Number of Middle Schools (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_open_opportunities
+    data_type: bigint
+    description: Number of Open Opportunities
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_open_opps
+    data_type: bigint
+    description: Number of Open Opps
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_page_views
+    data_type: double precision
+    description: Number of Page Views
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_renewal_opps
+    data_type: bigint
+    description: Number of Renewal Opps (Roll up of the number of renewal opps associated
+      with an account to be used for informing CSMs when a customer is approaching
+      their first renewal with Learning.com)
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_schools
+    data_type: double precision
+    description: Number of Schools
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_sessions
+    data_type: double precision
+    description: Number of Sessions
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_title_i_schools
+    data_type: double precision
+    description: Number of Title I Schools
+    constraints:
+    - type: not_null
+  - name: sfdc_number_of_won_renewal_opportunities
+    data_type: bigint
+    description: Number of Won Renewal Opportunities (Denotes the number of won renewal
+      opportunities at a given account. This field can be used to drive the 'Former
+      Customer' value as well as to determine if the Renewal History dynamic related
+      list field is surfaced on the account layout of former customers.)
+    constraints:
+    - type: not_null
+  - name: sfdc_open_opportunity_amount
+    data_type: numeric(35,10)
+    description: Open Opportunity Amount (captures total amount of all open opps tied
+      to an account)
+    constraints:
+    - type: not_null
+  - name: sfdc_open_renewal_opportunities
+    data_type: bigint
+    description: 'Open Renewal Opportunities (Denotes how many open renewal opportunities
+      a given customer has. If count is >1, customer should be considered Active.  Integrations:
+      Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_org_type
+    data_type: varchar(780)
+    description: Org Type
+    constraints:
+    - type: not_null
+  - name: sfdc_otc_provisioned
+    data_type: boolean
+    description: 'OTC Provisioned (checks the box if the otc provisioned date is not
+      blank  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_owner
+    data_type: varchar(430)
+    description: Owner
+    constraints:
+    - type: not_null
+  - name: sfdc_owner_id
+    data_type: varchar(30)
+    description: 'Account Owner (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_owner_name_text
+    data_type: varchar(380)
+    description: Owner Name (Text) (Text field for Owner Name for Zendesk integration)
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_account_owner
+    data_type: varchar(380)
+    description: Parent Account Owner
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_and_child_match
+    data_type: integer
+    description: Parent and Child match
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_churned
+    data_type: boolean
+    description: Parent Churned
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_et_tam
+    data_type: numeric(35,10)
+    description: 'Parent ET TAM (Shows District ET TAM (used for building record customers)  Integrations:
+      Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_gsid
+    data_type: varchar(160)
+    description: Parent GSID
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_id
+    data_type: varchar(30)
+    description: 'Parent Account (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_long_name
+    data_type: varchar(370)
+    description: Parent Long Name
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_mdr
+    data_type: varchar(60)
+    description: Parent MDR
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_name
+    data_type: varchar(780)
+    description: Parent Name
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_name_proper_case
+    data_type: varchar(370)
+    description: Parent Name Proper Case
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_owner_id
+    data_type: varchar(30)
+    description: Parent Owner ID (18-digit Salesforce ID of the record owner)
+    constraints:
+    - type: not_null
+  - name: sfdc_parent_uid
+    data_type: varchar(20)
+    description: Parent Agile ID
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_afro_amer
+    data_type: double precision
+    description: Enrollment - Black (Percent) (Enrollment - Black (Percent))
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_asian
+    data_type: double precision
+    description: Enrollment - Asian (Percent) (Enrollment - Asian (Percent))
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_hisp
+    data_type: double precision
+    description: Enrollment - Hispanic (Percent)
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_multi_racial
+    data_type: double precision
+    description: Enrollment - Multi Racial (Percent)
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_native
+    data_type: double precision
+    description: Enrollment - Native American (Percent)
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_white
+    data_type: double precision
+    description: Enrollment - White (Percent)
+    constraints:
+    - type: not_null
+  - name: sfdc_per_student_expenditures
+    data_type: varchar(310)
+    description: Per Student Expenditures
+    constraints:
+    - type: not_null
+  - name: sfdc_percent_students_ell
+    data_type: double precision
+    description: Enrollment - ELL (Percent) (Enrollment - ELL (Percent))
+    constraints:
+    - type: not_null
+  - name: sfdc_phone
+    data_type: varchar(130)
+    description: 'Phone (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_photo_url
+    data_type: varchar(780)
+    description: Photo URL
+    constraints:
+    - type: not_null
+  - name: sfdc_platform_sync
+    data_type: boolean
+    description: Platform Sync
+    constraints:
+    - type: not_null
+  - name: sfdc_poverty_percent_under_age_18
+    data_type: double precision
+    description: Poverty Percent Under Age 18
+    constraints:
+    - type: not_null
+  - name: sfdc_pre_k_enrollment
+    data_type: double precision
+    description: Pre-K Enrollment
+    constraints:
+    - type: not_null
+  - name: sfdc_priority_account
+    data_type: boolean
+    description: Priority Account
+    constraints:
+    - type: not_null
+  - name: sfdc_record_type
+    data_type: varchar(780)
+    description: 'Record Type (L is for district and B is for school  Integrations:
+      Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_reduced_lunch_student
+    data_type: double precision
+    description: Reduced Lunch Student (Number of students eligible for reduced price
+      lunch)
+    constraints:
+    - type: not_null
+  - name: sfdc_reference_customer
+    data_type: boolean
+    description: Reference Customer
+    constraints:
+    - type: not_null
+  - name: sfdc_related_activity
+    data_type: varchar(880)
+    description: Related Activity
+    constraints:
+    - type: not_null
+  - name: sfdc_related
+    data_type: boolean
+    description: Related (Temporary. Indication that account has related Opportunity,
+      Request, Case, or Activity.)
+    constraints:
+    - type: not_null
+  - name: sfdc_renewal_forecast_segment
+    data_type: varchar(30)
+    description: Renewal Forecast Segment (Automatically assigns the correct renewal
+      forecast segment based on current renewal ARR field.)
+    constraints:
+    - type: not_null
+  - name: sfdc_resa_name_proper
+    data_type: varchar(370)
+    description: RESA Name Proper (Name of the RESA on Proper case. Populated by Agile)
+    constraints:
+    - type: not_null
+  - name: sfdc_resa_uid
+    data_type: double precision
+    description: RESA UID (Agile UID of the Regional Education Service Agency (RESA)
+      associated with the district or school. Populated by Agile)
+    constraints:
+    - type: not_null
+  - name: sfdc_sales_owner_field
+    data_type: varchar(30)
+    description: 'Sales Owner Field (Owner of upsell for an account  Integrations:
+      Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_sales_support_rep
+    data_type: varchar(30)
+    description: 'Sales Support Rep (Sales Support Rep  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_sbqq_co_termed_contracts_combined
+    data_type: boolean
+    description: Combine Co-Termed Contracts (Flag that controls whether assets and
+      subscriptions from multiple co-teremed contracts are rolled up together. By
+      default, each co-termed contract generates a separate group on renewal quote.)
+    constraints:
+    - type: not_null
+  - name: sfdc_sbqq_contract_co_termination
+    data_type: varchar(780)
+    description: Contract Co-Termination (Determines how service and subscription
+      contracts for this customer are co-terminated.)
+    constraints:
+    - type: not_null
+  - name: sfdc_sbqq_preserve_bundle
+    data_type: boolean
+    description: Preserve Bundle Structure (Select to maintain bundle hierarchy on
+      renewal quotes and amendments)
+    constraints:
+    - type: not_null
+  - name: sfdc_school_enrollment
+    data_type: double precision
+    description: School Enrollment
+    constraints:
+    - type: not_null
+  - name: sfdc_school_id
+    data_type: varchar(780)
+    description: School NCES
+    constraints:
+    - type: not_null
+  - name: sfdc_school_type
+    data_type: varchar(780)
+    description: School Type (This field is mapped and will sync with Agile/ConnectLink)
+    constraints:
+    - type: not_null
+  - name: sfdc_school_year_end
+    data_type: date
+    description: 'School Year End (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_school_year_start
+    data_type: date
+    description: 'School Year Start (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_schools_in_district
+    data_type: double precision
+    description: 'Schools in District (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_state_eligible_or_initiative
+    data_type: boolean
+    description: State Eligible or Initiative
+    constraints:
+    - type: not_null
+  - name: sfdc_state_initiative
+    data_type: boolean
+    description: 'State Initiative (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_state_profile
+    data_type: varchar(30)
+    description: State Profile
+    constraints:
+    - type: not_null
+  - name: sfdc_state_program_eligible
+    data_type: boolean
+    description: State Program Eligible?
+    constraints:
+    - type: not_null
+  - name: sfdc_student_tam
+    data_type: double precision
+    description: Student TAM
+    constraints:
+    - type: not_null
+  - name: sfdc_sync_district
+    data_type: boolean
+    description: Syncing District? (Check this box if the customer syncs with Learning.com)
+    constraints:
+    - type: not_null
+  - name: sfdc_syncing_district
+    data_type: boolean
+    description: Syncing District
+    constraints:
+    - type: not_null
+  - name: sfdc_system_modstamp
+    data_type: timestamp
+    description: System Modstamp
+    constraints:
+    - type: not_null
+  - name: sfdc_target_account
+    data_type: boolean
+    description: Target Account (target account field that will denote if a district
+      has been designated a priority account as part of the territory planning process)
+    constraints:
+    - type: not_null
+  - name: sfdc_teachers_in_building
+    data_type: double precision
+    description: Teachers in Building
+    constraints:
+    - type: not_null
+  - name: sfdc_technology_equipment
+    data_type: varchar(780)
+    description: Technology - Equipment
+    constraints:
+    - type: not_null
+  - name: sfdc_technology_index
+    data_type: double precision
+    description: Technology Index
+    constraints:
+    - type: not_null
+  - name: sfdc_technology_measure
+    data_type: varchar(70)
+    description: Technology Measure
+    constraints:
+    - type: not_null
+  - name: sfdc_technology_supplies_and_purchases
+    data_type: varchar(780)
+    description: Technology - Supplies and Purchases
+    constraints:
+    - type: not_null
+  - name: sfdc_territory
+    data_type: varchar(780)
+    description: Territory
+    constraints:
+    - type: not_null
+  - name: sfdc_territory_list
+    data_type: varchar(780)
+    description: Territory
+    constraints:
+    - type: not_null
+  - name: sfdc_test_account
+    data_type: boolean
+    description: Test Account (Denotes if the account should be excluded from business
+      reporting and the account is only used for internal testing)
+    constraints:
+    - type: not_null
+  - name: sfdc_tiered_service_level
+    data_type: varchar(780)
+    description: Tiered Service Level (3/20/20 - Need to delete or fix the associated
+      flow. Hiding from profiles.)
+    constraints:
+    - type: not_null
+  - name: sfdc_time_zone
+    data_type: double precision
+    description: Time Zone (Numeric)
+    constraints:
+    - type: not_null
+  - name: sfdc_time_zone_raw
+    data_type: double precision
+    description: Time Zone (raw) (This is the non-summer time zone (i.e., not daylight
+      savings))
+    constraints:
+    - type: not_null
+  - name: sfdc_time_zone_transformed
+    data_type: varchar(30)
+    description: Time Zone
+    constraints:
+    - type: not_null
+  - name: sfdc_title_iv_funding_21_st_century_grants
+    data_type: varchar(210)
+    description: Title IV Funding (21st Century Grants)
+    constraints:
+    - type: not_null
+  - name: sfdc_title_iv_funding_student_support
+    data_type: varchar(210)
+    description: Title IV Funding (Student Support)
+    constraints:
+    - type: not_null
+  - name: sfdc_top_75_account
+    data_type: boolean
+    description: Top 75 Account
+    constraints:
+    - type: not_null
+  - name: sfdc_total_credits_purchased
+    data_type: double precision
+    description: Total Credits Purchased (This is what they initially purchased for
+      their subscription term. Manually decremented by the ECS team elsewhere.)
+    constraints:
+    - type: not_null
+  - name: sfdc_total_number_of_schools
+    data_type: double precision
+    description: Total Number of Schools
+    constraints:
+    - type: not_null
+  - name: sfdc_total_renewal_arr
+    data_type: numeric(35,10)
+    description: 'Total Renewal ARR (A total of all Renewal ARR from account and child
+      accounts.  Populated via Gainsight using the rule Rollup Renewal ARR  Integrations:
+      Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_trend_district_revenue
+    data_type: varchar(780)
+    description: Trend District Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_trend_enrollment
+    data_type: varchar(780)
+    description: Trend Enrollment
+    constraints:
+    - type: not_null
+  - name: sfdc_trend_federal_revenue
+    data_type: varchar(780)
+    description: Trend Federal Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_trend_instructional_expenditures
+    data_type: varchar(780)
+    description: Trend Instructional Expenditures
+    constraints:
+    - type: not_null
+  - name: sfdc_trend_local_revenue
+    data_type: varchar(780)
+    description: Trend Local Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_trend_state_revenue
+    data_type: varchar(780)
+    description: Trend State Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_trend_title_i_revenue
+    data_type: varchar(780)
+    description: Trend Title I Revenue
+    constraints:
+    - type: not_null
+  - name: sfdc_type
+    data_type: varchar(780)
+    description: Type
+    constraints:
+    - type: not_null
+  - name: sfdc_ultimate_account_lifecycle_stage
+    data_type: varchar(780)
+    description: Ultimate Account Lifecycle Stage
+    constraints:
+    - type: not_null
+  - name: sfdc_ultimate_account_owner
+    data_type: varchar(380)
+    description: Ultimate Account Owner
+    constraints:
+    - type: not_null
+  - name: sfdc_ultimate_parent_account
+    data_type: varchar(780)
+    description: 'ULTIMATE PARENT (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_ultimate_parent_billing_state
+    data_type: varchar(250)
+    description: Ultimate Parent Billing State
+    constraints:
+    - type: not_null
+  - name: sfdc_ultimate_parent_id
+    data_type: varchar(30)
+    description: Ultimate Parent
+    constraints:
+    - type: not_null
+  - name: sfdc_ultimate_parent_total_renewal_arr_2
+    data_type: numeric(35,10)
+    description: Ultimate Parent Total Renewal ARR (this is a currency formula field
+      to lookup to the parent's field value of the Total Renewal ARR)
+    constraints:
+    - type: not_null
+  - name: sfdc_urban_rural
+    data_type: varchar(40)
+    description: 'Urban Rural (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_vidcode_customer_2
+    data_type: boolean
+    description: 'Vidcode Customer (Converts the Number of Active Vidcode Subscriptions
+      field into a checkbox  Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_virtual_school
+    data_type: varchar(780)
+    description: Virtual School
+    constraints:
+    - type: not_null
+  - name: sfdc_virtual_status_text
+    data_type: varchar(780)
+    description: Virtual Status Text
+    constraints:
+    - type: not_null
+  - name: sfdc_website
+    data_type: varchar(780)
+    description: 'Website (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_1_1_computing
+    data_type: varchar(780)
+    description: 1:1 Computing
+    constraints:
+    - type: not_null
+  - name: sfdc_x_10_th_grade_enrollment
+    data_type: double precision
+    description: '10th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_11_th_grade_enrollment
+    data_type: double precision
+    description: '11th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_12_th_grade_enrollment
+    data_type: double precision
+    description: '12th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_2_nd_grade_enrollment
+    data_type: double precision
+    description: '2nd Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_2020_service_purchased
+    data_type: boolean
+    description: 2020 Service Purchased (Denotes if customer purchased training for
+      2020 school year)
+    constraints:
+    - type: not_null
+  - name: sfdc_x_21_csa_eol
+    data_type: boolean
+    description: '21CSA EOL (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_3_plms
+    data_type: boolean
+    description: 3PLMS (Check this if the customer is using a third party learning
+      managment system (LMS))
+    constraints:
+    - type: not_null
+  - name: sfdc_x_3_rd_grade_enrollment
+    data_type: double precision
+    description: '3rd Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_4_th_grade_enrollment
+    data_type: double precision
+    description: '4th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_6_th_grade_enrollment
+    data_type: double precision
+    description: '6th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_7_th_grade_enrollment
+    data_type: double precision
+    description: '7th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_x_9_th_grade_enrollment
+    data_type: double precision
+    description: '9th Grade Enrollment (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+  - name: sfdc_zendesk_domain
+    data_type: varchar(1550)
+    description: Zendesk Domain (Concatenation of both email domain fields for optimum
+      account matching for zendesk cases. Uses 'space' as the separating value)
+    constraints:
+    - type: not_null
+  - name: SFDC_lcom_organization_id
+    data_type: varchar(300)
+    description: LCom Organization linked to Salesforce account in Salesforce (Licensing
+      project).
+    constraints:
+    - type: not_null
+  - name: sfdc_state_initiative_school
+    data_type: boolean
+    description: State Initiative from the child(school) level. True if any school
+      has True attribute
+    constraints:
+    - type: not_null
+  - name: sfdc_district_state_initiative_school
+    data_type: boolean
+    description: District State Initiative from the child(school) level. True if any
+      school has True attribute
+    constraints:
+    - type: not_null
+  - name: sfdc_state_eligible_or_initiative_school
+    data_type: boolean
+    description: State Eligible or Initiative from the child(school) level. True if
+      any school has True attribute
+    constraints:
+    - type: not_null
+  - name: sfdc_state_initiative_district
+    data_type: boolean
+    description: State Initiative from the parent(district) level. True if parent`s
+      attribute is True
+    constraints:
+    - type: not_null
+  - name: sfdc_district_state_initiative_district
+    data_type: boolean
+    description: District State Initiative from the parent(district) level. True if
+      parent`s attribute is True
+    constraints:
+    - type: not_null
+  - name: sfdc_state_eligible_or_initiative_district
+    data_type: boolean
+    description: State Eligible or Initiative from the parent(district) level. True
+      if parent`s attribute is True
+    constraints:
+    - type: not_null
+  - name: ishighschool
+    data_type: boolean
+    description: For State progam reports where HS need to be excluded - Indicates
+      if the school is a high school only. No middle or elementary grades. Salesforce
+      Account grade_levels = 'High School' or (grade_levels is null and k_12_enrollment>0
+      and k_8_enrollment=0). For the most recent orders we should have all schools
+      in the table linked to a Salesforce account if they have an order
+    constraints:
+    - type: not_null
+  - name: loaddate
+    data_type: timestamp
+    description: The datetime the record was loaded
+    constraints:
+    - type: not_null

@@ -1,1169 +1,1065 @@
----
 version: 2
 models:
-  - name: fact_opportunity
-    description: Fact Opportunity (Salesforce Opportunity table)
-    config:
-      contract:
-        enforced: true
-      tags:
-        - fact
-    columns:
-      - name: opportunity_id
-        data_type: varchar(300)
-        description: Primary Key of FACT_OPPORTUNITY. It`s Salesforce Opportunity ID column
-        constraints:
-          - type: not_null
-          - type: primary_key
-            warn_unenforced: false
-        tests:
-          - unique
-      - name: name
-        data_type: varchar(300)
-        description: Opportunity Name
-        constraints:
-          - type: not_null
-      - name: account_id
-        data_type: varchar(300)
-        description: DIM_ACCOUNT FK If there are 2 LCOM Organizations - max(account_id) is grouped by SFDC_Account_id
-        constraints:
-          - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
-        data_tests:
-          - relationships:
-              to: ref('dim_account')
-              field: account_id        
-
-      - name: sfdc_account_id
-        data_type: varchar(300)
-        description: Salesforce Account ID
-        constraints:
-          - type: not_null
-      - name: account_manager
-        data_type: varchar(30)
-        description: Renewal Owner
-        constraints:
-          - type: not_null
-
-      - name: account_name_email
-        data_type: varchar(780)
-        description: Account Name (Email)
-        constraints:
-          - type: not_null
-      - name: account_owner_set
-        data_type: boolean
-        description: Account owner set
-        constraints:
-          - type: not_null
-      - name: activity_metric_id
-        data_type: varchar(30)
-        description: Activity Metric
-        constraints:
-          - type: not_null
-      - name: already_booked
-        data_type: boolean
-        description: Already Booked
-        constraints:
-          - type: not_null
-      - name: already_closed_lost
-        data_type: boolean
-        description: Already closed lost
-        constraints:
-          - type: not_null
-      - name: amount
-        data_type: numeric(35,10)
-        description: Amount
-        constraints:
-          - type: not_null
-      - name: amount_won
-        data_type: numeric(35,10)
-        description: Amount Won
-        constraints:
-          - type: not_null
-      - name: arr_bands
-        data_type: varchar(30)
-        description: ARR Bands
-        constraints:
-          - type: not_null
-      - name: arr
-        data_type: double precision
-        description: ARR (implemented to capture ARR value of opportunity)
-        constraints:
-          - type: not_null
-      - name: arr_new_business
-        data_type: numeric(38,10)
-        description: ARR New Business (ARR New Business)
-        constraints:
-          - type: not_null
-      - name: arr_renewal
-        data_type: numeric(38,10)
-        description: ARR Renewal (ARR renewal)
-        constraints:
-          - type: not_null
-      - name: arr_upsell
-        data_type: numeric(38,10)
-        description: ARR Upsell (ARR Upsell)
-        constraints:
-          - type: not_null
-      - name: arr_won
-        data_type: numeric(38,10)
-        description: ARR Won
-        constraints:
-          - type: not_null
-      - name: assessments
-        data_type: boolean
-        description: Assessments (If license has assessments)
-        constraints:
-          - type: not_null
-      - name: billing_addressee
-        data_type: varchar(160)
-        description: Billing Addressee (Billing Addressee)
-        constraints:
-          - type: not_null
-      - name: billing_city
-        data_type: varchar(120)
-        description: Billing City (Billing City)
-        constraints:
-          - type: not_null
-      - name: billing_state
-        data_type: varchar(780)
-        description: Billing State (Billing State)
-        constraints:
-          - type: not_null
-      - name: billing_street
-        data_type: varchar(780)
-        description: Billing Street (Billing Street)
-        constraints:
-          - type: not_null
-      - name: billing_zipcode
-        data_type: varchar(120)
-        description: Billing Zipcode (Billing Zipcode)
-        constraints:
-          - type: not_null
-      - name: budget_confirmed
-        data_type: boolean
-        description: Budget Confirmed
-        constraints:
-          - type: not_null
-      - name: churn_formula
-        data_type: double precision
-        description: Churn (Formula) (If the opportunity is lost will calculate a
-          negative value for churn)
-        constraints:
-          - type: not_null
-      - name: churn_process_discussed_with_customer
-        data_type: boolean
-        description: Churn process discussed with customer
-        constraints:
-          - type: not_null
-      - name: close_date
-        data_type: date
-        description: Close Date
-        constraints:
-          - type: not_null
-      - name: close_date_minus_last_activity_date
-        data_type: numeric(25,10)
-        description: Close Date minus Last Activity Date
-        constraints:
-          - type: not_null
-      - name: close_month
-        data_type: integer
-        description: Close Month
-        constraints:
-          - type: not_null
-      - name: close_year
-        data_type: integer
-        description: Close Year
-        constraints:
-          - type: not_null
-      - name: closed_won_date_time
-        data_type: timestamp
-        description: Closed Won Date/Time (Used to Capture Closed Won Date and Time)
-        constraints:
-          - type: not_null
-      - name: codesters_diff_migration
-        data_type: boolean
-        description: Codesters Diff Migration (For admins only. Determines if an opp was
-          part of the secondary migration of Codesters/Vidcode records. This
-          field should be deprecated by end of July 2023 at the latest.)
-        constraints:
-          - type: not_null
-      - name: codesters_has_licenses_synced
-        data_type: boolean
-        description: Has Licenses Synced
-        constraints:
-          - type: not_null
-      - name: codesters_number_of_licenses
-        data_type: bigint
-        description: Number of Licenses
-        constraints:
-          - type: not_null
-      - name: codesters_number_of_synced_licenses
-        data_type: bigint
-        description: Number of Synced Licenses
-        constraints:
-          - type: not_null
-      - name: codesters_order_to_be_extended
-        data_type: boolean
-        description: Codesters Order to be Extended (Used as part of the Jun-23 order
-          unenforcement process. Denotes that an opp is an exception to the
-          standard unenforcement process (new licenses created to run 7/1 -
-          10/31) and instead has had their existing licenses extended.)
-        constraints:
-          - type: not_null
-      - name: codesters_order_to_be_unenforced
-        data_type: boolean
-        description: Codesters Order to be Unenforced (Used as part of the Jun-23 order
-          unenforcement process. Denotes that an opp should be unenforced
-          according to standard process (new licenses created to run 7/1 -
-          10/31).)
-        constraints:
-          - type: not_null
-      - name: codesters_renewal
-        data_type: boolean
-        description: Codesters Renewal (Used for breaking out Codesters renewal opps for
-          CSM comp plans)
-        constraints:
-          - type: not_null
-      - name: combined_arr
-        data_type: numeric(38,10)
-        description: Combined ARR
-        constraints:
-          - type: not_null
-      - name: contract_id
-        data_type: varchar(30)
-        description: Contract
-        constraints:
-          - type: not_null
-      - name: created_by_id
-        data_type: varchar(30)
-        description: Created By
-        constraints:
-          - type: not_null
-      - name: created_date
-        data_type: timestamp
-        description: Created Date
-        constraints:
-          - type: not_null
-      - name: created_mon
-        data_type: integer
-        description: Created Month
-        constraints:
-          - type: not_null
-      - name: created_month
-        data_type: date
-        description: Custom Created Date
-        constraints:
-          - type: not_null
-      - name: created_year
-        data_type: integer
-        description: Created Year
-        constraints:
-          - type: not_null
-      - name: csm_email
-        data_type: varchar(400)
-        description: CSM Email
-        constraints:
-          - type: not_null
-      - name: csm_introduced
-        data_type: boolean
-        description: CSM Introduced
-        constraints:
-          - type: not_null
-      - name: csm_name
-        data_type: varchar(380)
-        description: CSM Name
-        constraints:
-          - type: not_null
-      - name: data_deletion_archiving_discussed
-        data_type: boolean
-        description: Data deletion/archiving discussed?
-        constraints:
-          - type: not_null
-      - name: data_quality_description
-        data_type: varchar(70)
-        description: Data Quality Description
-        constraints:
-          - type: not_null
-      - name: data_quality_score
-        data_type: integer
-        description: Data Quality Score
-        constraints:
-          - type: not_null
-      - name: days_open
-        data_type: numeric(25,10)
-        description: Days Open (Number of days that have passed since the opp was created)
-        constraints:
-          - type: not_null
-      - name: days_past_due
-        data_type: numeric(25,10)
-        description: Days Past Due
-        constraints:
-          - type: not_null
-      - name: days_since_last_activity
-        data_type: numeric(25,10)
-        description: Days since last activity
-        constraints:
-          - type: not_null
-      - name: deal_docs_completed
-        data_type: boolean
-        description: Deal Docs Completed?
-        constraints:
-          - type: not_null
-      - name: description
-        data_type: varchar(max)
-        description: Description
-        constraints:
-          - type: not_null
-      - name: disable_auto_renewal_opp
-        data_type: boolean
-        description: Disable Auto Renewal
-        constraints:
-          - type: not_null
-      - name: disable_odc
-        data_type: boolean
-        description: Disable ODC
-        constraints:
-          - type: not_null
-      - name: discovery_completed
-        data_type: boolean
-        description: Discovery Completed
-        constraints:
-          - type: not_null
-      - name: district_business_sub_type
-        data_type: varchar(20)
-        description: District Business Sub Type (Denotes if opp should be considered TX
-          or Non-TX business)
-        constraints:
-          - type: not_null
-      - name: district_enrollment
-        data_type: varchar(40)
-        description: District Enrollment
-        constraints:
-          - type: not_null
-      - name: downsell
-        data_type: double precision
-        description: Downsell (Automatically derives downsell)
-        constraints:
-          - type: not_null
-      - name: end_date
-        data_type: date
-        description: End Date
-        constraints:
-          - type: not_null
-      - name: expected_new_business_arr
-        data_type: double precision
-        description: Expected New Business ARR (captures ARR value based on probability %)
-        constraints:
-          - type: not_null
-      - name: expected_revenue
-        data_type: numeric(35,10)
-        description: Expected Revenue
-        constraints:
-          - type: not_null
-      - name: fire_flow
-        data_type: boolean
-        description: Fire Flow (Fire Flow)
-        constraints:
-          - type: not_null
-      - name: fiscal
-        data_type: varchar(20)
-        description: Fiscal Period
-        constraints:
-          - type: not_null
-      - name: forecast_category
-        data_type: varchar(130)
-        description: Forecast Category
-        constraints:
-          - type: not_null
-      - name: forecast_category_name
-        data_type: varchar(780)
-        description: Forecast Category
-        constraints:
-          - type: not_null
-      - name: gong_gong_count
-        data_type: integer
-        description: Gong Count (Auto computed field that is used in reports for
-          aggregations.)
-        constraints:
-          - type: not_null
-      - name: has_coding_discount
-        data_type: boolean
-        description: Has Coding Discount
-        constraints:
-          - type: not_null
-      - name: has_easy_tech
-        data_type: boolean
-        description: Has EasyTech
-        constraints:
-          - type: not_null
-      - name: has_open_activity
-        data_type: boolean
-        description: Has Open Activity
-        constraints:
-          - type: not_null
-      - name: has_opportunity_line_item
-        data_type: boolean
-        description: Has Line Item
-        constraints:
-          - type: not_null
-      - name: has_overdue_task
-        data_type: boolean
-        description: Has Overdue Task
-        constraints:
-          - type: not_null
-      - name: has_started_with_students
-        data_type: boolean
-        description: Has Started with Students
-        constraints:
-          - type: not_null
-      - name: house_account
-        data_type: boolean
-        description: House Account (Small customer with no assigned Account Manager)
-        constraints:
-          - type: not_null
-      - name: initial_interest
-        data_type: varchar(780)
-        description: Initial Interest (Reason for Initial Interest)
-        constraints:
-          - type: not_null
-      - name: integration_status
-        data_type: varchar(20)
-        description: Integration Status (Integration Status)
-        constraints:
-          - type: not_null
-      - name: international_reseller
-        data_type: boolean
-        description: International Reseller (This checkbox is to facilitate reporting of
-          international reseller account management)
-        constraints:
-          - type: not_null
-      - name: introduction_of_quote
-        data_type: varchar(780)
-        description: Introduction of Quote (Introduction of Quote)
-        constraints:
-          - type: not_null
-      - name: is_closed
-        data_type: boolean
-        description: Closed
-        constraints:
-          - type: not_null
-      - name: is_deleted
-        data_type: boolean
-        description: Deleted
-        constraints:
-          - type: not_null
-      - name: is_pd_resources_offered
-        data_type: boolean
-        description: IS/PD Resources Offered
-        constraints:
-          - type: not_null
-      - name: is_private
-        data_type: boolean
-        description: Private
-        constraints:
-          - type: not_null
-      - name: is_vrbypassed
-        data_type: boolean
-        description: Is VRBypassed (Adding 5 second time delay to avoid validation/flow
-          errors)
-        constraints:
-          - type: not_null
-      - name: is_won
-        data_type: boolean
-        description: Won
-        constraints:
-          - type: not_null
-      - name: jitterbit_fulfilled
-        data_type: boolean
-        description: Jitterbit Fulfilled
-        constraints:
-          - type: not_null
-      - name: last_modified_by_id
-        data_type: varchar(30)
-        description: Last Modified By
-        constraints:
-          - type: not_null
-      - name: last_modified_date
-        data_type: timestamp
-        description: Last Modified Date
-        constraints:
-          - type: not_null
-      - name: last_stage_change_date
-        data_type: timestamp
-        description: Last Stage Change Date
-        constraints:
-          - type: not_null          
-      - name: les_opp
-        data_type: boolean
-        description: Les Opp
-        constraints:
-          - type: not_null
-      - name: license_unenforced
-        data_type: boolean
-        description: License Unenforced
-        constraints:
-          - type: not_null
-      - name: migrated
-        data_type: boolean
-        description: Migrated?
-        constraints:
-          - type: not_null
-      - name: multi_year_arr
-        data_type: numeric(38,10)
-        description: Multi-Year ARR (Roll up summary of all opporunity products with
-          Class of ARR for creating multi-year calculations)
-        constraints:
-          - type: not_null
-      - name: multi_year
-        data_type: boolean
-        description: Dummyfield 2 (Multi-Year QA)
-        constraints:
-          - type: not_null
-      - name: multi_year_discussed
-        data_type: boolean
-        description: Multi-year discussed?
-        constraints:
-          - type: not_null
-      - name: multi_year_order
-        data_type: boolean
-        description: Multi Year Upfront Order?
-        constraints:
-          - type: not_null
-      - name: needs_analysis_conducted
-        data_type: boolean
-        description: Needs analysis conducted
-        constraints:
-          - type: not_null
-      - name: net_suite_order_id
-        data_type: varchar(90)
-        description: NetSuite OrderId
-        constraints:
-          - type: not_null
-      - name: netsuite_id
-        data_type: varchar(780)
-        description: "Netsuite Id (Integrations: Netsuite.)"
-        constraints:
-          - type: not_null
-      - name: new_biz_arr_trigger
-        data_type: numeric(38,10)
-        description: New Biz ARR Trigger
-        constraints:
-          - type: not_null          
-      - name: new_nrr
-        data_type: numeric(38,10)
-        description: NRR New Business
-        constraints:
-          - type: not_null
-      - name: next_step
-        data_type: varchar(780)
-        description: Next Step
-        constraints:
-          - type: not_null
-      - name: nnarr
-        data_type: double precision
-        description: NNARR (Calculates the change in ARR from the previous contract)
-        constraints:
-          - type: not_null
-      - name: no_integration_needed
-        data_type: boolean
-        description: No integration needed
-        constraints:
-          - type: not_null
-      - name: nrr_renewal
-        data_type: numeric(38,10)
-        description: NRR Renewal
-        constraints:
-          - type: not_null
-      - name: number_of_products
-        data_type: bigint
-        description: Number of Products
-        constraints:
-          - type: not_null
-      - name: number_of_schools
-        data_type: double precision
-        description: Number of Schools
-        constraints:
-          - type: not_null          
-      - name: odc_sent
-        data_type: boolean
-        description: ODC Sent
-        constraints:
-          - type: not_null
-      - name: of_months
-        data_type: double precision
-        constraints:
-          - type: not_null    
-      - name: opp_record_type
-        data_type: varchar(20)
-        description: Opp Record Type (Gong does not support using record type as a field
-          we can filter by, therefore we need to duplicate our opportunity
-          record types with a formula field. We can keep this field hidden from
-          users.)
-        constraints:
-          - type: not_null
-      - name: opp_to_be_closed
-        data_type: boolean
-        description: Opp to be Closed
-        constraints:
-          - type: not_null
-      - name: opportunity_number
-        data_type: varchar(100)
-        description: Opportunity Number
-        constraints:
-          - type: not_null
-      - name: opportunity_score_id
-        data_type: varchar(30)
-        description: Opportunity Score
-        constraints:
-          - type: not_null  
-
-
-
-      - name: order_unenforced
-        data_type: boolean
-        description: Order Unenforced (Used as part of the Jun-23 order unenforcement
-          process. Denotes that an opp has been unenforced according to standard
-          process (new licenses created to run 7/1 - 10/31).)
-        constraints:
-          - type: not_null
-      - name: original_close_date
-        data_type: date
-        description: Original Close Date (Original Close Date of Opp)
-        constraints:
-          - type: not_null
-      - name: original_opp_owner
-        data_type: varchar(30)
-        description: Original Opp Owner
-        constraints:
-          - type: not_null
-      - name: otc_email_sent
-        data_type: boolean
-        description: OTC Email Sent
-        constraints:
-          - type: not_null
-      - name: other
-        data_type: boolean
-        description: Dummyfield 1 (Other QA)
-        constraints:
-          - type: not_null
-      - name: owner_closed_won
-        data_type: double precision
-        description: Owner Closed Won
-        constraints:
-          - type: not_null
-      - name: owner_email
-        data_type: varchar(250)
-        description: Owner Email
-        constraints:
-          - type: not_null
-      - name: owner_id
-        data_type: varchar(30)
-        description: Opportunity Owner
-        constraints:
-          - type: not_null
-      - name: owner_open_pipeline
-        data_type: double precision
-        description: Owner Open Pipeline
-        constraints:
-          - type: not_null
-      - name: owner_quota
-        data_type: double precision
-        description: Owner Pipeline Target
-        constraints:
-          - type: not_null
-      - name: owner_role
-        data_type: varchar(250)
-        description: Owner Role
-        constraints:
-          - type: not_null
-      - name: owner_sales_quota
-        data_type: numeric(35,10)
-        description: Owner Sales Quota
-        constraints:
-          - type: not_null
-      - name: payment_terms
-        data_type: varchar(780)
-        description: Payment Terms (Payment term)
-        constraints:
-          - type: not_null
-      - name: pd_scheduled
-        data_type: boolean
-        description: PD Scheduled?
-        constraints:
-          - type: not_null
-      - name: pd_services
-        data_type: boolean
-        description: PD Services (PD Services)
-        constraints:
-          - type: not_null
-      - name: pipeline_needed_to_hit_quota
-        data_type: double precision
-        description: Pipeline Needed to Hit Quota
-        constraints:
-          - type: not_null
-      - name: platform_name
-        data_type: varchar(250)
-        description: Platform Name
-        constraints:
-          - type: not_null
-      - name: po_1
-        data_type: integer
-        description: PO1
-        constraints:
-          - type: not_null
-      - name: po_amount
-        data_type: numeric(35,10)
-        description: PO Amount (PO Amount)
-        constraints:
-          - type: not_null
-      - name: po_amount_matches_primary_quote_amount
-        data_type: boolean
-        description: PO Amount Matches Primary Quote Amount (Checks if PO Amount equals
-          amount on primary quote. If Yes, checks box for true. If No, checkbox
-          remains blank. This is used as a criteria for displaying the
-          screenflow for processing an opportunity.)
-        constraints:
-          - type: not_null
-      - name: po_hold
-        data_type: boolean
-        description: PO Hold (Use by Sales Support to indicate they have received a PO
-          without triggering the PO received email)
-        constraints:
-          - type: not_null
-      - name: po_number
-        data_type: varchar(90)
-        description: PO Number (Po Number)
-        constraints:
-          - type: not_null
-      - name: po_received
-        data_type: boolean
-        description: PO Received
-        constraints:
-          - type: not_null
-      - name: po_received_counter
-        data_type: integer
-        description: PO received counter
-        constraints:
-          - type: not_null
-      - name: po_received_date
-        data_type: date
-        description: PO Received Date (PO Received Date)
-        constraints:
-          - type: not_null
-      - name: price_increase_arr
-        data_type: double precision
-        description: Price Increase ARR
-        constraints:
-          - type: not_null
-      - name: pricebook_2_id
-        data_type: varchar(30)
-        description: Price Book
-        constraints:
-          - type: not_null
-      - name: primary_quote_approved
-        data_type: boolean
-        description: Primary Quote approved (Primary Quote approved checked if status is
-          approved)
-        constraints:
-          - type: not_null
-      - name: probability
-        data_type: double precision
-        description: Probability (%)
-        constraints:
-          - type: not_null
-      - name: progressive_billing
-        data_type: boolean
-        description: Progressive Billing
-        constraints:
-          - type: not_null
-      - name: purchase_level
-        data_type: varchar(20)
-        description: Purchase Level
-        constraints:
-          - type: not_null
-      - name: purchase_level_number
-        data_type: double precision
-        description: Purchase Level (Number)
-        constraints:
-          - type: not_null
-      - name: push_count
-        data_type: bigint
-        description: Push Count
-        constraints:
-          - type: not_null
-      - name: pushed_out
-        data_type: boolean
-        description: Pushed Out
-        constraints:
-          - type: not_null
-      - name: quota
-        data_type: varchar(250)
-        description: Quota
-        constraints:
-          - type: not_null
-      - name: quote_contract_type
-        data_type: varchar(780)
-        description: Quote Contract Type
-        constraints:
-          - type: not_null
-      - name: quote_created_date
-        data_type: date
-        description: Quote created Date
-        constraints:
-          - type: not_null
-      - name: quote_expiry_date
-        data_type: date
-        description: Quote Expiry Date
-        constraints:
-          - type: not_null
-      - name: quote_list_amount
-        data_type: double precision
-        description: Quote List Amount
-        constraints:
-          - type: not_null
-      - name: quote_name
-        data_type: varchar(250)
-        description: Quote name
-        constraints:
-          - type: not_null
-      - name: quote_notes
-        data_type: varchar(780)
-        description: Quote Notes (Quote Notes)
-        constraints:
-          - type: not_null
-      - name: quote_start_date
-        data_type: date
-        description: Quote Start Date
-        constraints:
-          - type: not_null
-      - name: quote_synced
-        data_type: boolean
-        description: Quote Synced
-        constraints:
-          - type: not_null
-      - name: quote_total_discount
-        data_type: double precision
-        description: Quote Total Discount
-        constraints:
-          - type: not_null
-      - name: rai
-        data_type: boolean
-        description: Send RAI (Renewal Advisory Invoice)
-        constraints:
-          - type: not_null
-      - name: readyfor_integration
-        data_type: boolean
-        description: Ready for Integration?
-        constraints:
-          - type: not_null
-      - name: rebuilt_during_migration
-        data_type: boolean
-        description: Rebuilt During Migration (Denotes if this opp was flagged to be
-          rebuilt during migration process)
-        constraints:
-          - type: not_null
-      - name: record_type_id
-        data_type: varchar(30)
-        description: Opportunity Record Type
-        constraints:
-          - type: not_null
-      - name: references_provided
-        data_type: boolean
-        description: References Provided
-        constraints:
-          - type: not_null
-      - name: remaining_quota
-        data_type: double precision
-        description: Remaining Quota
-        constraints:
-          - type: not_null
-      - name: renewable_revenue
-        data_type: numeric(38,10)
-        description: Renewable Revenue
-        constraints:
-          - type: not_null
-      - name: renewal_at_79
-        data_type: numeric(38,10)
-        description: Renewal at 79%
-        constraints:
-          - type: not_null
-      - name: renewal_biz_trigger
-        data_type: numeric(38,10)
-        description: Renewal Biz Trigger
-        constraints:
-          - type: not_null
-      - name: renewal_owner_email
-        data_type: varchar(250)
-        description: Renewal Owner Email
-        constraints:
-          - type: not_null
-      - name: rep_says_go
-        data_type: boolean
-        description: Rep Says Go! (Checking this box includes this opportunity in the
-          forecast for the quarter of the current close date.)
-        constraints:
-          - type: not_null
-      - name: reseller_class_for_les
-        data_type: boolean
-        description: Reseller Class for Les
-        constraints:
-          - type: not_null
-      - name: risk_identified
-        data_type: boolean
-        description: Risk Identified
-        constraints:
-          - type: not_null
-      - name: risk_opportunity
-        data_type: boolean
-        description: Risk opportunity (Pointing out opportunities at risk)
-        constraints:
-          - type: not_null
-      - name: roi_analysis_completed
-        data_type: boolean
-        description: ROI Analysis Completed
-        constraints:
-          - type: not_null
-      - name: running_user_for_reporting
-        data_type: integer
-        description: Running User for Reporting
-        constraints:
-          - type: not_null
-      - name: sales_support_rep
-        data_type: varchar(30)
-        description: Sales Support
-        constraints:
-          - type: not_null
-      - name: sbqq_contracted
-        data_type: boolean
-        description: Contracted (Internal flag used to kick off automatic asset and
-          subscription conversion.)
-        constraints:
-          - type: not_null
-      - name: sbqq_create_contracted_prices
-        data_type: boolean
-        description: Create Contracted Prices (Select this checkbox to create Contracted
-          Prices without creating a Contract.)
-        constraints:
-          - type: not_null
-      - name: sbqq_ordered
-        data_type: boolean
-        description: Ordered (Internal flag that drives automatic order creation.)
-        constraints:
-          - type: not_null
-      - name: sbqq_primary_quote
-        data_type: varchar(30)
-        description: Primary Quote (Points to primary quote on this opportunity.)
-        constraints:
-          - type: not_null
-      - name: sbqq_renewal
-        data_type: boolean
-        description: Renewal (Indicates this opportunity is a renewal opportunity.)
-        constraints:
-          - type: not_null
-      - name: school_year
-        data_type: varchar(780)
-        description: School Year
-        constraints:
-          - type: not_null
-      - name: send_odc
-        data_type: boolean
-        description: Send ODC
-        constraints:
-          - type: not_null
-      - name: set_initial_new_biz_arr_amount
-        data_type: boolean
-        description: Set initial new biz ARR Amount
-        constraints:
-          - type: not_null
-      - name: set_up_for_processing
-        data_type: boolean
-        description: Set up for Processing
-        constraints:
-          - type: not_null
-      - name: source_opp_arr
-        data_type: numeric(38,10)
-        description: Source Opp ARR (ARR from account's most recent Closed Won Opportunity)
-        constraints:
-          - type: not_null
-      - name: spring_promo
-        data_type: boolean
-        description: Spring Promo (Check if Spring Promo pricing was used to incentivize
-          customers to send PO early)
-        constraints:
-          - type: not_null
-      - name: stage_name
-        data_type: varchar(780)
-        description: Stage
-        constraints:
-          - type: not_null
-      - name: stakeholders_confirmed
-        data_type: boolean
-        description: Stakeholders Confirmed (Have you confirmed Interest of all
-          stakeholders?)
-        constraints:
-          - type: not_null
-      - name: start_date
-        data_type: date
-        description: Start Date (This is the date that licenses should start.)
-        constraints:
-          - type: not_null
-      - name: subscription_end_date
-        data_type: date
-        description: Subscription End Date (Subscription End Date)
-        constraints:
-          - type: not_null
-      - name: subscription_start_date
-        data_type: date
-        description: Subscription Start Date (Subscription Start Date)
-        constraints:
-          - type: not_null
-      - name: subscription_term
-        data_type: double precision
-        description: Subscription Term
-        constraints:
-          - type: not_null
-      - name: success_plan_agreed_upon
-        data_type: boolean
-        description: Success Plan Agreed Upon?
-        constraints:
-          - type: not_null
-      - name: success_plan_shared
-        data_type: boolean
-        description: Success Plan Shared
-        constraints:
-          - type: not_null
-      - name: system_modstamp
-        data_type: timestamp
-        description: System Modstamp
-        constraints:
-          - type: not_null
-      - name: test_account
-        data_type: boolean
-        description: Test Account (Returns the value of 'Test Account' from the account
-          object. Used for filtering list views for forecasting)
-        constraints:
-          - type: not_null
-      - name: total_arr_bookings
-        data_type: numeric(38,10)
-        description: Total ARR Bookings (Captures renewal ARR + Upsell ARR)
-        constraints:
-          - type: not_null
-      - name: total_credit_from_opp_product
-        data_type: double precision
-        description: Total credit from opp Product (Total Credit from opp Product)
-        constraints:
-          - type: not_null
-      - name: total_opportunity_quantity
-        data_type: double precision
-        description: Quantity
-        constraints:
-          - type: not_null
-      - name: training_recipient
-        data_type: varchar(250)
-        description: Training Recipient (Training Recipient)
-        constraints:
-          - type: not_null
-      - name: training_session_created
-        data_type: boolean
-        description: Training Session created (Training Session created)
-        constraints:
-          - type: not_null
-      - name: trigger_time_05
-        data_type: timestamp
-        description: Trigger Time 05
-        constraints:
-          - type: not_null
-      - name: trigger_time_06
-        data_type: timestamp
-        description: Trigger Time 06
-        constraints:
-          - type: not_null
-      - name: true_arr
-        data_type: numeric(35,10)
-        description: True ARR (Denotes the true ARR value of an opportunity.  Populated
-          by a scheduled flow to allow for roll-up summary to be used on the
-          account object to report on true ARR)
-        constraints:
-          - type: not_null
-      - name: true_arr_formula
-        data_type: double precision
-        description: True ARR (Formula) (Looks at Override ARR and if that field is
-          greater than zero, returns Override, else returns Source Opp ARR from
-          previous contract)
-        constraints:
-          - type: not_null
-      - name: true_renewal_arr
-        data_type: double precision
-        description: True Renewal ARR
-        constraints:
-          - type: not_null
-      - name: type
-        data_type: varchar(780)
-        description: Customer Type
-        constraints:
-          - type: not_null
-      - name: update_close_date
-        data_type: boolean
-        description: Update Close Date
-        constraints:
-          - type: not_null
-      - name: validation_bypass_date_time
-        data_type: timestamp
-        description: ValidationBypassDateTime (Adding delay to avoid flows and
-          validation rules running at the same time and erroring out
-          https://admin.salesforce.com/blog/2022/how-i-solved-it-bypass-validation-rules-in-flows)
-        constraints:
-          - type: not_null
-      - name: variance
-        data_type: numeric(36,10)
-        description: Variance (Variance of Opp amount and PO amount)
-        constraints:
-          - type: not_null
-      - name: vendor_of_choice
-        data_type: boolean
-        description: Vendor of Choice
-        constraints:
-          - type: not_null
-      - name: verbal_commitment
-        data_type: boolean
-        description: Verbal Commitment
-        constraints:
-          - type: not_null
-      - name: x_1_st_contact
-        data_type: varchar(30)
-        description: 1st Contact
-        constraints:
-          - type: not_null
-      - name: x_1_st_contact_email
-        data_type: varchar(250)
-        description: 1st Contact Email
-        constraints:
-          - type: not_null
-      - name: x_1_st_contact_name
-        data_type: varchar(780)
-        description: 1st Contact Name
-        constraints:
-          - type: not_null
-      - name: x_1_st_contact_role
-        data_type: varchar(780)
-        description: 1st Contact Role
-        constraints:
-          - type: not_null
-      - name: x_18_for_12
-        data_type: boolean
-        description: 18 for 12
-        constraints:
-          - type: not_null
-      - name: x_30_days_from_being_closed_lost
-        data_type: boolean
-        description: 30 Days from being Closed Lost
-        constraints:
-          - type: not_null
-      - name: loaddate
-        data_type: timestamp
-        description: The datetime the record was loaded
-        constraints:
-          - type: not_null                        
+- name: fact_opportunity
+  description: Fact Opportunity (Salesforce Opportunity table)
+  config:
+    contract:
+      enforced: true
+    tags:
+    - fact
+  columns:
+  - name: opportunity_id
+    data_type: varchar(300)
+    description: Primary Key of FACT_OPPORTUNITY. It`s Salesforce Opportunity ID column
+    constraints:
+    - type: not_null
+    - type: primary_key
+      warn_unenforced: false
+    tests:
+    - unique
+  - name: name
+    data_type: varchar(300)
+    description: Opportunity Name
+    constraints:
+    - type: not_null
+  - name: account_id
+    data_type: varchar(300)
+    description: DIM_ACCOUNT FK If there are 2 LCOM Organizations - max(account_id)
+      is grouped by SFDC_Account_id
+    constraints:
+    - type: not_null
+    - type: foreign_key
+      reference: ref('dim_account')
+      warn_unenforced: false
+    data_tests:
+    - relationships:
+        to: ref('dim_account')
+        field: account_id
+  - name: sfdc_account_id
+    data_type: varchar(300)
+    description: Salesforce Account ID
+    constraints:
+    - type: not_null
+  - name: account_manager
+    data_type: varchar(30)
+    description: Renewal Owner
+    constraints:
+    - type: not_null
+  - name: account_name_email
+    data_type: varchar(780)
+    description: Account Name (Email)
+    constraints:
+    - type: not_null
+  - name: account_owner_set
+    data_type: boolean
+    description: Account owner set
+    constraints:
+    - type: not_null
+  - name: activity_metric_id
+    data_type: varchar(30)
+    description: Activity Metric
+    constraints:
+    - type: not_null
+  - name: already_booked
+    data_type: boolean
+    description: Already Booked
+    constraints:
+    - type: not_null
+  - name: already_closed_lost
+    data_type: boolean
+    description: Already closed lost
+    constraints:
+    - type: not_null
+  - name: amount
+    data_type: numeric(35,10)
+    description: Amount
+    constraints:
+    - type: not_null
+  - name: amount_won
+    data_type: numeric(35,10)
+    description: Amount Won
+    constraints:
+    - type: not_null
+  - name: arr_bands
+    data_type: varchar(30)
+    description: ARR Bands
+    constraints:
+    - type: not_null
+  - name: arr
+    data_type: double precision
+    description: ARR (implemented to capture ARR value of opportunity)
+    constraints:
+    - type: not_null
+  - name: arr_new_business
+    data_type: numeric(38,10)
+    description: ARR New Business (ARR New Business)
+    constraints:
+    - type: not_null
+  - name: arr_renewal
+    data_type: numeric(38,10)
+    description: ARR Renewal (ARR renewal)
+    constraints:
+    - type: not_null
+  - name: arr_upsell
+    data_type: numeric(38,10)
+    description: ARR Upsell (ARR Upsell)
+    constraints:
+    - type: not_null
+  - name: arr_won
+    data_type: numeric(38,10)
+    description: ARR Won
+    constraints:
+    - type: not_null
+  - name: assessments
+    data_type: boolean
+    description: Assessments (If license has assessments)
+    constraints:
+    - type: not_null
+  - name: billing_addressee
+    data_type: varchar(160)
+    description: Billing Addressee (Billing Addressee)
+    constraints:
+    - type: not_null
+  - name: billing_city
+    data_type: varchar(120)
+    description: Billing City (Billing City)
+    constraints:
+    - type: not_null
+  - name: billing_state
+    data_type: varchar(780)
+    description: Billing State (Billing State)
+    constraints:
+    - type: not_null
+  - name: billing_street
+    data_type: varchar(780)
+    description: Billing Street (Billing Street)
+    constraints:
+    - type: not_null
+  - name: billing_zipcode
+    data_type: varchar(120)
+    description: Billing Zipcode (Billing Zipcode)
+    constraints:
+    - type: not_null
+  - name: churn_formula
+    data_type: double precision
+    description: Churn (Formula) (If the opportunity is lost will calculate a negative
+      value for churn)
+    constraints:
+    - type: not_null
+  - name: churn_process_discussed_with_customer
+    data_type: boolean
+    description: Churn process discussed with customer
+    constraints:
+    - type: not_null
+  - name: close_date
+    data_type: date
+    description: Close Date
+    constraints:
+    - type: not_null
+  - name: close_date_minus_last_activity_date
+    data_type: numeric(25,10)
+    description: Close Date minus Last Activity Date
+    constraints:
+    - type: not_null
+  - name: close_month
+    data_type: integer
+    description: Close Month
+    constraints:
+    - type: not_null
+  - name: close_year
+    data_type: integer
+    description: Close Year
+    constraints:
+    - type: not_null
+  - name: closed_won_date_time
+    data_type: timestamp
+    description: Closed Won Date/Time (Used to Capture Closed Won Date and Time)
+    constraints:
+    - type: not_null
+  - name: codesters_has_licenses_synced
+    data_type: boolean
+    description: Has Licenses Synced
+    constraints:
+    - type: not_null
+  - name: codesters_number_of_licenses
+    data_type: bigint
+    description: Number of Licenses
+    constraints:
+    - type: not_null
+  - name: codesters_number_of_synced_licenses
+    data_type: bigint
+    description: Number of Synced Licenses
+    constraints:
+    - type: not_null
+  - name: codesters_order_to_be_extended
+    data_type: boolean
+    description: Codesters Order to be Extended (Used as part of the Jun-23 order
+      unenforcement process. Denotes that an opp is an exception to the standard unenforcement
+      process (new licenses created to run 7/1 - 10/31) and instead has had their
+      existing licenses extended.)
+    constraints:
+    - type: not_null
+  - name: codesters_order_to_be_unenforced
+    data_type: boolean
+    description: Codesters Order to be Unenforced (Used as part of the Jun-23 order
+      unenforcement process. Denotes that an opp should be unenforced according to
+      standard process (new licenses created to run 7/1 - 10/31).)
+    constraints:
+    - type: not_null
+  - name: codesters_renewal
+    data_type: boolean
+    description: Codesters Renewal (Used for breaking out Codesters renewal opps for
+      CSM comp plans)
+    constraints:
+    - type: not_null
+  - name: combined_arr
+    data_type: numeric(38,10)
+    description: Combined ARR
+    constraints:
+    - type: not_null
+  - name: contract_id
+    data_type: varchar(30)
+    description: Contract
+    constraints:
+    - type: not_null
+  - name: created_by_id
+    data_type: varchar(30)
+    description: Created By
+    constraints:
+    - type: not_null
+  - name: created_date
+    data_type: timestamp
+    description: Created Date
+    constraints:
+    - type: not_null
+  - name: created_mon
+    data_type: integer
+    description: Created Month
+    constraints:
+    - type: not_null
+  - name: created_month
+    data_type: date
+    description: Custom Created Date
+    constraints:
+    - type: not_null
+  - name: created_year
+    data_type: integer
+    description: Created Year
+    constraints:
+    - type: not_null
+  - name: csm_email
+    data_type: varchar(400)
+    description: CSM Email
+    constraints:
+    - type: not_null
+  - name: csm_introduced
+    data_type: boolean
+    description: CSM Introduced
+    constraints:
+    - type: not_null
+  - name: csm_name
+    data_type: varchar(380)
+    description: CSM Name
+    constraints:
+    - type: not_null
+  - name: data_deletion_archiving_discussed
+    data_type: boolean
+    description: Data deletion/archiving discussed?
+    constraints:
+    - type: not_null
+  - name: data_quality_description
+    data_type: varchar(70)
+    description: Data Quality Description
+    constraints:
+    - type: not_null
+  - name: data_quality_score
+    data_type: integer
+    description: Data Quality Score
+    constraints:
+    - type: not_null
+  - name: days_open
+    data_type: numeric(25,10)
+    description: Days Open (Number of days that have passed since the opp was created)
+    constraints:
+    - type: not_null
+  - name: days_past_due
+    data_type: numeric(25,10)
+    description: Days Past Due
+    constraints:
+    - type: not_null
+  - name: days_since_last_activity
+    data_type: numeric(25,10)
+    description: Days since last activity
+    constraints:
+    - type: not_null
+  - name: deal_docs_completed
+    data_type: boolean
+    description: Deal Docs Completed?
+    constraints:
+    - type: not_null
+  - name: description
+    data_type: varchar(max)
+    description: Description
+    constraints:
+    - type: not_null
+  - name: disable_auto_renewal_opp
+    data_type: boolean
+    description: Disable Auto Renewal
+    constraints:
+    - type: not_null
+  - name: disable_odc
+    data_type: boolean
+    description: Disable ODC
+    constraints:
+    - type: not_null
+  - name: district_business_sub_type
+    data_type: varchar(20)
+    description: District Business Sub Type (Denotes if opp should be considered TX
+      or Non-TX business)
+    constraints:
+    - type: not_null
+  - name: district_enrollment
+    data_type: varchar(40)
+    description: District Enrollment
+    constraints:
+    - type: not_null
+  - name: downsell
+    data_type: double precision
+    description: Downsell (Automatically derives downsell)
+    constraints:
+    - type: not_null
+  - name: end_date
+    data_type: date
+    description: End Date
+    constraints:
+    - type: not_null
+  - name: expected_new_business_arr
+    data_type: double precision
+    description: Expected New Business ARR (captures ARR value based on probability
+      %)
+    constraints:
+    - type: not_null
+  - name: expected_revenue
+    data_type: numeric(35,10)
+    description: Expected Revenue
+    constraints:
+    - type: not_null
+  - name: fiscal
+    data_type: varchar(20)
+    description: Fiscal Period
+    constraints:
+    - type: not_null
+  - name: forecast_category
+    data_type: varchar(130)
+    description: Forecast Category
+    constraints:
+    - type: not_null
+  - name: forecast_category_name
+    data_type: varchar(780)
+    description: Forecast Category
+    constraints:
+    - type: not_null
+  - name: has_coding_discount
+    data_type: boolean
+    description: Has Coding Discount
+    constraints:
+    - type: not_null
+  - name: has_easy_tech
+    data_type: boolean
+    description: Has EasyTech
+    constraints:
+    - type: not_null
+  - name: has_open_activity
+    data_type: boolean
+    description: Has Open Activity
+    constraints:
+    - type: not_null
+  - name: has_opportunity_line_item
+    data_type: boolean
+    description: Has Line Item
+    constraints:
+    - type: not_null
+  - name: has_overdue_task
+    data_type: boolean
+    description: Has Overdue Task
+    constraints:
+    - type: not_null
+  - name: has_started_with_students
+    data_type: boolean
+    description: Has Started with Students
+    constraints:
+    - type: not_null
+  - name: house_account
+    data_type: boolean
+    description: House Account (Small customer with no assigned Account Manager)
+    constraints:
+    - type: not_null
+  - name: initial_interest
+    data_type: varchar(780)
+    description: Initial Interest (Reason for Initial Interest)
+    constraints:
+    - type: not_null
+  - name: international_reseller
+    data_type: boolean
+    description: International Reseller (This checkbox is to facilitate reporting
+      of international reseller account management)
+    constraints:
+    - type: not_null
+  - name: introduction_of_quote
+    data_type: varchar(780)
+    description: Introduction of Quote (Introduction of Quote)
+    constraints:
+    - type: not_null
+  - name: is_closed
+    data_type: boolean
+    description: Closed
+    constraints:
+    - type: not_null
+  - name: is_pd_resources_offered
+    data_type: boolean
+    description: IS/PD Resources Offered
+    constraints:
+    - type: not_null
+  - name: is_won
+    data_type: boolean
+    description: Won
+    constraints:
+    - type: not_null
+  - name: jitterbit_fulfilled
+    data_type: boolean
+    description: Jitterbit Fulfilled
+    constraints:
+    - type: not_null
+  - name: last_modified_by_id
+    data_type: varchar(30)
+    description: Last Modified By
+    constraints:
+    - type: not_null
+  - name: last_modified_date
+    data_type: timestamp
+    description: Last Modified Date
+    constraints:
+    - type: not_null
+  - name: last_stage_change_date
+    data_type: timestamp
+    description: Last Stage Change Date
+    constraints:
+    - type: not_null
+  - name: les_opp
+    data_type: boolean
+    description: Les Opp
+    constraints:
+    - type: not_null
+  - name: license_unenforced
+    data_type: boolean
+    description: License Unenforced
+    constraints:
+    - type: not_null
+  - name: migrated
+    data_type: boolean
+    description: Migrated?
+    constraints:
+    - type: not_null
+  - name: multi_year_arr
+    data_type: numeric(38,10)
+    description: Multi-Year ARR (Roll up summary of all opporunity products with Class
+      of ARR for creating multi-year calculations)
+    constraints:
+    - type: not_null
+  - name: multi_year
+    data_type: boolean
+    description: Dummyfield 2 (Multi-Year QA)
+    constraints:
+    - type: not_null
+  - name: multi_year_discussed
+    data_type: boolean
+    description: Multi-year discussed?
+    constraints:
+    - type: not_null
+  - name: multi_year_order
+    data_type: boolean
+    description: Multi Year Upfront Order?
+    constraints:
+    - type: not_null
+  - name: needs_analysis_conducted
+    data_type: boolean
+    description: Needs analysis conducted
+    constraints:
+    - type: not_null
+  - name: net_suite_order_id
+    data_type: varchar(90)
+    description: NetSuite OrderId
+    constraints:
+    - type: not_null
+  - name: netsuite_id
+    data_type: varchar(780)
+    description: 'Netsuite Id (Integrations: Netsuite.)'
+    constraints:
+    - type: not_null
+  - name: new_biz_arr_trigger
+    data_type: numeric(38,10)
+    description: New Biz ARR Trigger
+    constraints:
+    - type: not_null
+  - name: next_step
+    data_type: varchar(780)
+    description: Next Step
+    constraints:
+    - type: not_null
+  - name: nnarr
+    data_type: double precision
+    description: NNARR (Calculates the change in ARR from the previous contract)
+    constraints:
+    - type: not_null
+  - name: no_integration_needed
+    data_type: boolean
+    description: No integration needed
+    constraints:
+    - type: not_null
+  - name: nrr_renewal
+    data_type: numeric(38,10)
+    description: NRR Renewal
+    constraints:
+    - type: not_null
+  - name: number_of_products
+    data_type: bigint
+    description: Number of Products
+    constraints:
+    - type: not_null
+  - name: number_of_schools
+    data_type: double precision
+    description: Number of Schools
+    constraints:
+    - type: not_null
+  - name: odc_sent
+    data_type: boolean
+    description: ODC Sent
+    constraints:
+    - type: not_null
+  - name: of_months
+    data_type: double precision
+    constraints:
+    - type: not_null
+  - name: opp_record_type
+    data_type: varchar(20)
+    description: Opp Record Type (Gong does not support using record type as a field
+      we can filter by, therefore we need to duplicate our opportunity record types
+      with a formula field. We can keep this field hidden from users.)
+    constraints:
+    - type: not_null
+  - name: opp_to_be_closed
+    data_type: boolean
+    description: Opp to be Closed
+    constraints:
+    - type: not_null
+  - name: opportunity_number
+    data_type: varchar(100)
+    description: Opportunity Number
+    constraints:
+    - type: not_null
+  - name: opportunity_score_id
+    data_type: varchar(30)
+    description: Opportunity Score
+    constraints:
+    - type: not_null
+  - name: order_unenforced
+    data_type: boolean
+    description: Order Unenforced (Used as part of the Jun-23 order unenforcement
+      process. Denotes that an opp has been unenforced according to standard process
+      (new licenses created to run 7/1 - 10/31).)
+    constraints:
+    - type: not_null
+  - name: original_close_date
+    data_type: date
+    description: Original Close Date (Original Close Date of Opp)
+    constraints:
+    - type: not_null
+  - name: original_opp_owner
+    data_type: varchar(30)
+    description: Original Opp Owner
+    constraints:
+    - type: not_null
+  - name: otc_email_sent
+    data_type: boolean
+    description: OTC Email Sent
+    constraints:
+    - type: not_null
+  - name: other
+    data_type: boolean
+    description: Dummyfield 1 (Other QA)
+    constraints:
+    - type: not_null
+  - name: owner_closed_won
+    data_type: double precision
+    description: Owner Closed Won
+    constraints:
+    - type: not_null
+  - name: owner_email
+    data_type: varchar(250)
+    description: Owner Email
+    constraints:
+    - type: not_null
+  - name: owner_id
+    data_type: varchar(30)
+    description: Opportunity Owner
+    constraints:
+    - type: not_null
+  - name: owner_open_pipeline
+    data_type: double precision
+    description: Owner Open Pipeline
+    constraints:
+    - type: not_null
+  - name: owner_quota
+    data_type: double precision
+    description: Owner Pipeline Target
+    constraints:
+    - type: not_null
+  - name: owner_role
+    data_type: varchar(250)
+    description: Owner Role
+    constraints:
+    - type: not_null
+  - name: owner_sales_quota
+    data_type: numeric(35,10)
+    description: Owner Sales Quota
+    constraints:
+    - type: not_null
+  - name: payment_terms
+    data_type: varchar(780)
+    description: Payment Terms (Payment term)
+    constraints:
+    - type: not_null
+  - name: pd_scheduled
+    data_type: boolean
+    description: PD Scheduled?
+    constraints:
+    - type: not_null
+  - name: pd_services
+    data_type: boolean
+    description: PD Services (PD Services)
+    constraints:
+    - type: not_null
+  - name: pipeline_needed_to_hit_quota
+    data_type: double precision
+    description: Pipeline Needed to Hit Quota
+    constraints:
+    - type: not_null
+  - name: platform_name
+    data_type: varchar(250)
+    description: Platform Name
+    constraints:
+    - type: not_null
+  - name: po_amount
+    data_type: numeric(35,10)
+    description: PO Amount (PO Amount)
+    constraints:
+    - type: not_null
+  - name: po_amount_matches_primary_quote_amount
+    data_type: boolean
+    description: PO Amount Matches Primary Quote Amount (Checks if PO Amount equals
+      amount on primary quote. If Yes, checks box for true. If No, checkbox remains
+      blank. This is used as a criteria for displaying the screenflow for processing
+      an opportunity.)
+    constraints:
+    - type: not_null
+  - name: po_hold
+    data_type: boolean
+    description: PO Hold (Use by Sales Support to indicate they have received a PO
+      without triggering the PO received email)
+    constraints:
+    - type: not_null
+  - name: po_number
+    data_type: varchar(90)
+    description: PO Number (Po Number)
+    constraints:
+    - type: not_null
+  - name: po_received
+    data_type: boolean
+    description: PO Received
+    constraints:
+    - type: not_null
+  - name: po_received_counter
+    data_type: integer
+    description: PO received counter
+    constraints:
+    - type: not_null
+  - name: po_received_date
+    data_type: date
+    description: PO Received Date (PO Received Date)
+    constraints:
+    - type: not_null
+  - name: price_increase_arr
+    data_type: double precision
+    description: Price Increase ARR
+    constraints:
+    - type: not_null
+  - name: pricebook_2_id
+    data_type: varchar(30)
+    description: Price Book
+    constraints:
+    - type: not_null
+  - name: primary_quote_approved
+    data_type: boolean
+    description: Primary Quote approved (Primary Quote approved checked if status
+      is approved)
+    constraints:
+    - type: not_null
+  - name: probability
+    data_type: double precision
+    description: Probability (%)
+    constraints:
+    - type: not_null
+  - name: progressive_billing
+    data_type: boolean
+    description: Progressive Billing
+    constraints:
+    - type: not_null
+  - name: purchase_level
+    data_type: varchar(20)
+    description: Purchase Level
+    constraints:
+    - type: not_null
+  - name: purchase_level_number
+    data_type: double precision
+    description: Purchase Level (Number)
+    constraints:
+    - type: not_null
+  - name: push_count
+    data_type: bigint
+    description: Push Count
+    constraints:
+    - type: not_null
+  - name: pushed_out
+    data_type: boolean
+    description: Pushed Out
+    constraints:
+    - type: not_null
+  - name: quota
+    data_type: varchar(250)
+    description: Quota
+    constraints:
+    - type: not_null
+  - name: quote_contract_type
+    data_type: varchar(780)
+    description: Quote Contract Type
+    constraints:
+    - type: not_null
+  - name: quote_created_date
+    data_type: date
+    description: Quote created Date
+    constraints:
+    - type: not_null
+  - name: quote_expiry_date
+    data_type: date
+    description: Quote Expiry Date
+    constraints:
+    - type: not_null
+  - name: quote_list_amount
+    data_type: double precision
+    description: Quote List Amount
+    constraints:
+    - type: not_null
+  - name: quote_name
+    data_type: varchar(250)
+    description: Quote name
+    constraints:
+    - type: not_null
+  - name: quote_notes
+    data_type: varchar(780)
+    description: Quote Notes (Quote Notes)
+    constraints:
+    - type: not_null
+  - name: quote_start_date
+    data_type: date
+    description: Quote Start Date
+    constraints:
+    - type: not_null
+  - name: quote_synced
+    data_type: boolean
+    description: Quote Synced
+    constraints:
+    - type: not_null
+  - name: quote_total_discount
+    data_type: double precision
+    description: Quote Total Discount
+    constraints:
+    - type: not_null
+  - name: rai
+    data_type: boolean
+    description: Send RAI (Renewal Advisory Invoice)
+    constraints:
+    - type: not_null
+  - name: rebuilt_during_migration
+    data_type: boolean
+    description: Rebuilt During Migration (Denotes if this opp was flagged to be rebuilt
+      during migration process)
+    constraints:
+    - type: not_null
+  - name: record_type_id
+    data_type: varchar(30)
+    description: Opportunity Record Type
+    constraints:
+    - type: not_null
+  - name: references_provided
+    data_type: boolean
+    description: References Provided
+    constraints:
+    - type: not_null
+  - name: remaining_quota
+    data_type: double precision
+    description: Remaining Quota
+    constraints:
+    - type: not_null
+  - name: renewable_revenue
+    data_type: numeric(38,10)
+    description: Renewable Revenue
+    constraints:
+    - type: not_null
+  - name: renewal_at_79
+    data_type: numeric(38,10)
+    description: Renewal at 79%
+    constraints:
+    - type: not_null
+  - name: renewal_biz_trigger
+    data_type: numeric(38,10)
+    description: Renewal Biz Trigger
+    constraints:
+    - type: not_null
+  - name: renewal_owner_email
+    data_type: varchar(250)
+    description: Renewal Owner Email
+    constraints:
+    - type: not_null
+  - name: rep_says_go
+    data_type: boolean
+    description: Rep Says Go! (Checking this box includes this opportunity in the
+      forecast for the quarter of the current close date.)
+    constraints:
+    - type: not_null
+  - name: reseller_class_for_les
+    data_type: boolean
+    description: Reseller Class for Les
+    constraints:
+    - type: not_null
+  - name: risk_identified
+    data_type: boolean
+    description: Risk Identified
+    constraints:
+    - type: not_null
+  - name: risk_opportunity
+    data_type: boolean
+    description: Risk opportunity (Pointing out opportunities at risk)
+    constraints:
+    - type: not_null
+  - name: sales_support_rep
+    data_type: varchar(30)
+    description: Sales Support
+    constraints:
+    - type: not_null
+  - name: sbqq_contracted
+    data_type: boolean
+    description: Contracted (Internal flag used to kick off automatic asset and subscription
+      conversion.)
+    constraints:
+    - type: not_null
+  - name: sbqq_ordered
+    data_type: boolean
+    description: Ordered (Internal flag that drives automatic order creation.)
+    constraints:
+    - type: not_null
+  - name: sbqq_primary_quote
+    data_type: varchar(30)
+    description: Primary Quote (Points to primary quote on this opportunity.)
+    constraints:
+    - type: not_null
+  - name: sbqq_renewal
+    data_type: boolean
+    description: Renewal (Indicates this opportunity is a renewal opportunity.)
+    constraints:
+    - type: not_null
+  - name: school_year
+    data_type: varchar(780)
+    description: School Year
+    constraints:
+    - type: not_null
+  - name: send_odc
+    data_type: boolean
+    description: Send ODC
+    constraints:
+    - type: not_null
+  - name: set_initial_new_biz_arr_amount
+    data_type: boolean
+    description: Set initial new biz ARR Amount
+    constraints:
+    - type: not_null
+  - name: set_up_for_processing
+    data_type: boolean
+    description: Set up for Processing
+    constraints:
+    - type: not_null
+  - name: source_opp_arr
+    data_type: numeric(38,10)
+    description: Source Opp ARR (ARR from account's most recent Closed Won Opportunity)
+    constraints:
+    - type: not_null
+  - name: spring_promo
+    data_type: boolean
+    description: Spring Promo (Check if Spring Promo pricing was used to incentivize
+      customers to send PO early)
+    constraints:
+    - type: not_null
+  - name: stage_name
+    data_type: varchar(780)
+    description: Stage
+    constraints:
+    - type: not_null
+  - name: stakeholders_confirmed
+    data_type: boolean
+    description: Stakeholders Confirmed (Have you confirmed Interest of all stakeholders?)
+    constraints:
+    - type: not_null
+  - name: start_date
+    data_type: date
+    description: Start Date (This is the date that licenses should start.)
+    constraints:
+    - type: not_null
+  - name: subscription_end_date
+    data_type: date
+    description: Subscription End Date (Subscription End Date)
+    constraints:
+    - type: not_null
+  - name: subscription_start_date
+    data_type: date
+    description: Subscription Start Date (Subscription Start Date)
+    constraints:
+    - type: not_null
+  - name: subscription_term
+    data_type: double precision
+    description: Subscription Term
+    constraints:
+    - type: not_null
+  - name: success_plan_agreed_upon
+    data_type: boolean
+    description: Success Plan Agreed Upon?
+    constraints:
+    - type: not_null
+  - name: success_plan_shared
+    data_type: boolean
+    description: Success Plan Shared
+    constraints:
+    - type: not_null
+  - name: system_modstamp
+    data_type: timestamp
+    description: System Modstamp
+    constraints:
+    - type: not_null
+  - name: test_account
+    data_type: boolean
+    description: Test Account (Returns the value of 'Test Account' from the account
+      object. Used for filtering list views for forecasting)
+    constraints:
+    - type: not_null
+  - name: total_arr_bookings
+    data_type: numeric(38,10)
+    description: Total ARR Bookings (Captures renewal ARR + Upsell ARR)
+    constraints:
+    - type: not_null
+  - name: total_credit_from_opp_product
+    data_type: double precision
+    description: Total credit from opp Product (Total Credit from opp Product)
+    constraints:
+    - type: not_null
+  - name: total_opportunity_quantity
+    data_type: double precision
+    description: Quantity
+    constraints:
+    - type: not_null
+  - name: training_session_created
+    data_type: boolean
+    description: Training Session created (Training Session created)
+    constraints:
+    - type: not_null
+  - name: true_arr
+    data_type: numeric(35,10)
+    description: True ARR (Denotes the true ARR value of an opportunity.  Populated
+      by a scheduled flow to allow for roll-up summary to be used on the account object
+      to report on true ARR)
+    constraints:
+    - type: not_null
+  - name: true_arr_formula
+    data_type: double precision
+    description: True ARR (Formula) (Looks at Override ARR and if that field is greater
+      than zero, returns Override, else returns Source Opp ARR from previous contract)
+    constraints:
+    - type: not_null
+  - name: true_renewal_arr
+    data_type: double precision
+    description: True Renewal ARR
+    constraints:
+    - type: not_null
+  - name: type
+    data_type: varchar(780)
+    description: Customer Type
+    constraints:
+    - type: not_null
+  - name: update_close_date
+    data_type: boolean
+    description: Update Close Date
+    constraints:
+    - type: not_null
+  - name: validation_bypass_date_time
+    data_type: timestamp
+    description: ValidationBypassDateTime (Adding delay to avoid flows and validation
+      rules running at the same time and erroring out https://admin.salesforce.com/blog/2022/how-i-solved-it-bypass-validation-rules-in-flows)
+    constraints:
+    - type: not_null
+  - name: variance
+    data_type: numeric(36,10)
+    description: Variance (Variance of Opp amount and PO amount)
+    constraints:
+    - type: not_null
+  - name: vendor_of_choice
+    data_type: boolean
+    description: Vendor of Choice
+    constraints:
+    - type: not_null
+  - name: verbal_commitment
+    data_type: boolean
+    description: Verbal Commitment
+    constraints:
+    - type: not_null
+  - name: x_1_st_contact
+    data_type: varchar(30)
+    description: 1st Contact
+    constraints:
+    - type: not_null
+  - name: x_1_st_contact_email
+    data_type: varchar(250)
+    description: 1st Contact Email
+    constraints:
+    - type: not_null
+  - name: x_1_st_contact_name
+    data_type: varchar(780)
+    description: 1st Contact Name
+    constraints:
+    - type: not_null
+  - name: x_1_st_contact_role
+    data_type: varchar(780)
+    description: 1st Contact Role
+    constraints:
+    - type: not_null
+  - name: x_18_for_12
+    data_type: boolean
+    description: 18 for 12
+    constraints:
+    - type: not_null
+  - name: x_30_days_from_being_closed_lost
+    data_type: boolean
+    description: 30 Days from being Closed Lost
+    constraints:
+    - type: not_null
+  - name: loaddate
+    data_type: timestamp
+    description: The datetime the record was loaded
+    constraints:
+    - type: not_null
