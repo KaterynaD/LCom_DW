@@ -60,6 +60,18 @@ models:
         description: Last Activity Logged On
       - name: sfdc_number_of_schools
         description: Number of Schools
+      - name: sfdc_no_of_child_account
+        description: Number of Children
+      - name: sfdc_number_of_elementary_schools
+        description: "Number of Elementary Schools (Integrations: Gainsight.)"
+      - name: sfdc_number_of_high_schools
+        description: "Number of High Schools (Integrations: Gainsight.)"
+      - name: sfdc_number_of_k_8_buildings
+        description: Number of K-8 Buildings
+      - name: sfdc_number_of_middle_schools
+        description: "Number of Middle Schools (Integrations: Gainsight.)"
+      - name: sfdc_number_of_title_i_schools
+        description: Number of Title I Schools
       - name: sfdc_parent_gsid
         description: Parent GSID
       - name: sfdc_technology_equipment
