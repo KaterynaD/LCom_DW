@@ -42,8 +42,6 @@ models:
         description: District Faculty - Library/Media FTE
       - name: sfdc_district_kindergarten_teachers
         description: District Kindergarten Teachers
-      - name: sfdc_district_stem
-        description: District STEM
       - name: sfdc_easy_tech_tam
         description: EasyTech TAM
       - name: sfdc_easy_tech_tam_captured

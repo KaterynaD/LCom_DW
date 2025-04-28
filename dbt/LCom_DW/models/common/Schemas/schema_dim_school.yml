@@ -58,8 +58,6 @@ models:
         description: Hi Speed Internet
       - name: sfdc_k_8_district_presence
         description: K-8 District Presence
-      - name: sfdc_migration_tool
-        description: Migration Tool
       - name: sfdc_parent_id
         description: Parent Account
       - name: sfdc_parent_long_name

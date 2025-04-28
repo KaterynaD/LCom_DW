@@ -185,13 +185,7 @@ models:
           - type: not_null
         data_tests:
           - not_null
-      - name: new_nrr
-        data_type: numeric(38,10)
-        description: "NRR New Business"
-        constraints:
-          - type: not_null
-        data_tests:
-          - not_null
+
       - name: nnarr
         data_type: double precision
         description: "NNARR (Calculates the change in ARR from the previous contract)"
