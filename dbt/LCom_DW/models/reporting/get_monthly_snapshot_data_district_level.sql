@@ -22,7 +22,7 @@ from {{ ref("fact_license_order") }} flo
 join {{ ref("dim_district") }} dist
 on flo.organization_district_id = dist.district_id
 --
-join {{ ref("sku") }} s
+join {{ source("common","sku") }} s
 on flo.sku_id = s.skuid
 --
 join {{ ref("dim_license_order_school") }} dlos
