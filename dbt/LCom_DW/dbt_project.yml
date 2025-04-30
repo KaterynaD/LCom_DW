@@ -48,7 +48,7 @@ models:
       +schema: staging      
 
 on-run-start:
-  - "{{ dbt_run_log_insert('dbt run','Test run') }}"
+  - "{{ dbt_run_log_insert('dbt run','Scheduled Prod run') }}"
 
 on-run-end:
   - "{{ dbt_run_log_update('dbt run') }}"

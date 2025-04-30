@@ -1,11 +1,9 @@
 {{
     config(
 
-        materialized='incremental',        
-        on_schema_change='append_new_columns',
+        materialized='table',        
         dist='account_id', 
-        sort='account_id',    
-        pre_hook='truncate table {{ this }}'       
+        sort='account_id'     
         )
 }}
 

@@ -7,3 +7,11 @@ sources:
       identifier: false
     tables:
       - name: dim_calendar
+
+  - name: audit
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: dbt_run_log      

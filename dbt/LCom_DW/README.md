@@ -38,7 +38,7 @@ dbt run-operation create_lc_load_launches_weekly_snapshots
 dbt run-operation create_lc_load_launches_monthly_snapshots
 ```
 - Monthly and weekly snapshots tables are populated via models based on the stored procedures. No need to run the stored procedures using macros
-- When tables are created this macro can be run to create Foreighn Key constraints while we can not do it properly using dbt contract
+- When tables are created this macro can be run to create Foreighn Key constraints while we can not do it properly using dbt contract (was not run in Prod)
 ```
 dbt run-operation create_FKs_set_1
 ```
@@ -66,12 +66,11 @@ dbt seed
 ```
 works only if both tables are "table" materialization
 If one of the table is incremental - it does not work.
-
+"Table" materialization drops manually created FKs (Add in post-hook?)
 I removed constraint declaration from the schema/contract. There is still a test which checks integrity.
-I changed "table" to "incremental" with "truncate table" in "before" hook. It should keep the table but reload content
-I create FK manually once and will see if it works
+
 
 - dbt can not grant select for Redshift roles. It grants directly to users now, but maybe it makes sense to run a Redshift grant in a hook/macros? Or better ALTER DEFAULT PRIVILEGES?
 
-- The largest tables in the project (fact tables from LCom platform content, delivery and usage) were built when conformed dim_account did not exist and distributed by LCom platform organization id. An account, created in Salesforce, must change it's unique id in Dim_Account when a correspondeing organization created in LCom Platform Organization table to be properly distributed. It prevents from using incremental load in dbt because it requires a stable unique key. Most accounts are updated daily in Salesforce and incremental load does not improve performance anyway. But instead of "table" materialization I still use "incremental" with truncate table in "before" hook to keep the table.
+- The largest tables in the project (fact tables from LCom platform content, delivery and usage) were built when conformed dim_account did not exist and distributed by LCom platform organization id. An account, created in Salesforce, must change it's unique id in Dim_Account when a correspondeing organization created in LCom Platform Organization table to be properly distributed. It prevents from using incremental load in dbt because it requires a stable unique key. Most accounts are updated daily in Salesforce and incremental load does not improve performance anyway.
 

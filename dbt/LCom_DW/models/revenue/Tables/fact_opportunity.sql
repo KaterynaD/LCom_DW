@@ -2,10 +2,8 @@
     config(
 
         materialized='incremental',        
-        on_schema_change='append_new_columns',
         sort='start_date', 
-        dist='account_id',    
-        pre_hook='truncate table {{ this }}'       )
+        dist='account_id'      )
 }}
 with data as (
 select 
