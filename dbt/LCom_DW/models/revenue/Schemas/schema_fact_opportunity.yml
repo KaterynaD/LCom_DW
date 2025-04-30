@@ -15,7 +15,7 @@ models:
     - type: not_null
     - type: primary_key
       warn_unenforced: false
-    tests:
+    data_tests:
     - unique
   - name: name
     data_type: varchar(300)
@@ -28,7 +28,7 @@ models:
       is grouped by SFDC_Account_id
     constraints:
     - type: not_null
-    data_tests:
+    data_data_tests:
     - relationships:
         to: ref('dim_account')
         field: account_id
