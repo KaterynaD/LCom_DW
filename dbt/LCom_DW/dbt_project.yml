@@ -33,9 +33,7 @@ models:
     +post-hook:  " {{ dbt_run_log_update() }} "
     +persist_docs:
       relation: true
-      columns: true  
-    audit:
-      +schema: audit        
+      columns: true        
     common:
       +schema: common  
     content_delivery_usage:
