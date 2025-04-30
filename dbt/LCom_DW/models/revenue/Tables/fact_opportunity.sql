@@ -1,7 +1,7 @@
 {{
     config(
 
-        materialized='incremental',        
+        materialized='table',        
         sort='start_date', 
         dist='account_id'      )
 }}
