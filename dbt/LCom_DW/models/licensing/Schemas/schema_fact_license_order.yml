@@ -23,7 +23,7 @@ models:
           - type: not_null
           - type: primary_key
             warn_unenforced: false
-        tests:
+        data_tests:
           - unique
 
       - name: sku_id
@@ -37,7 +37,7 @@ models:
         description: DIM_ACCOUNT FK
         constraints:
           - type: not_null
-        data_tests:
+        data_data_tests:
           - relationships:
               to: ref('dim_account')
               field: account_id      
