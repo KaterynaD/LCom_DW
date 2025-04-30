@@ -37,9 +37,6 @@ models:
         description: DIM_ACCOUNT FK
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
         data_tests:
           - relationships:
               to: ref('dim_account')

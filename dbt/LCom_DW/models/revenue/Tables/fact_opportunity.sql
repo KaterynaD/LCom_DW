@@ -1,9 +1,11 @@
 {{
     config(
 
-        materialized='table',        
+        materialized='incremental',        
+        on_schema_change='append_new_columns',
         sort='start_date', 
-        dist='account_id'    )
+        dist='account_id',    
+        pre_hook='truncate table {{ this }}'       )
 }}
 with data as (
 select 
@@ -174,6 +176,7 @@ isnull(o.sbqq_contracted_c, {{ var("default_boolean") }}) as sbqq_contracted ,
 isnull(o.sbqq_ordered_c, {{ var("default_boolean") }}) as sbqq_ordered ,
 isnull(o.sbqq_primary_quote_c,   '{{ var("default_varchar") }}') as sbqq_primary_quote ,
 isnull(o.sbqq_renewal_c, {{ var("default_boolean") }}) as sbqq_renewal ,
+isnull(o.school_list_c,   '{{ var("default_varchar") }}') as school_list ,
 isnull(o.school_year_c,   '{{ var("default_varchar") }}') as school_year ,
 isnull(o.send_odc_c, {{ var("default_boolean") }}) as send_odc ,
 isnull(o.set_initial_new_biz_arr_amount_c, {{ var("default_boolean") }}) as set_initial_new_biz_arr_amount ,
@@ -383,6 +386,7 @@ sbqq_ordered::boolean	,
 sbqq_primary_quote::varchar(30)	,
 sbqq_renewal::boolean	,
 school_year::varchar(780)	,
+school_list::varchar(max)	,
 send_odc::boolean	,
 set_initial_new_biz_arr_amount::boolean	,
 set_up_for_processing::boolean	,

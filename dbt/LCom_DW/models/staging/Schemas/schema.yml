@@ -1,7 +1,7 @@
 ---
 version: 2
 models:
-  - name: lcom_sfdc_acccount_mapping
+  - name: lcom_sfdc_account_mapping
     description: Mapping table between content_delivery_usage.dbo.Organization  Salesforce Account tables.
     config:
       contract:

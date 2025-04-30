@@ -28,13 +28,11 @@ models:
       is grouped by SFDC_Account_id
     constraints:
     - type: not_null
-    - type: foreign_key
-      reference: ref('dim_account')
-      warn_unenforced: false
     data_tests:
     - relationships:
         to: ref('dim_account')
         field: account_id
+        
   - name: sfdc_account_id
     data_type: varchar(300)
     description: Salesforce Account ID
@@ -880,6 +878,11 @@ models:
   - name: school_year
     data_type: varchar(780)
     description: School Year
+    constraints:
+    - type: not_null
+  - name: school_list
+    data_type: varchar(max)
+    description: School List
     constraints:
     - type: not_null
   - name: send_odc

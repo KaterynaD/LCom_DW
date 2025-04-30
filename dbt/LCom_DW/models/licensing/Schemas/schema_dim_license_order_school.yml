@@ -29,9 +29,6 @@ models:
         description: Foreign key to DIM_ACCOUNT. Represents the district organization.
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
         tests:
           - relationships:
               to: ref('dim_account')
@@ -42,9 +39,6 @@ models:
         description: Foreign key to DIM_ACCOUNT. Represents the school organization.
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
         tests:
           - relationships:
               to: ref('dim_account')

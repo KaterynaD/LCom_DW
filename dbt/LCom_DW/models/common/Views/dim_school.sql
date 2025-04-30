@@ -69,10 +69,9 @@ SFDC_urban_rural,
 SFDC_state_initiative_district,
 SFDC_district_state_initiative_district,
 SFDC_state_eligible_or_initiative_district,
+isHighSchool,
 loaddate
 from {{ ref('dim_account') }}
-where SFDC_org_type = 'School'
-or LCOM_organization_type='district' /*districts like default values instead of*/
-or account_id = '{{ var("default_ID") }}' /*default account*/
+
 
 

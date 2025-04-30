@@ -28,9 +28,7 @@ models:
           can be different for the same school in the historical perspective. Some historical records loaded from csv files do not have districts in dim_account. The referrential integrity test is disabled.
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
+
         data_tests:
           - not_null
           - relationships:
@@ -43,9 +41,7 @@ models:
         description: "content_delivery_usage.dbo.fact_assignment_launch.organization_school_id. Some historical records loaded from csv files do not have schools in dim_account. The referrential integrity test is disabled."
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
+
         data_tests:
           - not_null
           - relationships:

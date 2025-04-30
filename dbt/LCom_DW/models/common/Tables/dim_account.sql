@@ -1,9 +1,11 @@
 {{
     config(
 
-        materialized='table',  
+        materialized='incremental',        
+        on_schema_change='append_new_columns',
         dist='account_id', 
-        sort='account_id'       
+        sort='account_id',    
+        pre_hook='truncate table {{ this }}'       
         )
 }}
 
@@ -373,7 +375,7 @@ on sp.state_province_key=o.state_province_key
 left outer join {{ source("dbo","country") }}  c
 on c.country_code=o.country_code
 -- mapping to Salesforce Accounts
-left outer join {{ ref("lcom_sfdc_acccount_mapping") }} m
+left outer join {{ ref("lcom_sfdc_account_mapping") }} m
 on o.organization_id=m.organization_id
 
 )

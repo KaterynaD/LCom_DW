@@ -57,8 +57,11 @@ models:
           - type: foreign_key
             reference: ref('fact_license_order')
             warn_unenforced: false   
-        tests:
-          - unique
+        data_tests:
+          - not_null        
+          - relationships:
+              to: ref('fact_license_order')
+              field: order_id
 
       - name: sku_id
         data_type: varchar(100)

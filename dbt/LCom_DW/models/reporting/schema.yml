@@ -7,6 +7,12 @@ models:
       tags:
         - rep
 
+  - name: vw_dw_table_report
+    description: row count and last action date for all tables/views in DW schemas
+    config:
+      tags:
+        - rep
+ 
 exposures:
 
   - name: get_monthly_snapshot_data_district_level
