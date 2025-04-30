@@ -10,8 +10,12 @@ COMMENT on schema content_delivery_usage is 'Content_Delivery_Usage schema combi
 create schema licensing;
 COMMENT on schema licensing is 'Licensing schema combines fact and dimensions objects related to Licensing. It may content views based on the original sources in content_delivery_usage database staging objects';
 
+CREATE SCHEMA staging;
+COMMENT on schema staging is 'Staging objects for transformations';
+
+
 create schema reporting;
 COMMENT on schema reporting is 'Reporting schema is for objects (mostly views) created specifically for dashboards, reports, data feeds, etc';
 
 CREATE SCHEMA revenue;
-COMMENT on schema revenue is 'Revenue schema combines fact and dimensions objects related to Revenue, Sales and Fimamce.';
+COMMENT on schema revenue is 'Revenue schema combines fact and dimensions objects related to Revenue, Sales and Finance.';
