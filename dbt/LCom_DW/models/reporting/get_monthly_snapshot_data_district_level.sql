@@ -135,7 +135,6 @@ flo.organization_district_id,
 sum(flo.active_students_YTD) active_students_YTD,
 sum(flo.launches_YTD) launches_YTD
 from {{ ref("fact_launches_monthly_snapshots") }} flo
-where flo.organization_district_id!=flo.organization_school_id
 group by
 flo.mon_lastday,
 flo.organization_district_id
