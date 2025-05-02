@@ -344,7 +344,7 @@ on sfdc_account.parent_id=dist.id
 o.organization_id,
     o.organization_name,
     o.organization_type,
-    o.parent_organization_id,
+    case when len(o.parent_organization_id)<1 then null else o.parent_organization_id end as parent_organization_id,
     p.organization_name  as parent_organization_name,
     o.is_trial,
     o.is_demo,
