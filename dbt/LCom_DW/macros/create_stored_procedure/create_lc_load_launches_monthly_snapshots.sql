@@ -44,15 +44,15 @@ case
  when len(fal.organization_school_id)<2  then
  fal.organization_district_id
 else
- fal.organization_school_id
+ isnull(fal.organization_school_id,fal.organization_district_id)
 end organization_school_id,
 fal.user_account_id,
 count(0) as Launches,
 count(distinct fal.learning_object_id) as DistinctItemsStudent
 from content_delivery_usage.dbo.fact_assignment_launch fal
 join dim_date dt
-on launch_datetime between DATEADD(hour, 7, dt.SchoolYear_StartDate) and DATEADD(hour, 7, dt.mon_lastday)
-AND launch_datetime < DATEADD(hour, 7, SchoolYear_EndDate)
+on TIMEZONE('UTC', launch_datetime) between dt.SchoolYear_StartDate and dt.mon_lastday
+AND TIMEZONE('UTC', launch_datetime) < SchoolYear_EndDate
 group by
 dt.mon_lastday,
 case 
@@ -61,7 +61,7 @@ case
  when len(fal.organization_school_id)<2  then
  fal.organization_district_id
 else
- fal.organization_school_id
+ isnull(fal.organization_school_id,fal.organization_district_id)
 end,
 fal.user_account_id
 )
