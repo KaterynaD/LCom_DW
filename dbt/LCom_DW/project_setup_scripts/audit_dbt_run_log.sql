@@ -1,8 +1,8 @@
 DROP TABLE if exists audit.dbt_run_log;
 CREATE TABLE audit.dbt_run_log (
     run_id  VARCHAR(255) not null,
-    start_time TIMESTAMP  not null,
-    end_time TIMESTAMP,
+    start_time TIMESTAMPTZ  not null,
+    end_time TIMESTAMPTZ,
     operation VARCHAR(255) not null,
     comments VARCHAR(255)
 )
