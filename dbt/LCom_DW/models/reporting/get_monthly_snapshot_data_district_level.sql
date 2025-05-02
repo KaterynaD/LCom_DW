@@ -80,7 +80,7 @@ sum(studentcount) sum_studentcount
 from raw_license_data d
 join cal on (
                 (
-                    cal.mon_lastday between d.StartDate
+                    cal.mon_firstday between d.StartDate
                     and d.ExpirationDate
                 )
                 or d.enforcedaterestrictions = 'n'
@@ -135,6 +135,10 @@ flo.organization_district_id,
 sum(flo.active_students_YTD) active_students_YTD,
 sum(flo.launches_YTD) launches_YTD
 from {{ ref("fact_launches_monthly_snapshots") }} flo
+join {{ ref("dim_district") }} dist
+on flo.organization_district_id = dist.district_id
+where lcom_trial = false
+and lcom_demo= false
 group by
 flo.mon_lastday,
 flo.organization_district_id
