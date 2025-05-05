@@ -6,7 +6,7 @@
 
  {% set update_endtime_operation %}
 
- {% set run_at_date = get_run_at_date() %}
+ {% set now = get_datetime_now() %}
 
 
 {% if operation|length > 1  %} 
@@ -22,7 +22,7 @@
 
  
  UPDATE {{ source("audit","dbt_run_log") }}
- SET end_time='{{ run_at_date }}'
+ SET end_time='{{ now }}'
  WHERE OPERATION='{{ run_operation }}'
  and run_id='{{ invocation_id }}'
  ;
