@@ -6,7 +6,7 @@
 
  {% set insert_starttime_operation %}
 
- {% set run_at_date = get_run_at_date() %}
+ {% set run_at_date = get_datetime_now() %}
 
 {% if operation|length > 1  %} 
   
