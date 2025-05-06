@@ -30,6 +30,8 @@ on flo.order_id = dlos.order_id
 join {{ ref("dim_school") }} sch
 on dlos.organization_school_id = sch.lcom_school_id
 --
+where dist.lcom_trial = false
+and dist.lcom_demo= false
 group by
 case when (dist.sfdc_state_initiative or dist.sfdc_state_initiative_school) then true else false end,
 dist.lcom_country_name,
