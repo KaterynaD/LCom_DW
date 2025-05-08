@@ -363,7 +363,7 @@ models:
     - type: not_null
   - name: sfdc_created_date
     data_type: timestamp
-    description: Created Date
+    description: Created Date in PST
     constraints:
     - type: not_null
   - name: sfdc_csm_email
@@ -864,7 +864,7 @@ models:
     - type: not_null
   - name: sfdc_last_modified_date
     data_type: timestamp
-    description: Last Modified Date
+    description: Last Modified Date in PST
     constraints:
     - type: not_null
   - name: sfdc_last_name
@@ -1112,7 +1112,7 @@ models:
     - type: not_null
   - name: sfdc_org_type
     data_type: varchar(780)
-    description: Org Type
+    description: Org Type - DO NOT USE for School/District. Use sfdc_record_type=L for districts and B for schools in SFDC
     constraints:
     - type: not_null
   - name: sfdc_otc_provisioned
@@ -1269,8 +1269,7 @@ models:
     - type: not_null
   - name: sfdc_record_type
     data_type: varchar(780)
-    description: 'Record Type (L is for district and B is for school  Integrations:
-      Gainsight.)'
+    description: 'Record Type (L is for district and B is for school  Integrations: Gainsight.)'
     constraints:
     - type: not_null
   - name: sfdc_reduced_lunch_student
@@ -1737,6 +1736,6 @@ models:
     - type: not_null
   - name: loaddate
     data_type: timestamp
-    description: The datetime the record was loaded
+    description: The datetime the record was loaded in PST
     constraints:
     - type: not_null
