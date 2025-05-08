@@ -227,7 +227,7 @@ models:
     - type: not_null
   - name: created_date
     data_type: timestamp
-    description: Created Date
+    description: Created Date in PST
     constraints:
     - type: not_null
   - name: created_mon
@@ -435,7 +435,7 @@ models:
     - type: not_null
   - name: last_modified_date
     data_type: timestamp
-    description: Last Modified Date
+    description: Last Modified Date in PST
     constraints:
     - type: not_null
   - name: last_stage_change_date
@@ -1063,6 +1063,6 @@ models:
     - type: not_null
   - name: loaddate
     data_type: timestamp
-    description: The datetime the record was loaded
+    description: The datetime the record was loaded in PST
     constraints:
     - type: not_null
