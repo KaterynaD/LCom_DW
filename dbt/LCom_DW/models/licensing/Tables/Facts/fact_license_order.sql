@@ -11,7 +11,7 @@
 
 select 
 stg.orderid order_id,
-isnull(stg.skuid,   '{{ var("default_ID") }}') as  sku_id,
+isnull(s.sku_id,   '{{ var("default_ID") }}') as  sku_id,
 isnull(a.account_id,   '{{ var("default_ID") }}') as  organization_district_id,
 isnull(stg.startdate, '{{ var("default_date") }}')  as startdate,
 isnull(stg.expirationdate, '{{ var("default_date") }}') as  expirationdate,
@@ -24,6 +24,8 @@ isnull(stg.auditupdatedate, '{{ var("default_date") }}') as auditupdatedate,
 from {{ ref("stg_license_orders") }} stg
 left outer join {{ ref("dim_account") }} a
 on lower(stg.ownerid) = a.lcom_organization_id
+left outer join {{ ref("dim_lcom_sku") }} s
+on lower(stg.skuid) = s.sku_id
 {% if is_incremental() %}
  where coalesce(stg.auditupdatedate,'1900-01-01') >= (select coalesce(max(t.auditupdatedate),'1900-01-01') from {{ this }} t)
 {% endif %}

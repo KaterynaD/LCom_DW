@@ -31,3 +31,6 @@ sources:
     tables:
       - name: license_order
       - name: license_orderschool
+      - name: sku
+      - name: sku_learning_object_v2
+      - name: sku_suite   

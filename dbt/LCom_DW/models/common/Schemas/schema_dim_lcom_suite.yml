@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: dim_lcom_suite
+    description: LCom Suite Dimension Table
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+    columns:
+      - name: suite_id
+        data_type: varchar(50)
+        description: Unique Suite identifier
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+
+      - name: sfdc_suite_id
+        data_type: varchar(50)
+        description: Salesforce Suite ID
+        constraints:
+          - type: not_null
+
+      - name: suite_name
+        data_type: varchar(250)
+        description: Name of the Suite
+        constraints:
+          - type: not_null
+
+      - name: created_date
+        data_type: timestamp
+        description: PST Timestamp the suite was created in SFDC
+        constraints:
+          - type: not_null
+
+      - name: last_modified_date
+        data_type: timestamp
+        description: PST Timestamp of the last suite modification in SFDC
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded (PST)
+        constraints:
+          - type: not_null

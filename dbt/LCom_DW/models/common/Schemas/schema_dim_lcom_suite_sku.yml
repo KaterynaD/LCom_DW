@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: dim_lcom_suite_sku
+    description: Relationships between LCom Suites and SKUs (Products)
+    config:
+      contract:
+        enforced: true
+    tags:
+      - fact
+
+    columns:
+      - name: suite_id
+        data_type: varchar(50)
+        description: FK to DIM_LCOM_SUITE (Products)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_lcom_suite')
+              field: suite_id
+
+      - name: sku_id
+        data_type: varchar(50)
+        description: FK to DIM_LCOM_PRODUCT
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_lcom_sku')
+              field: sku_id
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded (PST)
+        constraints:
+          - type: not_null

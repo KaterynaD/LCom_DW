@@ -65,11 +65,14 @@ models:
 
       - name: sku_id
         data_type: varchar(100)
-        description: DIM_PRODUCT FK TBD LearningPlatform.dbo.[Order].SkuId
+        description: DIM_LCOM_SKU FK
         constraints:
           - type: not_null
         data_tests:
-          - not_null             
+          - not_null   
+          - relationships:
+              to: ref('dim_lcom_sku')
+              field: sku_id                     
 
       - name: organization_district_id
         data_type: varchar(300)

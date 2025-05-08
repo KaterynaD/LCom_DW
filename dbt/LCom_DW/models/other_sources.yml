@@ -6,8 +6,7 @@ sources:
       schema: false
       identifier: false
     tables:
-      - name: dim_calendar
-      - name: sku      
+      - name: dim_calendar     
 
   - name: audit
     quoting:

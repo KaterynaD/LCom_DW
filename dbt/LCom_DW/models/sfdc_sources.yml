@@ -11,3 +11,5 @@ sources:
       - name: account
       - name: opportunity
       - name: lcom_organization_c      
+      - name: lcom_suite_c
+      - name: product_2
