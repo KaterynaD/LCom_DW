@@ -12,9 +12,9 @@ vacuum {{ ref('fact_license_order_history') }};
 --
 vacuum {{ ref('fact_opportunity_history') }};
 --
-vacuum {{ ref('dim_license_order_school) }};
-vacuum {{ ref('dim_lcom_sku) }};
-vacuum {{ ref('dim_sfdc_product) }};
+vacuum {{ ref('dim_license_order_school') }};
+vacuum {{ ref('dim_lcom_sku') }};
+vacuum {{ ref('dim_sfdc_product') }};
 --
 
 analyze {{ ref('fact_license_order') }};
