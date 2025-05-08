@@ -72,6 +72,6 @@ SFDC_state_eligible_or_initiative_school,
 loaddate
 --
 from {{ ref('dim_account') }}
-where SFDC_org_type = 'District'
+where SFDC_record_type='L'
 or LCOM_organization_type='district'
 or account_id = '{{ var("default_ID") }}' /*default account*/
