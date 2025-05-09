@@ -2,13 +2,18 @@
 version: 2
 models:
   - name: get_monthly_snapshot_data_district_level
-    description: View to use in Monthly Year over Year dashboard
+    description: View to use in Monthly Year over Year Provisioning Licensing and Utilization dashboard
+    config:
+      tags:
+        - rep
+  - name: get_weekly_snapshot_data_district_level
+    description: View to use in Weekly Provisioning Licensing and Utilization dashboard
     config:
       tags:
         - rep
 
   - name: vw_dw_table_report
-    description: row count and last action date for all tables/views in DW schemas
+    description: row count and last action date for all tabless/views in DW schemas
     config:
       tags:
         - rep
@@ -18,14 +23,14 @@ exposures:
   - name: get_monthly_snapshot_data_district_level
     label: Monthly Year over Year
     type: dashboard
-    maturity: low
-    url: https://10ay.online.tableau.com/#/site/lcomreporting/views/YoyUsage-Final/YoYUsageReport
+    maturity: medium
+    url: https://10ay.online.tableau.com/#/site/lcomreporting/datasources/77890515/connections
     description: >
-      Provisioning Licensing metric for State Program is not ready
+      Provisioning Licensing and Utilization
 
     depends_on:
       - ref('get_monthly_snapshot_data_district_level')
 
     owner:
-      name: Callum McData
-      email: data@jaffleshop.com        
+      name: Kate Drogaieva
+      email: kdrogaieva@learning.com     

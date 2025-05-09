@@ -13,7 +13,7 @@ flo.order_id,
 flo.startdate,
 flo.expirationdate,
 flo.enforcedaterestrictions,
-s.skuname,
+s.sku_name skuname,
 flo.studentcount,
 sum(case when sch.ishighschool then 1 else 0 end) HighSchools_Num,
 count(lcom_school_name) Schools_Num
@@ -23,7 +23,7 @@ join {{ ref("dim_district") }} dist
 on flo.organization_district_id = dist.district_id
 --
 join {{ ref("dim_lcom_sku") }} s
-on flo.sku_id = s.skuid
+on flo.sku_id = s.sku_id
 --
 join {{ ref("dim_license_order_school") }} dlos
 on flo.order_id = dlos.order_id
@@ -43,7 +43,7 @@ flo.order_id,
 flo.startdate,
 flo.expirationdate,
 flo.enforcedaterestrictions,
-s.skuname,
+s.sku_name,
 flo.studentcount
 )
 ,

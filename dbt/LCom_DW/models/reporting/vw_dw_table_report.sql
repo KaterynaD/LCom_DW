@@ -250,43 +250,6 @@ select
 	,MAX(loaddate) as last_action_date
 from licensing.dim_license_order_school
 
-union all
-
-
-
-select
-	'dw' as database_name
-	,'common' as schema_name
-	,'dim_lcom_sku' as table_name
-	,COUNT(*) as row_count
-	,MAX(loaddate) as last_action_date
-from common.dim_lcom_sku
-union all
-
-select
-	'dw' as database_name
-	,'common' as schema_name
-	,'dim_lcom_suite' as table_name
-	,COUNT(*) as row_count
-	,MAX(loaddate) as last_action_date
-from common.dim_lcom_suite
-union all
-
-select
-	'dw' as database_name
-	,'common' as schema_name
-	,'dim_lcom_suite_sku' as table_name
-	,COUNT(*) as row_count
-	,MAX(loaddate) as last_action_date
-from common.dim_lcom_suite_sku
-union all
-select
-	'dw' as database_name
-	,'common' as schema_name
-	,'dim_sfdc_product' as table_name
-	,COUNT(*) as row_count
-	,MAX(loaddate) as last_action_date
-from common.dim_sfdc_product
 ) 
 
 select
