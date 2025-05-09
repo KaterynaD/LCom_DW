@@ -18,13 +18,13 @@ models:
       data_tests:
         - unique
 
-    - name: product_name
+    - name: product_line
       data_type: varchar(200)
       description: Name of the product. All SKU name ilike EasyTech are "EasyTech" and EasyCode are "EasyCode", not Product Name from the source system
       constraints:
         - type: not_null
 
-    - name: subproduct_name
+    - name: product_name
       data_type: varchar(200)
       description: Name of the subproduct. (Online Safety, Pillars etc)
       constraints:
@@ -33,12 +33,6 @@ models:
     - name: sku_name
       data_type: varchar(150)
       description: Name of the SKU
-      constraints:
-        - type: not_null
-
-    - name: sku_prefix
-      data_type: varchar(100)
-      description: Prefix identifier of the SKU
       constraints:
         - type: not_null
 
@@ -57,24 +51,6 @@ models:
     - name: parent_sku_name
       data_type: varchar(150)
       description: Name of the parent SKU
-      constraints:
-        - type: not_null
-
-    - name: sku_msaid
-      data_type: integer
-      description: Internal MSA identifier for the SKU
-      constraints:
-        - type: not_null
-
-    - name: sku_stem
-      data_type: varchar(100)
-      description: Stem value of the SKU
-      constraints:
-        - type: not_null
-
-    - name: is_hosted
-      data_type: boolean
-      description: Inadicates if the SKU is hosted
       constraints:
         - type: not_null
 
