@@ -25,7 +25,6 @@ isnull(stg.sbqq_hidden_c, {{ var("default_boolean") }}) as sbqq_hidden,
 isnull(stg.sbqq_include_in_maintenance_c, {{ var("default_boolean") }}) as sbqq_include_in_maintenance,
 isnull(stg.is_not_provisioned_c, {{ var("default_boolean") }}) as is_not_provisioned,
 isnull(stg.last_modified_date	 AT TIME ZONE 'PST',	 '{{ var("default_date") }}') as last_modified_date,
-isnull(stg.lcom_suite_c, '{{ var("default_varchar") }}') as lcom_suite_id,
 isnull(lcom_suite.suite_name, '{{ var("default_varchar") }}') as lcom_suite,
 isnull(stg.multiplier_c, {{ var("default_numeric") }}) as multiplier,
 isnull(stg.netsuite_link_c, '{{ var("default_varchar") }}') as netsuite_link,
@@ -65,7 +64,6 @@ select
  {{ var("default_boolean") }} as sbqq_include_in_maintenance,
  {{ var("default_boolean") }} as is_not_provisioned,
  '{{ var("default_date") }}' as last_modified_date,
- '{{ var("default_varchar") }}' as lcom_suite_id, 
  '{{ var("default_varchar") }}' as lcom_suite,
  {{ var("default_numeric") }} as multiplier,
  '{{ var("default_varchar") }}' as netsuite_link,
@@ -99,7 +97,6 @@ select
 	,sbqq_include_in_maintenance::BOOLEAN
 	,is_not_provisioned::BOOLEAN
 	,last_modified_date::TIMESTAMP
-	,lcom_suite_id::VARCHAR(50)
 	,lcom_suite::VARCHAR(250)
 	,multiplier::DOUBLE PRECISION
 	,netsuite_link::VARCHAR(190)

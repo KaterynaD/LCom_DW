@@ -26,7 +26,7 @@ models:
 
     - name: subproduct_name
       data_type: varchar(200)
-      description: Name of the subproduct. (Online Safety)
+      description: Name of the subproduct. (Online Safety, Pillars etc)
       constraints:
         - type: not_null        
 

@@ -85,11 +85,6 @@ models:
     description: Last Modified Date
     constraints:
     - type: not_null
-  - name: lcom_suite_id
-    data_type: varchar(50)
-    description: LCOM Suite Id (The associated LCOM Suite of this product for provisioning
-    constraints:
-    - type: not_null
   - name: lcom_suite
     data_type: varchar(250)
     description: LCOM Suite (The associated LCOM Suite of this product for provisioning

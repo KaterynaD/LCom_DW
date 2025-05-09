@@ -19,8 +19,8 @@ end as product_name,
 case 
 when sku.skuname ilike '%online%safety%' then 'Online Safety'
 when sku.skuname ilike '%keyboarding%' then 'Keyboarding'
-else
-     '{{ var("default_varchar") }}'
+when sku.skuname ilike '%easy%code%pillars%' then 'EasyCode Pillars'
+when sku.skuname ilike '%easy%code%foundations%' then 'EasyCode Foundations'
 end as subproduct_name,
 isnull(sku.skuname,'{{ var("default_varchar") }}') as sku_name,
 isnull(sku.prefix,'{{ var("default_varchar") }}') as sku_prefix,
@@ -63,7 +63,7 @@ select
 select
  sku_id::VARCHAR(50) as sku_id
 ,product_name::VARCHAR(200) as product_name
-,subproduct_name::VARCHAR(200) as subproduct_name
+,isnull(subproduct_name,product_name)::VARCHAR(200) as subproduct_name
 ,sku_name::VARCHAR(150) as sku_name
 ,sku_prefix::VARCHAR(100) as sku_prefix
 ,sku_description::VARCHAR(1100) as sku_description
