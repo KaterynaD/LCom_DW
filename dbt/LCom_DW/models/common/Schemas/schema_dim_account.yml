@@ -1121,11 +1121,6 @@ models:
       blank  Integrations: Gainsight.)'
     constraints:
     - type: not_null
-  - name: sfdc_owner
-    data_type: varchar(430)
-    description: Owner
-    constraints:
-    - type: not_null
   - name: sfdc_owner_id
     data_type: varchar(30)
     description: 'Account Owner (Integrations: Gainsight.)'
