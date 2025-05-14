@@ -138,6 +138,11 @@ models:
     description: Billing Zipcode (Billing Zipcode)
     constraints:
     - type: not_null
+  - name: churn_date
+    data_type: date
+    description: Churn Date
+    constraints:
+    - type: not_null    
   - name: churn_formula
     data_type: double precision
     description: Churn (Formula) (If the opportunity is lost will calculate a negative
@@ -408,6 +413,11 @@ models:
     description: Introduction of Quote (Introduction of Quote)
     constraints:
     - type: not_null
+  - name: invoiced_date
+    data_type: date
+    description: Invoiced Date
+    constraints:
+    - type: not_null    
   - name: is_closed
     data_type: boolean
     description: Closed
