@@ -48,11 +48,6 @@ models:
     description: Account Name (Email)
     constraints:
     - type: not_null
-  - name: account_owner_set
-    data_type: boolean
-    description: Account owner set
-    constraints:
-    - type: not_null
   - name: activity_metric_id
     data_type: varchar(30)
     description: Activity Metric
