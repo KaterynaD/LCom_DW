@@ -287,11 +287,6 @@ models:
     description: Category
     constraints:
     - type: not_null
-  - name: sfdc_check_national_id
-    data_type: boolean
-    description: Check National ID
-    constraints:
-    - type: not_null
   - name: sfdc_closed_district_tx_adoption
     data_type: boolean
     description: Closed District - TX Adoption (If checked, the district is a known
