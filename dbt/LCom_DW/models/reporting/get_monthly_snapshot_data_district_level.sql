@@ -8,6 +8,7 @@ case when (dist.SFDC_state_eligible_or_initiative or dist.SFDC_state_eligible_or
 dist.lcom_country_name district_country,
 dist.lcom_state_province_code district_state,
 dist.lcom_district_name district_name,
+dist.sfdc_district_name sfdc_district_name,
 dist.SFDC_owner_name_text district_owner,
 flo.organization_district_id,
 flo.order_id,
@@ -46,7 +47,8 @@ flo.startdate,
 flo.expirationdate,
 flo.enforcedaterestrictions,
 s.sku_name,
-flo.studentcount
+flo.studentcount,
+dist.sfdc_district_name
 )
 ,
     cal as (
@@ -71,6 +73,7 @@ district_country,
 district_state,
 district_owner,
 district_name,
+sfdc_district_name,
 organization_district_id,
 skuname,
 sum(
@@ -101,6 +104,7 @@ district_country,
 district_state,
 district_owner,
 district_name,
+sfdc_district_name,
 organization_district_id,
 skuname
 )
@@ -116,6 +120,7 @@ state_initiative,
 state_program_eligible,
 district_owner,
 district_name,
+sfdc_district_name,
 organization_district_id,
 case
 when state_initiative then sum(state_initiative_studentcount)
@@ -134,6 +139,7 @@ state_initiative,
 state_program_eligible,
 district_owner,
 district_name,
+sfdc_district_name,
 organization_district_id
 )
 , usage_data as (
@@ -162,6 +168,7 @@ ld.state_initiative,
 ld.state_program_eligible,
 ld.district_owner DistrictOwner,
 ld.district_name DistrictName,
+ld.sfdc_district_name SFDC_DistrictName,
 ld.organization_district_id,
 ld.State_Initiative_License_Provisioned Licenses_Provisioned_District,
 ld.Number_Of_Students,

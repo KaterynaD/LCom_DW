@@ -11,6 +11,7 @@ with raw_license_data as (
             dist.lcom_country_name district_country,
             dist.lcom_state_province_code district_state,
             dist.lcom_district_name district_name,
+            dist.sfdc_district_name sfdc_district_name,
             dist.SFDC_owner_name_text district_owner,
             flo.organization_district_id,
             flo.order_id,
@@ -44,6 +45,7 @@ with raw_license_data as (
             dist.lcom_country_name,
             dist.lcom_state_province_code,
             dist.lcom_district_name,
+            dist.sfdc_district_name,
             dist.SFDC_owner_name_text,
             flo.organization_district_id,
             flo.order_id,
@@ -69,6 +71,7 @@ with raw_license_data as (
             district_state,
             district_owner,
             district_name,
+            sfdc_district_name,
             organization_district_id,
             skuname,
             sum(
@@ -98,6 +101,7 @@ with raw_license_data as (
             district_state,
             district_owner,
             district_name,
+            sfdc_district_name,
             organization_district_id,
             skuname
     ),
@@ -110,6 +114,7 @@ with raw_license_data as (
             state_initiative,
             district_owner,
             district_name,
+            sfdc_district_name,
             organization_district_id,
             case
             when state_initiative then sum(state_initiative_studentcount)
@@ -125,6 +130,7 @@ with raw_license_data as (
             state_initiative,
             district_owner,
             district_name,
+            sfdc_district_name,
             organization_district_id
     ),
     usage_data as (
@@ -150,6 +156,7 @@ with raw_license_data as (
         ld.state_initiative,
         ld.district_owner DistrictOwner,
         ld.district_name DistrictName,
+        ld.sfdc_district_name SFDC_DistrictName,
         ld.organization_district_id,
         ld.State_Initiative_License_Provisioned Licenses_Provisioned_District,
         ld.Number_Of_Students,
