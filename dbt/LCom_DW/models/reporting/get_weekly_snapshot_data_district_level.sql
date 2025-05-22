@@ -161,11 +161,7 @@ with raw_license_data as (
         ld.State_Initiative_License_Provisioned Licenses_Provisioned_District,
         ld.Number_Of_Students,
         isnull(ud.active_students_YTD, 0) active_students_YTD,
-        isnull(ud.launches_YTD, 0) launches_YTD,
-        null Salesforce_Id,
-        null salesforce_DistrictName,
-        null Utilization,
-        'N/A' Schools_with_Licenses
+        isnull(ud.launches_YTD, 0) launches_YTD
     from
         district_license_data ld
         left outer join usage_data ud on ld.organization_district_id = ud.organization_district_id
