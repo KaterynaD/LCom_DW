@@ -1,0 +1,219 @@
+version: 2
+models:
+- name: dim_opportunity_line
+  description: Salesforce opportunity line-level product and pricing information. Bridge dimensin between Fact_Opportunity and DIM_SFDC_Product
+  config:
+    contract:
+      enforced: true
+    tags:
+    - dim
+  columns:
+  - name: opportunity_line_id
+    data_type: VARCHAR(50)
+    description: Primary Key of DIM_OPPORTUNITY_LINE. Opportunity Line Item ID
+    constraints:
+    - type: not_null
+    - type: primary_key
+      warn_unenforced: false
+    data_tests:
+    - unique
+  - name: sfdc_product_id
+    data_type: VARCHAR(50)
+    description: Foreighn Key to DIM_SFDC_Product. Salesforce product
+    constraints:
+    - type: not_null
+    data_data_tests:
+    - relationships:
+        to: ref('dim_sfdc_product')
+        field: sfdc_product_id
+  - name: opportunity_id
+    data_type: VARCHAR(300)
+    description: Foreighn Key to Fact_Opportunity
+    constraints:
+    - type: not_null
+    data_data_tests:
+    - relationships:
+        to: ref('fact_opportunity')
+        field: opportunity_id
+  - name: start_date
+    data_type: DATE
+    description: Start Date
+    constraints:
+    - type: not_null
+  - name: end_date
+    data_type: DATE
+    description: End Date
+    constraints:
+    - type: not_null
+  - name: subscription_term
+    data_type: NUMERIC(35,17)
+    description: Subscription Term (Term of the subscription for this opportunity
+      product)
+    constraints:
+    - type: not_null
+  - name: quantity
+    data_type: INTEGER
+    description: Quantity
+    constraints:
+    - type: not_null
+  - name: total_price
+    data_type: NUMERIC(35,17)
+    description: Total Price
+    constraints:
+    - type: not_null
+  - name: unit_price
+    data_type: NUMERIC(35,17)
+    description: Sales Price
+    constraints:
+    - type: not_null
+  - name: weighted_total_price
+    data_type: NUMERIC(35,17)
+    description: Weighted Total Price (Returns the weighted forecast amount of total
+      price)
+    constraints:
+    - type: not_null
+  - name: combine_new_biz_arr
+    data_type: NUMERIC(36,17)
+    description: Combine New Biz ARR
+    constraints:
+    - type: not_null
+  - name: combine_renewal_arrs
+    data_type: NUMERIC(37,17)
+    description: Combine Renewal ARRs
+    constraints:
+    - type: not_null
+  - name: combine_upsell_arrs
+    data_type: NUMERIC(37,17)
+    description: Combine Upsell ARRs
+    constraints:
+    - type: not_null
+  - name: name
+    data_type: VARCHAR(1200)
+    description: Opportunity Product Name
+    constraints:
+    - type: not_null
+  - name: description
+    data_type: VARCHAR(1200)
+    description: Line Description
+    constraints:
+    - type: not_null
+  - name: netsuite_id
+    data_type: VARCHAR(50)
+    description: Netsuite ID (for Preventing duplicates and integration from Netsuite.)
+    constraints:
+    - type: not_null
+  - name: netsuite_sku
+    data_type: VARCHAR(90)
+    description: Netsuite SKU
+    constraints:
+    - type: not_null
+  - name: no_of_buildings
+    data_type: INTEGER
+    description: No. of Buildings
+    constraints:
+    - type: not_null
+  - name: no_of_licenses
+    data_type: INTEGER
+    description: No. of Licenses
+    constraints:
+    - type: not_null
+  - name: discount
+    data_type: NUMERIC(35,17)
+    description: Discount
+    constraints:
+    - type: not_null
+  - name: discount_applied
+    data_type: VARCHAR(25)
+    description: Discount Applied
+    constraints:
+    - type: not_null
+  - name: easy_tech_arr
+    data_type: NUMERIC(35,17)
+    description: EasyTech ARR
+    constraints:
+    - type: not_null
+  - name: gold_service_on_quote
+    data_type: INTEGER
+    description: Gold Service on quote
+    constraints:
+    - type: not_null
+  - name: is_active_opp_product
+    data_type: BOOLEAN
+    description: IsActiveOppProduct (Denotes if the opportunity product is active)
+    constraints:
+    - type: not_null
+  - name: learning_sbxid
+    data_type: VARCHAR(55)
+    description: LearningSBXID
+    constraints:
+    - type: not_null
+  - name: list_price
+    data_type: NUMERIC(35,17)
+    description: List Price
+    constraints:
+    - type: not_null
+  - name: net_price_display
+    data_type: NUMERIC(35,17)
+    description: Net Price Display
+    constraints:
+    - type: not_null
+  - name: net_unit_price
+    data_type: NUMERIC(35,17)
+    description: Net Unit Price
+    constraints:
+    - type: not_null
+  - name: opp_probability
+    data_type: NUMERIC(35,17)
+    description: Opp Probability (Probability of associated opportunity)
+    constraints:
+    - type: not_null
+  - name: opportunity_product_arr
+    data_type: NUMERIC(35,17)
+    description: Opportunity Product ARR
+    constraints:
+    - type: not_null
+  - name: pricebook_entry_id
+    data_type: VARCHAR(18)
+    description: Price Book Entry
+    constraints:
+    - type: not_null
+  - name: pricebook_id
+    data_type: VARCHAR(18)
+    description: PricebookID
+    constraints:
+    - type: not_null
+  - name: pro_rate_adj_term
+    data_type: NUMERIC(35,17)
+    description: Pro-rate Adj Term
+    constraints:
+    - type: not_null
+  - name: sfdc_product_code
+    data_type: VARCHAR(765)
+    description: ''
+    constraints:
+    - type: not_null
+  - name: sfdc_product_description
+    data_type: VARCHAR(4000)
+    description: ''
+    constraints:
+    - type: not_null
+  - name: sbqq_quote_line
+    data_type: VARCHAR(50)
+    description: Quote Line (Quote line that generated this Opportunity Product.)
+    constraints:
+    - type: not_null
+  - name: created_date
+    data_type: TIMESTAMP WITHOUT TIME ZONE
+    description: Created Date  in PST
+    constraints:
+    - type: not_null
+  - name: last_modified_date
+    data_type: TIMESTAMP WITHOUT TIME ZONE
+    description: Last Modified Date  in PST
+    constraints:
+    - type: not_null
+  - name: loaddate
+    data_type: timestamp
+    description: The datetime the record was loaded in PST
+    constraints:
+    - type: not_null    

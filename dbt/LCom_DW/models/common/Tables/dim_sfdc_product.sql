@@ -1,10 +1,7 @@
 {{
     config(
 
-        materialized='incremental',
-        unique_key=['sfdc_product_id'],
-        incremental_strategy='merge',
-        on_schema_change='append_new_columns',     
+        materialized='table',
         sort='sfdc_product_id', 
         dist='all'
  )  
@@ -45,10 +42,6 @@ isnull(stg.vidcode_org_id_c, '{{ var("default_varchar") }}') as vidcode_org_id
 from {{ source("fivetran_salesforce_quickstart","product_2") }} stg
 left outer join {{ ref("dim_lcom_suite") }} lcom_suite
 on stg.lcom_suite_c = lcom_suite.sfdc_suite_id
-{% if is_incremental() %}
-where coalesce(stg.last_modified_date,'1900-01-01') >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }}  t)
-{% endif %}
-{% if not is_incremental() %}
 union all
 select 
  '{{ var("default_ID") }}' as sfdc_product_id,
@@ -81,7 +74,6 @@ select
  {{ var("default_numeric") }} as sbqq_subscription_term,
  '{{ var("default_varchar") }}' as sbqq_subscription_type,
  '{{ var("default_varchar") }}' as vidcode_org_id
- {% endif %}
 )
 select
      sfdc_product_id::VARCHAR(50)
