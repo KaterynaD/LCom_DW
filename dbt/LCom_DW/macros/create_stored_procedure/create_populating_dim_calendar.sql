@@ -96,21 +96,25 @@ SELECT
         ELSE Mon + 5                -- January (1) to July (7) → 6 to 12
     END SchoolYear_Mon,
     CASE 
-        WHEN DATE_PART(month, cal_date) < 8 
+        WHEN DATE_PART(month, cal_date) < 6 
         THEN (DATE_PART(year, cal_date) - 1)::VARCHAR || '/' || DATE_PART(year, cal_date)::VARCHAR
         ELSE DATE_PART(year, cal_date)::VARCHAR || '/' || (DATE_PART(year, cal_date) + 1)::VARCHAR
     END AS FiscalYear,
     CASE 
-        WHEN DATE_PART(month, cal_date) < 8 
-        THEN TO_DATE((DATE_PART(year, cal_date) - 1)::VARCHAR || '-08-01', 'YYYY-MM-DD')
-        ELSE TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-08-01', 'YYYY-MM-DD')
+        WHEN DATE_PART(month, cal_date) < 6 
+        THEN TO_DATE((DATE_PART(year, cal_date) - 1)::VARCHAR || '-06-01', 'YYYY-MM-DD')
+        ELSE TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-06-01', 'YYYY-MM-DD')
     END AS FiscalYear_StartDate,
     CASE 
-        WHEN DATE_PART(month, cal_date) < 8 
-        THEN TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-07-31', 'YYYY-MM-DD')
-        ELSE TO_DATE((DATE_PART(year, cal_date) + 1)::VARCHAR || '-07-31', 'YYYY-MM-DD')
+        WHEN DATE_PART(month, cal_date) < 5 
+        THEN TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-05-31', 'YYYY-MM-DD')
+        ELSE TO_DATE((DATE_PART(year, cal_date) + 1)::VARCHAR || '-05-31', 'YYYY-MM-DD')
     END AS FiscalYear_EndDate,
-    (((DATE_PART(month, cal_date)::INTEGER - 8 + 12) % 12) / 3 + 1)::INTEGER AS FiscalQuarter,
+    CASE 
+        WHEN Mon >= 6 THEN Mon - 5  -- June (6) to December (12) → 1 to 5
+        ELSE Mon + 7                -- January (1) to May (5) → 6 to 12
+    END FiscalYear_Mon,
+    (((DATE_PART(month, cal_date)::INTEGER - 6 + 12) % 12) / 3 + 1)::INTEGER AS FiscalQuarter,
     (DATE_PART(year, cal_date)::VARCHAR +'0'+ FiscalQuarter::VARCHAR)::INTEGER  AS FiscalQuarter_Year
     ,common.f_USFederalHolidayCalendar(cal_date) AS IsUSFederalHoliday  -- Using the Python UDF
 FROM  stg_calendar;
