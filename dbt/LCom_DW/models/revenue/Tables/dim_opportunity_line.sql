@@ -55,6 +55,7 @@ isnull(ol.unit_price, {{ var("default_numeric") }}) as unit_price	,
 isnull(ol.weighted_total_price_c, {{ var("default_numeric") }}) as weighted_total_price	
 from
 {{ source('fivetran_salesforce_quickstart', 'opportunity_line_item') }} as ol
+where ol.is_deleted=False
 )
 select
      opportunity_line_id::VARCHAR(50) 
