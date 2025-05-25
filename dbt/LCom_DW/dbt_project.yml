@@ -29,6 +29,9 @@ models:
   +grants:  # roles are not supported in Redshift
     select: ['kdrogaieva','ksure','abutler','lgorokhova','xkendall','svcreporting']
   LCom_DW:    
+    +pre-hook:  " {{ dbt_run_log_insert('','Start') }} "
+    +post-hook:  " {{ dbt_run_log_insert('','End') }} "
+  
     +persist_docs:
       relation: true
       columns: true        
@@ -46,17 +49,23 @@ models:
       +schema: staging      
 
 on-run-start:
-  - "{{ dbt_run_log_insert('dbt run','Scheduled Prod run') }}"
+  - "{{ dbt_run_log_insert('dbt run Start') }}"
 
 on-run-end:
-  - "{{ dbt_run_log_update('dbt run') }}"
-
+  - "{{ dbt_run_log_insert('dbt run End ') }}"
 
 vars:
   loaddate: "{{ set_loaddate() }}"
+  processing_mon_year: "Current"
   default_date: "1900-01-01"
   default_varchar: "Unknown"  
   default_numeric: 0  
   default_boolean: False
   default_ID: "00000000-0000-0000-0000-000000000000"
+  run_type: "Scheduled Prod run"      
+
+
+
+
+
   
