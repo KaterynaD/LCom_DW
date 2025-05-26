@@ -28,9 +28,6 @@ quoting:
 models:
   +grants:  # roles are not supported in Redshift
     select: ['kdrogaieva','ksure','abutler','lgorokhova','xkendall','svcreporting']
-  LCom_DW:    
-    +pre-hook:  " {{ dbt_run_log_insert('','Start') }} "
-    +post-hook:  " {{ dbt_run_log_insert('','End') }} "
   
     +persist_docs:
       relation: true
