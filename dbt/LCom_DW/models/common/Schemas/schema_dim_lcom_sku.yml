@@ -18,15 +18,15 @@ models:
       data_tests:
         - unique
 
-    - name: product_line
+    - name: sku_group
       data_type: varchar(200)
-      description: Name of the product. All SKU name ilike EasyTech are "EasyTech" and EasyCode are "EasyCode", not Product Name from the source system
+      description: SKU Groups. "EasyTech","EasyCode" or  "Tech Apps for Texas" by SKU Name, Product Name from LCOM system or "Other"
       constraints:
         - type: not_null
 
-    - name: product_name
+    - name: sku_subgroup
       data_type: varchar(200)
-      description: Name of the subproduct. (Online Safety, Pillars etc)
+      description: SKU SubGroups. (Online Safety, Pillars etc from SKU Name, Product Name from LCOM system or "Other")
       constraints:
         - type: not_null        
 
