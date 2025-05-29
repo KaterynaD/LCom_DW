@@ -34,3 +34,5 @@ sources:
       - name: sku
       - name: sku_learning_object_v2
       - name: sku_suite   
+      - name: sequence      
+      - name: sequence_learning_object                       
