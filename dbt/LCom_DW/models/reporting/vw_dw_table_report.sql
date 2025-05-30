@@ -90,6 +90,10 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from common.dim_lcom_suite_sku
+
+
+
+
 union all
 select
 	'dw' as database_name
@@ -194,6 +198,26 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from content_delivery_usage.dim_lcom_sku_learning_object
+
+
+union all
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'dim_sequence' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.dim_sequence
+
+
+union all
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'dim_sequence_learning_object' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.dim_sequence_learning_object
 
 --revenue
 

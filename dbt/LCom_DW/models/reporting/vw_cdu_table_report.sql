@@ -398,6 +398,27 @@ select
 	,MAX(loaddate) as last_action_date
 from content_delivery_usage.staging.sku
 
+
+union all
+
+select
+	'content_delivery_usage' as database_name
+	,'staging' as schema_name
+	,'sequence' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.staging.sequence
+
+union all
+
+select
+	'content_delivery_usage' as database_name
+	,'staging' as schema_name
+	,'sequence_learning_object' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.staging.sequence_learning_object
+
 union all
 
 select
