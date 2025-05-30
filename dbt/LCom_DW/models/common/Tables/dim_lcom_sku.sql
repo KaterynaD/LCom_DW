@@ -13,16 +13,23 @@
 with data as (
 select 
 lower(sku.skuid) sku_id,
-case when sku.skuname ilike '%easy%tech%' then 'EasyTech'
-     when sku.skuname ilike '%easy%code%' then 'EasyCode'     
-     when sku.skuname ilike '%techapps%for%texas%' then  'Tech Apps for Texas'   
-     else isnull(sku.ProductName,'Other')
+case when sku.skuname ilike '%easy%tech%' then 'EasyTech'  
+     when sku.skuname ilike '%techapps%for%texas%' then  'EasyTech' 
+     when sku.skuname ilike '%online%safety%' then 'EasyTech'
+     when sku.skuname ilike '%keyboarding%' then 'EasyTech'  
+     when sku.skuname ilike '%easy%code%' then 'EasyCode'   
+     when sku.skuname ilike '%pillars%' then 'EasyCode'
+     when sku.skuname ilike '%foundations%' and sku.skuname not ilike '%math%' and sku.skuname not ilike '%science%' then 'EasyCode'
+     else 
+        isnull(sku.ProductName,'Other')
+        --sku.ProductName in ('EasyTech', 'EasyCode', 'Tech Apps for Texas','Online Safety','Keyboarding','EasyCode Pillars','EasyCode Foundations') then  regexp_replace(sku.ProductName, '(.)', '\\1.')
 end as sku_group,
 case 
+when sku.skuname ilike '%techapps%for%texas%' then  'Tech Apps for Texas'
 when sku.skuname ilike '%online%safety%' then 'Online Safety'
 when sku.skuname ilike '%keyboarding%' then 'Keyboarding'
-when sku.skuname ilike '%easy%code%pillars%' then 'EasyCode Pillars'
-when sku.skuname ilike '%easy%code%foundations%' then 'EasyCode Foundations'
+when sku.skuname ilike '%pillars%' then 'EasyCode Pillars'
+when sku.skuname ilike '%foundations%' and sku.skuname not ilike '%math%' and sku.skuname not ilike '%science%' then 'EasyCode Foundations'
 end as sku_subgroup,
 isnull(sku.skuname,'{{ var("default_varchar") }}') as sku_name,
 isnull(sku.description,'{{ var("default_varchar") }}') as sku_description,
