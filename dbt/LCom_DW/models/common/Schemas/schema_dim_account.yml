@@ -12,7 +12,7 @@ models:
   - name: account_id
     data_type: varchar(300)
     description: Primary and Distribution Key of DIM_ACCOUNT. It's organization_id
-      (school or district) or Salesforce Id if not available in LCom Platform
+      (school or district) or Salesforce Id if not available in LCom Platform. The PK in DIM_ACCOUNT is changed from Salesforce Account Id to LCOM Organization Id when 2 entities are joined. DIM_ACCOUNT is re-created each time (Table materialization).
     constraints:
     - type: not_null
     - type: primary_key
@@ -23,7 +23,7 @@ models:
     data_type: varchar(300)
     description: LCOM Organization ID Can be skew with default values if an account
       does not exist in LCOM Platform. Can be used in joins with LCOM related tables
-      but better use Organization_id as a distribution key
+      but better use account_id because it's a distribution key
     constraints:
     - type: not_null
   - name: lcom_organization_name
@@ -114,7 +114,7 @@ models:
       are more then one LCom Organization related to teh same account, there is `dup-`prefix
       in the value. It's possible to have more then one Salesforce Id with `dup-'
       prefix added, but `clean` Salesforce Id is unique and safe to be used in the
-      joins
+      joins. Use account_id in joins because it's a distribution key.
     constraints:
     - type: not_null
     data_tests:
@@ -1541,11 +1541,6 @@ models:
   - name: sfdc_type
     data_type: varchar(780)
     description: Type
-    constraints:
-    - type: not_null
-  - name: sfdc_ultimate_account_lifecycle_stage
-    data_type: varchar(780)
-    description: Ultimate Account Lifecycle Stage
     constraints:
     - type: not_null
   - name: sfdc_ultimate_account_owner
