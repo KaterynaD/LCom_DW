@@ -4,20 +4,7 @@
         materialized='table',        
         dist='account_id', 
         sort='account_id',
-        post_hook=[ 
-                   '{{ create_FK(target.database,"licensing","dim_license_order_school","organization_school_id",model.schema,model.name, "account_id") }}',
-                   '{{ create_FK(target.database,"licensing","dim_license_order_school","organization_district_id",model.schema,model.name, "account_id") }}',
-                   '{{ create_FK(target.database,"licensing","fact_license_order","organization_district_id",model.schema,model.name, "account_id") }}',
-                   '{{ create_FK(target.database,"licensing","fact_license_order_history","organization_district_id",model.schema,model.name, "account_id") }}',                   
-                   '{{ create_FK(target.database,"revenue","fact_opportunity","account_id",model.schema,model.name, "account_id") }}',
-                   '{{ create_FK(target.database,"revenue","fact_opportunity_history","account_id",model.schema,model.name, "account_id") }}',    
-                   '{{ create_FK(target.database,"content_delivery_usage","fact_launches_monthly_snapshots","organization_district_id",model.schema,model.name, "account_id") }}',
-                   '{{ create_FK(target.database,"content_delivery_usage","fact_launches_weekly_snapshots","organization_district_id",model.schema,model.name, "account_id") }}',                                  
-                   '{{ create_FK(target.database,"content_delivery_usage","fact_launches_monthly_snapshots","organization_school_id",model.schema,model.name, "account_id") }}',
-                   '{{ create_FK(target.database,"content_delivery_usage","fact_launches_weekly_snapshots","organization_school_id",model.schema,model.name, "account_id") }}',                                  
-                    
-                    
-        ]
+        post_hook=['{{ FK_to_DIM_ACCOUNT() }}','{{ update_DIM_ACCOUNT_HISTORY_changed_UK() }}']                         
         )
 }}
 
@@ -34,12 +21,12 @@ where org_type_c='School'
 group by parent_id
 )
 , sfdc_data as (
-  select
+  select 
     --SFDC columns
 sfdc_account.Id,
     sfdc_account.name,
     --
-sfdc_account.account_last_activity_date_c,
+    sfdc_account.account_last_activity_date_c,
     sfdc_account.account_lifecycle_stage_c,
     sfdc_account.account_management_type_c,
     sfdc_account.act_id_c,
@@ -67,8 +54,12 @@ sfdc_account.account_last_activity_date_c,
     sfdc_account.agileed_parent_pending_c,
     sfdc_account.agileed_personnel_last_sync_c,
     sfdc_account.alt_phone_c,
+    sfdc_account.billing_state,
+    sfdc_account.billing_state_code,
     sfdc_account.cares_act_allocation_c,
     sfdc_account.category_c,
+    sfdc_account.churn_date_c,
+    sfdc_account.churned_opportunity_id_c,
     sfdc_account.closed_district_tx_adoption_c,
     sfdc_account.code_monkey_customer_c,
     sfdc_account.codester_id_c,
@@ -350,7 +341,7 @@ on sfdc_account.parent_id=dist.id
 
 )
 , LCOM_data as (
-  select
+  select 
     --LCOM columns
 o.organization_id,
     o.organization_name,
@@ -496,10 +487,18 @@ coalesce(LCOM_data.SFDC_account_id,
     '{{ var("default_date") }}') as SFDC_agileed_personnel_last_sync,
     isnull(SFDC_data.alt_phone_c,
     '{{ var("default_varchar") }}') as SFDC_alt_phone,
+    isnull(SFDC_data.billing_state,
+    '{{ var("default_varchar") }}') as SFDC_billing_state,
+    isnull(SFDC_data.billing_state_code,
+    '{{ var("default_varchar") }}') as SFDC_billing_state_code,
     isnull(SFDC_data.cares_act_allocation_c,
     {{ var("default_numeric") }}) as SFDC_cares_act_allocation,
     isnull(SFDC_data.category_c,
     '{{ var("default_varchar") }}') as SFDC_category,
+    isnull(SFDC_data.churn_date_c,
+    '{{ var("default_date") }}') as SFDC_churn_date,
+    isnull(SFDC_data.churned_opportunity_id_c,
+    '{{ var("default_varchar") }}') as SFDC_churned_opportunity_id,
     isnull(SFDC_data.closed_district_tx_adoption_c,
     {{ var("default_boolean") }}) as SFDC_closed_district_tx_adoption,
     isnull(SFDC_data.code_monkey_customer_c,
@@ -1112,8 +1111,12 @@ select
    {{ var("default_boolean") }}   as   SFDC_agileed_parent_pending ,
   '{{ var("default_date") }}' as SFDC_agileed_personnel_last_sync ,
   '{{ var("default_varchar") }}' as SFDC_alt_phone ,
+  '{{ var("default_varchar") }}'  as SFDC_billing_state,
+  '{{ var("default_varchar") }}'  as SFDC_billing_state_code,
    {{ var("default_numeric") }}   as   SFDC_cares_act_allocation ,
   '{{ var("default_varchar") }}' as SFDC_category ,
+  '{{ var("default_date") }}'    as SFDC_churn_date,
+  '{{ var("default_varchar") }}' as SFDC_churned_opportunity_id,
    {{ var("default_boolean") }}   as   SFDC_closed_district_tx_adoption ,
    {{ var("default_boolean") }}   as   SFDC_code_monkey_customer ,
   '{{ var("default_varchar") }}' as SFDC_codester_id ,
@@ -1438,8 +1441,12 @@ select
     sfdc_agileed_parent_pending :: boolean,
     sfdc_agileed_personnel_last_sync :: timestamp,
     sfdc_alt_phone :: varchar(130),
+    sfdc_billing_state :: varchar(240),
+    sfdc_billing_state_code :: varchar(30),   
     sfdc_cares_act_allocation :: double precision,
     sfdc_category :: varchar(780),
+    sfdc_churn_date::date,
+    sfdc_churned_opportunity_id:: varchar(765),    
     sfdc_closed_district_tx_adoption :: boolean,
     sfdc_code_monkey_customer :: boolean,
     sfdc_codester_id :: varchar(70),

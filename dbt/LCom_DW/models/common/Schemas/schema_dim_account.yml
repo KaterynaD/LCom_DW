@@ -277,6 +277,18 @@ models:
     description: Agile Phone
     constraints:
     - type: not_null
+
+  - name: sfdc_billing_state
+    data_type: varchar(240)
+    description: Billing State
+    constraints:
+    - type: not_null
+  - name: sfdc_billing_state_code
+    data_type: varchar(30)
+    description: Billing State Code
+    constraints:
+    - type: not_null    
+
   - name: sfdc_cares_act_allocation
     data_type: double precision
     description: CARES Act Allocation
@@ -287,6 +299,18 @@ models:
     description: Category
     constraints:
     - type: not_null
+
+  - name: sfdc_churn_date
+    data_type: date
+    description: Churn Date
+    constraints:
+    - type: not_null
+  - name: sfdc_churned_opportunity_id
+    data_type: varchar(765)
+    description: Churned Opportunity ID
+    constraints:
+    - type: not_null
+
   - name: sfdc_closed_district_tx_adoption
     data_type: boolean
     description: Closed District - TX Adoption (If checked, the district is a known
