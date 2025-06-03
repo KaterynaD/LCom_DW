@@ -1,0 +1,135 @@
+{{ config(
+
+   
+   materialized='scd2_plus',
+   
+   unique_key='account_id',
+
+   check_cols=[
+'lcom_organization_id',
+'lcom_trial',
+'lcom_demo',
+'lcom_country_name',
+'lcom_organization_name',
+'lcom_organization_type',
+'lcom_parent_organization_name',
+'lcom_state_province_code',
+'sfdc_parent_id',
+'SFDC_record_type',
+'sfdc_current_renewal_arr',
+'sfdc_state_initiative',
+'sfdc_state_initiative_school',
+'sfdc_state_eligible_or_initiative',
+'sfdc_state_eligible_or_initiative_school',
+'sfdc_owner_id',
+'sfdc_owner_name_text',
+'sfdc_billing_state',
+'sfdc_billing_state_code',
+'sfdc_grade_levels',
+'sfdc_k_12_enrollment',
+'sfdc_k_8_enrollment',
+'sfdc_name',
+'sfdc_parent_name',
+'sfdc_ultimate_account_owner',
+'sfdc_ultimate_parent_account',
+'sfdc_ultimate_parent_billing_state',
+'sfdc_ultimate_parent_id',
+'sfdc_urban_rural',
+'isHighSchool'],
+
+   punch_thru_cols=['sfdc_account_id'],
+
+   updated_at='last_modified_date',
+
+   scd_id_col_name = 'account_hist_id',
+   scd_valid_from_col_name='fromdate',
+   scd_valid_to_col_name='todate',
+   scd_record_version_col_name='record_version',
+   scd_loaddate_col_name='loaddate',
+   scd_updatedate_col_name='updatedate',
+   
+   scd_valid_from_min_date='1900-01-01',
+   scd_valid_to_max_date='3000-12-31' ,
+
+   loaddate = var('loaddate'),
+
+   dist='account_id', 
+   sort='fromdate' 
+
+) }}
+
+with data as (
+select
+account_id,
+lcom_organization_id,
+case when lcom_trial then 1 else 0 end lcom_trial,
+case when lcom_demo then 1 else 0 end lcom_demo,
+lcom_country_name,
+lcom_organization_name,
+lcom_organization_type,
+lcom_parent_organization_name,
+lcom_state_province_code,
+sfdc_account_id,
+sfdc_parent_id,
+SFDC_record_type,
+sfdc_current_renewal_arr,
+case when sfdc_state_initiative then 1 else 0 end sfdc_state_initiative,
+case when sfdc_state_initiative_school then 1 else 0 end sfdc_state_initiative_school,
+case when sfdc_state_eligible_or_initiative then 1 else 0 end sfdc_state_eligible_or_initiative,
+case when sfdc_state_eligible_or_initiative_school then 1 else 0 end sfdc_state_eligible_or_initiative_school,
+sfdc_owner_id,
+sfdc_owner_name_text,
+sfdc_billing_state,
+sfdc_billing_state_code,
+sfdc_grade_levels,
+sfdc_k_12_enrollment,
+sfdc_k_8_enrollment,
+sfdc_name,
+sfdc_parent_name,
+sfdc_ultimate_account_owner,
+sfdc_ultimate_parent_account,
+sfdc_ultimate_parent_billing_state,
+sfdc_ultimate_parent_id,
+sfdc_urban_rural,
+case when isHighSchool then 1 else 0 end isHighSchool,
+GREATEST(lcom_modified_datetime, sfdc_last_modified_date, lcom_created_datetime,sfdc_created_date,'1900-01-01'::date):: timestamp  last_modified_date
+from {{ ref("dim_account") }}
+{% if is_incremental() %}
+where   GREATEST(lcom_modified_datetime, sfdc_last_modified_date, lcom_created_datetime,sfdc_created_date,'1900-01-01'::date) >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }} t)
+{% endif %}
+)
+select
+account_id,
+lcom_organization_id,
+lcom_trial,
+lcom_demo,
+lcom_country_name,
+lcom_organization_name,
+lcom_organization_type,
+lcom_parent_organization_name,
+lcom_state_province_code,
+sfdc_account_id,
+sfdc_parent_id,
+SFDC_record_type,
+sfdc_current_renewal_arr,
+sfdc_state_initiative,
+sfdc_state_initiative_school,
+sfdc_state_eligible_or_initiative,
+sfdc_state_eligible_or_initiative_school,
+sfdc_owner_id,
+sfdc_owner_name_text,
+sfdc_billing_state,
+sfdc_billing_state_code,
+sfdc_grade_levels,
+sfdc_k_12_enrollment,
+sfdc_k_8_enrollment,
+sfdc_name,
+sfdc_parent_name,
+sfdc_ultimate_account_owner,
+sfdc_ultimate_parent_account,
+sfdc_ultimate_parent_billing_state,
+sfdc_ultimate_parent_id,
+sfdc_urban_rural,
+isHighSchool,
+last_modified_date
+from data
