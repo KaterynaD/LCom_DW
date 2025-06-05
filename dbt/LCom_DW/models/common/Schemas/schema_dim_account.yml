@@ -1,8 +1,7 @@
 version: 2
 models:
 - name: dim_account
-  description: Conformed DIM_ACCOUNT dimension. Account (districts and schools) data
-    from all systems
+  description: '{{ doc("table_dim_account") }}'
   config:
     contract:
       enforced: true

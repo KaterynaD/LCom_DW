@@ -15,6 +15,7 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+docs-paths: ["documentation"]
 
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
@@ -25,9 +26,13 @@ quoting:
   schema: false
   identifier: false
 
+
+
 models:
   +grants:  # roles are not supported in Redshift
     select: ['kdrogaieva','ksure','abutler','lgorokhova','xkendall','svcreporting']
+
+
   LCom_DW:    
 
     +pre-hook:
@@ -52,6 +57,10 @@ models:
       +schema: revenue
     staging:
       +schema: staging      
+
+ 
+
+
 
 on-run-start:
   - "{{ dbt_run_log_insert('dbt run Start') }}"
