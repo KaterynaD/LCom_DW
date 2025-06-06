@@ -453,6 +453,11 @@ models:
     description: Les Opp
     constraints:
     - type: not_null
+  - name: license_provisioned_date
+    data_type: date
+    description: License Provisioned Date
+    constraints:
+    - type: not_null
   - name: license_unenforced
     data_type: boolean
     description: License Unenforced
@@ -532,6 +537,11 @@ models:
   - name: number_of_schools
     data_type: double precision
     description: Number of Schools
+    constraints:
+    - type: not_null
+  - name: number_of_students
+    data_type: double precision
+    description: Number of Students
     constraints:
     - type: not_null
   - name: odc_sent
@@ -625,6 +635,11 @@ models:
   - name: owner_sales_quota
     data_type: numeric(35,10)
     description: Owner Sales Quota
+    constraints:
+    - type: not_null
+  - name: paid_date
+    data_type: date
+    description: Paid Date
     constraints:
     - type: not_null
   - name: payment_terms
@@ -1066,6 +1081,31 @@ models:
     description: 30 Days from being Closed Lost
     constraints:
     - type: not_null
+
+  - name: x_2_nd_contact_email
+    data_type: varchar(250)
+    description: 2nd Contact Email
+    constraints:
+    - type: not_null
+  - name: x_2_nd_contact_name
+    data_type: varchar(780)
+    description: 2nd Contact Name
+    constraints:
+    - type: not_null
+
+
+  - name: x_3_rd_contact_email
+    data_type: varchar(250)
+    description: 3rd Contact Email
+    constraints:
+    - type: not_null
+  - name: x_3_rd_contact_name
+    data_type: varchar(780)
+    description: 3rd Contact Name
+    constraints:
+    - type: not_null    
+
+
   - name: loaddate
     data_type: timestamp
     description: The datetime the record was loaded in PST
