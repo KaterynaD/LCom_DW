@@ -1477,11 +1477,7 @@ models:
       flow. Hiding from profiles.)
     constraints:
     - type: not_null
-  - name: sfdc_time_zone
-    data_type: double precision
-    description: Time Zone (Numeric)
-    constraints:
-    - type: not_null
+
   - name: sfdc_time_zone_raw
     data_type: double precision
     description: Time Zone (raw) (This is the non-summer time zone (i.e., not daylight
