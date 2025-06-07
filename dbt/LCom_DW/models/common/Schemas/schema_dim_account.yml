@@ -1478,17 +1478,6 @@ models:
     constraints:
     - type: not_null
 
-  - name: sfdc_time_zone_raw
-    data_type: double precision
-    description: Time Zone (raw) (This is the non-summer time zone (i.e., not daylight
-      savings))
-    constraints:
-    - type: not_null
-  - name: sfdc_time_zone_transformed
-    data_type: varchar(30)
-    description: Time Zone
-    constraints:
-    - type: not_null
   - name: sfdc_title_iv_funding_21_st_century_grants
     data_type: varchar(210)
     description: Title IV Funding (21st Century Grants)
