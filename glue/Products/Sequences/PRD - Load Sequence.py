@@ -21,7 +21,7 @@ SeqinMicrosoftSQLServer_node1746555015996 = glueContext.create_dynamic_frame.fro
     connection_options = {
         "useConnectionProperties": "true",
         "dbtable": "Sequence",
-        "sampleQuery": "select SequenceId, SequenceName, SequenceDescription, IsValid, auditCreateDate,auditUpdateDate,IsLearningPathway, cast(SYSDATETIMEOFFSET() AT TIME ZONE 'Pacific Standard Time' as datetime) as LoadDate from ContentCatalog.dbo.Sequence with (NoLock) where auditCreateDate>=cast('" +StartDate+ "' as date)",
+        "sampleQuery": "select distinct s.SequenceId, s.SequenceName, s.SequenceDescription, s.IsValid, s.auditCreateDate,s.auditUpdateDate,s.IsLearningPathway, cast(case when ut.UnitTypeName != 'Unit' then 1 else 0 end as bit) isCustom, cast(SYSDATETIMEOFFSET() AT TIME ZONE 'Pacific Standard Time' as datetime) as LoadDate from ContentCatalog.dbo.Sequence s with (NoLock) join ContentCatalog.dbo.SequenceUnit su with (NoLock) on su.SequenceId = s.SequenceId  join  Unit u with (NoLock) on su.UnitId=u.UnitId join UnitType ut with (NoLock) on u.UnitTypeId=ut.UnitTypeId where s.auditCreateDate>=cast('" +StartDate+ "' as date)",
         "connectionName": "PRD SQL ContentCatalog",
     },
     transformation_ctx = "SeqinMicrosoftSQLServer_node1746555015996"
