@@ -36,7 +36,7 @@ where dist.lcom_trial = false
 and dist.lcom_demo= false
 group by
 case when (dist.sfdc_state_initiative or dist.sfdc_state_initiative_school) then true else false end,
-case when (dist.SFDC_state_eligible_or_initiative or dist.SFDC_state_eligible_or_initiative_school) then true else false end,
+dist.sfdc_state_program_eligible,
 dist.lcom_country_name,
 dist.lcom_state_province_code,
 dist.lcom_district_name,
