@@ -4,7 +4,7 @@
 (
 select
 case when (dist.sfdc_state_initiative or dist.sfdc_state_initiative_school) then true else false end state_initiative,
-case when (dist.SFDC_state_eligible_or_initiative or dist.SFDC_state_eligible_or_initiative_school) then true else false end state_program_eligible,
+dist.sfdc_state_program_eligible state_program_eligible,
 dist.lcom_country_name district_country,
 dist.lcom_state_province_code district_state,
 dist.lcom_district_name district_name,
