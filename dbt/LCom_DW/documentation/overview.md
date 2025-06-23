@@ -64,6 +64,14 @@ Our dbt project may use this package for surrogate keys, etc.
 
 {% docs __LCom_DW__ %}
 # Main dbt project
+
+- Models in top-level models folders (Common, Revenue etc) are created in the database schemas with the same names. (Customized generate_schema_name macros and configuration in dbt_project.yml)
+- The schemas are created manually before the start of the project. The scripts are in [bitbucket](https://bitbucket.org/learningcom/redshift/src/master/DW/) and in project_setup_folder in [bitbucket](https://bitbucket.org/learningcom/transformations/src/master/dbt/LCom_DW/project_setup_scripts/)
+- Each dbt run in Prod target is logged in audit.dbt_run_log table. It's "dbt run Start/End" operation and "Scheduled Prod run" comment by default but the comment can be customized in run_type variable.
+- Each dbt model run in Prod target is logged in audit.dbt_run_log table. It's configured for all models in dbt_project.yml (Pre and Post hooks)
+- Null values are replaced with default values from variables in dbt_project.yml Like "Unknown" for varchar columns etc.
+- audit.dbt_run_log table is a not part of the transformation models and **must be created outside of the dbt project** because every run of dbt need the table for logs. The table creation statement is in [bitbucket](https://bitbucket.org/learningcom/redshift/src/master/DW/audit/Tables/dbt_run_log.sql) and in project_setup_folder in [bitbucket](https://bitbucket.org/learningcom/transformations/src/master/dbt/LCom_DW/project_setup_scripts/)
+
 {% enddocs %}
 
 {% docs __dbt_scd2_plus__ %}

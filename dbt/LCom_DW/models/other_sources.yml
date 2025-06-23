@@ -1,6 +1,7 @@
 ---
 sources:
   - name: common
+    description: "Common source tables used across multiple models built once per project and static" 
     quoting:
       database: false
       schema: false
@@ -9,6 +10,7 @@ sources:
       - name: dim_calendar     
 
   - name: audit
+    description: "Audit and logs tables for tracking dbt runs and changes"
     quoting:
       database: false
       schema: false

@@ -29,26 +29,9 @@ dbt run-operation create_populating_dim_calendar
 ```
 dbt run-operation run_populating_dim_calendar
 ```
-- Monthly and Weekly snapshots tables were created before dbt project and populated using stored procedures. Commands to create tables and stored procedures:
 
-```
-dbt run-operation create_fact_launches_weekly_snapshots_table
-dbt run-operation create_fact_launches_monthly_snapshots_table
-dbt run-operation create_lc_load_launches_weekly_snapshots
-dbt run-operation create_lc_load_launches_monthly_snapshots
-```
-- Monthly and weekly snapshots tables are populated via models based on the stored procedures. No need to run the stored procedures using macros
-- When tables are created this macro can be run to create Foreighn Key constraints while we can not do it properly using dbt contract (was not run in Prod)
-```
-dbt run-operation create_FKs_set_1
-```
-- While there is no DIM_PRODUCT, sku.csv (export from LCOM sku table on 04-28-2025) should be loaded using
-```
-dbt seed
-```
 ### To Do
 
-- Conformed(?) dim_product or few dim_products for each business area with a bridge
 - Employees (Sales Reps, Account Owners, Tech Support)
 - Technical Support business area (Cases and Biz Ops requests)
 - LCom platform content, delivery and usage view objects recreate as tables. However, fact tables are huge and may still views. 
@@ -57,8 +40,9 @@ dbt seed
 
 ### Known issues:
 
-- dbt for Redshift does not create comments from columns descriptions in views. Need a macros.
+- dbt for Redshift does not create comments from columns descriptions in views. Need a macro.
 - dbt v1.8.4 (the version used in Fivetran) creates FK only referring the exact table name , not using ref JINJA function. 
+- dbt does not hide packages in documentation if there are only macros. There is a reported bug for a long time but they do not fix.
 ``` 
     - type: foreign_key
       expression: common.dim_account(account_id)

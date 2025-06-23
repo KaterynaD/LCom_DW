@@ -1,6 +1,7 @@
 ---
 sources:
   - name: dbo
+    description: "Source tables for content delivery usage models. The tables in dbo schema are transformed data (facts) from staging schema in content_delivery_usage database using Redshift Stored Procedures.." 
     database: content_delivery_usage
     quoting:
       database: false
@@ -23,6 +24,7 @@ sources:
       - name: user_account
       
   - name: staging
+    description: "Source tables for content delivery usage models. The tables in staging schema are from LCom Platform MS SQL Server databases loaded and processed by AWS Glue jobs and Redshift Stored Procedures."
     database: content_delivery_usage
     quoting:
       database: false

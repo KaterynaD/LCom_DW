@@ -1,0 +1,76 @@
+version: 2
+
+macros:
+  - name: generate_schema_name
+    description: Replaces the standard approach allowing creating tables in custom schemas configured in dbt_project.yml for specific folders
+
+  - name: dbt_run_log_insert
+    description: Inserts a log entry in audit.dbt_run_log table. run_id is populated automatically inside 
+    arguments:
+      - name: operation
+        description: Usually a table name or Start/End run
+      - name: comment
+        description: A comment or description of the operation being logged
+
+  - name: get_datetime_now
+    description: Returns current timestamp in PST timezone. It's used in the logs and loaddate columns
+
+
+  - name: set_loaddate
+    description: It's used to set loaddate var in dbt_project and then populate loaddate column in all table
+
+  - name: run_vacuum_and_analyze
+    description: Executes vacuum and analyze commands . It's executes seprately after the main transformations run. We can not run v&a commands in post-hooks because we can not run 2 v&a commands in the same time in Redshift and with dbt parallel execution it may happen. 
+
+  - name: create_FK
+    description: Creates Foreighn Key for a specific database.schema.table.column to database.refschema.reftable.refcolumn if they exist. It's needed to re-create FK to models with "Table" materialization after the models run to the models with "Incremental" materialization. The call is done from "Table" materialized models post-hooks
+    arguments:
+      - name: database
+        description: The database where the tables are located
+      - name: schema
+        description: The schema where the "Incremental" table is located
+      - name: table
+        description: The "Incremental" table where the foreign key will be created
+      - name: column
+        description: The column in the "Incremental" table that will be a foreign key
+      - name: refschema
+        description: The schema of the reference table (Table that contains the primary key and materialized as "Table")
+      - name: reftable
+        description: Table that contains the primary key and materialized as "Table"
+      - name: refcolumn
+        description: The column in the reference table that is the primary key  
+
+  - name: create_FKs_set_1
+    description: One time run to create a set of FKs for some tables   
+
+  - name: create_lc_load_launches_monthly_snapshots
+    description: Creates a set of overloading stored procedures lc_load_launches_monthly_snapshots in content_delivery_usage schema. The stored procedure populates content_delivery_usage.fact_launches_monthly_snapshots table and was created before the start of dbt project. The stored procedure is used in fact_launches_monthly_snapshots model with custom materialization.
+
+  - name: create_lc_load_launches_weekly_snapshots
+    description: Creates a set of overloading stored procedures lc_load_launches_weekly_snapshots in content_delivery_usage schema. The stored procedure populates content_delivery_usage.fact_launches_weekly_snapshots table and was created before the start of dbt project. The stored procedure is used in fact_launches_weekkly_snapshots model with custom materialization.
+
+  - name: create_lc_load_students_usage_monthly_snapshots
+    description: Creates a set of overloading stored procedures lc_load_students_usage_monthly_snapshots in content_delivery_usage schema. They are the main stored procedures to populate content_delivery_usage.fact_students_usage_monthly_snapshots table and use temporary tables. The process is heavily uses dynamic SQL but without temporary tables (not supported in dbt models) is very slow.  This main stored procedure creates temporary tables for SKU/Sequences Groups and Subgroups and Totals to be used in further aggregations. The stored procedures is used in fact_students_usage_monthly_snapshots model with custom materialization. 
+      Creates lc_load_students_usage_monthly_snapshots_details stored procedure in content_delivery_usage schema.It's called from create_lc_load_students_usage_monthly_snapshots_levels stored procedure to aggregate data at the specific level (compay wide/country/state/district/school) and populate a temporary table.
+      Creates lc_load_students_usage_monthly_snapshots_levels stored procedure in content_delivery_usage schema.  It's called from lc_load_students_usage_monthly_snapshots stored procedure, runs aggregations at compay wide/country/state/district/school levels and inserts data into content_delivery_usage.fact_students_usage_monthly_snapshots table.
+  
+  - name: create_populating_dim_calendar
+    description: Creates f_USFederalHolidayCalendar function and populating_dim_calendar stored procedure in common schema. The function and stored procedure are used to populate Common.Dim_Calendar table. They were created before the start of dbt project. ideally, they are called once at the start of a project or if something should be adjusted in the calendar.
+
+  - name: create_fact_launches_monthly_snapshots_table
+    description: Creates content_delivery_usage.fact_launches_monthly_snapshots table. It's populated in lc_load_launches_monthly_snapshots using custom materialization (fact_launches_monthly_snapshots model). It was created before the start of dbt project. Runs only once to create the table.
+
+  - name: create_fact_launches_weekly_snapshots_table
+    description: Creates content_delivery_usage.fact_launches_weekly_snapshots table. It's populated in lc_load_launches_weekly_snapshots using custom materialization (fact_launches_weekly_snapshots model). It was created before the start of dbt project. Runs only once to create the table.
+
+  - name: create_fact_students_usage_monthly_snapshots_table
+    description: Creates content_delivery_usage.fact_students_usage_monthly_snapshots table. It's populated in lc_load_launches_weekly_snapshots stored procedure using custom materialization (fact_students_usage_monthly_snapshots model). Temporary tables are used to populate the table which are not available in dbt standard materializations. Runs only once to create the table.
+
+  - name: create_common_dim_calendar_table
+    description: Creates common.dim_calendar table. It was created before the start of dbt project. Runs only once to create the table.
+
+  - name: sql_runner
+    description: Used in custom materialization to populate a table from a stored procedure
+
+  - name: run_populating_dim_calendar
+    description: To populate dim_calendar    (call common.populating_dim_calendar)
