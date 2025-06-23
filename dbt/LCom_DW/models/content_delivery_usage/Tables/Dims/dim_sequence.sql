@@ -28,8 +28,8 @@ CASE
     WHEN s.SequenceName = 'Common Sense Education' THEN 'Common Sense Education'     
     WHEN s.SequenceName = 'Digital Safety Foundation' THEN 'Digital Safety Foundation'        
     -- EasyTech subgroups
-    WHEN s.SequenceName ILIKE '%Student-Driven Learning Path%' THEN 'Student-Driven Learning Path'
-    WHEN s.SequenceName ILIKE '%Blended Learning Path%' THEN 'Blended Learning Path'
+    WHEN s.SequenceName = 'EasyTech Student-Driven Learning Path' THEN 'EasyTech Student-Driven Learning Path'
+    WHEN s.SequenceName = 'EasyTech Blended Learning Path' THEN 'EasyTech Blended Learning Path'
 
     -- Tech Quest subgroups
     WHEN s.SequenceName ILIKE '%PreKindergarten%' OR s.SequenceName ILIKE '%Kindergarten%' OR s.SequenceName ILIKE '%1st%' OR s.SequenceName ILIKE '%2nd%' OR s.SequenceName ILIKE '%3rd%' OR s.SequenceName ILIKE '%4th%' OR s.SequenceName ILIKE '%5th%' THEN 'Tech Quest Elementary'
@@ -65,6 +65,7 @@ END AS Sequence_SubGroup,
 isnull(s.SequenceName,'{{ var("default_varchar") }}') as Sequence_Name,
 isnull(s.SequenceDescription,'{{ var("default_varchar") }}') as Sequence_Description,
 isnull(s.Isvalid,{{ var("default_boolean") }}) as is_valid,
+isnull(s.IsCustom,{{ var("default_boolean") }}) as is_custom,
 isnull(s.auditcreatedate,'{{ var("default_date") }}') as auditcreatedate,
 isnull(s.auditupdatedate, '{{ var("default_date") }}') as auditupdatedate
 from {{ source("staging","sequence") }} s
@@ -76,6 +77,7 @@ select
 '{{ var("default_varchar") }}' as Sequence_name,
 '{{ var("default_varchar") }}' as Sequence_description,
 {{ var("default_boolean") }} as is_valid,
+{{ var("default_boolean") }} as is_custom,
 '{{ var("default_date") }}' as auditcreatedate,
  '{{ var("default_date") }}' as auditupdatedate
 )
@@ -86,6 +88,7 @@ select
 ,Sequence_name::VARCHAR(150) as Sequence_name
 ,Sequence_description::VARCHAR(1100) as Sequence_description
 ,is_valid::BOOLEAN as   is_valid
+,is_custom::BOOLEAN as   is_custom
 ,auditcreatedate::TIMESTAMP as auditcreatedate
 ,auditupdatedate::TIMESTAMP as auditupdatedate
 ,'{{ var("loaddate") }}'::timestamp as loaddate

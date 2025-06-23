@@ -19,15 +19,14 @@ case when sku.skuname ilike '%easy%tech%' then 'EasyTech'
      when sku.skuname ilike '%keyboarding%' then 'EasyTech'  
      when sku.skuname ilike '%easy%code%' then 'EasyCode'   
      when sku.skuname ilike '%pillars%' then 'EasyCode'
-     when sku.skuname ilike '%foundations%' and sku.skuname not ilike '%math%' and sku.skuname not ilike '%science%' then 'EasyCode'
+     when sku.skuname ilike '%foundations%' and sku.skuname not ilike '%math%' and sku.skuname not ilike '%science%' then 'EasyCode'     
      else 
-        isnull(sku.ProductName,'Other')
-        --sku.ProductName in ('EasyTech', 'EasyCode', 'Tech Apps for Texas','Online Safety','Keyboarding','EasyCode Pillars','EasyCode Foundations') then  regexp_replace(sku.ProductName, '(.)', '\\1.')
+        isnull(sku.ProductName,'Other')        
 end as sku_group,
 case 
-when sku.skuname ilike '%techapps%for%texas%' then  'Tech Apps for Texas'
-when sku.skuname ilike '%online%safety%' then 'Online Safety'
-when sku.skuname ilike '%keyboarding%' then 'Keyboarding'
+when sku.skuname ilike '%techapps%for%texas%' or  sku.skuname ilike '%easyTech%texas%edition%' then  'Tech Apps for Texas'
+when sku.skuname = 'Online Safety & Digital Citizenship' then 'Online Safety & Digital Citizenship'
+when sku.skuname = 'EasyTech Keyboarding & Word Processing' then 'Keyboarding & Word Processing'
 when sku.skuname ilike '%pillars%' then 'EasyCode Pillars'
 when sku.skuname ilike '%foundations%' and sku.skuname not ilike '%math%' and sku.skuname not ilike '%science%' then 'EasyCode Foundations'
 end as sku_subgroup,

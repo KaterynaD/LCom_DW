@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: dim_product_category_learning_object_monthly
+    description: |
+      Monthly association of product categories with learning objects (curriculum items) based on date ranges.
+      Aggregated by school year and month to support product usage tracking over time.
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+        - product_usage
+
+    columns:
+      - name: schoolyear
+        data_type: varchar(20)
+        description: School year (e.g., 2023/2024)
+        constraints:
+          - type: not_null
+
+      - name: schoolyear_startdate
+        data_type: date
+        description: First date of the school year
+        constraints:
+          - type: not_null
+
+      - name: schoolyear_mon
+        data_type: integer
+        description: Month number within the school year (1 = July, 12 = June)
+        constraints:
+          - type: not_null
+
+      - name: mon_year
+        data_type: integer
+        description: Month and year as an integer in the format YYYYMM
+        constraints:
+          - type: not_null
+
+      - name: mon_lastday
+        data_type: date
+        description: Last calendar day of the month
+        constraints:
+          - type: not_null
+
+      - name: product_category
+        data_type: varchar(150)
+        description: Product category defined in DIM_PRODUCT_CATEGORY
+        constraints:
+          - type: not_null
+
+      - name: learning_object_id
+        data_type: varchar(50)
+        description: FK to dim_learning_object representing curriculum content
+
+
+      - name: fromdate
+        data_type: date
+        description: Valid start date of this category assignment
+        constraints:
+          - type: not_null
+
+      - name: todate
+        data_type: date
+        description: Valid end date of this category assignment
+        constraints:
+          - type: not_null

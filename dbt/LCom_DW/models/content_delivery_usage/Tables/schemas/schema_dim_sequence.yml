@@ -49,6 +49,12 @@ models:
         constraints:
           - type: not_null
 
+      - name: is_custom
+        data_type: boolean
+        description: Indicates if the sequence is built from custom  units (UnitTypeName != Unit, but DistrictCurriculumUnit as an example)
+        constraints:
+          - type: not_null          
+
       - name: auditcreatedate
         data_type: timestamp
         description: Record creation PST timestamp in the source system

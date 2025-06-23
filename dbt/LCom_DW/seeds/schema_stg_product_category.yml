@@ -1,0 +1,75 @@
+version: 2
+
+seeds:
+  - name: stg_product_category
+    description: |
+      Staging table for product categories dimension. This table is used to populate a working table (model) as a source because dbt contract does not work in v1.8.4 and Redshift 
+      for seeds. The table should be replaced with an external table based on a file in S3 bucket in the future.
+
+      The categories are manually picked SKU, Sequences and combinations based on SKU or Sequence IDs mostly. Specific SKU or Seq has a life span but it's also custom.
+      The SQL to create slowly changing dimension type 2 table for product categories is in analyses/dim_product_category_base_query.sql file.
+      But it's based on IDs and too complex to maintain as a query. A spreadsheet (seed file) is used to maintain the product categories dimension.
+    config:
+      schema: staging
+      contract:
+        enforced: true
+      tags: 
+        - dim
+
+    columns:
+
+      - name: product_type
+        data_type: varchar(3)
+        description: SKU or Seq
+        constraints:
+          - type: not_null    
+        data_tests:
+          - not_null  
+
+      - name: product_category
+        data_type: varchar(150)
+        description: Product Category
+        constraints:
+          - type: not_null               
+        data_tests:
+          - not_null  
+
+      - name: product_name
+        data_type: varchar(150)
+        description: Product SKU or Seq name
+        constraints:
+          - type: not_null    
+        data_tests:
+          - not_null  
+
+      - name: product_id
+        data_type: varchar(50)
+        description: Product SKU or Seq ID (FK to common.dim_lcom_sku or content_delivery_usage.dim_sequence)
+        constraints:
+          - type: not_null              
+        data_tests:
+          - not_null  
+
+      - name: fromdate
+        data_type: date
+        description: Product SKU or Seq is valid in the category from this date. 1900-01-01 is a default values instead of Null and means the product valid all time till Todate.
+        constraints:
+          - type: not_null    
+        data_tests:
+          - not_null  
+
+      - name: todate
+        data_type: date
+        description: Product SKU or Seq is valid in the category till this date. 3000-12-31 is a default values instead of Null and means the product valid forever after FromDate
+        constraints:
+          - type: not_null   
+        data_tests:
+          - not_null  
+
+      - name: loaddate
+        data_type: timestamp
+        description: Timestamp when the record was configured in the filr.
+        constraints:
+          - type: not_null                         
+        data_tests:
+          - not_null            
