@@ -7,9 +7,8 @@
 -- depends_on: {{ source("dbo","mv_student_account") }} 
 -- depends_on: {{ ref("dim_district") }} 
 -- depends_on: {{ ref("dim_learning_object") }} 
--- depends_on: {{ ref("dim_lcom_sku") }} 
--- depends_on: {{ ref("dim_lcom_sku_learning_object") }} 
--- depends_on: {{ ref("dim_sequence") }} 
--- depends_on: {{ ref("dim_sequence_learning_object") }} 
+-- depends_on: {{ ref("dim_product_category") }} 
+-- depends_on: {{ ref("dim_product_category_learning_object_monthly") }} 
+
 
 call {{ target.database }}.{{ schema }}.lc_load_students_usage_monthly_snapshots(cast('{{ var("loaddate") }}' as timestamp));
