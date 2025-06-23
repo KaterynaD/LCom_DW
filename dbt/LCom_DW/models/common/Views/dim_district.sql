@@ -58,6 +58,7 @@ SFDC_parent_gsid	,
 SFDC_technology_equipment	,
 SFDC_technology_supplies_and_purchases	,
 SFDC_type	,
+SFDC_district_enrollment,
 --Other useful SFDC columns
 sfdc_state_program_eligible ,
 SFDC_district_state_initiative	,
