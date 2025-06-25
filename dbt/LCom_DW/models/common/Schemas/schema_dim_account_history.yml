@@ -323,3 +323,9 @@ models:
     - type: not_null
     data_tests:
     - not_null
+
+  - name: SFDC_ultimate_parent_current_renewal_arr
+    data_type: numeric(38,10)
+    description: 'Aggregated current renewal ARR across all ultimate parent account child accounts.'
+    constraints:
+    - type: not_null 

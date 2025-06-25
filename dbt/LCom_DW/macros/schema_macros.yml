@@ -19,9 +19,13 @@ macros:
   - name: set_loaddate
     description: It's used to set loaddate var in dbt_project and then populate loaddate column in all table
 
-  - name: run_vacuum_and_analyze
-    description: Executes vacuum and analyze commands . It's executes seprately after the main transformations run. We can not run v&a commands in post-hooks because we can not run 2 v&a commands in the same time in Redshift and with dbt parallel execution it may happen. 
+  - name: run_vacuum_and_analyze_main_set
+    description: Executes vacuum and analyze commands for the tables in "LCOM" man set of tables. It's executes seprately after the main transformations run. We can not run v&a commands in post-hooks because we can not run 2 v&a commands in the same time in Redshift and with dbt parallel execution it may happen. 
 
+  - name: run_vacuum_and_analyze_product_usage
+    description: Executes vacuum and analyze commands for the tables in Product Usage tables subset. 
+
+  
   - name: create_FK
     description: Creates Foreighn Key for a specific database.schema.table.column to database.refschema.reftable.refcolumn if they exist. It's needed to re-create FK to models with "Table" materialization after the models run to the models with "Incremental" materialization. The call is done from "Table" materialized models post-hooks
     arguments:
@@ -74,3 +78,9 @@ macros:
 
   - name: run_populating_dim_calendar
     description: To populate dim_calendar    (call common.populating_dim_calendar)
+
+  - name: get_day_of_month_now
+    description: Returns day of teh current month to be used in month_range_to_load macro
+
+  - name: month_range_to_load
+    description: For staging tables used to populate revenue.fact_customers_monthly_snapshots returns mon_year condition to load data. It can be a historical range or based on the current day of month to process only current month or current and previous in a case there were changes in INVOICED_DATE.

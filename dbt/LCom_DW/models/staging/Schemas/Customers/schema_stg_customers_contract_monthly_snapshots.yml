@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_customers_contract_monthly_snapshots
+    description: >
+      Staging snapshot of contract-based customers by month, capturing ultimate parent accounts Active starting Invoice Date and ending End date. The snapshots are used as Starting points in Net Active Customer calculations that's why they are shift 1 month ahead (mon_year is mon_year actual + 1 Month)
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - customers
+        - staging
+        
+    columns:
+      - name: mon_year
+        data_type: integer
+        description: Next Year and month of Invoice Date in YYYYMM format representing the snapshot period. The snapshot is used as a Starting  point in Net Active Customers that's why it's shift 1 month
+        constraints:
+          - type: not_null
+
+      - name: mon_lastday
+        data_type: date
+        description: Last day of the month corresponding to the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        data_type: varchar(300)
+        description: Salesforce Opportunity ID associated with the contract snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_account_id
+        data_type: varchar(300)
+        description: Salesforce Account ID for the opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_ultimate_parent_id
+        data_type: varchar(300)
+        description: Salesforce Ultimate Parent Account ID for the opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: record_type
+        data_type: varchar(20)
+        description: Type of record in the snapshot - Starting
+        constraints:
+          - type: not_null
+
+      - name: include_flg
+        data_type: boolean
+        description: Flag indicating if the record should be included in monthly active customer calculations.
+        constraints:
+          - type: not_null
+          
+      - name: comments
+        data_type: varchar(max)
+        description: Optional comments or flags for review/debugging purposes.
+        
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded in PST
+        constraints:
+         - type: not_null  

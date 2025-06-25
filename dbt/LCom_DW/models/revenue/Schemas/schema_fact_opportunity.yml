@@ -463,6 +463,13 @@ models:
     description: License Unenforced
     constraints:
     - type: not_null
+
+  - name: lost_reason
+    data_type: varchar(780)
+    description: Lost Reason
+    constraints:
+    - type: not_null
+
   - name: migrated
     data_type: boolean
     description: Migrated?

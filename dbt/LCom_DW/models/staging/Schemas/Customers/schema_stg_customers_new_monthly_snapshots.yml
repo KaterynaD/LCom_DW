@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_customers_new_monthly_snapshots
+    description: >
+      Staging snapshot of New and Returning customers by month, capturing ultimate parent accounts from Closed Won opportunities. Ultimate Parent Account is New if theer are no other existing child accounts opportunities invoiced this month or before. If there is a "gap" in the coverage at least 1 month, the ultimate parent account is marked as Returning (e.g. an opportunity expires in November and no any other active opportunities from any child account till January).
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - customers
+        - staging
+        
+    columns:
+      - name: mon_year
+        data_type: integer
+        description: Year and month of Invoiced Date in YYYYMM format representing the snapshot period. 
+        constraints:
+          - type: not_null
+
+      - name: mon_lastday
+        data_type: date
+        description: Last day of the month corresponding to the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        data_type: varchar(300)
+        description: Salesforce Opportunity ID associated with the contract snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_account_id
+        data_type: varchar(300)
+        description: Salesforce Account ID for the opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_ultimate_parent_id
+        data_type: varchar(300)
+        description: Salesforce Ultimate Parent Account ID for thes opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: record_type
+        data_type: varchar(20)
+        description: Type of record in the snapshot - New or Returning (ReturningFY if there is a gap in the processing Fiscal Year)
+        constraints:
+          - type: not_null        
+
+      - name: include_flg
+        data_type: boolean
+        description: Flag indicating if the record should be included in monthly Net Active customer calculations. It might not be included  if it's existing opportunity, or it was churned or non renewed
+        constraints:
+          - type: not_null
+
+      - name: comments
+        data_type: varchar(max)
+        description: Optional comments or flags for review/debugging purposes.
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded in PST
+        constraints:
+         - type: not_null  

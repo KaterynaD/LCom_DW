@@ -23,7 +23,7 @@ group by parent_id
 , sfdc_data as (
   select 
     --SFDC columns
-sfdc_account.Id,
+    sfdc_account.Id,
     sfdc_account.name,
     --
     sfdc_account.account_last_activity_date_c,
@@ -54,6 +54,8 @@ sfdc_account.Id,
     sfdc_account.agileed_parent_pending_c,
     sfdc_account.agileed_personnel_last_sync_c,
     sfdc_account.alt_phone_c,
+    sfdc_account.billing_country,
+    sfdc_account.billing_country_code,
     sfdc_account.billing_state,
     sfdc_account.billing_state_code,
     sfdc_account.cares_act_allocation_c,
@@ -318,16 +320,18 @@ sfdc_account.Id,
     sfdc_account.x_9_th_grade_enrollment_c,
     sfdc_account.zendesk_domain_c,
     --School (some child accounts info)
-sch.school_state_initiative_c as state_initiative_school,
+    sch.school_state_initiative_c as state_initiative_school,
     sch.school_district_state_initiative_c as district_state_initiative_school,
     sch.school_state_eligible_or_initiative_c as state_eligible_or_initiative_school,
     --District (some parent account info)
-dist.state_initiative_c as state_initiative_district,
+    dist.state_initiative_c as state_initiative_district,
     dist.district_state_initiative_c as district_state_initiative_district,
     dist.state_eligible_or_initiative_c as state_eligible_or_initiative_district,
     --
-lower(loc.lcom_platform_organization_id_c) lcom_organization_id
---
+    lower(loc.lcom_platform_organization_id_c) lcom_organization_id,
+    --
+    sfdc_ultimate_parent.sfdc_current_renewal_arr as sfdc_ultimate_parent_current_renewal_arr
+    --
 FROM {{ source('fivetran_salesforce_quickstart', 'account') }} sfdc_account
 left outer join {{ source('fivetran_salesforce_quickstart', 'lcom_organization_c') }} loc
 on sfdc_account.lcom_organization_c = loc.id
@@ -335,12 +339,15 @@ left outer join sch
 on sfdc_account.id=sch.parent_id
 left outer join {{ source('fivetran_salesforce_quickstart', 'account') }} dist
 on sfdc_account.parent_id=dist.id
+left outer join {{ ref("sfdc_ultimate_parent_accounts_data")}} sfdc_ultimate_parent
+on sfdc_ultimate_parent.sfdc_ultimate_parent_id = sfdc_account.id
+
 
 )
 , LCOM_data as (
   select 
     --LCOM columns
-o.organization_id,
+    o.organization_id,
     o.organization_name,
     o.organization_type,
     case when len(o.parent_organization_id)<1 then null else o.parent_organization_id end as parent_organization_id,
@@ -382,7 +389,7 @@ select
     coalesce(LCOM_data.organization_id,
     SFDC_data.Id) as account_id,
     --LCOM columns
-isnull(LCOM_data.organization_id,
+    isnull(LCOM_data.organization_id,
     '{{ var("default_varchar") }}') as  lcom_organization_id,
     isnull(LCOM_data.organization_name,
     '{{ var("default_varchar") }}') as  lcom_organization_name,
@@ -423,7 +430,7 @@ isnull(LCOM_data.organization_id,
     isnull(LCOM_data.deleted_datetime,
     '{{ var("default_date") }}')  as lcom_deleted_datetime,
     --SFDC columns
-coalesce(LCOM_data.SFDC_account_id,
+    coalesce(LCOM_data.SFDC_account_id,
     SFDC_data.Id,
     '{{ var("default_varchar") }}') as SFDC_account_id,
     isnull(SFDC_data.name,
@@ -484,6 +491,10 @@ coalesce(LCOM_data.SFDC_account_id,
     '{{ var("default_date") }}') as SFDC_agileed_personnel_last_sync,
     isnull(SFDC_data.alt_phone_c,
     '{{ var("default_varchar") }}') as SFDC_alt_phone,
+    isnull(sfdc_data.billing_country,
+    '{{ var("default_varchar") }}') as SFDC_billing_country,    
+    isnull(sfdc_data.billing_country_code,
+    '{{ var("default_varchar") }}') as SFDC_billing_country_code,
     isnull(SFDC_data.billing_state,
     '{{ var("default_varchar") }}') as SFDC_billing_state,
     isnull(SFDC_data.billing_state_code,
@@ -1013,14 +1024,14 @@ coalesce(LCOM_data.SFDC_account_id,
     isnull(SFDC_data.lcom_organization_id,
     '{{ var("default_varchar") }}') as  SFDC_lcom_organization_id,
     --School (some child accounts info)
-isnull(SFDC_data.state_initiative_school,
+    isnull(SFDC_data.state_initiative_school,
     {{ var("default_boolean") }}) as SFDC_state_initiative_school,
     isnull(SFDC_data.district_state_initiative_school,
     {{ var("default_boolean") }}) as SFDC_district_state_initiative_school,
     isnull(SFDC_data.state_eligible_or_initiative_school,
     {{ var("default_boolean") }}) as SFDC_state_eligible_or_initiative_school,
     --District (some parent account info)
-isnull(SFDC_data.state_initiative_district,
+    isnull(SFDC_data.state_initiative_district,
     {{ var("default_boolean") }}) as SFDC_state_initiative_district,
     isnull(SFDC_data.district_state_initiative_district,
     {{ var("default_boolean") }}) as SFDC_district_state_initiative_district,
@@ -1035,8 +1046,10 @@ or
 (SFDC_data.grade_levels_c is null and  SFDC_data.k_12_enrollment_c>0 and SFDC_data.k_8_enrollment_c=0)
 ) then True
 else False
-end as isHighSchool
+end as isHighSchool,
 --
+ isnull(sfdc_ultimate_parent_current_renewal_arr,
+    {{ var("default_numeric") }}) as SFDC_ultimate_parent_current_renewal_arr
 --
 FROM LCOM_data
 --
@@ -1102,6 +1115,8 @@ select
    {{ var("default_boolean") }}   as   SFDC_agileed_parent_pending ,
   '{{ var("default_date") }}' as SFDC_agileed_personnel_last_sync ,
   '{{ var("default_varchar") }}' as SFDC_alt_phone ,
+  '{{ var("default_varchar") }}' as SFDC_billing_country,
+  '{{ var("default_varchar") }}' as SFDC_billing_country_code,
   '{{ var("default_varchar") }}'  as SFDC_billing_state,
   '{{ var("default_varchar") }}'  as SFDC_billing_state_code,
    {{ var("default_numeric") }}   as   SFDC_cares_act_allocation ,
@@ -1375,7 +1390,8 @@ select
 {{ var("default_boolean") }} as SFDC_district_state_initiative_district,
 {{ var("default_boolean") }} as SFDC_state_eligible_or_initiative_district,
 --Calculated
-{{ var("default_boolean") }} as isHighSchool
+{{ var("default_boolean") }} as isHighSchool,
+{{ var("default_numeric") }} as SFDC_ultimate_parent_current_renewal_arr
 )
 select
     account_id::varchar(300),
@@ -1429,6 +1445,8 @@ select
     sfdc_agileed_parent_pending :: boolean,
     sfdc_agileed_personnel_last_sync :: timestamp,
     sfdc_alt_phone :: varchar(130),
+    sfdc_billing_country :: varchar(240),
+    sfdc_billing_country_code :: varchar(30),
     sfdc_billing_state :: varchar(240),
     sfdc_billing_state_code :: varchar(30),   
     sfdc_cares_act_allocation :: double precision,
@@ -1700,6 +1718,7 @@ select
     sfdc_district_state_initiative_district :: boolean,
     sfdc_state_eligible_or_initiative_district :: boolean,
     --Calculated
-isHighSchool:: boolean,
+    isHighSchool:: boolean,
+    SFDC_ultimate_parent_current_renewal_arr :: numeric(38,10),
     '{{ var("loaddate") }}'::timestamp as loaddate
 FROM data

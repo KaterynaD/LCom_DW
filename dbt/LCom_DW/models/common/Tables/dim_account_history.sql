@@ -35,7 +35,11 @@
 'sfdc_ultimate_parent_billing_state',
 'sfdc_ultimate_parent_id',
 'sfdc_urban_rural',
-'isHighSchool'],
+'isHighSchool',
+'sfdc_ultimate_parent_current_renewal_arr',
+'sfdc_billing_country',
+'sfdc_billing_country_code',
+'sfdc_district_enrollment'],
 
    punch_thru_cols=['sfdc_account_id'],
 
@@ -92,6 +96,10 @@ sfdc_ultimate_parent_billing_state,
 sfdc_ultimate_parent_id,
 sfdc_urban_rural,
 case when isHighSchool then 1 else 0 end isHighSchool,
+sfdc_ultimate_parent_current_renewal_arr,
+sfdc_billing_country,
+sfdc_billing_country_code,
+sfdc_district_enrollment,
 GREATEST(lcom_modified_datetime, sfdc_last_modified_date, lcom_created_datetime,sfdc_created_date,'1900-01-01'::date):: timestamp  last_modified_date
 from {{ ref("dim_account") }}
 {% if is_incremental() %}
@@ -131,5 +139,9 @@ sfdc_ultimate_parent_billing_state,
 sfdc_ultimate_parent_id,
 sfdc_urban_rural,
 isHighSchool,
+sfdc_ultimate_parent_current_renewal_arr,
+sfdc_billing_country,
+sfdc_billing_country_code,
+sfdc_district_enrollment,
 last_modified_date
 from data

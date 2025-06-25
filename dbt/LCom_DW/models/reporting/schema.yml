@@ -13,11 +13,49 @@ models:
         - rep
 
   - name: vw_dw_table_report
-    description: row count and last action date for all tabless/views in DW schemas
+    description: Row counts and last action date for all tabless/views in DW database schemas
     config:
       tags:
         - rep
- 
+
+  - name: vw_cdu_table_report
+    description: Row counts and last action date for all tabless/views in CONTENT_DELIVERY_USAGE database schemas
+    config:
+      tags:
+        - rep
+
+
+  - name: vw_usage_scorecard
+    description: Active Students and Launches in current School Year Month for scorecards dashboard
+    config:
+      tags:
+        - rep
+
+  - name: vw_licensing_scorecard
+    description: Number of Districts, Schools and Students licenses in current School Year Month for scorecards dashboard
+    config:
+      tags:
+        - rep
+
+  - name: vw_licensing_monthly
+    description: Historical numbers of Districts, Schools and Students licenses monthly
+    config:
+      tags:
+        - rep        
+
+  - name: vw_customer_scorecard
+    description: Contract Active, Net Active and Total Active number of customers for scorecard dashboard
+    config:
+      tags:
+        - rep        
+
+  - name: vw_customers_monthly
+    description: Historical Contract Active, Net Active and Total Active, New, Returning Churn, NonRenewal number of customers monthly
+    config:
+      tags:
+        - rep       
+
+
 exposures:
 
   - name: get_monthly_snapshot_data_district_level
@@ -26,7 +64,7 @@ exposures:
     maturity: medium
     url: https://10ay.online.tableau.com/#/site/lcomreporting/datasources/77890515/connections
     description: >
-      Provisioning Licensing and Utilization
+      YoY Provisioning Licensing and Utilization data source
 
     depends_on:
       - ref('get_monthly_snapshot_data_district_level')
@@ -34,3 +72,18 @@ exposures:
     owner:
       name: Kate Drogaieva
       email: kdrogaieva@learning.com     
+
+  - name: get_weekly_snapshot_data_district_level
+    label: Weekly Usage
+    type: dashboard
+    maturity: medium
+    url: https://10ay.online.tableau.com/#/site/lcomreporting/datasources/78530453/connections
+    description: >
+      Weekly Utilization data source
+
+    depends_on:
+      - ref('get_weekly_snapshot_data_district_level')
+
+    owner:
+      name: Kate Drogaieva
+      email: kdrogaieva@learning.com        

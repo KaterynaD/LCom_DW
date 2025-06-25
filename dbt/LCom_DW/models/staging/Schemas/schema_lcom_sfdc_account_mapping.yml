@@ -8,7 +8,8 @@ models:
         enforced: true   
       tags:
         - map
-
+        - staging
+        
     columns:
 
       - name: organization_id

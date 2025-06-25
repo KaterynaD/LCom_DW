@@ -70,7 +70,7 @@ on-run-end:
 
 vars:
   loaddate: "{{ set_loaddate() }}"
-  processing_mon_year: "Current"
+  load_history: 0
   default_date: "1900-01-01"
   default_varchar: "Unknown"  
   default_numeric: 0  

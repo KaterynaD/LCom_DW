@@ -276,7 +276,16 @@ models:
     description: Agile Phone
     constraints:
     - type: not_null
-
+  - name: sfdc_billing_country
+    data_type: varchar(240)
+    description: Billing Country
+    constraints:
+    - type: not_null
+  - name: sfdc_billing_country_code
+    data_type: varchar(30)
+    description: Billing Countrye Code
+    constraints:
+    - type: not_null  
   - name: sfdc_billing_state
     data_type: varchar(240)
     description: Billing State
@@ -1727,6 +1736,13 @@ models:
       in the table linked to a Salesforce account if they have an order
     constraints:
     - type: not_null
+
+  - name: SFDC_ultimate_parent_current_renewal_arr
+    data_type: numeric(38,10)
+    description: 'Aggregated current renewal ARR across all ultimate parent account child accounts.'
+    constraints:
+    - type: not_null
+
   - name: loaddate
     data_type: timestamp
     description: The datetime the record was loaded in PST

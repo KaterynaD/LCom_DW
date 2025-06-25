@@ -14,7 +14,9 @@
 'probability','quote_list_amount','quote_total_discount','remaining_quota',
 'renewable_revenue','renewal_at_79','renewal_biz_trigger','total_arr_bookings',
 'total_credit_from_opp_product','total_opportunity_quantity','true_arr',
-'true_arr_formula','true_renewal_arr','variance','last_modified_date'],
+'true_arr_formula','true_renewal_arr','variance','last_modified_date',
+'invoiced_date','close_date','start_date','end_date','opp_record_type',
+'license_unenforced','disable_auto_renewal_opp'],
 
    punch_thru_cols=['account_id'],
 
@@ -78,6 +80,13 @@ true_arr	,
 true_arr_formula	,
 true_renewal_arr	,
 variance ,
+invoiced_date ,
+close_date ,
+start_date ,
+end_date ,
+opp_record_type ,
+case when license_unenforced then 1 else 0 end  as license_unenforced ,
+case when disable_auto_renewal_opp then 1 else 0 end as disable_auto_renewal_opp ,
 last_modified_date 
 from {{ ref("fact_opportunity") }}
 {% if is_incremental() %}
