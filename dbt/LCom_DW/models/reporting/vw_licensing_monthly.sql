@@ -1,10 +1,13 @@
 {{ config(materialized='view', bind=False) }}
+
+
 with dim_month as --Thread to calculate monthly metrics
 (select distinct c.mon_year, c.mon_firstday, c.mon_lastday, c.schoolyear, c.schoolyear_startdate, c.schoolyear_enddate , c.schoolyear_mon
-from {{ source("common","dim_calendar") }} c 
+from {{ source("common","dim_calendar") }}  c 
 where mon_year between 202207 and to_char(GetDate(),'yyyymm')
 )
 --
+,rawdata as (
 select
 m.schoolyear,
 m.mon_year,
@@ -16,8 +19,6 @@ a.sfdc_name,
 a.lcom_country_name,
 a.lcom_state_province_code,
 sku.sku_id,
-sku.sku_group,
-sku.sku_subgroup,
 sku.sku_name,
 schoolcount,
 studentcount
@@ -35,3 +36,74 @@ on floh.organization_district_id = a.account_id
 and m.mon_lastday between a.fromdate and a.todate
 where a.lcom_trial=false 
 and a.lcom_demo=false
+)
+,data as (
+select
+schoolyear,
+mon_year,
+mon_lastday,
+schoolyear_mon,
+organization_district_id,
+lcom_organization_name ,
+sfdc_name,
+lcom_country_name,
+lcom_state_province_code,
+sku_id,
+ltrim(rtrim(sku_name)) as sku_name,
+sum(schoolcount) as schoolcount,
+sum(studentcount) as studentcount
+from rawdata r
+group by 
+schoolyear,
+mon_year,
+mon_lastday,
+schoolyear_mon,
+organization_district_id,
+lcom_organization_name ,
+sfdc_name,
+lcom_country_name,
+lcom_state_province_code,
+sku_id,
+sku_name
+)
+select 
+schoolyear,
+mon_year,
+mon_lastday,
+schoolyear_mon,
+organization_district_id,
+lcom_organization_name ,
+sfdc_name,
+lcom_country_name,
+lcom_state_province_code,
+sku_id,
+sku_name,
+schoolcount,
+studentcount
+from data
+union all
+select 
+schoolyear,
+mon_year,
+mon_lastday,
+schoolyear_mon,
+organization_district_id,
+lcom_organization_name ,
+sfdc_name,
+lcom_country_name,
+lcom_state_province_code,
+'(All)' as sku_id,
+'(All)' as sku_name,
+max(schoolcount) as schoolcount,
+max(studentcount) as studentcount
+from data
+group by
+schoolyear,
+mon_year,
+mon_lastday,
+schoolyear_mon,
+organization_district_id,
+lcom_organization_name ,
+sfdc_name,
+lcom_country_name,
+lcom_state_province_code
