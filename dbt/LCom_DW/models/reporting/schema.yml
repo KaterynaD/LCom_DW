@@ -55,6 +55,12 @@ models:
       tags:
         - rep       
 
+  - name: vw_customers_opportunities_monthly
+    description: Opportunities details based on customers monthly counts built
+    config:
+      tags:
+        - rep
+
 
 exposures:
 
