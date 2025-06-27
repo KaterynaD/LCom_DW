@@ -2,7 +2,7 @@
 version: 2
 models:
   - name: fact_license_order_history
-    description: "FACT_LICENSE_ORDER snapshots table when the stage changes. It`s a fact table, but history is tracked as SCD2 (fromdate - todate)"
+    description: "The table records changes in FACT_LICENSE_ORDER using Slowly Changing Dimension Type 2 method (fromdate - todate)"
     config:
       contract:
         enforced: false
