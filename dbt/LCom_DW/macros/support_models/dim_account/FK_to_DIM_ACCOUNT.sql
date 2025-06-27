@@ -12,6 +12,8 @@
  {{ create_FK(target.database,"content_delivery_usage","fact_launches_weekly_snapshots","organization_district_id",model.schema,model.name, "account_id")   }}                                
  {{ create_FK(target.database,"content_delivery_usage","fact_launches_monthly_snapshots","organization_school_id",model.schema,model.name, "account_id") }}
  {{ create_FK(target.database,"content_delivery_usage","fact_launches_weekly_snapshots","organization_school_id",model.schema,model.name, "account_id")   }}                           
+ {{ create_FK(target.database,"support","fact_case","account_id",model.schema,model.name, "account_id")   }}       
+ {{ create_FK(target.database,"support","fact_case_history","account_id",model.schema,model.name, "account_id")   }}                        
 
 
 {% endmacro  %}

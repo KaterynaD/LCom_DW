@@ -84,3 +84,12 @@ macros:
 
   - name: month_range_to_load
     description: For staging tables used to populate revenue.fact_customers_monthly_snapshots returns mon_year condition to load data. It can be a historical range or based on the current day of month to process only current month or current and previous in a case there were changes in INVOICED_DATE.
+
+  - name: update_DIM_ACCOUNT_HISTORY_changed_UK
+    description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage accounts deleted in SFDC
+
+  - name: update_FACT_OPPORTUNITY_HISTORY_changed_UK
+    description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage opportunities deleted in SFDC    
+
+  - name: update_FACT_CASE_HISTORY_changed_UK
+    description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage cases deleted in SFDC        

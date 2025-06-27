@@ -1,0 +1,360 @@
+version: 2
+
+models:
+  - name: fact_case
+    description: Fact Case (Salesforce Case table)
+    config:
+      contract:
+        enforced: true
+      tags:
+        - fact
+
+    columns:
+
+      - name: case_id
+        data_type: varchar(300)
+        description: Case ID
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+
+      - name: account_id
+        data_type: varchar(300)
+        description: Account ID
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: sfdc_account_id
+        data_type: varchar(300)
+        description: SFDC Account ID
+        constraints:
+          - type: not_null
+
+      - name: account_owner
+        data_type: varchar(400)
+        description: Account Owner
+        constraints:
+          - type: not_null
+
+      - name: account_owner_email
+        data_type: varchar(400)
+        description: Account Owner Email
+        constraints:
+          - type: not_null
+
+      - name: already_closed
+        data_type: boolean
+        description: Already Closed
+        constraints:
+          - type: not_null
+
+      - name: case_auto_close_warning_sent
+        data_type: boolean
+        description: Case Auto-Close Warning Sent
+        constraints:
+          - type: not_null
+
+      - name: case_number
+        data_type: varchar(90)
+        description: Case Number
+        constraints:
+          - type: not_null
+
+      - name: case_owner_email
+        data_type: varchar(400)
+        description: Case Owner Email
+        constraints:
+          - type: not_null
+
+      - name: case_ready_to_survey
+        data_type: boolean
+        description: Case Ready to Survey
+        constraints:
+          - type: not_null
+
+      - name: closed_date
+        data_type: timestamp
+        description: Date/Time Closed
+        constraints:
+          - type: not_null
+
+      - name: codesters_case
+        data_type: boolean
+        description: Codesters Case
+        constraints:
+          - type: not_null
+
+      - name: codesters_classes
+        data_type: double precision
+        description: Codesters – Number of Classes
+        constraints:
+          - type: not_null
+
+      - name: codesters_i_2_c_student_avg
+        data_type: double precision
+        description: Codesters I2C Student Average
+        constraints:
+          - type: not_null
+
+      - name: codesters_i_2_c_student_completion
+        data_type: double precision
+        description: Codesters I2C Student % Completion
+        constraints:
+          - type: not_null
+
+      - name: codesters_students
+        data_type: double precision
+        description: Codesters – Number of Students
+        constraints:
+          - type: not_null
+
+      - name: confirmed_resolution
+        data_type: boolean
+        description: Confirmed Resolution
+        constraints:
+          - type: not_null
+
+      - name: contact_email
+        data_type: varchar(400)
+        description: Contact Email
+        constraints:
+          - type: not_null
+
+      - name: contact_id
+        data_type: varchar(300)
+        description: Contact ID
+        constraints:
+          - type: not_null
+
+      - name: contact_phone
+        data_type: varchar(120)
+        description: Contact Phone
+        constraints:
+          - type: not_null
+
+      - name: created_date
+        data_type: timestamp
+        description: Created Date in PST timezone
+        constraints:
+          - type: not_null
+
+      - name: csat_response
+        data_type: varchar(1000)
+        description: CSAT Response
+        constraints:
+          - type: not_null
+
+      - name: data_quality_description
+        data_type: varchar(1000)
+        description: Data Quality Description
+        constraints:
+          - type: not_null
+
+      - name: data_quality_score
+        data_type: integer
+        description: Data Quality Score
+        constraints:
+          - type: not_null
+
+      - name: description
+        data_type: varchar(max)
+        description: Case Description
+        constraints:
+          - type: not_null
+
+      - name: initial_response_captured
+        data_type: boolean
+        description: Initial Response Captured
+        constraints:
+          - type: not_null
+
+      - name: is_closed
+        data_type: boolean
+        description: Is Closed
+        constraints:
+          - type: not_null
+
+      - name: is_escalated
+        data_type: boolean
+        description: Is Escalated
+        constraints:
+          - type: not_null
+
+      - name: issues
+        data_type: varchar(1000)
+        description: Issues
+        constraints:
+          - type: not_null
+
+      - name: jira_ticket_submitted
+        data_type: boolean
+        description: Jira Ticket Submitted
+        constraints:
+          - type: not_null
+
+      - name: last_modified_date
+        data_type: timestamp
+        description: Last Modified Date  in PST timezone
+        constraints:
+          - type: not_null
+
+      - name: location_of_issue
+        data_type: varchar(5000)
+        description: Location of Issue
+        constraints:
+          - type: not_null
+
+      - name: net_suite_link
+        data_type: varchar(1000)
+        description: NetSuite Link
+        constraints:
+          - type: not_null
+
+      - name: netsuite_case_number
+        data_type: varchar(1000)
+        description: NetSuite Case Number
+        constraints:
+          - type: not_null
+
+      - name: netsuite_id
+        data_type: varchar(300)
+        description: NetSuite ID
+        constraints:
+          - type: not_null
+
+      - name: origin
+        data_type: varchar(1000)
+        description: Case Origin
+        constraints:
+          - type: not_null
+
+      - name: owner_id
+        data_type: varchar(300)
+        description: Owner ID, DIM_EMPLOYEE FK
+        constraints:
+          - type: not_null
+        data_data_tests:
+          - relationships:
+            to: ref('dim_employee')
+            field: employee_id         
+
+      - name: platform_name
+        data_type: varchar(300)
+        description: Platform Name
+        constraints:
+          - type: not_null
+
+      - name: case_priority
+        data_type: varchar(1000)
+        description: Case Priority
+        constraints:
+          - type: not_null
+
+      - name: product_feedback_submitted
+        data_type: boolean
+        description: Product Feedback Submitted
+        constraints:
+          - type: not_null
+
+      - name: products
+        data_type: varchar(5000)
+        description: Products
+        constraints:
+          - type: not_null
+
+      - name: support_type
+        data_type: varchar(240)
+        description: Support Type
+        constraints:
+          - type: not_null
+
+      - name: round_robin_id
+        data_type: numeric(20,17)
+        description: Round Robin ID
+        constraints:
+          - type: not_null
+
+      - name: sales_escalation
+        data_type: boolean
+        description: Sales Escalation
+        constraints:
+          - type: not_null
+
+      - name: solution
+        data_type: varchar(5000)
+        description: Solution
+        constraints:
+          - type: not_null
+
+      - name: status
+        data_type: varchar(100)
+        description: Status
+        constraints:
+          - type: not_null
+
+      - name: subject
+        data_type: varchar(1000)
+        description: Case Subject
+        constraints:
+          - type: not_null
+
+      - name: supplied_email
+        data_type: varchar(400)
+        description: Supplied Email
+        constraints:
+          - type: not_null
+
+      - name: supplied_name
+        data_type: varchar(500)
+        description: Supplied Name
+        constraints:
+          - type: not_null
+
+      - name: survey_send_date_time
+        data_type: timestamp
+        description: Survey Send Date Time
+        constraints:
+          - type: not_null
+
+      - name: thread_id
+        data_type: varchar(300)
+        description: Thread ID
+        constraints:
+          - type: not_null
+
+      - name: case_type
+        data_type: varchar(100)
+        description: Case Type
+        constraints:
+          - type: not_null
+
+      - name: ultimate_parent_account
+        data_type: varchar(790)
+        description: Ultimate Parent Account
+        constraints:
+          - type: not_null
+
+      - name: validation_account_name
+        data_type: varchar(780)
+        description: Validation Account Name
+        constraints:
+          - type: not_null
+
+      - name: xcase_number
+        data_type: varchar(100)
+        description: XCase Number
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded in PST
+        constraints:
+          - type: not_null

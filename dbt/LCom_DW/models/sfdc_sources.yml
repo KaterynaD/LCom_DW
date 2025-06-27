@@ -15,3 +15,6 @@ sources:
       - name: lcom_suite_c
       - name: product_2
       - name: opportunity_line_item
+      - name: user      
+      - name: case           
+      - name: record_type               

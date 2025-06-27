@@ -56,7 +56,9 @@ models:
     revenue:
       +schema: revenue
     staging:
-      +schema: staging      
+      +schema: staging   
+    support:
+      +schema: support         
 
  
 

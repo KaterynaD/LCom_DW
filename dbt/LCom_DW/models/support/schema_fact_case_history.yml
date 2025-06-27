@@ -1,0 +1,141 @@
+version: 2
+
+models:
+  - name: fact_case_history
+    description: "The table records changes in FACT_CASE using Slowly Changing Dimension Type 2 method (fromdate - todate)"
+    config:
+      contract:
+        enforced: false
+      tags:
+        - fact
+
+    columns:
+      - name: case_hist_id
+        data_type: varchar(50)
+        description: Primary key of fact_case_history table.
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+          - not_null
+
+      - name: fromdate
+        data_type: timestamp
+        description: State of data valid from this date.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: todate
+        data_type: timestamp
+        description: State of data valid to this date.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: record_version
+        data_type: integer
+        description: Version number of the record state.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: case_id
+        data_type: varchar(300)
+        description: Foreign key to the case record in FACT_CASE.
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('fact_case')
+            warn_unenforced: false          
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('fact_case')
+              field: case_id
+
+      - name: is_closed
+        data_type: integer
+        description: 1 if case is closed, 0 otherwise.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: is_escalated
+        data_type: integer
+        description: 1 if case is escalated, 0 otherwise.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: closed_date
+        data_type: timestamp
+        description: Date the case was closed.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: case_priority
+        data_type: varchar(1000)
+        description: Priority of the case (e.g., High, Medium, Low).
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: owner_id
+        data_type: varchar(300)
+        description: Owner of the case.
+        constraints:
+          - type: not_null
+        data_data_tests:
+          - not_null        
+          - relationships:
+            to: ref('dim_employee')
+            field: employee_id  
+
+      - name: account_id
+        data_type: varchar(300)
+        description: Foreign key to DIM_ACCOUNT table.
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: loaddate
+        data_type: timestamp
+        description: Timestamp when the record was loaded in PST.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: updatedate
+        data_type: timestamp
+        description: Timestamp when the record was last updated.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: scd_hash
+        data_type: varchar(50)
+        description: Hash of tracked columns for change detection in SCD2.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
