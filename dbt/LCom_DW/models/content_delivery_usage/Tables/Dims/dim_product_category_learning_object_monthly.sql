@@ -109,5 +109,6 @@ mon_lastday,
 Product_Category,
 learning_object_id,
 SchoolYear_StartDate fromdate,
-mon_lastday todate
+mon_lastday todate,
+'{{ var("loaddate") }}'::timestamp as loaddate
 from final_data

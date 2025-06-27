@@ -65,3 +65,11 @@ models:
         description: Valid end date of this category assignment
         constraints:
           - type: not_null
+
+      - name: LoadDate
+        data_type: timestamp
+        description: "Timestamp when the record was loaded."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
