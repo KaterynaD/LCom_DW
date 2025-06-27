@@ -95,6 +95,7 @@ from common.dim_lcom_suite_sku
 
 
 union all
+
 select
 	'dw' as database_name
 	,'common' as schema_name
@@ -102,6 +103,16 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from common.dim_sfdc_product
+
+union all
+
+select
+	'dw' as database_name
+	,'common' as schema_name
+	,'dim_employee' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from common.dim_employee
 
 union all
 
@@ -219,6 +230,26 @@ select
 	,MAX(loaddate) as last_action_date
 from content_delivery_usage.dim_sequence_learning_object
 
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'fact_students_usage_monthly_snapshots' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.fact_students_usage_monthly_snapshots
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'dim_product_category_learning_object_monthly' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.dim_product_category_learning_object_monthly
+
 --revenue
 
 union all
@@ -241,6 +272,26 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from revenue.fact_opportunity_history
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'dim_opportunity_line' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.dim_opportunity_line
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'fact_customers_monthly_snapshots' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.fact_customers_monthly_snapshots
 
 --licensing
 
@@ -273,6 +324,8 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from licensing.dim_license_order_school
+
+
 
 ) 
 
