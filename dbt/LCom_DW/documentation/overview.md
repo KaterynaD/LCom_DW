@@ -31,7 +31,8 @@ AWS Redshift hosts the data
   - **Content_Delivery_Usage** – fact (aggregated snapshots) and dimensional tables related to Usage LCOM data
   - **Licensing** – license orders
   - **Reporting** – views and tables created for specific reports or data feeds
-  - **Revenue** – Salesforce opportunity data
+  - **Revenue** – Salesforce opportunities and customers data
+  - **Support** – Salesforce Support cases  
   - **Staging** – used for some intermediate tables and views
 
 [Tableau visualizes the data](https://10ay.online.tableau.com/#/site/lcomreporting/explore)
