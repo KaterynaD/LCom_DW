@@ -59,7 +59,10 @@ models:
             reference: ref('fact_opportunity')
             warn_unenforced: false    
         data_tests:
-          - not_null     
+          - relationships:
+              to: ref('fact_opportunity')
+              field: opportunity_id       
+          - not_null 
 
  
 

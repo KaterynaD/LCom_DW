@@ -24,8 +24,7 @@ models:
     - type: not_null
   - name: account_id
     data_type: varchar(300)
-    description: DIM_ACCOUNT FK If there are 2 LCOM Organizations - max(account_id)
-      is grouped by SFDC_Account_id
+    description: DIM_ACCOUNT FK 
     constraints:
     - type: not_null
     data_data_tests:

@@ -5,8 +5,7 @@
    
    unique_key='opportunity_id',
 
-   check_cols=['stage_name'],
-   update_cols=['name','amount','amount_won','arr','arr_new_business','arr_renewal','arr_upsell',
+   check_cols=['stage_name','name','amount','amount_won','arr','arr_new_business','arr_renewal','arr_upsell',
 'arr_won','combined_arr','downsell','expected_new_business_arr',
 'expected_revenue','multi_year_arr','new_biz_arr_trigger','nnarr','nrr_renewal','owner_closed_won',
 'owner_open_pipeline','owner_quota','owner_sales_quota',
