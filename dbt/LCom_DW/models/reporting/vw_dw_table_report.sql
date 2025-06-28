@@ -325,7 +325,26 @@ select
 	,MAX(loaddate) as last_action_date
 from licensing.dim_license_order_school
 
+--support
+union all
 
+select
+	'dw' as database_name
+	,'support' as schema_name
+	,'fact_case' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from support.fact_case
+
+union all
+
+select
+	'dw' as database_name
+	,'support' as schema_name
+	,'fact_case_history' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from support.fact_case_history
 
 ) 
 
