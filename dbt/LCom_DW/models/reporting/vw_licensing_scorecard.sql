@@ -5,12 +5,12 @@ with
 dim_date as (
 select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate, SchoolYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
 from {{ source("common","dim_calendar") }}
-where GetDate() between Mon_FirstDay and Mon_LastDay
+where trunc(GetDate()) between Mon_FirstDay and Mon_LastDay
 )
 ,dim_date_prev as (
 select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate, SchoolYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
 from {{ source("common","dim_calendar") }}
-where  date_add('year', -1, GetDate()) between Mon_FirstDay and Mon_LastDay
+where  date_add('year', -1, trunc(GetDate())) between Mon_FirstDay and Mon_LastDay
 )
 ,rawdata as (select
 a.account_id,

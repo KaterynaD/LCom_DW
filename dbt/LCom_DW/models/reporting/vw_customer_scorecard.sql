@@ -7,13 +7,13 @@ with dim_month as
  (
 select distinct FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
 from {{ source("common","dim_calendar") }}
-where GetDate() between Mon_FirstDay and Mon_LastDay
+where trunc(GetDate()) between Mon_FirstDay and Mon_LastDay
 )
 ,dim_month_prev as
  (
 select distinct FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
 from {{ source("common","dim_calendar") }}
-where date_add('year', -1, GetDate()) between Mon_FirstDay and Mon_LastDay
+where date_add('year', -1, trunc(GetDate())) between Mon_FirstDay and Mon_LastDay
 )
 ,contract_based_active_rawdata as (
 select sfdc_ultimate_parent_id
