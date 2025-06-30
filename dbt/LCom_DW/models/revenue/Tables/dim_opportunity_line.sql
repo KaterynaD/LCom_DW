@@ -52,7 +52,9 @@ isnull(ol.start_date_c,  '{{ var("default_date") }}'  ) as start_date	,
 isnull(ol.subscription_term_c, {{ var("default_numeric") }}) as subscription_term	,
 isnull(ol.total_price, {{ var("default_numeric") }}) as total_price	,
 isnull(ol.unit_price, {{ var("default_numeric") }}) as unit_price	,
-isnull(ol.weighted_total_price_c, {{ var("default_numeric") }}) as weighted_total_price	
+isnull(ol.weighted_total_price_c, {{ var("default_numeric") }}) as weighted_total_price	,
+isnull(ol.business_type_opty_product_c,  '{{ var("default_varchar") }}'  ) as business_type_opty_product	,
+isnull(ol.class_c,  '{{ var("default_varchar") }}'  ) as class
 from
 {{ source('fivetran_salesforce_quickstart', 'opportunity_line_item') }} as ol
 where ol.is_deleted=False
@@ -94,6 +96,8 @@ select
 	,sfdc_product_code::VARCHAR(765)
 	,sfdc_product_description::VARCHAR(4000)
 	,sbqq_quote_line::VARCHAR(50)
+	,business_type_opty_product::VARCHAR(765)	
+    ,class::VARCHAR(765)
 	,created_date::TIMESTAMP WITHOUT TIME ZONE
 	,last_modified_date::TIMESTAMP WITHOUT TIME ZONE
     ,'{{ var("loaddate") }}'::timestamp as loaddate

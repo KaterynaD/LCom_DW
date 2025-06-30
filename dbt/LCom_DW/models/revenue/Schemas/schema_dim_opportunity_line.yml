@@ -202,6 +202,23 @@ models:
     description: Quote Line (Quote line that generated this Opportunity Product.)
     constraints:
     - type: not_null
+
+
+  - name: business_type_opty_product
+    data_type: VARCHAR(765)
+    description: 'Class, Learn-207, syncs with CPC quote line item type'
+    constraints:
+    - type: not_null
+
+
+  - name: class
+    data_type: VARCHAR(765)
+    description: 'Class1'
+    constraints:
+    - type: not_null    
+
+
+
   - name: created_date
     data_type: TIMESTAMP WITHOUT TIME ZONE
     description: Created Date  in PST
