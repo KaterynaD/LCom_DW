@@ -15,14 +15,14 @@ select
 	,f.include_flg
 	,f.sfdc_ultimate_parent_id
 	,ah.sfdc_billing_state state
-	,a.sfdc_billing_country country
+	,ah.sfdc_billing_country country
 	,ah.sfdc_name	
-    ,a.sfdc_district_enrollment
+    ,case when ah.sfdc_district_enrollment=0 then ah.sfdc_school_enrollment else ah.sfdc_district_enrollment end as district_enrollment
+    ,case when (ah.sfdc_state_initiative or ah.sfdc_state_initiative_school) then true else false end as state_initiative
+	,ah.sfdc_urban_rural as urban_rural 
 from {{ ref("vw_fact_customers_monthly_snapshots") }} f
-join {{ ref("dim_account") }} a 
-on f.sfdc_ultimate_parent_id = a.sfdc_account_id
 join {{ ref("dim_account_history") }} ah
-on a.account_id = ah.account_id
+on f.sfdc_ultimate_parent_id = ah.account_id
 and f.mon_lastday between ah.fromdate and  ah.todate
 --
 join dim_month c
