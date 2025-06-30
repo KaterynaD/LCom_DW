@@ -8,7 +8,7 @@
         [       
        '{{ create_FK(target.database,model.schema,model.name, "account_id","common","dim_account","account_id") }}',
        '{{ create_FK(target.database,"revenue","fact_opportunity_history","opportunity_id",model.schema,model.name, "opportunity_id") }}' ,
-       '{{ update_FACT_OPPORTUNITY_HISTORY_changed_UK() }}'                                                 
+        {"sql": "{{ update_FACT_OPPORTUNITY_HISTORY_changed_UK() }}", "transaction": False}                                                       
         ]    
         
         )
