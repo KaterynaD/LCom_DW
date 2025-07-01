@@ -3,11 +3,7 @@
 
         materialized='table',        
         sort='start_date', 
-        dist='account_id'  ,
-        post_hook=
-        [       
-       '{{ create_FK(target.database,model.schema,model.name, "account_id","common","dim_account","account_id") }}'       
-        ]    
+        dist='account_id'     
         
         )
 }}
