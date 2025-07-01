@@ -7,6 +7,7 @@ models:
       enforced: true
     tags:
       - dim
+      - common      
   columns:
     - name: sku_id
       data_type: varchar(50)

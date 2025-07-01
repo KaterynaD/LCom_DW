@@ -7,6 +7,7 @@ models:
     config: 
       tags:
         - dim
+        - common
     columns:
       - name: school_id
         description: Primary Key of DIM_SCHOOL (DIM_ACCOUNT.Account_Id)

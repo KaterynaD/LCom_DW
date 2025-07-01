@@ -10,6 +10,7 @@ models:
         enforced: false
       tags:
         - staging
+        - common        
 
     columns:
       - name: sfdc_ultimate_parent_id

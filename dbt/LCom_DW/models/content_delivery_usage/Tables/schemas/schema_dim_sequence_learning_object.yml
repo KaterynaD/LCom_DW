@@ -8,6 +8,7 @@ models:
         enforced: true
     tags:
       - fact
+      - content_delivery_usage      
 
     columns:
       - name: sequence_id

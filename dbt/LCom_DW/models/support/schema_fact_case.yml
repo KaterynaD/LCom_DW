@@ -8,6 +8,7 @@ models:
         enforced: true
       tags:
         - fact
+        - support        
 
     columns:
 

@@ -7,6 +7,7 @@ models:
       enforced: true
     tags:
     - dim
+    - common
   columns:
   - name: account_id
     data_type: varchar(300)

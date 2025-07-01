@@ -7,6 +7,7 @@ models:
       enforced: true
     tags:
     - dim
+    - revenue   
   columns:
   - name: opportunity_line_id
     data_type: VARCHAR(50)
@@ -22,7 +23,7 @@ models:
     description: Foreighn Key to DIM_SFDC_Product. Salesforce product
     constraints:
     - type: not_null
-    data_data_tests:
+    data_tests:
     - relationships:
         to: ref('dim_sfdc_product')
         field: sfdc_product_id
@@ -31,7 +32,7 @@ models:
     description: Foreighn Key to Fact_Opportunity
     constraints:
     - type: not_null
-    data_data_tests:
+    data_tests:
     - relationships:
         to: ref('fact_opportunity')
         field: opportunity_id

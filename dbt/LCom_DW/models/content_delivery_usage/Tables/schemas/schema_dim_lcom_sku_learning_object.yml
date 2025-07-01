@@ -9,6 +9,7 @@ models:
         enforced: true
     tags:
       - fact
+      - content_delivery_usage
 
     columns:
       - name: sku_id

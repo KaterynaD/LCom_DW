@@ -11,7 +11,7 @@ models:
         enforced: false
     tags:
       - fact
-
+      - content_delivery_usage
     columns:
       - name: mon_lastday
         data_type: date

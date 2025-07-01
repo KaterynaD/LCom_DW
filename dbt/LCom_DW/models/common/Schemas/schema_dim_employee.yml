@@ -8,7 +8,7 @@ models:
         enforced: true
       tags:
         - dim
-
+        - common
     columns:
       - name: employee_id
         data_type: varchar(300)

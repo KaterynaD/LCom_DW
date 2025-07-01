@@ -8,6 +8,7 @@ models:
         enforced: false
       tags:
         - fact
+        - support        
 
     columns:
       - name: case_hist_id

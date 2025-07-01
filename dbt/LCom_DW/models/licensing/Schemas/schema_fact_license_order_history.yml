@@ -8,7 +8,7 @@ models:
         enforced: false
       tags:
         - fact
-
+        - licensing
     columns:
 
 

@@ -12,7 +12,7 @@ models:
         enforced: true    
       tags:
         - dim
-
+        - licensing
     columns:
       - name: order_id
         data_type: varchar(100)

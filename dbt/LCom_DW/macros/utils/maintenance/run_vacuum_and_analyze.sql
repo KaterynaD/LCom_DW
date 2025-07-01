@@ -18,7 +18,8 @@ vacuum {{ ref('dim_opportunity_line') }};
 vacuum {{ ref('dim_sequence') }};
 vacuum {{ ref('dim_sequence_learning_object') }};
 vacuum {{ ref('dim_sfdc_product') }};
-
+vacuum {{ ref('fact_case') }};
+vacuum {{ ref('fact_case_history') }};
 vacuum {{ ref('fact_customers_monthly_snapshots') }};
 vacuum {{ ref('fact_launches_monthly_snapshots') }};
 vacuum {{ ref('fact_launches_weekly_snapshots') }};
@@ -47,7 +48,8 @@ analyze {{ ref('dim_opportunity_line') }};
 analyze {{ ref('dim_sequence') }};
 analyze {{ ref('dim_sequence_learning_object') }};
 analyze {{ ref('dim_sfdc_product') }};
-
+analyze {{ ref('fact_case') }};
+analyze {{ ref('fact_case_history') }};
 analyze {{ ref('fact_customers_monthly_snapshots') }};
 analyze {{ ref('fact_launches_monthly_snapshots') }};
 analyze {{ ref('fact_launches_weekly_snapshots') }};

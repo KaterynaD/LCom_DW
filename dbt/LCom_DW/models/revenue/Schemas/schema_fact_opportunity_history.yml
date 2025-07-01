@@ -13,6 +13,7 @@ models:
         enforced: false
       tags:
         - fact
+        - revenue        
     columns:
       - name: opportunity_hist_id
         data_type: varchar(300)

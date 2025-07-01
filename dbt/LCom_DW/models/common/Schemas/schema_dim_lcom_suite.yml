@@ -8,6 +8,7 @@ models:
         enforced: true
       tags:
         - dim
+        - common
     columns:
       - name: suite_id
         data_type: varchar(50)

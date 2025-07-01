@@ -14,7 +14,7 @@ models:
         enforced: true
       tags:
         - fact
-
+        - licensing
     columns:
       - name: order_id
         data_type: varchar(100)
@@ -31,7 +31,7 @@ models:
         description: DIM_LCOM_SKU FK
         constraints:
           - type: not_null
-        data_data_tests:
+        data_tests:
           - relationships:
               to: ref('dim_lcom_sku')
               field: sku_id            
@@ -41,7 +41,7 @@ models:
         description: DIM_ACCOUNT FK
         constraints:
           - type: not_null
-        data_data_tests:
+        data_tests:
           - relationships:
               to: ref('dim_account')
               field: account_id      

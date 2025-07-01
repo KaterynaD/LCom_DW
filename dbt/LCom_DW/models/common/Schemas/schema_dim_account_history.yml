@@ -13,6 +13,7 @@ models:
       enforced: false
     tags:
     - dim
+    - common
   columns:
   - name: account_hist_id
     data_type: varchar(50)

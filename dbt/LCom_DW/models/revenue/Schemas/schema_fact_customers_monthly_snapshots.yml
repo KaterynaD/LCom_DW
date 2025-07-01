@@ -22,6 +22,7 @@ models:
       tags:
         - fact
         - customers
+        - revenue        
 
     columns:
 
