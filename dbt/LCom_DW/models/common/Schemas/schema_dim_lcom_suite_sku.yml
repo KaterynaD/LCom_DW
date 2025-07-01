@@ -6,9 +6,9 @@ models:
     config:
       contract:
         enforced: true
-    tags:
-      - dim
-      - common
+      tags:
+        - dim
+        - common
 
     columns:
       - name: suite_id

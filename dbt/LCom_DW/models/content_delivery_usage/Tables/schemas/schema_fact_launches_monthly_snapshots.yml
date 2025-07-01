@@ -9,9 +9,10 @@ models:
     config:
       contract:
         enforced: false
-    tags:
-      - fact
-      - content_delivery_usage
+      tags:
+        - fact
+        - cdu           
+
     columns:
       - name: mon_lastday
         data_type: date

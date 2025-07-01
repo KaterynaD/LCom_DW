@@ -8,7 +8,8 @@ models:
         enforced: true
       tags:
         - dim
-        - content_delivery_usage
+        - cdu
+
     columns:
       - name: sequence_id
         data_type: varchar(50)

@@ -6,9 +6,9 @@ models:
     config:
       contract:
         enforced: true
-    tags:
-      - fact
-      - content_delivery_usage      
+      tags:
+        - dim
+        - cdu        
 
     columns:
       - name: sequence_id

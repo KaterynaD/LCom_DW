@@ -6,7 +6,7 @@ models:
     config:
       tags:
         - dim
-        - common        
+    
     columns:
       - name: district_id
         description: Primary Key of DIM_DISTRICT (DIM_ACCOUNT.Account_Id). 
