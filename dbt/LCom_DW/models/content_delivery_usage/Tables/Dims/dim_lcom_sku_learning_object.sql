@@ -3,8 +3,7 @@
 
         materialized='table',        
         sort='sku_id', 
-        dist='all',
-        post_hook='{{ create_FK(target.database,model.schema,model.name, "sku_id","common","dim_lcom_sku","sku_id") }}'
+        dist='all'
  )  
 }}
 

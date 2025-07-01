@@ -3,8 +3,7 @@
 
         materialized='table',        
         sort='sequence_id', 
-        dist='even',
-        post_hook='{{ create_FK(target.database,model.schema,model.name, "sequence_id","content_delivery_usage","dim_sequence","sequence_id") }}'
+        dist='even'
  )  
 }}
 

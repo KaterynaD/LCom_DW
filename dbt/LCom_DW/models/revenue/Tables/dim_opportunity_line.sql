@@ -2,9 +2,7 @@
     config(
         materialized='table',        
         sort='sfdc_product_id', 
-        dist='opportunity_id'  ,
-        post_hook=['{{ create_FK(target.database,model.schema,model.name, "sfdc_product_id","common","dim_sfdc_product","sfdc_product_id") }}',
-                   '{{ create_FK(target.database,model.schema,model.name, "opportunity_id","revenue","fact_opportunity","opportunity_id") }}'                                                    
+        dist='opportunity_id'  
         ]                                                   
          )
 }}

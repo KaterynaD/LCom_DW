@@ -5,12 +5,7 @@
     sort='created_date', 
     dist='account_id'  ,
     post_hook=[        
-        '{{ create_FK(target.database,model.schema,model.name, "account_id","common","dim_account","account_id") }}',
-        '{{ create_FK(target.database,model.schema,model.name, "owner_id","common","dim_employee","employee_id") }}',
-        '{{ create_FK(target.database,"support","fact_case_history","case_id",model.schema,model.name, "case_id") }}' ,
-        {"sql": "{{ update_FACT_CASE_HISTORY_changed_UK() }}", "transaction": False}                                               
-
-    
+        {"sql": "{{ update_FACT_CASE_HISTORY_changed_UK() }}", "transaction": False}                                                   
     ]
     )
 }}
