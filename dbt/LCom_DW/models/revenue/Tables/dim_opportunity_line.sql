@@ -6,8 +6,8 @@
          )
 }}
 
--- depends_on: {{ ref("fact_opportunity") }}  
--- depends_on: {{ ref("dim_sfdc_product") }}  
+
+  
 
 with data as (
 select
@@ -54,6 +54,10 @@ isnull(ol.business_type_opty_product_c,  '{{ var("default_varchar") }}'  ) as bu
 isnull(ol.class_c,  '{{ var("default_varchar") }}'  ) as class
 from
 {{ source('fivetran_salesforce_quickstart', 'opportunity_line_item') }} as ol
+join {{ ref('fact_opportunity') }} as o
+on ol.opportunity_id = o.opportunity_id
+join {{ ref("dim_sfdc_product") }} as p
+on ol.product_2_id = p.sfdc_product_id
 where ol.is_deleted=False
 )
 select
