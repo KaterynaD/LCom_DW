@@ -22,7 +22,7 @@ select
 	,ah.sfdc_urban_rural as urban_rural 
 from {{ ref("vw_fact_customers_monthly_snapshots") }} f
 join {{ ref("dim_account_history") }} ah
-on f.sfdc_ultimate_parent_id = ah.account_id
+on f.sfdc_ultimate_parent_id = ah.sfdc_account_id
 and f.mon_lastday between ah.fromdate and  ah.todate
 --
 join dim_month c
