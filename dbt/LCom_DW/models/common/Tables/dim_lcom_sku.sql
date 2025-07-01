@@ -2,11 +2,7 @@
         
         materialized='table',
         dist='all',
-        sort='sku_name',
-        post_hook=[
-                '{{ create_FK(target.database,"licensing","fact_license_order","sku_id",model.schema,model.name, "sku_id") }}',
-                '{{ create_FK(target.database,"licensing","fact_license_order_history","sku_id",model.schema,model.name, "sku_id") }}'
-                  ]
+        sort='sku_name'
 )
  }}
 

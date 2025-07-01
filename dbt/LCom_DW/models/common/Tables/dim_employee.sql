@@ -3,13 +3,7 @@
 
         materialized='table',
         sort='employee_id', 
-        dist='all',
-          post_hook=[
-        
-        '{{ create_FK(target.database,"support","fact_case","owner_id",model.schema,model.name, "employee_id")   }}   ',
-        '{{ create_FK(target.database,"support","fact_case_history","owner_id",model.schema,model.name, "employee_id")   }}   '        
-    
-    ]
+        dist='all'
  )  
 }}
 

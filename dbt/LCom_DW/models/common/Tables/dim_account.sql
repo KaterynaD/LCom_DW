@@ -4,7 +4,7 @@
         materialized='table',        
         dist='account_id', 
         sort='account_id',
-        post_hook=['{{ FK_to_DIM_ACCOUNT() }}','{{ update_DIM_ACCOUNT_HISTORY_changed_UK() }}']                         
+        post_hook=['{{ update_DIM_ACCOUNT_HISTORY_changed_UK() }}']                         
         )
 }}
 
