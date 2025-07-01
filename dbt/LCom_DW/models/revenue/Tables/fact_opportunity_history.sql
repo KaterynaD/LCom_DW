@@ -37,7 +37,7 @@
    sort='fromdate' ,
 	pre_hook=
         [       
-        {"sql": "{{ update_FACT_OPPORTUNITY_HISTORY_changed_UK() }}", "transaction": "false"}                                                       
+        {"sql": "{{ update_FACT_OPPORTUNITY_HISTORY_changed_UK() }}", "transaction": false}                                                       
         ] 
 ) }}
 
