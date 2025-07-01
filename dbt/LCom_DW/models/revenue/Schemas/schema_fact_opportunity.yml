@@ -27,7 +27,7 @@ models:
     description: DIM_ACCOUNT FK 
     constraints:
     - type: not_null
-    data_data_tests:
+    data_tests:
     - relationships:
         to: ref('dim_account')
         field: account_id
