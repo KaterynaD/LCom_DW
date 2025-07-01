@@ -2,8 +2,7 @@
     config(
         materialized='table',        
         sort='sfdc_product_id', 
-        dist='opportunity_id'  
-        ]                                                   
+        dist='opportunity_id'                                                 
          )
 }}
 
