@@ -6,8 +6,7 @@
          )
 }}
 
--- depends_on: {{ ref("fact_opportunity") }}  
--- depends_on: {{ ref("dim_sfdc_product") }}  
+  
 
 with data as (
 select
