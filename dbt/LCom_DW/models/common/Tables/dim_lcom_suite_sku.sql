@@ -4,7 +4,7 @@
         materialized='table',        
         sort='suite_id', 
         dist='all'
-        ]
+   
  )  
 }}
 
