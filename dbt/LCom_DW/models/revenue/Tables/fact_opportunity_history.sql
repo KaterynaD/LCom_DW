@@ -34,8 +34,11 @@
    loaddate = var('loaddate'),
 
    dist='account_id', 
-   sort='fromdate' 
-
+   sort='fromdate' ,
+	pre_hook=
+        [       
+        {"sql": "{{ update_FACT_OPPORTUNITY_HISTORY_changed_UK() }}", "transaction": "false"}                                                       
+        ] 
 ) }}
 
 select 
