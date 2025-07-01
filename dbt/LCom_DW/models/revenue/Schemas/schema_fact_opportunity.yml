@@ -464,11 +464,17 @@ models:
     constraints:
     - type: not_null
 
-  - name: lost_reason
-    data_type: varchar(780)
-    description: Lost Reason
+  - name: loss_reason
+    data_type: varchar(765)
+    description: Loss Reason
     constraints:
     - type: not_null
+
+  - name: loss_notes
+    data_type: varchar(3000)
+    description: Lost Notes
+    constraints:
+    - type: not_null        
 
   - name: migrated
     data_type: boolean
