@@ -10,7 +10,7 @@
  {%  if get_day_of_month_now()<=5 %}
 
  --Previous and Current month first 5 days
- mon_year in ( GETDATE(), 'YYYYMM')::int, 
+ mon_year in ( TO_CHAR(GETDATE(), 'YYYYMM')::int, 
                TO_CHAR(DATEADD(month, -1, GETDATE()), 'YYYYMM')::int)
 {% else %}
 
