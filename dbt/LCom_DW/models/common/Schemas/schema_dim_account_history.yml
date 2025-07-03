@@ -111,14 +111,14 @@ models:
     - not_null
   - name: sfdc_state_eligible_or_initiative
     data_type: integer
-    description: State Eligible or Initiative
+    description: Do not use. Column deleted in SFDC. Always 0.
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_state_eligible_or_initiative_school
     data_type: integer
-    description: State Eligible or Initiative from the child(school) level. 1 if any school has True attribute
+    description: Do not use. Column deleted in SFDC. Always 0.
     constraints:
     - type: not_null
     data_tests:

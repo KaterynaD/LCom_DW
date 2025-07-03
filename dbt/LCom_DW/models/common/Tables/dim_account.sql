@@ -14,8 +14,7 @@ with sch as (
 select
     parent_id,
     BOOL_OR(state_initiative_c) as school_state_initiative_c,
-    BOOL_OR(district_state_initiative_c) as school_district_state_initiative_c,
-    BOOL_OR(state_eligible_or_initiative_c) as school_state_eligible_or_initiative_c
+    BOOL_OR(district_state_initiative_c) as school_district_state_initiative_c
 FROM {{ source('fivetran_salesforce_quickstart', 'account') }}
 where org_type_c='School'
 group by parent_id
@@ -263,7 +262,6 @@ group by parent_id
     sfdc_account.school_year_end_c,
     sfdc_account.school_year_start_c,
     sfdc_account.schools_in_district_c,
-    sfdc_account.state_eligible_or_initiative_c,
     sfdc_account.state_initiative_c,
     sfdc_account.state_profile_c,
     sfdc_account.state_program_eligible_c,
@@ -322,11 +320,9 @@ group by parent_id
     --School (some child accounts info)
     sch.school_state_initiative_c as state_initiative_school,
     sch.school_district_state_initiative_c as district_state_initiative_school,
-    sch.school_state_eligible_or_initiative_c as state_eligible_or_initiative_school,
     --District (some parent account info)
     dist.state_initiative_c as state_initiative_district,
     dist.district_state_initiative_c as district_state_initiative_district,
-    dist.state_eligible_or_initiative_c as state_eligible_or_initiative_district,
     --
     lower(loc.lcom_platform_organization_id_c) lcom_organization_id,
     --
@@ -909,8 +905,6 @@ select
     '{{ var("default_date") }}') as SFDC_school_year_start,
     isnull(SFDC_data.schools_in_district_c,
     {{ var("default_numeric") }}) as SFDC_schools_in_district,
-    isnull(SFDC_data.state_eligible_or_initiative_c,
-    {{ var("default_boolean") }}) as SFDC_state_eligible_or_initiative,
     isnull(SFDC_data.state_initiative_c,
     {{ var("default_boolean") }}) as SFDC_state_initiative,
     isnull(SFDC_data.state_profile_c,
@@ -1028,15 +1022,11 @@ select
     {{ var("default_boolean") }}) as SFDC_state_initiative_school,
     isnull(SFDC_data.district_state_initiative_school,
     {{ var("default_boolean") }}) as SFDC_district_state_initiative_school,
-    isnull(SFDC_data.state_eligible_or_initiative_school,
-    {{ var("default_boolean") }}) as SFDC_state_eligible_or_initiative_school,
     --District (some parent account info)
     isnull(SFDC_data.state_initiative_district,
     {{ var("default_boolean") }}) as SFDC_state_initiative_district,
     isnull(SFDC_data.district_state_initiative_district,
     {{ var("default_boolean") }}) as SFDC_district_state_initiative_district,
-    isnull(SFDC_data.state_eligible_or_initiative_district,
-    {{ var("default_boolean") }}) as SFDC_state_eligible_or_initiative_district,
     --Calculated
 --
 case when
@@ -1324,7 +1314,6 @@ select
   '{{ var("default_date") }}' as SFDC_school_year_end ,
   '{{ var("default_date") }}' as SFDC_school_year_start ,
    {{ var("default_numeric") }}   as   SFDC_schools_in_district ,
-   {{ var("default_boolean") }}   as   SFDC_state_eligible_or_initiative ,
    {{ var("default_boolean") }}   as   SFDC_state_initiative ,
   '{{ var("default_varchar") }}' as SFDC_state_profile ,
    {{ var("default_boolean") }}   as   SFDC_state_program_eligible ,
@@ -1384,11 +1373,9 @@ select
   --School (some child accounts info)
 {{ var("default_boolean") }} as SFDC_state_initiative_school,
 {{ var("default_boolean") }} as SFDC_district_state_initiative_school,
-{{ var("default_boolean") }} as SFDC_state_eligible_or_initiative_school,
 --District (some parent account info)
 {{ var("default_boolean") }} as SFDC_state_initiative_district,
 {{ var("default_boolean") }} as SFDC_district_state_initiative_district,
-{{ var("default_boolean") }} as SFDC_state_eligible_or_initiative_district,
 --Calculated
 {{ var("default_boolean") }} as isHighSchool,
 {{ var("default_numeric") }} as SFDC_ultimate_parent_current_renewal_arr
@@ -1654,7 +1641,6 @@ select
     sfdc_school_year_end :: date,
     sfdc_school_year_start :: date,
     sfdc_schools_in_district :: double precision,
-    sfdc_state_eligible_or_initiative :: boolean,
     sfdc_state_initiative :: boolean,
     sfdc_state_profile :: varchar(30),
     sfdc_state_program_eligible :: boolean,
@@ -1713,10 +1699,8 @@ select
     SFDC_lcom_organization_id :: varchar(300),
     sfdc_state_initiative_school :: boolean,
     sfdc_district_state_initiative_school :: boolean,
-    sfdc_state_eligible_or_initiative_school :: boolean,
     sfdc_state_initiative_district :: boolean,
     sfdc_district_state_initiative_district :: boolean,
-    sfdc_state_eligible_or_initiative_district :: boolean,
     --Calculated
     isHighSchool:: boolean,
     SFDC_ultimate_parent_current_renewal_arr :: numeric(38,10),

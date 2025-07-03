@@ -1394,11 +1394,6 @@ models:
     description: 'Schools in District (Integrations: Gainsight.)'
     constraints:
     - type: not_null
-  - name: sfdc_state_eligible_or_initiative
-    data_type: boolean
-    description: State Eligible or Initiative
-    constraints:
-    - type: not_null
   - name: sfdc_state_initiative
     data_type: boolean
     description: 'State Initiative (Integrations: Gainsight.)'
@@ -1704,12 +1699,6 @@ models:
       school has True attribute
     constraints:
     - type: not_null
-  - name: sfdc_state_eligible_or_initiative_school
-    data_type: boolean
-    description: State Eligible or Initiative from the child(school) level. True if
-      any school has True attribute
-    constraints:
-    - type: not_null
   - name: sfdc_state_initiative_district
     data_type: boolean
     description: State Initiative from the parent(district) level. True if parent`s
@@ -1720,12 +1709,6 @@ models:
     data_type: boolean
     description: District State Initiative from the parent(district) level. True if
       parent`s attribute is True
-    constraints:
-    - type: not_null
-  - name: sfdc_state_eligible_or_initiative_district
-    data_type: boolean
-    description: State Eligible or Initiative from the parent(district) level. True
-      if parent`s attribute is True
     constraints:
     - type: not_null
   - name: ishighschool
