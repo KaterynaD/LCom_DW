@@ -15,13 +15,6 @@ ALTER TABLE licensing.dim_license_order_school ADD FOREIGN KEY (organization_sch
 ALTER TABLE licensing.dim_license_order_school ADD FOREIGN KEY (order_id) REFERENCES licensing.fact_license_order(order_id);
 --
 
-ALTER TABLE revenue.fact_opportunity_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
-ALTER TABLE revenue.fact_opportunity_history ADD FOREIGN KEY (opportunity_id) REFERENCES revenue.fact_opportunity(opportunity_id);
-
-ALTER TABLE support.fact_case_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
-ALTER TABLE support.fact_case_history ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
-ALTER TABLE support.fact_case_history ADD FOREIGN KEY (case_id) REFERENCES support.fact_case(case_id);
-
 
 
 {% endset %}
