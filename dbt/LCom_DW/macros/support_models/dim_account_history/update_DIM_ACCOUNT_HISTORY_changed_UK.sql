@@ -13,6 +13,20 @@
 --and SFDC account exists with more then 1 records in DIM_ACCOUNT_HISTORY
 --then after update account_id in dim_account_history we may have a mess with from - to dates
 --let's delete LCom Org history records since there are less info
+
+insert into common.dim_account_history_deleted
+select * from common.dim_account_history
+where account_id in (
+select 
+a.account_id
+from (select account_id, lcom_organization_id, sfdc_account_id from common.dim_account_history where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') h
+join (select account_id, lcom_organization_id, sfdc_account_id from common.dim_account where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') a
+on h.sfdc_account_id = a.sfdc_account_id 
+where h.account_id<>a.account_id --account_id was changed in dim_account but not in the history table
+and a.account_id<>a.sfdc_account_id --it's changed from SFDC to LCom
+);
+
+
 delete from common.dim_account_history
 where account_id in (
 select 
