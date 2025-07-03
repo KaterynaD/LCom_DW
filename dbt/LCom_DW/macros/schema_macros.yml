@@ -27,7 +27,7 @@ macros:
 
   
   - name: create_FK
-    description: Creates Foreighn Key for a specific database.schema.table.column to database.refschema.reftable.refcolumn if they exist. It's needed to re-create FK to models with "Table" materialization after the models run to the models with "Incremental" materialization. The call is done from "Table" materialized models post-hooks
+    description: Creates Foreign Key for a specific database.schema.table.column to database.refschema.reftable.refcolumn if they exist. It's needed to re-create FK to models with "Table" materialization after the models run to the models with "Incremental" materialization. The call is done from "Table" materialized models post-hooks
     arguments:
       - name: database
         description: The database where the tables are located
@@ -45,7 +45,10 @@ macros:
         description: The column in the reference table that is the primary key  
 
   - name: create_FKs_set_1
-    description: One time run to create a set of FKs for some tables   
+    description: One time run to create a set of FKs for some tables which are incremental and FKs are not removed in every day refresh 
+
+  - name: Recreating_FK
+    description: Recreating a set of FKs for full refresh tables and FKs are removed each run        
 
   - name: create_lc_load_launches_monthly_snapshots
     description: Creates a set of overloading stored procedures lc_load_launches_monthly_snapshots in content_delivery_usage schema. The stored procedure populates content_delivery_usage.fact_launches_monthly_snapshots table and was created before the start of dbt project. The stored procedure is used in fact_launches_monthly_snapshots model with custom materialization.
@@ -88,8 +91,13 @@ macros:
   - name: update_DIM_ACCOUNT_HISTORY_changed_UK
     description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage accounts deleted in SFDC
 
+  - name: delete_from_DIM_ACCOUNT_HISTORY_from_to_the_same
+    description: Deletes records from DIM_ACCOUNT_HISTORY if fromdate=todate They are not usable for history tracking anyway    
+
   - name: update_FACT_OPPORTUNITY_HISTORY_changed_UK
     description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage opportunities deleted in SFDC    
 
   - name: update_FACT_CASE_HISTORY_changed_UK
     description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage cases deleted in SFDC        
+
+    

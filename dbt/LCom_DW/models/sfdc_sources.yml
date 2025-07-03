@@ -17,4 +17,5 @@ sources:
       - name: opportunity_line_item
       - name: user      
       - name: case           
-      - name: record_type               
+      - name: record_type             
+        

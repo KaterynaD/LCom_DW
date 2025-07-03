@@ -59,7 +59,9 @@
    loaddate = var('loaddate'),
 
    dist='account_id', 
-   sort='fromdate' 
+   sort='fromdate' ,
+   
+   post_hook=['{{ delete_from_DIM_ACCOUNT_HISTORY_from_to_the_same() }}'] 
 
 ) }}
 

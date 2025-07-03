@@ -4,9 +4,7 @@
     materialized='table',    
     sort='created_date', 
     dist='account_id'  ,
-    post_hook=[        
-        {"sql": "{{ update_FACT_CASE_HISTORY_changed_UK() }}", "transaction": False}                                                   
-    ]
+    post_hook=['{{ update_FACT_CASE_HISTORY_changed_UK() }}']
     )
 }}
 

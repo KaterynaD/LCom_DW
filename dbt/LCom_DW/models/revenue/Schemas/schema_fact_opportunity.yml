@@ -154,21 +154,6 @@ models:
     description: Close Date
     constraints:
     - type: not_null
-  - name: close_date_minus_last_activity_date
-    data_type: numeric(25,10)
-    description: Close Date minus Last Activity Date
-    constraints:
-    - type: not_null
-  - name: close_month
-    data_type: integer
-    description: Close Month
-    constraints:
-    - type: not_null
-  - name: close_year
-    data_type: integer
-    description: Close Year
-    constraints:
-    - type: not_null
   - name: closed_won_date_time
     data_type: timestamp
     description: Closed Won Date/Time (Used to Capture Closed Won Date and Time)
@@ -230,21 +215,6 @@ models:
     description: Created Date in PST
     constraints:
     - type: not_null
-  - name: created_mon
-    data_type: integer
-    description: Created Month
-    constraints:
-    - type: not_null
-  - name: created_month
-    data_type: date
-    description: Custom Created Date
-    constraints:
-    - type: not_null
-  - name: created_year
-    data_type: integer
-    description: Created Year
-    constraints:
-    - type: not_null
   - name: csm_email
     data_type: varchar(400)
     description: CSM Email
@@ -260,11 +230,6 @@ models:
     description: CSM Name
     constraints:
     - type: not_null
-  - name: data_deletion_archiving_discussed
-    data_type: boolean
-    description: Data deletion/archiving discussed?
-    constraints:
-    - type: not_null
   - name: data_quality_description
     data_type: varchar(70)
     description: Data Quality Description
@@ -273,21 +238,6 @@ models:
   - name: data_quality_score
     data_type: integer
     description: Data Quality Score
-    constraints:
-    - type: not_null
-  - name: days_open
-    data_type: numeric(25,10)
-    description: Days Open (Number of days that have passed since the opp was created)
-    constraints:
-    - type: not_null
-  - name: days_past_due
-    data_type: numeric(25,10)
-    description: Days Past Due
-    constraints:
-    - type: not_null
-  - name: days_since_last_activity
-    data_type: numeric(25,10)
-    description: Days since last activity
     constraints:
     - type: not_null
   - name: deal_docs_completed
@@ -984,17 +934,6 @@ models:
     description: Success Plan Shared
     constraints:
     - type: not_null
-  - name: system_modstamp
-    data_type: timestamp
-    description: System Modstamp
-    constraints:
-    - type: not_null
-  - name: test_account
-    data_type: boolean
-    description: Test Account (Returns the value of 'Test Account' from the account
-      object. Used for filtering list views for forecasting)
-    constraints:
-    - type: not_null
   - name: total_arr_bookings
     data_type: numeric(38,10)
     description: Total ARR Bookings (Captures renewal ARR + Upsell ARR)
@@ -1089,11 +1028,7 @@ models:
     description: 18 for 12
     constraints:
     - type: not_null
-  - name: x_30_days_from_being_closed_lost
-    data_type: boolean
-    description: 30 Days from being Closed Lost
-    constraints:
-    - type: not_null
+
 
   - name: x_2_nd_contact_email
     data_type: varchar(250)
