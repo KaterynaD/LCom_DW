@@ -61,13 +61,11 @@ SFDC_virtual_school,
 SFDC_virtual_status_text,
 --Other useful SFDC columns
 SFDC_district_state_initiative,
-SFDC_state_eligible_or_initiative,
 SFDC_state_initiative,
 SFDC_urban_rural,
 --District (some parent account info)
 SFDC_state_initiative_district,
 SFDC_district_state_initiative_district,
-SFDC_state_eligible_or_initiative_district,
 isHighSchool,
 loaddate
 from {{ ref('dim_account') }}

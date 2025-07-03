@@ -63,14 +63,12 @@ SFDC_school_enrollment,
 --Other useful SFDC columns
 sfdc_state_program_eligible ,
 SFDC_district_state_initiative	,
-SFDC_state_eligible_or_initiative	,
 SFDC_state_initiative	,
 SFDC_urban_rural,
 SFDC_owner_name_text,
 -- some School level SFDC info
 SFDC_state_initiative_school,
 SFDC_district_state_initiative_school,
-SFDC_state_eligible_or_initiative_school,
 --
 loaddate
 --
