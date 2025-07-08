@@ -811,6 +811,14 @@ models:
     description: Renewal Owner Email
     constraints:
     - type: not_null
+
+  - name: renewal_opportunity_id
+    data_type: varchar(300)
+    description: Renewal Opportunity Id
+    constraints:
+    - type: not_null
+
+
   - name: rep_says_go
     data_type: boolean
     description: Rep Says Go! (Checking this box includes this opportunity in the
@@ -954,6 +962,15 @@ models:
     description: Training Session created (Training Session created)
     constraints:
     - type: not_null
+
+
+  - name: transacted_opp_id
+    data_type: varchar(300)
+    description: Transacted Opportunity (for combine_upsell_arrs)
+    constraints:
+    - type: not_null
+
+
   - name: true_arr
     data_type: numeric(35,10)
     description: True ARR (Denotes the true ARR value of an opportunity.  Populated
