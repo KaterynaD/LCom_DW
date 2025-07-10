@@ -1369,11 +1369,6 @@ models:
     description: School Enrollment
     constraints:
     - type: not_null
-  - name: sfdc_school_id
-    data_type: varchar(780)
-    description: School NCES
-    constraints:
-    - type: not_null
   - name: sfdc_school_type
     data_type: varchar(780)
     description: School Type (This field is mapped and will sync with Agile/ConnectLink)
