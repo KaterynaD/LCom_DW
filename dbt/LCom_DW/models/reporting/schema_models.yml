@@ -60,36 +60,4 @@ models:
     config:
       tags:
         - rep
-
-
-exposures:
-
-  - name: get_monthly_snapshot_data_district_level
-    label: Monthly Year over Year
-    type: dashboard
-    maturity: medium
-    url: https://10ay.online.tableau.com/#/site/lcomreporting/datasources/77890515/connections
-    description: >
-      YoY Provisioning Licensing and Utilization data source
-
-    depends_on:
-      - ref('get_monthly_snapshot_data_district_level')
-
-    owner:
-      name: Kate Drogaieva
-      email: kdrogaieva@learning.com     
-
-  - name: get_weekly_snapshot_data_district_level
-    label: Weekly Usage
-    type: dashboard
-    maturity: medium
-    url: https://10ay.online.tableau.com/#/site/lcomreporting/datasources/78530453/connections
-    description: >
-      Weekly Utilization data source
-
-    depends_on:
-      - ref('get_weekly_snapshot_data_district_level')
-
-    owner:
-      name: Kate Drogaieva
-      email: kdrogaieva@learning.com        
+       
