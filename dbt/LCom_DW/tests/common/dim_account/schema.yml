@@ -1,0 +1,7 @@
+version: 2
+data_tests:
+  - name: dim_account_all_organizations_included
+    description: validates if all LCom organizations are included in DIM_ACCOUNT
+
+  - name: dim_account_all_sfdc_accounts_included
+    description: validates if all SFDC accounts are included in DIM_ACCOUNT    

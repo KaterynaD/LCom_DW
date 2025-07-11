@@ -1,0 +1,63 @@
+---
+version: 2
+models:
+  - name: get_monthly_snapshot_data_district_level
+    description: View to use in Monthly Year over Year Provisioning Licensing and Utilization dashboard
+    config:
+      tags:
+        - rep
+  - name: get_weekly_snapshot_data_district_level
+    description: View to use in Weekly Provisioning Licensing and Utilization dashboard
+    config:
+      tags:
+        - rep
+
+  - name: vw_dw_table_report
+    description: Row counts and last action date for all tabless/views in DW database schemas
+    config:
+      tags:
+        - rep
+
+  - name: vw_cdu_table_report
+    description: Row counts and last action date for all tabless/views in CONTENT_DELIVERY_USAGE database schemas
+    config:
+      tags:
+        - rep
+
+
+  - name: vw_usage_scorecard
+    description: Active Students and Launches in current School Year Month for scorecards dashboard
+    config:
+      tags:
+        - rep
+
+  - name: vw_licensing_scorecard
+    description: Number of Districts, Schools and Students licenses in current School Year Month for scorecards dashboard
+    config:
+      tags:
+        - rep
+
+  - name: vw_licensing_monthly
+    description: Historical numbers of Districts, Schools and Students licenses monthly
+    config:
+      tags:
+        - rep        
+
+  - name: vw_customer_scorecard
+    description: Contract Active, Net Active and Total Active number of customers for scorecard dashboard
+    config:
+      tags:
+        - rep        
+
+  - name: vw_customers_monthly
+    description: Historical Contract Active, Net Active and Total Active, New, Returning Churn, NonRenewal number of customers monthly
+    config:
+      tags:
+        - rep       
+
+  - name: vw_customers_opportunities_monthly
+    description: Opportunities details based on customers monthly counts built
+    config:
+      tags:
+        - rep
+       

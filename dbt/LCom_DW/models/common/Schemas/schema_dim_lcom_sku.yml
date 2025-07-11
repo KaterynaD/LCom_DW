@@ -1,0 +1,85 @@
+version: 2
+models:
+- name: dim_lcom_sku
+  description: LCom SKU (Product) Dimension Table
+  config:
+    contract:
+      enforced: true
+    tags:
+      - dim
+      - common      
+  columns:
+    - name: sku_id
+      data_type: varchar(50)
+      description: Unique SKU identifier
+      constraints:
+        - type: not_null
+        - type: primary_key
+          warn_unenforced: false
+      data_tests:
+        - unique
+
+    - name: sku_group
+      data_type: varchar(200)
+      description: SKU Groups. "EasyTech","EasyCode" or  "Tech Apps for Texas" by SKU Name, Product Name from LCOM system or "Other"
+      constraints:
+        - type: not_null
+
+    - name: sku_subgroup
+      data_type: varchar(200)
+      description: SKU SubGroups. (Online Safety, Pillars etc from SKU Name, Product Name from LCOM system or "Other")
+      constraints:
+        - type: not_null        
+
+    - name: sku_name
+      data_type: varchar(150)
+      description: Name of the SKU
+      constraints:
+        - type: not_null
+
+    - name: sku_description
+      data_type: varchar(1100)
+      description: Detailed description of the SKU
+      constraints:
+        - type: not_null
+
+    - name: parent_sku_id
+      data_type: varchar(100)
+      description: ID of the parent SKU
+      constraints:
+        - type: not_null
+
+    - name: parent_sku_name
+      data_type: varchar(150)
+      description: Name of the parent SKU
+      constraints:
+        - type: not_null
+
+    - name: is_active
+      data_type: boolean
+      description: Indicates if the SKU is active
+      constraints:
+        - type: not_null
+
+    - name: is_valid
+      data_type: boolean
+      description: Indicates if the SKU is valid
+      constraints:
+        - type: not_null
+
+    - name: auditcreatedate
+      data_type: timestamp
+      description: Record creation PST timestamp in the source system
+      constraints:
+        - type: not_null
+
+    - name: auditupdatedate
+      data_type: timestamp
+      description: Record last update PST timestamp in the source system
+      constraints:
+        - type: not_null
+    - name: loaddate
+      data_type: timestamp
+      description: The datetime the record was loaded (PST)
+      constraints:
+        - type: not_null        

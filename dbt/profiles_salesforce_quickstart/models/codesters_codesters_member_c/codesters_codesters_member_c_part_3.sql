@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","codesters_codesters_member_c") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","codesters_codesters_member_c"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["associated_account_id_c", "customer_gsid_c", "codesters_codesters_profile_social_auth_provider_c", "codesters_codesters_profile_screen_name_c", "codesters_codesters_last_name_c", "created_by_id", "codesters_codesters_username_c", "codesters_codesters_profile_init_source_c", "name", "codesters_contact_c", "codesters_codesters_first_name_c", "codesters_codesters_profile_school_c", "codesters_codesters_id_c", "codesters_codesters_organization_c", "codesters_codesters_email_c", "codesters_codesters_profile_init_medium_c", "codesters_codesters_profile_country_c", "codesters_codesters_profile_init_campaign_c", "last_modified_by_id", "codesters_codesters_profile_school_type_c", "codesters_codesters_profile_postal_code_c", "codesters_codesters_profile_school_code_c", "codesters_codesters_profile_region_c", "codesters_codesters_profile_city_c", "codesters_codesters_profile_district_c", "learning_sbxid_c", "id", "codesters_codesters_user_id_c", "codesters_id_c", "codesters_codesters_role_c"] ) }}
+
+{% endif %}

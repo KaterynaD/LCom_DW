@@ -1,0 +1,22 @@
+---
+version: 2
+models:
+  - name: dim_student
+    description: Conformed Student dimension base on
+      content_delivery_usage.dbo.mv_student_account.
+    config:
+      tags:
+        - dim
+  - name: dim_teacher
+    description: Conformed Teacher dimension base on
+      content_delivery_usage.dbo.mv_teacher_account.
+    config:
+      tags:
+        - dim
+  - name: dim_user
+    description: Conformed Users dimension base on
+      content_delivery_usage.dbo.user_account. It should be a table with info
+      from all systems
+    config:
+      tags:
+        - dim

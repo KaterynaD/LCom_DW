@@ -1,0 +1,88 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'LCom_DW'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'LCom_DW'
+
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["documentation"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+quoting:
+  database: false
+  schema: false
+  identifier: false
+
+
+
+models:
+  +grants:  # roles are not supported in Redshift
+    select: ['kdrogaieva','ksure','abutler','lgorokhova','xkendall','svcreporting']
+
+
+  LCom_DW:    
+
+    +pre-hook:
+      sql: "{{ dbt_run_log_insert('','Start') }}"
+      transaction: false
+    +post-hook:
+      sql: "{{ dbt_run_log_insert('','End') }}"
+      transaction: false
+
+    +persist_docs:
+      relation: true
+      columns: true        
+    common:
+      +schema: common  
+    content_delivery_usage:
+      +schema: content_delivery_usage
+    licensing:
+      +schema: licensing
+    reporting:
+      +schema: reporting
+    revenue:
+      +schema: revenue
+    staging:
+      +schema: staging   
+    support:
+      +schema: support         
+
+ 
+
+
+
+on-run-start:
+  - "{{ dbt_run_log_insert('dbt run Start') }}"
+
+on-run-end:
+  - "{{ dbt_run_log_insert('dbt run End ') }}"
+
+vars:
+  loaddate: "{{ set_loaddate() }}"
+  processing_mon_year: "Current"
+  load_history: 0
+  default_date: "1900-01-01"
+  default_varchar: "Unknown"  
+  default_numeric: 0  
+  default_boolean: False
+  default_ID: "00000000-0000-0000-0000-000000000000"
+  run_type: "Scheduled Prod run"      
+
+
+
+
+
+  

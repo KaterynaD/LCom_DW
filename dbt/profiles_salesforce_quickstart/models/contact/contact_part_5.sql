@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","contact") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","contact"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["mailing_state", "implementation_status_c", "x_2024_fall_promotions_c", "hubspot_title_c", "mailing_country_code", "agile_email_c", "learning_sbxid_c", "subject_c", "sdrowner_c", "mailing_country", "gong_current_flow_user_name_c", "codesters_campaign_source_c", "lead_source", "middle_name", "onboarding_next_steps_c", "department", "planned_rostering_c", "mql_grade_c", "job_category_desc_c", "pronouns", "agile_job_title_c", "first_name", "rcsfl_sms_number_c", "training_notes_c", "how_did_you_hear_about_us_c", "current_outreach_sequence_c", "dupe_management_id_c", "outreach_stage_c", "keywords_c", "mailing_city", "jigsaw_contact_id", "gong_flow_execution_id_c", "product_interest_c", "individual_id", "implementation_notes_c", "other_city", "planned_frequency_c", "dsp_url_c", "buyer_attributes", "gong_current_flow_step_number_c", "platform_id_c", "key_contact_detail_c", "platform_role_c", "institution_id_c", "agile_phone_c", "id", "prior_experience_c", "other_phone", "gong_current_flow_id_c", "gong_current_flow_step_type_c"] ) }}
+
+{% endif %}

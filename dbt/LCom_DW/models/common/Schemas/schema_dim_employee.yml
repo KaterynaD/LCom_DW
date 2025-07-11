@@ -1,0 +1,99 @@
+version: 2
+
+models:
+  - name: dim_employee
+    description: Employee dimension table sourced from Salesforce User data
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+        - common
+    columns:
+      - name: employee_id
+        data_type: varchar(300)
+        description: Unique employee identifier (primary key)
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+
+      - name: name
+        data_type: varchar(400)
+        description: Full name of the employee
+        constraints:
+          - type: not_null
+
+      - name: alias
+        data_type: varchar(25)
+        description: Short user alias within the org
+        constraints:
+          - type: not_null
+
+      - name: community_nickname
+        data_type: varchar(400)
+        description: Salesforce Community nickname
+        constraints:
+          - type: not_null
+
+      - name: username
+        data_type: varchar(240)
+        description: Salesforce login username
+        constraints:
+          - type: not_null
+
+      - name: department
+        data_type: varchar(240)
+        description: Employee’s department
+        constraints:
+          - type: not_null
+
+      - name: title
+        data_type: varchar(240)
+        description: Job title
+        constraints:
+          - type: not_null
+
+      - name: user_role
+        data_type: varchar(240)
+        description: Assigned Salesforce user role
+        constraints:
+          - type: not_null
+
+      - name: email
+        data_type: varchar(400)
+        description: Work email address
+        constraints:
+          - type: not_null
+
+      - name: is_active
+        data_type: boolean
+        description: Flag indicating whether the user is active
+        constraints:
+          - type: not_null
+
+      - name: last_login_date
+        data_type: TIMESTAMP WITHOUT TIME ZONE
+        description: Timestamp of the most recent login (PST)
+        constraints:
+          - type: not_null
+          
+      - name: created_date
+        data_type: TIMESTAMP WITHOUT TIME ZONE
+        description: Timestamp the record was created (PST)
+        constraints:
+          - type: not_null
+
+      - name: last_modified_date
+        data_type: TIMESTAMP WITHOUT TIME ZONE
+        description: Timestamp of the last modification (PST)
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: TIMESTAMP WITHOUT TIME ZONE
+        description: Timestamp the record was loaded into the warehouse (PST)
+        constraints:
+          - type: not_null

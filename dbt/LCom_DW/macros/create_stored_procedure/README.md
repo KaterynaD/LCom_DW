@@ -1,0 +1,2 @@
+The macros is used once to create stored procedures which originally were created before dbt project and already exist in the databse.
+They help to include stored procedures in the dbt project and simplify version control.

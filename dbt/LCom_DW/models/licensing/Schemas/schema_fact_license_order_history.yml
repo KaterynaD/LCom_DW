@@ -1,0 +1,162 @@
+---
+version: 2
+models:
+  - name: fact_license_order_history
+    description: "The table records changes in FACT_LICENSE_ORDER using Slowly Changing Dimension Type 2 method (fromdate - todate)"
+    config:
+      contract:
+        enforced: false
+      tags:
+        - fact
+        - licensing
+    columns:
+
+
+      - name: order_hist_id
+        data_type: varchar(300)
+        description: Primary Key of FACT_LICENSE_ORDER_HISTORY.
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+           - unique
+           - not_null
+
+
+      - name: fromdate
+        data_type: timestamp
+        description: State of data valid from this date
+        constraints:
+          - type: not_null
+        data_tests:
+           - not_null      
+
+      - name: todate
+        data_type: timestamp
+        description: State of data valid to this date
+        constraints:
+          - type: not_null
+        data_tests:
+           - not_null          
+
+      - name: record_version
+        data_type: integer
+        description: State of data version
+        constraints:
+          - type: not_null          
+        data_tests:
+          - not_null     
+
+
+      - name: order_id
+        data_type: varchar(100)
+        description: Fact License Order FK (LearningPlatform.dbo.[Order].OrderId)
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('fact_license_order')
+            warn_unenforced: false   
+        data_tests:
+          - not_null        
+          - relationships:
+              to: ref('fact_license_order')
+              field: order_id
+
+      - name: sku_id
+        data_type: varchar(100)
+        description: DIM_LCOM_SKU FK
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null   
+          - relationships:
+              to: ref('dim_lcom_sku')
+              field: sku_id                     
+
+      - name: organization_district_id
+        data_type: varchar(300)
+        description: DIM_ACCOUNT FK
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        data_tests:
+          - not_null        
+          - relationships:
+              to: ref('dim_account')
+              field: account_id      
+
+      - name: startdate
+        data_type: timestamp
+        description: Order Start date LearningPlatform.dbo.[Order].Startdate
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null            
+
+      - name: expirationdate
+        data_type: timestamp
+        description: Order Expiration date LearningPlatform.dbo.[Order].Expirationdate
+        constraints:
+          - type: not_null        
+        data_tests:
+          - not_null            
+
+      - name: enforcedaterestrictions
+        data_type: char(1)
+        description: Enforce Date Restricts (n if startdate and expirationdate should be ignored) LearningPlatform.dbo.[Order].enforcedaterestrictions
+        constraints:
+          - type: not_null             
+        data_tests:
+          - not_null            
+
+
+      - name: schoolcount
+        data_type: integer
+        description: Number of schools covered LearningPlatform.dbo.[Order].SchoolCount
+        constraints:
+          - type: not_null 
+        data_tests:
+          - not_null            
+
+      - name: studentcount
+        data_type: integer
+        description: Number of licenses/students LearningPlatform.dbo.[Order].StudentCount
+        constraints:
+          - type: not_null           
+        data_tests:
+          - not_null                 
+
+      - name: auditupdatedate
+        data_type: timestamp
+        description: Order Modified date LearningPlatform.dbo.[Order].auditupdatedate
+        constraints:
+          - type: not_null 
+        data_tests:
+          - not_null            
+
+      - name: loaddate
+        data_type: timestamp
+        description: Data loaded at
+        constraints:
+          - type: not_null        
+        data_tests:
+          - not_null            
+      - name: updatedate
+        data_type: timestamp
+        description: Data updated at
+        constraints:
+          - type: not_null        
+        data_tests:
+          - not_null                  
+
+      - name: scd_hash
+        data_type: VARCHAR(50)
+        description: Hash of checked columns (Stage Name) to identify changes
+        constraints:
+          - type: not_null            
+        data_tests:
+          - not_null              
+

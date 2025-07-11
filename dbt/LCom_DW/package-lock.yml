@@ -1,0 +1,6 @@
+packages:
+  - package: dbt-labs/dbt_utils
+    version: 1.3.0
+  - git: https://github.com/KaterynaD/dbt_scd2_plus
+    revision: 8c14fb873dc8388773417a7f63ef74c038671221
+sha1_hash: 2e8d91381ea63b9f2c71b5addf2abe9b69e85d72

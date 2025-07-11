@@ -1,0 +1,76 @@
+version: 2
+
+models:
+  - name: dim_sequence
+    description: LCOM Sequence Dimension Table
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+        - cdu
+
+    columns:
+      - name: sequence_id
+        data_type: varchar(50)
+        description: Unique sequence identifier, PK
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+
+      - name: sequence_group
+        data_type: varchar(200)
+        description: Sequence Group name based on the similar patterns in the name
+        constraints:
+          - type: not_null
+
+      - name: sequence_subgroup
+        data_type: varchar(200)
+        description: Sequence SubGroup name based on the similar patterns in the name
+        constraints:
+          - type: not_null
+
+      - name: sequence_name
+        data_type: varchar(150)
+        description: Name of the sequence
+        constraints:
+          - type: not_null
+
+      - name: sequence_description
+        data_type: varchar(1100)
+        description: Detailed description of the sequence
+        constraints:
+          - type: not_null
+
+      - name: is_valid
+        data_type: boolean
+        description: Indicates if the sequence is valid
+        constraints:
+          - type: not_null
+
+      - name: is_custom
+        data_type: boolean
+        description: Indicates if the sequence is built from custom  units (UnitTypeName != Unit, but DistrictCurriculumUnit as an example)
+        constraints:
+          - type: not_null          
+
+      - name: auditcreatedate
+        data_type: timestamp
+        description: Record creation PST timestamp in the source system
+        constraints:
+          - type: not_null
+
+      - name: auditupdatedate
+        data_type: timestamp
+        description: Record last update PST timestamp in the source system
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded (PST)
+        constraints:
+          - type: not_null

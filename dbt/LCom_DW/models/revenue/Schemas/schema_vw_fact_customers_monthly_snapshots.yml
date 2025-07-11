@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: vw_fact_customers_monthly_snapshots
+    description: >
+      View aggregating monthly customer lifecycle states per Ultimate Parent Account,
+      based on `fact_customers_monthly_snapshots`.
+
+      It provides the following rollups:
+        • **Contract Active** – calculated from `Starting` records of the next month.
+        • **Net Active** – cumulative metric starting from **Contract Active** last month of prior fiscal year:
+            Starting + New + Returning + ReturningFY - Churn - NonRenewal - Ghost
+        • **Total Active** – same as Net Active but excluding Churn/NonRenewal/Ghost deductions.
+      
+      Used to support monthly tracking of active SaaS customers by lifecycle category.
+
+    config:
+      contract:
+        enforced: false
+      tags:
+        - fact
+        - customers
+        
+
+
+    columns:
+
+      - name: mon_year
+        data_type: integer
+        description: >
+          Year-month of the customer snapshot (`YYYYMM` format).The base date depends on customer-lifecycle snapshots.
+
+      - name: mon_lastday
+        data_type: date
+        description: >
+          Last calendar day of the snapshot month.
+
+      - name: record_type
+        data_type: varchar(20)
+        description: >
+          Lifecycle category assigned to the parent account for the month.  
+          Includes both raw and derived types:
+            • **Starting** – contract carried into the period  
+            • **New** – first contract ever for the parent account  
+            • **Returning** – contract resumes after ≥ 1-month gap  
+            • **Churn** – all contracts ended; no active renewals  
+            • **NonRenewal** – contract expired <= 6 months ago, auto-renew disabled  
+            • **Ghost** – same as NonRenewal but auto-renew flag is false 
+            • **Contract Active** – calculated from `Starting` records of the next month.
+            • **Net Active** – cumulative metric starting from **Contract Active** last month of prior fiscal year:
+            Starting + New + Returning + ReturningFY - Churn - NonRenewal - Ghost
+            • **Total Active** – same as Net Active but excluding Churn/NonRenewal/Ghost deductions.
+
+        tests:
+          - accepted_values:
+              values: [
+                'Starting', 'New', 'Returning', 'ReturningFY',
+                'Churn', 'NonRenewal', 'Ghost',
+                'Total Active', 'Net Active', 'Contract Active'
+              ]
+
+      - name: include_flg
+        data_type: boolean
+        description: >
+          Flag indicating whether the record contributes to Net/Total Active metrics
+          for the corresponding month. Always `true` for aggregate types.
+
+      - name: sfdc_ultimate_parent_id
+        data_type: varchar(300)
+        description: >
+          Salesforce Ultimate Parent Account ID. Each row represents one account
+          and its lifecycle state for the corresponding month. 
+        tests:
+          - not_null

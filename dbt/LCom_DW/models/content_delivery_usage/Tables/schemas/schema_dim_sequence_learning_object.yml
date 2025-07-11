@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: dim_sequence_learning_object
+    description: Relations between Sequences and Learning Objects (Curriculum Items - Lessons)
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+        - cdu        
+
+    columns:
+      - name: sequence_id
+        data_type: varchar(50)
+        description: FK to DIM_SEQUENCE (Sequences)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_sequence')
+              field: sequence_id
+
+      - name: learning_object_id
+        data_type: varchar(50)
+        description: FK to DIM_LEARNING_OBJECT (Lessons)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_learning_object')
+              field: learning_object_id
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded (PST)
+        constraints:
+          - type: not_null

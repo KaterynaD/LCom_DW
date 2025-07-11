@@ -1,0 +1,382 @@
+---
+version: 2
+models:
+  - name: fact_opportunity_history
+    data_tests:
+      - dbt_scd2_plus.scd2_plus_validation:
+          unique_key: 'opportunity_id'
+          scd_valid_from_col_name: 'fromdate'
+          scd_valid_to_col_name:  'todate'
+    description: Fact Opportunity (Salesforce Opportunity table) metrics snapshots table when the stage changes. It`s a fact table, but history is tracked as SCD2 (fromdate - todate)
+    config:
+      contract:
+        enforced: false
+      tags:
+        - fact
+        - revenue        
+    columns:
+      - name: opportunity_hist_id
+        data_type: varchar(300)
+        description: Primary Key of FACT_OPPORTUNITY_HISTORY.
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+          - not_null
+
+
+      - name: fromdate
+        data_type: timestamp
+        description: State of data valid from this date
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null          
+      - name: todate
+        data_type: timestamp
+        description: State of data valid to this date
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null               
+      - name: record_version
+        data_type: integer
+        description: State of data version
+        constraints:
+          - type: not_null          
+        data_tests:
+          - not_null     
+
+
+
+      - name: opportunity_id
+        data_type: varchar(300)
+        description: Fact Opportunity FK - (Salesforce Opportunity ID column)
+        constraints:
+          - type: not_null         
+          - type: foreign_key
+            reference: ref('fact_opportunity')
+            warn_unenforced: false    
+        data_tests:
+          - relationships:
+              to: ref('fact_opportunity')
+              field: opportunity_id       
+          - not_null 
+
+ 
+
+      - name: stage_name
+        data_type: varchar(780)
+        description: Stage (check column). If an opportunity enters a new stage, a new record is added in the table.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null     
+
+      - name: account_id
+        data_type: varchar(300)
+        description: DIM_ACCOUNT FK
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id       
+          - not_null
+
+      - name: name
+        data_type: varchar(300)
+        description: Opportunity Name
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null   
+
+
+      - name: amount
+        data_type: numeric(35,10)
+        description: "Amount"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: amount_won
+        data_type: numeric(35,10)
+        description: "Amount Won"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: arr
+        data_type: double precision
+        description: "ARR (implemented to capture ARR value of opportunity)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: arr_new_business
+        data_type: numeric(38,10)
+        description: "ARR New Business (ARR New Business)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: arr_renewal
+        data_type: numeric(38,10)
+        description: "ARR Renewal (ARR renewal)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: arr_upsell
+        data_type: numeric(38,10)
+        description: "ARR Upsell (ARR Upsell)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: arr_won
+        data_type: numeric(38,10)
+        description: "ARR Won"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: combined_arr
+        data_type: numeric(38,10)
+        description: "Combined ARR"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: downsell
+        data_type: double precision
+        description: "Downsell (Automatically derives downsell)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: expected_new_business_arr
+        data_type: double precision
+        description: "Expected New Business ARR (captures ARR value based on probability %)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: expected_revenue
+        data_type: numeric(35,10)
+        description: "Expected Revenue"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: multi_year_arr
+        data_type: numeric(38,10)
+        description: "Multi-Year ARR (Roll up summary of all opporunity products with Class of ARR for creating multi-year calculations)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: new_biz_arr_trigger
+        data_type: numeric(38,10)
+        description: "New Biz ARR Trigger"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: nnarr
+        data_type: double precision
+        description: "NNARR (Calculates the change in ARR from the previous contract)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: nrr_renewal
+        data_type: numeric(38,10)
+        description: "NRR Renewal"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: owner_closed_won
+        data_type: double precision
+        description: "Owner Closed Won"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: owner_open_pipeline
+        data_type: double precision
+        description: "Owner Open Pipeline"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: owner_quota
+        data_type: double precision
+        description: "Owner Pipeline Target"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: owner_sales_quota
+        data_type: numeric(35,10)
+        description: "Owner Sales Quota"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: pipeline_needed_to_hit_quota
+        data_type: double precision
+        description: "Pipeline Needed to Hit Quota"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: po_amount
+        data_type: numeric(35,10)
+        description: "PO Amount (PO Amount)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: price_increase_arr
+        data_type: double precision
+        description: "Price Increase ARR"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: probability
+        data_type: double precision
+        description: "Probability (%)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: quote_list_amount
+        data_type: double precision
+        description: "Quote List Amount"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: quote_total_discount
+        data_type: double precision
+        description: "Quote Total Discount"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: remaining_quota
+        data_type: double precision
+        description: "Remaining Quota"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: renewable_revenue
+        data_type: numeric(38,10)
+        description: "Renewable Revenue"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: renewal_at_79
+        data_type: numeric(38,10)
+        description: "Renewal at 79%"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: renewal_biz_trigger
+        data_type: numeric(38,10)
+        description: "Renewal Biz Trigger"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: total_arr_bookings
+        data_type: numeric(38,10)
+        description: "Total ARR Bookings (Captures renewal ARR + Upsell ARR)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: total_credit_from_opp_product
+        data_type: double precision
+        description: "Total credit from opp Product (Total Credit from opp Product)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: total_opportunity_quantity
+        data_type: double precision
+        description: "Quantity"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: true_arr
+        data_type: numeric(35,10)
+        description: "True ARR (Denotes the true ARR value of an opportunity.  Populated by a scheduled flow to allow for roll-up summary to be used on the account object to report on true ARR)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: true_arr_formula
+        data_type: double precision
+        description: "True ARR (Formula) (Looks at Override ARR and if that field is greater than zero, returns Override, else returns Source Opp ARR from previous contract)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: true_renewal_arr
+        data_type: double precision
+        description: "True Renewal ARR"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+      - name: variance
+        data_type: numeric(36,10)
+        description: "Variance (Variance of Opp amount and PO amount)"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+
+
+
+
+
+      - name: last_modified_date
+        data_type: timestamp
+        description: Last Modified Date
+        constraints:
+          - type: not_null
+
+
+      - name: loaddate
+        data_type: timestamp
+        description: Data loaded at
+        constraints:
+          - type: not_null        
+      - name: updatedate
+        data_type: timestamp
+        description: Data updated at
+        constraints:
+          - type: not_null              
+
+      - name: scd_hash
+        data_type: VARCHAR(50)
+        description: Hash of checked columns (Stage Name) to identify changes
+        constraints:
+          - type: not_null     

@@ -1,0 +1,69 @@
+sources:
+
+- name: fivetran_salesforce
+  quoting:
+    database: false
+    schema: false
+    identifier: false
+  tables:  
+  - name: entity_definition
+  - name: field_definition
+
+  
+- name: fivetran_salesforce_quickstart
+  quoting:
+    database: false
+    schema: false
+    identifier: false
+  tables:
+  - name: campaign
+  - name: agileed_fieldmapping_c
+  - name: business_ops_request_c
+  - name: account
+  - name: case_comment
+  - name: case_related_issue
+  - name: case
+  - name: codesters_codesters_member_c
+  - name: codesters_codesters_settings_c
+  - name: codesters_codesters_license_c
+  - name: codesters_codesters_organization_c
+  - name: codesters_opportunity_license_c
+  - name: contact
+  - name: contract
+  - name: entity_definition
+  - name: field_definition
+  - name: lcom_license_c
+  - name: lcom_account_c
+  - name: lcom_license_site_c
+  - name: lcom_order_c
+  - name: lcom_member_c
+  - name: lcom_order_line_c
+  - name: lcom_suite_c
+  - name: lcom_organization_c
+  - name: lcom_order_modification_c
+  - name: lcom_term_c
+  - name: lead
+  - name: lead_status_c
+  - name: nps_survey_responses_c
+  - name: object_from_email_accepted_fields_c
+  - name: object_from_email_default_fields_c
+  - name: opportunity
+  - name: opportunity_history
+  - name: order
+  - name: opportunity_line_item
+  - name: order_item
+  - name: organization
+  - name: pricebook_2
+  - name: pricebook_entry
+  - name: product_2
+  - name: rcsfl_admin_setting_c
+  - name: record_type
+  - name: sbqq_product_option_c
+  - name: sbqq_quote_c
+  - name: sbqq_quote_line_group_c
+  - name: sbqq_quote_line_c
+  - name: state_profile_c
+  - name: switches_c
+  - name: user
+  - name: user_role
+

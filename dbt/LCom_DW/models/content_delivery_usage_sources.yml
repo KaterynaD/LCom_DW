@@ -1,0 +1,40 @@
+---
+sources:
+  - name: dbo
+    description: "Source tables for content delivery usage models. The tables in dbo schema are transformed data (facts) from staging schema in content_delivery_usage database using Redshift Stored Procedures.." 
+    database: content_delivery_usage
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: context
+      - name: organization
+      - name: mv_teacher_account
+      - name: learning_object
+      - name: content_instruction_type
+      - name: content_topic
+      - name: content_subtopic
+      - name: learning_pathway
+      - name: fact_assignment_completion
+      - name: fact_assignment_launch
+      - name: state_province
+      - name: country
+      - name: mv_student_account
+      - name: user_account
+      
+  - name: staging
+    description: "Source tables for content delivery usage models. The tables in staging schema are from LCom Platform MS SQL Server databases loaded and processed by AWS Glue jobs and Redshift Stored Procedures."
+    database: content_delivery_usage
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: license_order
+      - name: license_orderschool
+      - name: sku
+      - name: sku_learning_object_v2
+      - name: sku_suite   
+      - name: sequence      
+      - name: sequence_learning_object                       

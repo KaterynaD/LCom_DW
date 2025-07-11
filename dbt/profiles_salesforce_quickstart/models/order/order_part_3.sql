@@ -1,0 +1,6 @@
+-- depends_on: {{ source("fivetran_salesforce_quickstart","order") }}
+{% if execute %}
+
+  {{ dbt_profiler.get_profile(relation=source("fivetran_salesforce_quickstart","order"), exclude_measures=["min","max","avg","median","std_dev_population","std_dev_sample"], include_columns=["integration_indicator_c", "primary_sales_rep_id_c", "activated_by_id", "net_suite_id_c", "upload_contact_c", "billing_country_code", "secondary_implementation_contact_c", "sbqq_payment_term_c", "implementation_contact_c", "shipping_state", "shipping_country", "integration_error_c", "type", "created_by_id", "ship_to_contact_id", "customer_authorized_by_id", "billing_instructions_c", "sbqq_quote_c", "lcom_account_c", "order_number", "sbqq_price_calc_status_message_c", "status", "opportunity_id", "billing_city", "pricebook_2_id", "name", "account_id", "billing_state_code", "company_authorized_by_id", "shipping_postal_code", "sbqq_first_contracted_order_c", "last_modified_by_id", "shipping_geocode_accuracy", "status_code", "billing_postal_code", "sbqq_price_calc_status_c", "shipping_city", "owner_id", "description", "po_number", "shipping_country_code", "quote_id", "funding_source_c", "partner_c", "order_reference_number", "shipping_street", "id", "sbqq_billing_frequency_c", "billing_country", "billing_street"] ) }}
+
+{% endif %}

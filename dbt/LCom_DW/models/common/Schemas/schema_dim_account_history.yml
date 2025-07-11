@@ -1,0 +1,332 @@
+---
+version: 2
+models:
+- name: dim_account_history
+  data_tests:
+  - dbt_scd2_plus.scd2_plus_validation:
+      unique_key: account_id
+      scd_valid_from_col_name: fromdate
+      scd_valid_to_col_name: todate
+  description: Dim Account history table (Slowly Changing Dimension Type 2).
+  config:
+    contract:
+      enforced: false
+    tags:
+    - dim
+    - common
+  columns:
+  - name: account_hist_id
+    data_type: varchar(50)
+    description: Primary Key of DIM_ACCOUNT_HISTORY
+    constraints:
+    - type: not_null
+    - type: primary_key
+      warn_unenforced: false
+    data_tests:
+    - not_null
+    - unique
+  - name: fromdate
+    data_type: timestamp
+    description: State of data valid from this date
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: todate
+    data_type: timestamp
+    description: State of data valid to this date
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: record_version
+    data_type: integer
+    description: State of data version
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: account_id
+    data_type: varchar(300)
+    description: "Unique and Distribution Key of DIM_ACCOUNT_HISTORY. Primary and Distribution Key of DIM_ACCOUNT. It's organization_id (school or district) or Salesforce Id if not available in LCom Platform. The PK in DIM_ACCOUNT is changed from Salesforce Account Id to LCOM Organization Id when 2 entities are joined. DIM_ACCOUNT is re-created each time (Table materialization).There is a process to update the key DIM_ACCOUNT_HISTORY (incremental load)."
+    constraints:
+    - type: not_null
+    - type: foreign_key
+      reference: ref('dim_account')
+      warn_unenforced: false     
+    data_tests:
+    - not_null
+    - relationships:
+        to: ref('dim_account')
+        field: account_id    
+
+  - name: lcom_trial
+    data_type: integer
+    description: Trial use of LCOM products
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: lcom_demo
+    data_type: integer
+    description: Demo use of LCOM products
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_parent_id
+    data_type: varchar(30)
+    description: "Parent Account (Integrations: Gainsight.)"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_record_type
+    data_type: varchar(780)
+    description: "Record Type (L is for district and B is for school  Integrations: Gainsight.)"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_current_renewal_arr
+    data_type: numeric(35,10)
+    description: "Current Renewal ARR (Integrations: Gainsight.)"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_state_initiative
+    data_type: integer
+    description: 'State Initiative (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_state_initiative_school
+    data_type: integer
+    description: State Initiative from the child(school) level. 1 if any school has True attribute
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_state_eligible_or_initiative
+    data_type: integer
+    description: Do not use. Column deleted in SFDC. Always 0.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_state_eligible_or_initiative_school
+    data_type: integer
+    description: Do not use. Column deleted in SFDC. Always 0.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_owner_id
+    data_type: varchar(30)
+    description: 'Account Owner (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_owner_name_text
+    data_type: varchar(380)
+    description: Owner Name (Text) (Text field for Owner Name for Zendesk integration)
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: ishighschool
+    data_type: integer
+    description: "For State progam reports where HS need to be excluded - Indicates
+      if the school is a high school only. No middle or elementary grades. Salesforce
+      Account grade_levels = 'High School' or (grade_levels is null and k_12_enrollment>0
+      and k_8_enrollment=0). For the most recent orders we should have all schools
+      in the table linked to a Salesforce account if they have an order"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: lcom_organization_id
+    data_type: varchar(300)
+    description: "LCOM Organization ID Can be skew with default values if an account
+      does not exist in LCOM Platform. Can be used in joins with LCOM related tables
+      but better use account_id in joins because it's  a distribution key"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: sfdc_account_id
+    data_type: varchar(300)
+    description: "Salesforce Account ID. It's unique Salesforce Account Id. If there
+      are more then one LCom Organization related to the same account, there is `dup-`prefix
+      in the value. It's possible to have more then one Salesforce Id with `dup-'
+      prefix added, but `clean` Salesforce Id is unique and safe to be used in the
+      joins. Use account_id in joins because it's  a distribution key"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: loaddate
+    data_type: timestamp
+    description: The datetime the record was loaded in PST
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: updatedate
+    data_type: timestamp
+    description: updatedate column
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: scd_hash
+    data_type: varchar(50)
+    description: scd_hash column
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+  - name: lcom_country_name
+    data_type: varchar(70)
+    description: Country name from LCOM. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: lcom_organization_name
+    data_type: varchar(270)
+    description: Organization name from LCOM. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: lcom_organization_type
+    data_type: varchar(270)
+    description: Organization type from LCOM. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: lcom_parent_organization_name
+    data_type: varchar(270)
+    description: Parent organization name from LCOM. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: lcom_state_province_code
+    data_type: varchar(20)
+    description: State or province code from LCOM. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_billing_state
+    data_type: varchar(240)
+    description: Billing state from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_billing_state_code
+    data_type: varchar(30)
+    description: Billing state code from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_grade_levels
+    data_type: varchar(4110)
+    description: Grade levels from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_k_12_enrollment
+    data_type: double precision
+    description: K-12 enrollment count from Salesforce. Default is 0.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_k_8_enrollment
+    data_type: double precision
+    description: K-8 enrollment count from Salesforce. Default is 0.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_name
+    data_type: varchar(780)
+    description: Account name from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_parent_name
+    data_type: varchar(780)
+    description: Parent account name from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_ultimate_account_owner
+    data_type: varchar(380)
+    description: Ultimate account owner from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_ultimate_parent_account
+    data_type: varchar(780)
+    description: Ultimate parent account name from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_ultimate_parent_billing_state
+    data_type: varchar(250)
+    description: Billing state of the ultimate parent account. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_ultimate_parent_id
+    data_type: varchar(30)
+    description: Salesforce ID of the ultimate parent account. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_urban_rural
+    data_type: varchar(40)
+    description: Urban or rural designation from Salesforce. Default is 'Unknown'.
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: SFDC_ultimate_parent_current_renewal_arr
+    data_type: numeric(38,10)
+    description: 'Aggregated current renewal ARR across all ultimate parent account child accounts.'
+    constraints:
+    - type: not_null 

@@ -1,0 +1,64 @@
+---
+version: 2
+models:
+  - name: lcom_sfdc_account_mapping
+    description: Mapping table between content_delivery_usage.dbo.Organization  Salesforce Account tables.
+    config:
+      contract:
+        enforced: true   
+      tags:
+        - map
+        - staging
+        - common
+        
+    columns:
+
+      - name: organization_id
+        data_type: varchar(300)
+        description: "Primary and Distribution Key of the mapping table. It's organization_id (school or district) from content_delivery_usage.dbo.Organization table"      
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false          
+        data_tests:
+          - unique
+
+      - name: organization_type
+        data_type: varchar(270)      
+        description: "School or District. If both have the same salesforce_id, SFDC_account_id in the district will be the same as salesforce_id and in the scholl record it will have `dup-` prefix"      
+        constraints:
+          - type: not_null        
+
+      - name: salesforce_id
+        data_type: varchar(300)
+        description: "Cleaned Salesforce_Id from content_delivery_usage.dbo.Organization table. The original one has broken or wrong or placeholders values. In addition, empty original salesforce_id substitutes with lower(lcom_platform_organization_id_c) from rawdata.fivetran_salesforce.lcom_organization_c. It's possible more then one Salesforce account linked to the same organization_id in this setting. Max(Salesforce Account Id) is used in such cases. Mapping value to Salesforce Account table. "      
+        constraints:
+          - type: not_null         
+
+
+      - name: SFDC_account_Id
+        data_type: varchar(300)
+        description: "Value for Salesforce.Account.Id unique Id column - DIM_Account.SFDC_account_Id. The column itself is not unique because more then one organization_id can be linked to the same salesforce_id. In such cases, only one organization_id has ``clean`` SFDC_Account_Id, the others have `dup-` prefix in SFDC_Account_Id."      
+        constraints:
+          - type: not_null
+        data_tests:
+          - unique:
+              where: "left(SFDC_account_id,4) != 'dup-'"          
+
+      - name: applied_rule
+        data_type: varchar(150)      
+        description: "The rule, applied to SFDC_Account_Id column, where to add `dup-` prefix: Districts has precedence over Schools. If more then one schools or districts have teh same salesforce_id, then the one with the highest organization_id will be used as a clean one. The others will have `dup-` prefix in SFDC_Account_Id."      
+        constraints:
+          - type: not_null        
+
+      - name: cnt_dist_org_id_group_by_salesforce_id
+        data_type: integer      
+        description: "Indicates duplicates by salesforce_id if not null and more then 1"      
+
+      - name: cnt_districts_in_dups_by_salesforce_id
+        data_type: integer          
+        description: "How many Districts are in duplicates by salesforce_id"   
+
+      - name: cnt_schools_in_dups_by_salesforce_id
+        data_type: integer     
+        description: "How many Schools are in duplicates by salesforce_id"         

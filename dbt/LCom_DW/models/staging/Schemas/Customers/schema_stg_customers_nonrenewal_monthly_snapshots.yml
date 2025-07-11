@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: stg_customers_nonrenewal_monthly_snapshots
+    description: >
+      Staging snapshot of NonRenewal customers by month, capturing ultimate parent accounts from Closed Won NonRenewal opportunities ended 6 months ago. Ultimate Parent Account is NonRenewal if there are no any Active child accounts (opportunities) and Closed Lost Renewal Opportunities. If NonRenewal Flag is False in such opportunities, the ultimate parent account is marked as Ghost.
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - customers
+        - staging
+        - revenue
+        
+    columns:
+      - name: mon_year
+        data_type: integer
+        description: Year and month of End Date + 6 months in YYYYMM format representing the snapshot period. 
+        constraints:
+          - type: not_null
+
+      - name: mon_lastday
+        data_type: date
+        description: Last day of the month corresponding to the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        data_type: varchar(300)
+        description: Salesforce Opportunity ID associated with the contract snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_account_id
+        data_type: varchar(300)
+        description: Salesforce Account ID for the opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_ultimate_parent_id
+        data_type: varchar(300)
+        description: Salesforce Ultimate Parent Account ID for the opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: record_type
+        data_type: varchar(20)
+        description: Type of record in the snapshot - NonRenewal or Ghost
+        constraints:
+          - type: not_null
+
+      - name: include_flg
+        data_type: boolean
+        description: Flag indicating if the record should be included in monthly Net Active customer calculations. It might not be included  if it was NOT counted as a customer (expired in a previous Fiscal Year). However we want to report it as Non Renewal or Ghost this month.
+        constraints:
+          - type: not_null
+
+      - name: comments
+        data_type: varchar(max)
+        description: Optional comments or flags for review/debugging purposes.
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded in PST
+        constraints:
+         - type: not_null  

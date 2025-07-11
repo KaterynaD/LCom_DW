@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: stg_customers_churn_monthly_snapshots
+    description: >
+      Staging snapshot of churned customers by month, capturing ultimate parent accounts from Closed Lost Renewal opportunities closed in the month. Ultimate Parent Account is Churn if there are no any Active child accounts (opportunities) and Current REnewal Arr is 0 in all child accounts.
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - customers
+        - staging
+        - revenue        
+        
+    columns:
+      - name: mon_year
+        data_type: integer
+        description: Year and month of Close Date in YYYYMM format representing the snapshot period. 
+        constraints:
+          - type: not_null
+
+      - name: mon_lastday
+        data_type: date
+        description: Last day of the month corresponding to the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        data_type: varchar(300)
+        description: Salesforce Opportunity ID associated with the contract snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_account_id
+        data_type: varchar(300)
+        description: Salesforce Account ID for the opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_ultimate_parent_id
+        data_type: varchar(300)
+        description: Salesforce Ultimate Parent Account ID for the opportunity in the snapshot.
+        constraints:
+          - type: not_null
+
+      - name: record_type
+        data_type: varchar(20)
+        description: Type of record in the snapshot - Churn
+        constraints:
+          - type: not_null
+
+      - name: include_flg
+        data_type: boolean
+        description: Flag indicating if the record should be included in monthly Net Active customer calculations. It might not be included  if it was NOT counted as a customer (expired in a previous Fiscal Year but churn only this month). However we want to report it as Churn this month.
+        constraints:
+          - type: not_null
+          
+      - name: comments
+        data_type: varchar(max)
+        description: Optional comments or flags for review/debugging purposes.
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded in PST
+        constraints:
+         - type: not_null          
