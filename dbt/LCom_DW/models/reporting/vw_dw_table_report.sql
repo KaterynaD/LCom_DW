@@ -131,9 +131,7 @@ union all
 		--(cast(launch_datetime as date))
 			)) as last_action_date
 from content_delivery_usage.dim_context
-
 union all
-
 select
 	'dw' as database_name
 	,'content_delivery_usage' as schema_name
