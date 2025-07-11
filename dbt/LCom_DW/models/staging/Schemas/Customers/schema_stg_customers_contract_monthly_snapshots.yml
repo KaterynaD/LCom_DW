@@ -11,7 +11,7 @@ models:
       tags:
         - customers
         - staging
-        - revenues
+        - revenue
         
     columns:
       - name: mon_year
