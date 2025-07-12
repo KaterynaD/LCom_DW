@@ -11,10 +11,7 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from common.dim_account
-
-
 union all
-
 select
 	'dw' as database_name
 	,'common' as schema_name
