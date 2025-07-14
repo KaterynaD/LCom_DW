@@ -2,17 +2,17 @@
 
 
 with dim_month as --Thread to calculate monthly metrics
-(select distinct c.mon_year, c.mon_firstday, c.mon_lastday, c.schoolyear, c.schoolyear_startdate, c.schoolyear_enddate , c.schoolyear_mon
+(select distinct c.mon_year, c.mon_firstday, c.mon_lastday, c.FiscalYear, c.FiscalYear_startdate, c.FiscalYear_enddate , c.FiscalYear_mon
 from {{ source("common","dim_calendar") }}  c 
 where mon_year between 202207 and to_char(GetDate(),'yyyymm')
 )
 --
 ,rawdata as (
 select
-m.schoolyear,
+m.FiscalYear,
 m.mon_year,
 m.mon_lastday,
-m.schoolyear_mon,
+m.FiscalYear_mon,
 organization_district_id,
 a.lcom_organization_name ,
 a.sfdc_name,
@@ -42,10 +42,10 @@ and a.lcom_demo=false
 )
 ,data as (
 select
-schoolyear,
+FiscalYear,
 mon_year,
 mon_lastday,
-schoolyear_mon,
+FiscalYear_mon,
 organization_district_id,
 lcom_organization_name ,
 sfdc_name,
@@ -60,10 +60,10 @@ sum(schoolcount) as schoolcount,
 sum(studentcount) as studentcount
 from rawdata r
 group by 
-schoolyear,
+FiscalYear,
 mon_year,
 mon_lastday,
-schoolyear_mon,
+FiscalYear_mon,
 organization_district_id,
 lcom_organization_name ,
 sfdc_name,
@@ -76,10 +76,10 @@ sku_id,
 sku_name
 )
 select 
-schoolyear,
+FiscalYear,
 mon_year,
 mon_lastday,
-schoolyear_mon,
+FiscalYear_mon,
 organization_district_id,
 lcom_organization_name ,
 sfdc_name,
@@ -95,10 +95,10 @@ studentcount
 from data
 union all
 select 
-schoolyear,
+FiscalYear,
 mon_year,
 mon_lastday,
-schoolyear_mon,
+FiscalYear_mon,
 organization_district_id,
 lcom_organization_name ,
 sfdc_name,
@@ -113,10 +113,10 @@ max(schoolcount) as schoolcount,
 max(studentcount) as studentcount
 from data
 group by
-schoolyear,
+FiscalYear,
 mon_year,
 mon_lastday,
-schoolyear_mon,
+FiscalYear_mon,
 organization_district_id,
 lcom_organization_name ,
 sfdc_name,
