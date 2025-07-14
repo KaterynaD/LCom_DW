@@ -70,7 +70,7 @@ union all
 select 
 'Target' category,
 2000000 unique_students,
-0 unique_students_launches,
+69994720 unique_students_launches,
 'N/A' schoolyear,
 cast('1900-01-01' as date) latest_launch
 
