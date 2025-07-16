@@ -11,9 +11,9 @@ from {{ source("common","dim_calendar") }}
 where trunc(GetDate())between Mon_FirstDay and Mon_LastDay
 )
 ,dim_date_prev as (
-select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate, SchoolYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
+select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate
 from {{ source("common","dim_calendar") }}
-where date_add('year', -1, trunc(GetDate())) between Mon_FirstDay and Mon_LastDay
+where SchoolYear_StartDate =  (select  max(SchoolYear_StartDate)  from {{ source("common","dim_calendar") }} where SchoolYear_StartDate<(select SchoolYear_StartDate from {{ source("common","dim_calendar") }} where cal_date=trunc(GetDate())))
 )
 , vw_usage_scorecard as 
 (select
@@ -70,7 +70,7 @@ union all
 select 
 'Target' category,
 2000000 unique_students,
-69994720 unique_students_launches,
+0 unique_students_launches,
 'N/A' schoolyear,
 cast('1900-01-01' as date) latest_launch
 

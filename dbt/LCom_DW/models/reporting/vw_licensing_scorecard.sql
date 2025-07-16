@@ -8,9 +8,10 @@ from {{ source("common","dim_calendar") }}
 where trunc(GetDate()) between Mon_FirstDay and Mon_LastDay
 )
 ,dim_date_prev as (
-select distinct FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
+select distinct FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate,Mon_Year
 from {{ source("common","dim_calendar") }}
-where  date_add('year', -1, trunc(GetDate())) between Mon_FirstDay and Mon_LastDay
+where FiscalYear_StartDate =  (select  max(FiscalYear_StartDate)  from {{ source("common","dim_calendar") }} where FiscalYear_StartDate<(select FiscalYear_StartDate from {{ source("common","dim_calendar") }} where cal_date=trunc(GetDate())))
+and FiscalYear_Mon=12
 )
 ,rawdata as (select
 a.account_id,
