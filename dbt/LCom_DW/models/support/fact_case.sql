@@ -38,7 +38,6 @@ isnull(stg.description , '{{ var("default_varchar") }}') as description	,
 isnull(stg.initial_response_captured_c , {{ var("default_boolean") }}) as initial_response_captured	,
 isnull(stg.is_closed, {{ var("default_boolean") }}) as is_closed	,
 isnull(stg.is_escalated, {{ var("default_boolean") }}) as is_escalated	,
-isnull(stg.issues_c, '{{ var("default_varchar") }}') as issues	,
 isnull(stg.jira_ticket_submitted_c , {{ var("default_boolean") }}) as jira_ticket_submitted	,
 isnull(stg.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date	,
 coalesce(location_of_issue_c,location_of_issues_c	, '{{ var("default_varchar") }}') as location_of_issue	,
@@ -54,7 +53,7 @@ isnull(stg.products_c , '{{ var("default_varchar") }}') as products	,
 isnull(rt.name , '{{ var("default_varchar") }}') as support_type	,
 isnull(stg.round_robin_id_c, {{ var("default_numeric") }}) as round_robin_id	,
 isnull(stg.sales_escalation_c , {{ var("default_boolean") }}) as sales_escalation	,
-coalesce(solution_c,solutions_c	, '{{ var("default_varchar") }}') as solution	,
+isnull(solution_c, '{{ var("default_varchar") }}') as solution	,
 isnull(stg.status , '{{ var("default_varchar") }}') as status	,
 isnull(stg.subject , '{{ var("default_varchar") }}') as subject	,
 isnull(stg.supplied_email , '{{ var("default_varchar") }}') as supplied_email	,
@@ -101,7 +100,6 @@ select
  ,initial_response_captured::BOOLEAN
  ,is_closed::BOOLEAN
  ,is_escalated::BOOLEAN
- ,issues::VARCHAR(1000)
  ,jira_ticket_submitted::BOOLEAN
  ,last_modified_date::TIMESTAMP
  ,location_of_issue::VARCHAR(5000)

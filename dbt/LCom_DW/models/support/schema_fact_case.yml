@@ -188,12 +188,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: issues
-        data_type: varchar(1000)
-        description: Issues
-        constraints:
-          - type: not_null
-
       - name: jira_ticket_submitted
         data_type: boolean
         description: Jira Ticket Submitted
