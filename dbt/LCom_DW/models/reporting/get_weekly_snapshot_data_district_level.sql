@@ -13,6 +13,9 @@ with raw_license_data as (
             dist.lcom_district_name district_name,
             dist.sfdc_district_name sfdc_district_name,
             dist.SFDC_owner_name_text district_owner,
+            case
+                when dist.sfdc_district_enrollment = 0 then dist.sfdc_school_enrollment
+                else dist.sfdc_district_enrollment end as district_enrollment,            
             flo.organization_district_id,
             flo.order_id,
             flo.startdate,
@@ -47,6 +50,9 @@ with raw_license_data as (
             dist.lcom_district_name,
             dist.sfdc_district_name,
             dist.SFDC_owner_name_text,
+            case
+                when dist.sfdc_district_enrollment = 0 then dist.sfdc_school_enrollment
+                else dist.sfdc_district_enrollment end,
             flo.organization_district_id,
             flo.order_id,
             flo.startdate,
@@ -70,6 +76,7 @@ with raw_license_data as (
             district_country,
             district_state,
             district_owner,
+            district_enrollment,
             district_name,
             sfdc_district_name,
             organization_district_id,
@@ -100,6 +107,7 @@ with raw_license_data as (
             district_country,
             district_state,
             district_owner,
+            district_enrollment,
             district_name,
             sfdc_district_name,
             organization_district_id,
@@ -113,6 +121,7 @@ with raw_license_data as (
             district_state,
             state_initiative,
             district_owner,
+            district_enrollment,
             district_name,
             sfdc_district_name,
             organization_district_id,
@@ -129,6 +138,7 @@ with raw_license_data as (
             district_state,
             state_initiative,
             district_owner,
+            district_enrollment,
             district_name,
             sfdc_district_name,
             organization_district_id
@@ -157,6 +167,7 @@ with raw_license_data as (
         ld.district_owner DistrictOwner,
         ld.district_name DistrictName,
         ld.sfdc_district_name SFDC_DistrictName,
+        ld.district_enrollment District_Enrollment,
         ld.organization_district_id,
         ld.State_Initiative_License_Provisioned Licenses_Provisioned_District,
         ld.Number_Of_Students,
