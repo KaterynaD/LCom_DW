@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: monthly_snapshot_data_district_level
+    description: >
+      Monthly snapshot of district-level data derived from the get_monthly_snapshot_data_district_level view.
+      This snapshot captures the state of data as of each specific month to preserve the point-in-time logic
+      defined in the source view, which may vary from month to month.
+    config:
+      contract:
+        enforced: true
+      tags:
+      - snapshot      
+    columns:
+      - name: snp_mon_year
+        description: Snapshot year and month in YYYYMM format. Indicates the effective month of the snapshot.
+        data_type: integer
+        constraints:
+        - type: not_null
+
+      - name: mon_lastday
+        description: Last day of the calendar month.
+        data_type: date
+
+      - name: mon
+        description: Numeric representation of the calendar month (1–12).
+        data_type: integer
+
+      - name: schoolyear
+        description: Academic school year in 'YYYY/YYYY' format.
+        data_type: character varying(20)
+
+      - name: schoolyear_mon
+        description: Month index within the school year.
+        data_type: integer
+
+      - name: country
+        description: Country name for the district.
+        data_type: character varying(70)
+
+      - name: state
+        description: State code of the district (e.g., 'CA', 'NY').
+        data_type: character varying(20)
+
+      - name: state_initiative
+        description: Whether the district is part of a state initiative (based on SFDC flags `sfdc_state_initiative` or `sfdc_state_initiative_school`).
+        data_type: boolean
+
+      - name: state_program_eligible
+        description: Whether the district is eligible for a state program.
+        data_type: boolean
+
+      - name: districtowner
+        description: Salesforce owner name associated with the district.
+        data_type: character varying(380)
+
+      - name: districtenrollment
+        description: District enrollment; defaults to school enrollment if district enrollment is 0.
+        data_type: double precision
+
+      - name: districtname
+        description: Internal name of the district.
+        data_type: character varying(270)
+
+      - name: sfdc_districtname
+        description: Salesforce-provided district name.
+        data_type: character varying(780)
+
+      - name: organization_district_id
+        description: Unique LCom Platform district ID used to join various sources as a distribution key.
+        data_type: character varying(300)
+
+      - name: licenses_provisioned_district
+        description: >
+          Number of student licenses provisioned for the district under a qualifying state initiative. 
+          The result is summed per SKU-district-month and then rolled up per district-month if the district is marked as `state_initiative = true`.
+          Calculated by summing `studentcount` where:
+            - The state is one of ('NC', 'MI', 'SC', 'WV') **AND** the SKU name contains 'easy tech' **AND** not all schools are high schools.
+            - OR the state is 'MS' or 'FL' and SKU contains 'easy tech'.          
+        data_type: bigint
+
+      - name: number_of_students
+        description: >
+          Maximum of total student counts (`studentcount`) across all SKU orders active in the month. The result is summed per SKU-district-month 
+          and then rolled up to max per district-month.
+          Represents the total number of licensed students (not limited to state initiatives).
+        data_type: bigint
+
+      - name: active_students_ytd
+        description: School Year-to-date count of distinct active students and non-students(!) in the district based on launch activity.
+        data_type: bigint
+
+      - name: launches_ytd
+        description: School Year-to-date count of total product launches by students and non-students(!) in the district.
+        data_type: bigint      
+
+      - name: loaddate
+        data_type: timestamp
+        description: The datetime the record was loaded in PST
+        constraints:
+        - type: not_null
