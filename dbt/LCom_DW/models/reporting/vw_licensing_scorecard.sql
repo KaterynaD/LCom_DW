@@ -22,7 +22,8 @@ from {{ ref("fact_license_order") }} flo
 join {{ ref("dim_account") }} a
 on flo.organization_district_id = a.account_id
 where ( trunc(GETDATE()) between startdate and expirationdate
-or enforcedaterestrictions = 'n')
+or (enforcedaterestrictions = 'n' and startdate<=trunc(GETDATE()))
+)
 and a.lcom_trial=false 
 and a.lcom_demo=false
 group by a.account_id,

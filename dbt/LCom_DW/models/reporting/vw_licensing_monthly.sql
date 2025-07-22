@@ -33,7 +33,7 @@ on
 case when m.mon_lastday<GetDate() then m.mon_lastday else GetDate() end between fromdate and todate
 AND
 (case when m.mon_lastday<GetDate() then m.mon_lastday else GetDate() end between startdate and expirationdate
-or enforcedaterestrictions = 'n')
+or (enforcedaterestrictions = 'n' and startdate<=case when m.mon_lastday<GetDate() then m.mon_lastday else GetDate() end))
 join {{ ref("dim_account_history") }} a
 on floh.organization_district_id = a.account_id
 and m.mon_lastday between a.fromdate and a.todate
