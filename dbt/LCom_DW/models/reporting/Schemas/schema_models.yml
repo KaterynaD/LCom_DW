@@ -1,11 +1,6 @@
 ---
 version: 2
 models:
-  - name: get_monthly_snapshot_data_district_level
-    description: View to use in Monthly Year over Year Provisioning Licensing and Utilization dashboard
-    config:
-      tags:
-        - rep
   - name: get_weekly_snapshot_data_district_level
     description: View to use in Weekly Provisioning Licensing and Utilization dashboard
     config:
