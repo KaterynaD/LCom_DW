@@ -94,14 +94,14 @@ end
 sum(studentcount) sum_studentcount
 from raw_license_data d
 join cal on (
-                /*(
+                (
                     cal.mon_firstday between d.StartDate
                     and d.ExpirationDate
-                )*/
-                (
+                )
+               /* (
                     d.StartDate <= cal.mon_lastday
                     and d.ExpirationDate >= cal.mon_firstday
-                )
+                )*/
                 or (d.enforcedaterestrictions = 'n' and d.StartDate <= cal.mon_lastday)
             ) --
 group by
