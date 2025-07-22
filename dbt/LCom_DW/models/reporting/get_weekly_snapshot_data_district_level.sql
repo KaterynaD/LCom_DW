@@ -98,7 +98,7 @@ with raw_license_data as (
                     cal.Sun_WeekEnd between d.StartDate
                     and d.ExpirationDate
                 )
-                or d.enforcedaterestrictions = 'n'
+                or (d.enforcedaterestrictions = 'n' and d.StartDate <= cal.mon_lastday)
             ) --
         group by
             cal.Mon_WeekStart,
