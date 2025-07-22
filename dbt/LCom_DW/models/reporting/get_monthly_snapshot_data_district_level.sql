@@ -102,7 +102,7 @@ join cal on (
                     d.StartDate <= cal.mon_lastday
                     and d.ExpirationDate >= cal.mon_firstday
                 )
-                or d.enforcedaterestrictions = 'n'
+                or (d.enforcedaterestrictions = 'n' and d.StartDate <= cal.mon_lastday)
             ) --
 group by
 cal.mon_lastday,
