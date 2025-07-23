@@ -6,6 +6,11 @@ models:
       Monthly snapshot of district-level data derived from the get_monthly_snapshot_data_district_level view.
       This snapshot captures the state of data as of each specific month to preserve the point-in-time logic
       defined in the source view, which may vary from month to month.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - snp_mon_year
+            - snp_type      
     config:
       contract:
         enforced: true
@@ -18,6 +23,12 @@ models:
         constraints:
         - type: not_null
 
+      - name: snp_type
+        description: Snapshot type. It's <<Scheduled Monthly Snapshot>> by default and used in a scheduled run. But if we want to do a manual mid-month snapshot, it can be replaced manually for something meaningful.
+        data_type: varchar(100)
+        constraints:
+        - type: not_null        
+
       - name: mon_lastday
         description: Last day of the calendar month.
         data_type: date
@@ -28,7 +39,7 @@ models:
 
       - name: schoolyear
         description: Academic school year in 'YYYY/YYYY' format.
-        data_type: character varying(20)
+        data_type: varchar(20)
 
       - name: schoolyear_mon
         description: Month index within the school year.
@@ -36,11 +47,11 @@ models:
 
       - name: country
         description: Country name for the district.
-        data_type: character varying(70)
+        data_type: varchar(70)
 
       - name: state
         description: State code of the district (e.g., 'CA', 'NY').
-        data_type: character varying(20)
+        data_type: varchar(20)
 
       - name: state_initiative
         description: Whether the district is part of a state initiative (based on SFDC flags `sfdc_state_initiative` or `sfdc_state_initiative_school`).
@@ -52,7 +63,7 @@ models:
 
       - name: districtowner
         description: Salesforce owner name associated with the district.
-        data_type: character varying(380)
+        data_type: varchar(380)
 
       - name: districtenrollment
         description: District enrollment; defaults to school enrollment if district enrollment is 0.
@@ -60,15 +71,15 @@ models:
 
       - name: districtname
         description: Internal name of the district.
-        data_type: character varying(270)
+        data_type: varchar(270)
 
       - name: sfdc_districtname
         description: Salesforce-provided district name.
-        data_type: character varying(780)
+        data_type: varchar(780)
 
       - name: organization_district_id
         description: Unique LCom Platform district ID used to join various sources as a distribution key.
-        data_type: character varying(300)
+        data_type: varchar(300)
 
       - name: licenses_provisioned_district
         description: >
@@ -77,22 +88,22 @@ models:
           Calculated by summing `studentcount` where:
             - The state is one of ('NC', 'MI', 'SC', 'WV') **AND** the SKU name contains 'easy tech' **AND** not all schools are high schools.
             - OR the state is 'MS' or 'FL' and SKU contains 'easy tech'.          
-        data_type: bigint
+        data_type: integer
 
       - name: number_of_students
         description: >
           Maximum of total student counts (`studentcount`) across all SKU orders active in the month. The result is summed per SKU-district-month 
           and then rolled up to max per district-month.
           Represents the total number of licensed students (not limited to state initiatives).
-        data_type: bigint
+        data_type: integer
 
       - name: active_students_ytd
         description: School Year-to-date count of distinct active students and non-students(!) in the district based on launch activity.
-        data_type: bigint
+        data_type: integer
 
       - name: launches_ytd
         description: School Year-to-date count of total product launches by students and non-students(!) in the district.
-        data_type: bigint      
+        data_type: integer     
 
       - name: loaddate
         data_type: timestamp
