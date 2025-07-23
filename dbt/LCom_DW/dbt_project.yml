@@ -79,7 +79,7 @@ vars:
   default_numeric: 0  
   default_boolean: False
   default_ID: "00000000-0000-0000-0000-000000000000"
-  run_type: "Scheduled Prod run"      
+  run_type: "Manual Prod run"      
 
 
 
