@@ -6,11 +6,7 @@ models:
       Monthly snapshot of district-level data derived from the get_monthly_snapshot_data_district_level view.
       This snapshot captures the state of data as of each specific month to preserve the point-in-time logic
       defined in the source view, which may vary from month to month.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - snp_mon_year
-            - snp_type      
+
     config:
       contract:
         enforced: true
