@@ -28,6 +28,7 @@ vacuum {{ ref('fact_license_order_history') }};
 vacuum {{ ref('fact_opportunity') }};
 vacuum {{ ref('fact_opportunity_history') }};
 vacuum {{ ref('lcom_sfdc_account_mapping') }};
+vacuum {{ ref('monthly_snapshot_data_district_level') }};
 
 vacuum {{ ref('stg_customers_churn_monthly_snapshots') }};
 vacuum {{ ref('stg_customers_contract_monthly_snapshots') }};
@@ -58,6 +59,7 @@ analyze {{ ref('fact_license_order_history') }};
 analyze {{ ref('fact_opportunity') }};
 analyze {{ ref('fact_opportunity_history') }};
 analyze {{ ref('lcom_sfdc_account_mapping') }};
+analyze {{ ref('monthly_snapshot_data_district_level') }};
 
 
 analyze {{ ref('stg_customers_churn_monthly_snapshots') }};
