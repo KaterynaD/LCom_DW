@@ -46,7 +46,7 @@ The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/sr
 
 - End of day (4pm _TBD schedule_) AWS GLUE jobs started
 - Fivetran Salesforce connection starts at 6pm PST
-- Fivetran dbt transformation starts at 5am PST next day
+- Fivetran dbt transformation starts at 1:28 am PST next day
 
 _TBD Tableau refresh schedule for individual data sets?_
 
