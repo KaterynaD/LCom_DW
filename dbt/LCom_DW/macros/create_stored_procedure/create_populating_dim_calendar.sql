@@ -11,9 +11,10 @@ $$
 LANGUAGE plpythonu;
 
 
-CREATE OR REPLACE PROCEDURE {{target.database}}.common.populating_dim_calendar(pstart_date date, pend_date date)
-LANGUAGE plpgsql
+CREATE OR REPLACE PROCEDURE common.populating_dim_calendar(pstart_date date, pend_date date)
+	LANGUAGE plpgsql
 AS $$
+	
 declare
  cal_date_var date;
 begin
@@ -77,28 +78,61 @@ SELECT
     DATE_TRUNC('month', cal_date)::DATE AS Mon_FirstDay,
     LAST_DAY(cal_date) AS Mon_LastDay,  -- Use LAST_DAY function for the last day of the month
     --School Year
-    CASE 
+    CASE WHEN cal_date<to_date('2025-07-01','YYYY-MM-DD') THEN
+     CASE 
+         WHEN DATE_PART(month, cal_date) < 8 
+         THEN (DATE_PART(year, cal_date) - 1)::VARCHAR || '/' || DATE_PART(year, cal_date)::VARCHAR
+         ELSE DATE_PART(year, cal_date)::VARCHAR || '/' || (DATE_PART(year, cal_date) + 1)::VARCHAR
+     END 
+    ELSE --the same as Fiscal Year starting Jul 2025
+     CASE 
          WHEN DATE_PART(month, cal_date) < 7 
          THEN (DATE_PART(year, cal_date) - 1)::VARCHAR || '/' || DATE_PART(year, cal_date)::VARCHAR
          ELSE DATE_PART(year, cal_date)::VARCHAR || '/' || (DATE_PART(year, cal_date) + 1)::VARCHAR
-     END AS SchoolYear,
+     END
+    END AS SchoolYear,
 
-    CASE 
+    CASE WHEN cal_date<to_date('2025-07-01','YYYY-MM-DD')  THEN
+     CASE 
+         WHEN DATE_PART(month, cal_date) < 8 
+         THEN TO_DATE((DATE_PART(year, cal_date) - 1)::VARCHAR || '-08-01', 'YYYY-MM-DD')
+         ELSE TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-08-01', 'YYYY-MM-DD')
+     END 
+    ELSE --the same as Fiscal Year starting Jul 2025
+     CASE 
          WHEN DATE_PART(month, cal_date) < 7 
          THEN TO_DATE((DATE_PART(year, cal_date) - 1)::VARCHAR || '-07-01', 'YYYY-MM-DD')
          ELSE TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-07-01', 'YYYY-MM-DD')
-     END AS SchoolYear_StartDate,
+     END
+    END AS SchoolYear_StartDate,
 
+    CASE WHEN cal_date<to_date('2024-08-01','YYYY-MM-DD')  THEN    --2024-2025 SchoolYear will have 11 month and End Date is 06-30
+     CASE 
+         WHEN DATE_PART(month, cal_date) < 8 
+         THEN TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-07-31', 'YYYY-MM-DD')
+         ELSE TO_DATE((DATE_PART(year, cal_date) + 1)::VARCHAR || '-07-31', 'YYYY-MM-DD')
+     END 
+    --WHEN  SchoolYear='2024/2025' THEN '2025-06-30'
+    --WHEN  SchoolYear='2025/2026' THEN '2026-06-30'    
+    ELSE --the same as Fiscal Year starting Jul 2025
      CASE 
         WHEN DATE_PART(month, cal_date) <= 6 
         THEN TO_DATE(DATE_PART(year, cal_date)::VARCHAR || '-06-30', 'YYYY-MM-DD')
         ELSE TO_DATE((DATE_PART(year, cal_date) + 1)::VARCHAR || '-06-30', 'YYYY-MM-DD')
-     END AS SchoolYear_EndDate,
+     END
+    END AS SchoolYear_EndDate,
 
+    CASE WHEN cal_date<to_date('2025-07-01','YYYY-MM-DD')  THEN
+     CASE 
+         WHEN Mon >= 8 THEN Mon - 7  -- August (8) to December (12) → 1 to 5
+         ELSE Mon + 5                -- January (1) to July (7) → 6 to 12
+     END 
+    ELSE --the same as Fiscal Year starting Jul 2025
      CASE 
          WHEN Mon >= 7 THEN Mon - 6  -- July (7) to December (12) → 1 to 6
          ELSE Mon + 6                -- January (1) to May (5) → 6 to 12
-     END AS SchoolYear_Mon,
+     End
+    END AS SchoolYear_Mon,
     --Fiscal Year
     CASE 
         WHEN DATE_PART(month, cal_date) < 7 
@@ -127,6 +161,7 @@ FROM  stg_calendar;
 drop table if exists stg_calendar;
 
 END;
+
 
 $$
 ;
