@@ -30,10 +30,10 @@ join {{ ref("dim_lcom_sku") }} sku
 on floh.sku_id = sku.sku_id
 join dim_month m
 on 
-case when m.mon_lastday<GetDate() then m.mon_lastday else GetDate() end between fromdate and todate
+case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between fromdate and todate
 AND
-(case when m.mon_lastday<GetDate() then m.mon_lastday else GetDate() end between startdate and expirationdate
-or (enforcedaterestrictions = 'n' and startdate<=case when m.mon_lastday<GetDate() then m.mon_lastday else GetDate() end))
+(case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between startdate and expirationdate
+or (enforcedaterestrictions = 'n' and startdate<=case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end))
 join {{ ref("dim_account_history") }} a
 on floh.organization_district_id = a.account_id
 and m.mon_lastday between a.fromdate and a.todate
