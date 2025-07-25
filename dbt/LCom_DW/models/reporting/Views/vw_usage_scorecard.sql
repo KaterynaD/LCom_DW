@@ -46,7 +46,7 @@ join {{ source("dbo","mv_student_account") }} ua
 on fal.user_account_id = ua.user_account_id
 and fal.organization_district_id=ua.organization_district_id
 join dim_date_prev dt
-on TIMEZONE('UTC', fal.launch_datetime) BETWEEN dt.SchoolYear_StartDate AND dt.SchoolYear_EndDate
+on TIMEZONE('UTC', fal.launch_datetime) BETWEEN dt.SchoolYear_StartDate AND DATEADD(day,1,dt.SchoolYear_EndDate)
 where o.is_demo=false
 and o.is_trial=false
 group by dt.SchoolYear
