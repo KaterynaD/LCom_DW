@@ -160,3 +160,9 @@ models:
         data_tests:
           - not_null              
 
+      - name: netsuite_order_id
+        data_type: varchar(50)
+        description: Netsuite Order Id. LearningPlatform.dbo.[Order].netsuiteorderid
+        constraints:
+          - type: not_null
+            warn_unenforced: false     
