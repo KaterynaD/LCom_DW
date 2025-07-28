@@ -1,7 +1,7 @@
 {{ config(
         
         materialized='incremental',
-        unique_key='snp_mon_year',
+        unique_key=['snp_mon_year','snp_type'],
         incremental_strategy='delete+insert',
         on_schema_change='append_new_columns',
         dist='snp_mon_year',
