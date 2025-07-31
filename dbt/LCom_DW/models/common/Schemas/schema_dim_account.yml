@@ -37,7 +37,7 @@ models:
     constraints:
     - type: not_null
   - name: lcom_parent_organization_id
-    data_type: varchar(270)
+    data_type: varchar(300)
     description: LCOM Parent Organization Id (district Id)
     constraints:
     - type: not_null
@@ -1186,7 +1186,7 @@ models:
     constraints:
     - type: not_null
   - name: sfdc_parent_id
-    data_type: varchar(30)
+    data_type: varchar(300)
     description: 'Parent Account (Integrations: Gainsight.)'
     constraints:
     - type: not_null
@@ -1563,7 +1563,7 @@ models:
     constraints:
     - type: not_null
   - name: sfdc_ultimate_parent_id
-    data_type: varchar(30)
+    data_type: varchar(300)
     description: Ultimate Parent
     constraints:
     - type: not_null
