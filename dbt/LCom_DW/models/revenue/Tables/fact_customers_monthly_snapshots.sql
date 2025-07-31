@@ -1,83 +1,60 @@
 {{ config(
         
-        materialized='incremental',
-        unique_key='mon_year',
-        incremental_strategy='delete+insert',
-        on_schema_change='append_new_columns',
+        materialized='table',
         dist='sfdc_ultimate_parent_id',
         sort='mon_year'
 )
  }}
-with dim_month as --Thread to calculate monthly metrics 
-(select 
-distinct 
-c.mon_year, 
-c.mon_firstday, 
-c.mon_lastday, 
-c.fiscalyear, 
-c.fiscalyear_mon, 
-c.fiscalyear_startdate, 
-c.fiscalyear_enddate 
-from {{ source("common","dim_calendar") }} c 
-where 
---Current or Current and Previous (first 5 days) fiscalyear
-c.fiscalyear in (select distinct fiscalyear from {{ source("common","dim_calendar") }} where {{ month_range_to_load() }})
-
-)
-, monthly_rawdata as (
+with monthly_rawdata as (
 select
-	 stg.mon_year
-	,stg.mon_lastday
-	,stg.opportunity_id
-	,stg.sfdc_account_id
-	,stg.sfdc_ultimate_parent_id
-	,stg.record_type
-	,stg.include_flg
-	,stg.comments
-from {{ ref("stg_customers_contract_monthly_snapshots") }} stg
-join dim_month m on m.mon_year = stg.mon_year
-where stg.include_flg = true
-and stg.record_type='Starting'
+	 mon_year
+	,mon_lastday
+	,opportunity_id
+	,sfdc_account_id
+	,sfdc_ultimate_parent_id
+	,record_type
+	,include_flg
+	,comments
+from {{ ref("stg_customers_contract_monthly_snapshots") }}
+where include_flg = true
+and record_type='Starting'
 union all
 select
-	 stg.mon_year
-	,stg.mon_lastday
-	,stg.opportunity_id
-	,stg.sfdc_account_id
-	,stg.sfdc_ultimate_parent_id
-	,stg.record_type
-	,stg.include_flg
-	,stg.comments
-from {{ ref("stg_customers_churn_monthly_snapshots") }} stg
-join dim_month m on m.mon_year = stg.mon_year
-where (stg.include_flg = true or stg.record_type='Churn')
+	 mon_year
+	,mon_lastday
+	,opportunity_id
+	,sfdc_account_id
+	,sfdc_ultimate_parent_id
+	,record_type
+	,include_flg
+	,comments
+from {{ ref("stg_customers_churn_monthly_snapshots") }}
+where include_flg = true or record_type='Churn'
 union all
 select
-	 stg.mon_year
-	,stg.mon_lastday
-	,stg.opportunity_id
-	,stg.sfdc_account_id
-	,stg.sfdc_ultimate_parent_id
-	,stg.record_type
-	,stg.include_flg
-	,stg.comments
-from {{ ref("stg_customers_new_monthly_snapshots") }} stg
-join dim_month m on m.mon_year = stg.mon_year
-where stg.include_flg = true
-and stg.record_type in ('New','Returning','ReturningFY')
+	 mon_year
+	,mon_lastday
+	,opportunity_id
+	,sfdc_account_id
+	,sfdc_ultimate_parent_id
+	,record_type
+	,include_flg
+	,comments
+from {{ ref("stg_customers_new_monthly_snapshots") }}
+where include_flg = true
+and record_type in ('New','Returning','ReturningFY')
 union all
 select
-	 stg.mon_year
-	,stg.mon_lastday
-	,stg.opportunity_id
-	,stg.sfdc_account_id
-	,stg.sfdc_ultimate_parent_id
-	,stg.record_type
-	,stg.include_flg
-	,stg.comments
-from {{ ref("stg_customers_nonrenewal_monthly_snapshots") }} stg
-join dim_month m on m.mon_year = stg.mon_year
-where stg.record_type in ('NonRenewal', 'Ghost')
+	 mon_year
+	,mon_lastday
+	,opportunity_id
+	,sfdc_account_id
+	,sfdc_ultimate_parent_id
+	,record_type
+	,include_flg
+	,comments
+from {{ ref("stg_customers_nonrenewal_monthly_snapshots") }}
+where record_type in ('NonRenewal', 'Ghost')
 )
 ,monthly_data as (
 select

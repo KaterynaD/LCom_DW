@@ -16,6 +16,8 @@ models:
 
       There is also additional filter of records to include Churn records only once per Fiscal Year if there are no "Returning" opportunities in between.
 
+      The table is refreshed completly in each run due to complexity of the calculations, so it is not a real snapshot table. The data are freeze in the underlying staging tables.
+
     config:
       contract:
         enforced: true      
