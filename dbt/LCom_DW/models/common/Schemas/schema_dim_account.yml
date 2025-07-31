@@ -1483,11 +1483,7 @@ models:
     description: Title IV Funding (21st Century Grants)
     constraints:
     - type: not_null
-  - name: sfdc_title_iv_funding_student_support
-    data_type: varchar(210)
-    description: Title IV Funding (Student Support)
-    constraints:
-    - type: not_null
+  
   - name: sfdc_top_75_account
     data_type: boolean
     description: Top 75 Account
