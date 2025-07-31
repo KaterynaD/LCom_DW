@@ -1,0 +1,120 @@
+models:
+  - name: vw_fact_revenue_monthly_snapshots
+    description: This view aggregates Fact_Revenue data to include cumulative 'ARR' and 'Booking' record types for running total analysis across a fiscal year.
+    config:
+      tags:
+        - fact
+        - revenue
+    columns:
+      - name: record_type
+        description: "{{ doc('column_revenue_record_type') }} and cumulative accross a fiscal year ARR and Booking added in this view"
+
+
+      - name: mon_year
+        description: "{{ doc('column_revenue_mon_year') }}"
+     
+
+      - name: mon_lastday
+        description: "{{ doc('column_revenue_mon_lastday') }}"
+    
+
+      - name: fiscalyear
+        description: "{{ doc('column_fiscalyear') }}"
+
+
+      - name: fiscalyear_mons
+        description: "{{ doc('column_fiscalyear_mon') }}"
+ 
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+
+
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+
+
+      - name: opp_record_type
+        description: "{{ doc('column_opp_record_type') }}"
+
+
+      - name: sfdc_account_id
+        description: "{{ doc('column_sfdc_account_id') }}"
+
+
+      - name: sfdc_state_initiative
+        description: "{{ doc('column_sfdc_state_initiative') }}"
+
+
+      - name: sfdc_ultimate_parent_id
+        description: "{{ doc('column_sfdc_ultimate_parent_id') }}"
+
+
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+
+
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+
+
+      - name: start_date
+        description: "{{ doc('column_start_date') }}"
+
+
+      - name: end_date
+        description: "{{ doc('column_end_date') }}"
+
+
+      - name: renewal_opportunity_id
+        description: "{{ doc('column_renewal_opportunity_id') }}"
+
+
+      - name: renewal_stage_name
+        description: "{{ doc('column_renewal_stage_name') }}"
+
+
+      - name: renewal_invoiced_date
+        description: "{{ doc('column_renewal_invoiced_date') }}"
+
+
+      - name: renewal_close_date
+        description: "{{ doc('column_renewal_close_date') }}"
+
+
+      - name: disable_auto_renewal_opp
+        description: "{{ doc('column_disable_auto_renewal_opp') }}"
+
+
+      - name: license_unenforced
+        description: "{{ doc('column_license_unenforced') }}"
+
+
+      - name: bucket_original
+        description: "{{ doc('column_bucket') }}"
+         
+
+      - name: bucket
+        description: >-
+          The same as bucket_original, but 'Expected' in 'ARR-Starting' record_type.
+
+
+      - name: amount
+        description: "{{ doc('column_amount') }}"
+
+
+      - name: include_flg
+        description: "{{ doc('column_include_flg') }}"
+
+
+      - name: audit_id
+        description: "{{ doc('column_revenue_audit_id') }}"
+
+
+      - name: new_opp_this_fy_flg
+        description: "{{ doc('column_new_opp_this_fy_flg') }}"
+
+
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
