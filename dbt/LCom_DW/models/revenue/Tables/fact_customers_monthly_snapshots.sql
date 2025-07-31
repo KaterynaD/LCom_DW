@@ -1,6 +1,9 @@
 {{ config(
         
-        materialized='table',
+        materialized='incremental',
+        unique_key='mon_year',
+        incremental_strategy='delete+insert',
+        on_schema_change='append_new_columns',
         dist='sfdc_ultimate_parent_id',
         sort='mon_year'
 )
@@ -107,3 +110,6 @@ select
 	,comments::varchar(max)
 	,'{{ var("loaddate") }}'::timestamp as loaddate
 from final_data
+ where {{ month_range_to_load() }}
+ /*Starting Next Month is Contract Active current month Next, 1 future month should always be present in the data*/
+ or mon_year = TO_CHAR(DATEADD(month, 1, GETDATE()), 'YYYYMM')::int

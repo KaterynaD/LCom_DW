@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: fact_customers_monthly_snapshots          
+  - name: fact_customers_monthly_snapshots       s   
     description: >
       Monthly fact table that consolidates customer-lifecycle snapshots from:
         • stg_customers_contract_monthly_snapshots   (record_type = Starting)
@@ -16,7 +16,7 @@ models:
 
       There is also additional filter of records to include Churn records only once per Fiscal Year if there are no "Returning" opportunities in between.
 
-      The table is refreshed completly in each run due to complexity of the calculations, so it is not a real snapshot table. The data are freeze in the underlying staging tables.
+      Starting Next Month is Contract Active current month Next, 1 future month should always be present in the data
 
     config:
       contract:
