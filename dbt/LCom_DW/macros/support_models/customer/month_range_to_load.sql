@@ -2,7 +2,7 @@
 
 {%  if var("load_history")==1 %}
  
- mon_year>=202205 and mon_year<=202507
+ mon_year<=TO_CHAR(GETDATE(), 'YYYYMM')::int
 
 {% else %}
 
