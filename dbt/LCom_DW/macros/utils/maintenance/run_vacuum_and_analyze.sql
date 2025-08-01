@@ -35,6 +35,8 @@ vacuum {{ ref('stg_customers_contract_monthly_snapshots') }};
 vacuum {{ ref('stg_customers_new_monthly_snapshots') }};
 vacuum {{ ref('stg_customers_nonrenewal_monthly_snapshots') }};
 
+vacuum {{ ref('stg_revenue') }};
+vacuum {{ ref('fact_revenue_monthly_snapshots') }};
 --
 
 analyze {{ ref('dim_account') }};
@@ -66,6 +68,9 @@ analyze {{ ref('stg_customers_churn_monthly_snapshots') }};
 analyze {{ ref('stg_customers_contract_monthly_snapshots') }};
 analyze {{ ref('stg_customers_new_monthly_snapshots') }};
 analyze {{ ref('stg_customers_nonrenewal_monthly_snapshots') }};
+
+analyze {{ ref('stg_revenue') }};
+analyze {{ ref('fact_revenue_monthly_snapshots') }};
 
  {% endset %}
 
