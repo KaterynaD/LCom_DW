@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: fact_customers_monthly_snapshots       s   
+  - name: fact_customers_monthly_snapshots   
     description: >
       Monthly fact table that consolidates customer-lifecycle snapshots from:
         • stg_customers_contract_monthly_snapshots   (record_type = Starting)
@@ -23,8 +23,8 @@ models:
         enforced: true      
       tags:
         - fact
-        - customers
-        - revenue        
+        - revenue
+        - customers       
 
     columns:
 
@@ -71,7 +71,7 @@ models:
             • **Ghost** – same as NonRenewal but auto-renew flag is false
         constraints:
          - type: not_null              
-        tests:        
+        data_tests:        
           - accepted_values:
               values: ['Starting', 'New', 'Returning', 'ReturningFY', 'Churn', 'NonRenewal', 'Ghost']
 
