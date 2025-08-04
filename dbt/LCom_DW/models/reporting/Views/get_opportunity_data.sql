@@ -8,6 +8,8 @@
             s.sku_name,
             flo.schoolcount AS ord_school_count,
             flo.studentcount AS ord_student_count,
+            flo.startdate AS ord_start_date,
+            flo.expirationdate AS ord_end_date,
             flo.enforcedaterestrictions,
             sch.lcom_school_name
         FROM
@@ -23,6 +25,8 @@
             loc.sku_name,
             loc.ord_school_count,
             loc.ord_student_count,
+            loc.ord_start_date,
+            loc.ord_end_date,
             loc.enforcedaterestrictions AS ord_enforcedaterestrictions,
             LISTAGG(loc.lcom_school_name, ', ') WITHIN GROUP (
                 ORDER BY
@@ -36,6 +40,8 @@
             loc.sku_name,
             loc.ord_school_count,
             loc.ord_student_count,
+            loc.ord_start_date,
+            loc.ord_end_date,
             loc.enforcedaterestrictions
     )
     SELECT
@@ -58,14 +64,17 @@
         opp.close_date,
         opp.paid_date,
         opp.license_provisioned_date,
+        opp.multi_year,
         opp.number_of_students AS opp_student_count,
         opp.number_of_schools AS opp_school_count,
         opp_li.quantity AS opp_li_student_count,
-        prod.sfdc_product_name,
+        prod.sfdc_product_name AS product_name,
         suite.suite_name,
-        sku.sku_name AS sold_sku_name,
+        sku.sku_name AS sku_name,
         los.ord_school_count,
         los.ord_student_count,
+        los.ord_start_date,
+        los.ord_end_date,
         los.ord_enforcedaterestrictions,
         los.ord_schools_list,
         CASE
@@ -78,6 +87,10 @@
             AND opp.end_date
         ) THEN 'Active'
         ELSE 'Inactive' END AS Active_or_Inactive,
+        case
+            when acc.sfdc_district_enrollment = 0 then acc.sfdc_school_enrollment
+            else acc.sfdc_district_enrollment end as district_enrollment,
+        acc.SFDC_urban_rural as rural_urban,
         opp.x_1_st_contact_name,
         opp.x_1_st_contact_email,
         opp.x_2_nd_contact_name,
