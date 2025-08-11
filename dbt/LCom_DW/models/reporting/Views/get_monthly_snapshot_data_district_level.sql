@@ -85,7 +85,7 @@ organization_district_id,
 skuname,
 sum(
 case
-when district_state in ('NC','MI','SC','WV') and skuname ilike '%easy%tech%' and HighSchools_Num!=Schools_Num then studentcount
+when district_state in ('NC','MI','SC','WV','GA') and skuname ilike '%easy%tech%' and HighSchools_Num!=Schools_Num then studentcount
 when district_state = 'MS' and skuname ilike '%easy%tech%'  then studentcount
 when district_state = 'FL' and skuname ilike '%easy%tech%'  then studentcount
 else 0
