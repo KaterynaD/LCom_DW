@@ -63,11 +63,12 @@ false new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month mon
 on
-case when fb.license_unenforced then '3000-01-01'::date else fb.End_Date end >= mon.mon_firstday --still active this month or expires in a future or unenforced, need to start from first day to include not expired this month 
+case when fb.license_unenforced  then '3000-01-01'::date else fb.End_Date end >= mon.mon_firstday --still active this month or expires in a future or unenforced, need to start from first day to include not expired this month 
 and fb.invoiced_date<=mon.mon_lastday --If it's invoiced AFTER start_date, there is a gap and it will be counted in the invoiced month 
 join fiscalyear fy
 on fy.current_fiscalyear = mon.fiscalyear
 where (fb.renewal_invoiced_date='1900-01-01' or fb.renewal_invoiced_date>mon.mon_lastday)--no invoiced renewals yet in this month
+and not(fb.renewal_close_date<=mon.mon_lastday and fb.renewal_stage_name='Closed Lost') --no Closed Lost renewals in this month or before
 and mon.fiscalyear_mon = 12 and
 fb.bucket in (
 'Sales : New Business : ARR',
@@ -124,6 +125,7 @@ fb.bucket in (
 'Sales : Reseller ARR Upsell'
 )
 and (fb.disable_auto_renewal_opp=false or fb.renewal_opportunity_id!='Unknown')
+and not(fb.renewal_close_date<=m.mon_lastday and fb.renewal_stage_name='Closed Lost') --no Closed Lost renewals in this month or before
 )
 --
 --
@@ -184,6 +186,7 @@ where fb.bucket in (
 'Sales : Reseller ARR Renewal'
 )
 and (fb.disable_auto_renewal_opp=false or fb.renewal_opportunity_id!='Unknown')
+and not(fb.renewal_close_date<=m.mon_lastday and fb.renewal_stage_name='Closed Lost') --no Closed Lost renewals in this month or before
 )
 --
 --==
