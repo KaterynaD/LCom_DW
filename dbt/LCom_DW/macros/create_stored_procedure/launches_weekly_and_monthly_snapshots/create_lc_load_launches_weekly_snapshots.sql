@@ -34,7 +34,7 @@ with
 dim_date as (
 select distinct Sun_WeekEnd, SchoolYear_StartDate, SchoolYear_EndDate
 from common.dim_calendar
-where Sun_WeekEnd between pstart_date and pend_date
+where Sun_WeekEnd=Cal_date and Sun_WeekEnd between pstart_date and pend_date
 )
 ,dsu as (
 select

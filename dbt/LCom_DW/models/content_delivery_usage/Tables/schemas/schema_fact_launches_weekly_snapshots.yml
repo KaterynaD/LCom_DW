@@ -4,7 +4,9 @@ models:
   - name: fact_launches_weekly_snapshots
     description: >
       Cumulative activity from the start of a school year (YTD) till week end (Sunday)
-      per student aggregated to the school level. It's populated with lc_load_launches_weekly_snapshots stored procedure
+      per student aggregated to the school level. If a new school year starts in the middle of a week, the week is counted ONLY in the new school year.
+      This week is NOT in the previous school year.
+      It's populated with lc_load_launches_weekly_snapshots stored procedure
     config:
       contract:
         enforced: false
