@@ -288,6 +288,16 @@ select
 	,MAX(loaddate) as last_action_date
 from revenue.fact_customers_monthly_snapshots
 
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'fact_revenue_monthly_snapshots' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.fact_revenue_monthly_snapshots
+
 --licensing
 
 union all
