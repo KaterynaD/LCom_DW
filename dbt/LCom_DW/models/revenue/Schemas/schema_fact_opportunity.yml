@@ -58,11 +58,6 @@ models:
     description: Already Booked
     constraints:
     - type: not_null
-  - name: already_closed_lost
-    data_type: boolean
-    description: Already closed lost
-    constraints:
-    - type: not_null
   - name: amount
     data_type: numeric(35,10)
     description: Amount
@@ -103,11 +98,6 @@ models:
     description: ARR Won
     constraints:
     - type: not_null
-  - name: assessments
-    data_type: boolean
-    description: Assessments (If license has assessments)
-    constraints:
-    - type: not_null
   - name: billing_addressee
     data_type: varchar(160)
     description: Billing Addressee (Billing Addressee)
@@ -142,11 +132,6 @@ models:
     data_type: double precision
     description: Churn (Formula) (If the opportunity is lost will calculate a negative
       value for churn)
-    constraints:
-    - type: not_null
-  - name: churn_process_discussed_with_customer
-    data_type: boolean
-    description: Churn process discussed with customer
     constraints:
     - type: not_null
   - name: close_date
@@ -558,11 +543,6 @@ models:
   - name: otc_email_sent
     data_type: boolean
     description: OTC Email Sent
-    constraints:
-    - type: not_null
-  - name: other
-    data_type: boolean
-    description: Dummyfield 1 (Other QA)
     constraints:
     - type: not_null
   - name: owner_closed_won
@@ -982,11 +962,6 @@ models:
   - name: true_renewal_arr
     data_type: double precision
     description: True Renewal ARR
-    constraints:
-    - type: not_null
-  - name: type
-    data_type: varchar(780)
-    description: Customer Type
     constraints:
     - type: not_null
   - name: update_close_date
