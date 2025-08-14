@@ -570,11 +570,6 @@ models:
     description: Owner Closed Won
     constraints:
     - type: not_null
-  - name: owner_email
-    data_type: varchar(250)
-    description: Owner Email
-    constraints:
-    - type: not_null
   - name: owner_id
     data_type: varchar(30)
     description: Opportunity Owner
