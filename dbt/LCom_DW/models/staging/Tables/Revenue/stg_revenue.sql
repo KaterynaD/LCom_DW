@@ -172,7 +172,8 @@ on fo.account_id=a.account_id
 join cal			
 on fo.invoiced_date between cal.mon_firstday and cal.mon_lastday			
 where fo.stage_name in ( 'Closed Won', 'Closed-Won Upsell')			
-and fo.opp_record_type='Renewal'			
+and fo.opp_record_type='Renewal'	
+and not(fo.name ilike '%NEGATIVE OPP%' or fo.name ilike '%REPLACEMENT OPP%')	
 and fo.downsell!=0			
 )			
 ,cancellation_data as (			
