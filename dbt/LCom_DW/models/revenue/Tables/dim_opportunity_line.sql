@@ -44,6 +44,7 @@ isnull(ol.product_2_id,  '{{ var("default_varchar") }}'  ) as sfdc_product_id	,
 isnull(ol.product_code,  '{{ var("default_varchar") }}'  ) as sfdc_product_code	,
 isnull(ol.product_description_c,  '{{ var("default_varchar") }}'  ) as sfdc_product_description	,
 isnull(ol.quantity, {{ var("default_numeric") }}) as quantity	,
+isnull(ol.record_type_c, '{{ var("default_varchar") }}') as record_type	,
 isnull(ol.sbqq_quote_line_c,  '{{ var("default_varchar") }}'  ) as sbqq_quote_line	,
 isnull(ol.start_date_c,  '{{ var("default_date") }}'  ) as start_date	,
 isnull(ol.subscription_term_c, {{ var("default_numeric") }}) as subscription_term	,
@@ -94,6 +95,7 @@ select
 	,pricebook_entry_id::VARCHAR(18)
 	,pricebook_id::VARCHAR(18)
 	,pro_rate_adj_term::NUMERIC(35,17)
+	,record_type::VARCHAR(765)
 	,sfdc_product_code::VARCHAR(765)
 	,sfdc_product_description::VARCHAR(4000)
 	,sbqq_quote_line::VARCHAR(50)
