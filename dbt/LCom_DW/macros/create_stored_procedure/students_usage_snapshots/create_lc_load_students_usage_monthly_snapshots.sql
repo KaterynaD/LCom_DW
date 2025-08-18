@@ -67,7 +67,7 @@ where mon_year=pmonth_year;
        join content_delivery_usage.dbo.mv_student_account st
        on fal.user_account_id=st.user_account_id and fal.organization_district_id=st.organization_district_id
        join dim_date dt
-       on TIMEZONE('UTC', fal.launch_datetime) between dt.SchoolYear_StartDate and dt.Mon_LastDay
+       on TIMEZONE('UTC', fal.launch_datetime) between dt.SchoolYear_StartDate and  DATEADD(day,1,dt.Mon_LastDay)
        where dist.lcom_trial = false
        and dist.lcom_demo = false ;
 
