@@ -65,9 +65,13 @@ models:
         description: District enrollment; defaults to school enrollment if district enrollment is 0.
         data_type: double precision
 
+      - name: rural_urban
+        description: IIs district urban or rural.
+        data_type: varchar(40)         
+
       - name: districtname
         description: Internal name of the district.
-        data_type: varchar(270)
+        data_type: varchar(270)       
 
       - name: sfdc_districtname
         description: Salesforce-provided district name.
