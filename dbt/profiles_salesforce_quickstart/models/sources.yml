@@ -1,13 +1,6 @@
 sources:
 
-- name: fivetran_salesforce
-  quoting:
-    database: false
-    schema: false
-    identifier: false
-  tables:  
-  - name: entity_definition
-  - name: field_definition
+
 
   
 - name: fivetran_salesforce_quickstart
@@ -66,4 +59,4 @@ sources:
   - name: switches_c
   - name: user
   - name: user_role
-
+  - name: training_session

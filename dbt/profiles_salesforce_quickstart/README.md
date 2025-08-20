@@ -105,7 +105,11 @@ The python code created models and source.yml files after a small manual adjustm
 
 Fivetran created tables and columns names slightly different from the original Salesforce API names.
 
-I created Salesforce.csv and Fivetran.csv files with table and column names from 2 systems (EntityDefinition and FieldDefinition were added in Fivetran connector scheama):
+EntityDefinition and FieldDefinition were added in Fivetran connector scheama in test environment in April 2025
+Now the data exist in seeds/entity_definition202504.csv and seeds/field_definition202504.csv
+Not uptodate anymore, but can be used.
+
+I created Salesforce.csv and Fivetran.csv files with table and column names from 2 systems (Run in Dbeaver or whatever and export in csv file, the header should be "table_name","column_name" (quotes!)):
 
 ```
 select
@@ -138,6 +142,14 @@ Create actual mapping between Salesforce and Fivetran table and column names bas
 
 
 The Python code created salesforce_fivetran_mapped_columns.csv file and then I used it as mapping.csv seed to create a mapping table.
+ install pandas
+- pip install pandas
+- cd project_setup_utils to run mapping.py
+- "C:/Users/KDrogaieva/OneDrive - Learning.com/Development/dbt-master/transformations/.venv/Scripts/python.exe" "c:/Users/KDrogaieva/OneDrive - Learning.com/Development/dbt-master/transformations/dbt/profiles_salesforce_quickstart/project_setup_utils/mapping.py"
+- Only pandas is required to be install
+- copy and paste in seeds/mapping.csv Make sure the column NAMES are from mapping.csv (no spaces)
+
+- Run dbt seed after
 
 I need to compare populated columns in Account table for districts and schools accounts. "District" and "School" models were created bassed on "Account" models manually.
 

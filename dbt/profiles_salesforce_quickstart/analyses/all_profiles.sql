@@ -14,8 +14,8 @@ with data as (
 
 
 select 
-'{{original_table_name}}' as table_name,
-p.column_name,
+'{{original_table_name}}'::varchar as table_name,
+p.column_name::varchar as column_name,
 p.row_count ,
 p.data_type ,
 p.not_null_proportion ,
@@ -49,8 +49,8 @@ f.is_nillable as sfdc_is_nillable,
 f.description as sfdc_description,
 m.table_name,
 m.column_name 
-from {{ source("fivetran_salesforce","entity_definition") }} e  
-join {{ source("fivetran_salesforce","field_definition") }} f 
+from {{ ref("entity_definition202504") }} e  
+join {{ ref("field_definition202504") }} f 
 on e.durable_id = f.entity_definition_id
 left outer join  {{ ref("mapping") }} m
 on lower(e.qualified_api_name)=m.sfdc_table_name 
