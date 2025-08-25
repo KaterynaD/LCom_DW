@@ -1,7 +1,7 @@
 ---
 sources:
   - name: fivetran_salesforce_quickstart
-    description: "Source for Salesforce data managed by Fivetran. Fivetran loads data in rawdata.fivetran_salesforce schema and pre-process using own dbt project in rawdata.fivetran_salesforce_quickstart schema. The data with formula based columns are in the views in rawdata.fivetran_salesforce_quickstart schema"
+    description: "Source for Salesforce data managed by Fivetran. Fivetran loads data in rawdata.fivetran_salesforce schema and pre-process using own dbt project in rawdata.fivetran_salesforce_quickstart schema. The data with formula based columns are in the views in rawdata and marked as deleted records are not available.fivetran_salesforce_quickstart schema"
     database: rawdata
     quoting:
       database: false
@@ -17,5 +17,6 @@ sources:
       - name: opportunity_line_item
       - name: user      
       - name: case           
-      - name: record_type             
-        
+      - name: record_type         
+      - name: contact    
+      - name: training_session_c        
