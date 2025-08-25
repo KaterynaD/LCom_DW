@@ -24,18 +24,24 @@ flo.studentcount,
 sum(case when sch.ishighschool then 1 else 0 end) HighSchools_Num,
 count(lcom_school_name) Schools_Num
 --,LISTAGG(distinct lcom_school_name,',' ) WITHIN GROUP (ORDER BY lcom_school_name) schools
-from {{ ref("fact_license_order") }} flo
-join {{ ref("dim_district") }} dist
-on flo.organization_district_id = dist.district_id
+-- from {{ ref("fact_license_order") }} flo
+-- join {{ ref("dim_district") }} dist
+-- on flo.organization_district_id = dist.district_id
+-- --
+-- join {{ ref("dim_lcom_sku") }} s
+-- on flo.sku_id = s.sku_id
+-- --
+-- join {{ ref("dim_license_order_school") }} dlos
+-- on flo.order_id = dlos.order_id
+-- join {{ ref("dim_school") }} sch
+-- on dlos.organization_school_id = sch.lcom_school_id
 --
-join {{ ref("dim_lcom_sku") }} s
-on flo.sku_id = s.sku_id
---
-join {{ ref("dim_license_order_school") }} dlos
-on flo.order_id = dlos.order_id
-join {{ ref("dim_school") }} sch
-on dlos.organization_school_id = sch.lcom_school_id
---
+from dw.licensing.fact_license_order flo
+            join dw.common.dim_district dist on flo.organization_district_id = dist.district_id --
+            join dw.common.dim_lcom_sku s on flo.sku_id = s.sku_id --
+            join dw.licensing.dim_license_order_school dlos on flo.order_id = dlos.order_id
+            join dw.common.dim_school sch on dlos.organization_school_id = sch.lcom_school_id --
+        
 where dist.lcom_trial = false
 and dist.lcom_demo= false
 group by
@@ -97,14 +103,14 @@ end
 sum(studentcount) sum_studentcount
 from raw_license_data d
 join cal on (
-                (
+                /* (
                     cal.mon_firstday between d.StartDate
                     and d.ExpirationDate
-                )
-               /* (
+                )*/
+               (
                     d.StartDate <= cal.mon_lastday
                     and d.ExpirationDate >= cal.mon_firstday
-                )*/
+                )
                 or (d.enforcedaterestrictions = 'n' and d.StartDate <= cal.mon_lastday)
             ) --
 group by
@@ -169,7 +175,7 @@ flo.organization_district_id,
 sum(flo.active_students_YTD) active_students_YTD,
 sum(flo.launches_YTD) launches_YTD
 from {{ ref("fact_launches_monthly_snapshots") }} flo
-join {{ ref("dim_district") }} dist
+join dw.common.dim_district dist -- {{ ref("dim_district") }} dist
 on flo.organization_district_id = dist.district_id
 where lcom_trial = false
 and lcom_demo= false
