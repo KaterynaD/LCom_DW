@@ -23,11 +23,15 @@ ALTER TABLE content_delivery_usage.fact_students_usage_monthly_snapshots ADD FOR
 --
 ALTER TABLE support.fact_case ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE support.fact_case_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
-
+--
+ALTER TABLE content_delivery_usage.fact_training_session ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
+ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 -- TO common.dim_employee
 ALTER TABLE support.fact_case ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
 ALTER TABLE support.fact_case_history ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
-
+--
+ALTER TABLE content_delivery_usage.fact_training_session ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
+ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
 -- TO common.dim_lcom_sku
 ALTER TABLE licensing.fact_license_order ADD FOREIGN KEY (sku_id) REFERENCES common.dim_lcom_sku(sku_id);
 ALTER TABLE licensing.fact_license_order_history ADD FOREIGN KEY (sku_id) REFERENCES common.dim_lcom_sku(sku_id);
@@ -46,7 +50,8 @@ ALTER TABLE revenue.fact_opportunity_history ADD FOREIGN KEY (opportunity_id) RE
 -- TO content_delivery_usage.dim_sequence
 ALTER TABLE content_delivery_usage.dim_sequence_learning_object ADD FOREIGN KEY (sequence_id) REFERENCES content_delivery_usage.dim_sequence(sequence_id);
 
-
+-- TO content_delivery_usage.fact_training_session
+ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY (training_session_id) REFERENCES content_delivery_usage.fact_training_session(training_session_id);
 
 {% endset %}
 
