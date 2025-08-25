@@ -88,6 +88,10 @@ The datetime the record was loaded in PST
 DIM_ACCOUNT PK/FK 
 {% enddocs %}
 
+{% docs column_opportunity_line_id %}
+DIM_OPPORTUNITY_LINE PK/FK 
+{% enddocs %}
+
 
 {% docs column_owner_id %}
 DIM_EMPLOYEE FK

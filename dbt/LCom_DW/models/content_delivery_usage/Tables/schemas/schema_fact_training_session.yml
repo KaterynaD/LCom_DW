@@ -43,6 +43,18 @@ models:
         constraints:
           - type: not_null
 
+
+      - name: opportunity_line_id
+        data_type: VARCHAR(300)
+        description: "{{ doc('column_opportunity_line_id') }} It's set using fuzzy condition: training session account has an Invoiced, Closed Won opportunity close no longer then 60 days before or after the session creation date and a line related to a product containg <<Webinar>> or <<Training>>. The training session type should match the product name, e.g. both should contain <Webbinar>> or <<visit>> and <<OnSite>>." 
+        constraints:
+        - type: not_null
+        data_tests:
+        - relationships:
+            to: ref('dim_opportunity_line')
+            field: opportunity_line_id
+
+
       - name: owner_id
         data_type: VARCHAR(300)
         description: "{{ doc('column_owner_id') }}"
