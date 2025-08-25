@@ -33,9 +33,10 @@ models:
     constraints:
     - type: not_null
     data_tests:
-    - relationships:
+    - dbt_utils.relationships_where:
         to: ref('fact_opportunity')
         field: opportunity_id
+        from_condition: opportunity_id != '{{ var("default_ID") }}'
   - name: start_date
     data_type: DATE
     description: Start Date
