@@ -35,7 +35,6 @@ join {{ ref("dim_license_order_school") }} dlos
 on flo.order_id = dlos.order_id
 join {{ ref("dim_school") }} sch
 on dlos.organization_school_id = sch.lcom_school_id
---
 where dist.lcom_trial = false
 and dist.lcom_demo= false
 group by
@@ -97,16 +96,12 @@ end
 sum(studentcount) sum_studentcount
 from raw_license_data d
 join cal on (
-                (
-                    cal.mon_firstday between d.StartDate
-                    and d.ExpirationDate
-                )
-               /* (
+               (
                     d.StartDate <= cal.mon_lastday
                     and d.ExpirationDate >= cal.mon_firstday
-                )*/
+                )
                 or (d.enforcedaterestrictions = 'n' and d.StartDate <= cal.mon_lastday)
-            ) --
+            ) 
 group by
 cal.mon_lastday,
 cal.mon,
