@@ -21,7 +21,7 @@ isnull(ol.discount_applied_c,  '{{ var("default_varchar") }}'  ) as discount_app
 isnull(ol.easy_tech_arr_c, {{ var("default_numeric") }}) as easy_tech_arr	,
 isnull(ol.end_date_c,  '{{ var("default_date") }}'  ) as end_date	,
 isnull(ol.gold_service_on_quote_c, {{ var("default_numeric") }}) as gold_service_on_quote	,
-isnull(ol.id,  '{{ var("default_varchar") }}'  ) as opportunity_line_id	,
+isnull(ol.id,  '{{ var("default_ID") }}'  ) as opportunity_line_id	,
 isnull(ol.is_active_opp_product_c,   {{ var("default_boolean") }}) as is_active_opp_product	,
 isnull(ol.last_modified_date	 AT TIME ZONE 'PST'	,	 '{{ var("default_date") }}'  ) as last_modified_date	,
 isnull(ol.learning_sbxid_c,  '{{ var("default_varchar") }}'  ) as learning_sbxid	,
@@ -34,13 +34,13 @@ isnull(ol.netsuite_sku_c,  '{{ var("default_varchar") }}'  ) as netsuite_sku	,
 isnull(ol.no_of_buildings_c, {{ var("default_numeric") }}) as no_of_buildings	,
 isnull(ol.no_of_licenses_c, {{ var("default_numeric") }}) as no_of_licenses	,
 isnull(ol.opp_probability_c, {{ var("default_numeric") }}) as opp_probability	,
-isnull(ol.opportunity_id,  '{{ var("default_varchar") }}'  ) as opportunity_id	,
+isnull(ol.opportunity_id,  '{{ var("default_ID") }}'  ) as opportunity_id	,
 isnull(ol.opportunity_product_arr_c, {{ var("default_numeric") }}) as opportunity_product_arr	,
 isnull(ol.opportunity_product_line_id_c,  '{{ var("default_varchar") }}'  ) as opportunity_product_line_id	,
 isnull(ol.pricebook_entry_id,  '{{ var("default_varchar") }}'  ) as pricebook_entry_id	,
 isnull(ol.pricebook_id_c,  '{{ var("default_varchar") }}'  ) as pricebook_id	,
 isnull(ol.pro_rate_adj_term_c, {{ var("default_numeric") }}) as pro_rate_adj_term	,
-isnull(ol.product_2_id,  '{{ var("default_varchar") }}'  ) as sfdc_product_id	,
+isnull(ol.product_2_id,  '{{ var("default_ID") }}'  ) as sfdc_product_id	,
 isnull(ol.product_code,  '{{ var("default_varchar") }}'  ) as sfdc_product_code	,
 isnull(ol.product_description_c,  '{{ var("default_varchar") }}'  ) as sfdc_product_description	,
 isnull(ol.quantity, {{ var("default_numeric") }}) as quantity	,
@@ -62,8 +62,8 @@ on ol.product_2_id = p.sfdc_product_id
 where ol.is_deleted=False
 )
 select
-     opportunity_line_id::VARCHAR(50) 
-	,sfdc_product_id::VARCHAR(50)
+     opportunity_line_id::VARCHAR(300) 
+	,sfdc_product_id::VARCHAR(300)
 	,opportunity_id::VARCHAR(300) 
 	,start_date::DATE
 	,end_date::DATE
@@ -105,3 +105,47 @@ select
 	,last_modified_date::TIMESTAMP WITHOUT TIME ZONE
     ,'{{ var("loaddate") }}'::timestamp as loaddate
 from data
+union all
+select
+'{{ var("default_ID") }}' as opportunity_line_id	,
+'{{ var("default_ID") }}' as sfdc_product_id	,
+'{{ var("default_ID") }}' as opportunity_id	,
+'{{ var("default_date") }}' as start_date	,
+'{{ var("default_date") }}' as end_date	,
+{{ var("default_numeric") }} as subscription_term	,
+{{ var("default_numeric") }} as quantity	,
+{{ var("default_numeric") }} as total_price	,
+{{ var("default_numeric") }} as unit_price	,
+{{ var("default_numeric") }} as weighted_total_price	,
+{{ var("default_numeric") }} as combine_new_biz_arr	,
+{{ var("default_numeric") }} as combine_renewal_arrs	,
+{{ var("default_numeric") }} as combine_upsell_arrs	,
+'{{ var("default_varchar") }}' as name	,
+'{{ var("default_varchar") }}' as description	,
+'{{ var("default_varchar") }}' as netsuite_id	,
+'{{ var("default_varchar") }}' as netsuite_sku	,
+{{ var("default_numeric") }} as no_of_buildings	,
+{{ var("default_numeric") }} as no_of_licenses	,
+{{ var("default_numeric") }} as discount	,
+'{{ var("default_varchar") }}' as discount_applied	,
+{{ var("default_numeric") }} as easy_tech_arr	,
+{{ var("default_numeric") }} as gold_service_on_quote	,
+{{ var("default_boolean") }} as is_active_opp_product	,
+'{{ var("default_varchar") }}' as learning_sbxid	,
+{{ var("default_numeric") }} as list_price	,
+{{ var("default_numeric") }} as net_price_display	,
+{{ var("default_numeric") }} as net_unit_price	,
+{{ var("default_numeric") }} as opp_probability	,
+{{ var("default_numeric") }} as opportunity_product_arr	,
+'{{ var("default_varchar") }}' as pricebook_entry_id	,
+'{{ var("default_varchar") }}' as pricebook_id	,
+{{ var("default_numeric") }} as pro_rate_adj_term	,
+'{{ var("default_varchar") }}' as record_type	,
+'{{ var("default_varchar") }}' as sfdc_product_code	,
+'{{ var("default_varchar") }}' as sfdc_product_description	,
+'{{ var("default_varchar") }}' as sbqq_quote_line	,
+'{{ var("default_varchar") }}' as business_type_opty_product	,
+'{{ var("default_varchar") }}' as class	,
+ '{{ var("default_date") }}' as created_date	,
+'{{ var("default_date") }}' as last_modified_date,
+'{{ var("default_date") }}' as loaddate

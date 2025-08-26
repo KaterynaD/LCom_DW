@@ -29,7 +29,7 @@ Type of opportunity, such as New, Renewal, or Upsell.
 {% enddocs %}
 
 {% docs column_sfdc_account_id %}
-Salesforce Account ID for the opportunity.
+Salesforce Account ID.
 {% enddocs %}
 
 {% docs column_sfdc_state_initiative %}
@@ -67,3 +67,54 @@ Flag indicating whether auto-renewal was disabled on the opportunity.
 {% docs column_license_unenforced %}
 Boolean indicating if the license is unenforced.
 {% enddocs %}
+
+{% docs column_created_by_id %}
+Created By user. The ID allows to join COMMON.DIM_EMPLOYEE, but no FK is created. Can be used for validation purposes
+{% enddocs %}
+
+{% docs column_created_date %}
+Created Date in PST
+{% enddocs %}
+
+{% docs column_last_modified_by_id %}
+Last Modified By user. The ID allows to join COMMON.DIM_EMPLOYEE, but no FK is created. Can be used for validation purposes
+{% enddocs %}
+
+{% docs column_last_modified_date %}
+The datetime the record was loaded in PST
+{% enddocs %}
+
+{% docs column_account_id %}
+DIM_ACCOUNT PK/FK 
+{% enddocs %}
+
+{% docs column_opportunity_line_id %}
+DIM_OPPORTUNITY_LINE PK/FK 
+{% enddocs %}
+
+
+{% docs column_owner_id %}
+DIM_EMPLOYEE FK
+{% enddocs %}
+
+{% docs column_fromdate %}
+State of data valid from this date
+{% enddocs %}
+
+{% docs column_todate %}
+State of data valid to this date
+{% enddocs %}
+
+{% docs column_record_version %}
+State of data version
+{% enddocs %}
+
+
+{% docs column_updatedate %}
+Data updated at in PST
+{% enddocs %}
+
+
+{% docs column_scd_hash %}
+Hash of checked columns  to identify changes
+{% enddocs %}   

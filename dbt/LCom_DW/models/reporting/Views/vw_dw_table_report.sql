@@ -245,6 +245,27 @@ select
 	,MAX(loaddate) as last_action_date
 from content_delivery_usage.dim_product_category_learning_object_monthly
 
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'fact_training_session' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.fact_training_session
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'fact_training_session_history' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.fact_training_session_history
+
+
 --revenue
 
 union all

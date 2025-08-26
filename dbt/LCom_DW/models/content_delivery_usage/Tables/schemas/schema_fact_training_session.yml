@@ -1,0 +1,472 @@
+version: 2
+
+models:
+  - name: fact_training_session
+    description: "Fact table for training sessions based on Salesforce Training Session object. Contains information about training sessions, including dates, locations, participants, and various attributes related to the training."
+    config:
+      contract:
+        enforced: true
+      tags:
+      - fact
+      - training 
+    
+    columns:
+      - name: training_session_id
+        data_type: VARCHAR(300)
+        description: "{{ doc('column_training_session_id') }}"
+        constraints:
+        - type: not_null
+        - type: primary_key
+          warn_unenforced: false
+        data_tests:
+        - unique
+
+      - name: name
+        data_type: VARCHAR(240)
+        description: "{{ doc('column_name') }}"
+        constraints:
+          - type: not_null
+
+      - name: account_id
+        data_type: VARCHAR(300)
+        description: "{{ doc('column_account_id') }}"
+        constraints:
+        - type: not_null
+        data_tests:
+        - relationships:
+            to: ref('dim_account')
+            field: account_id
+
+      - name: sfdc_account_id
+        data_type: VARCHAR(300)
+        description: "{{ doc('column_sfdc_account_id') }}"
+        constraints:
+          - type: not_null
+
+
+      - name: opportunity_line_id
+        data_type: VARCHAR(300)
+        description: "{{ doc('column_opportunity_line_id') }} It's set using fuzzy condition: training session account has an Invoiced, Closed Won opportunity close no longer then 60 days before or after the session creation date and a line related to a product containg <<Webinar>> or <<Training>>. The training session type should match the product name, e.g. both should contain <Webbinar>> or <<visit>> and <<OnSite>>." 
+        constraints:
+        - type: not_null
+        data_tests:
+        - relationships:
+            to: ref('dim_opportunity_line')
+            field: opportunity_line_id
+
+
+      - name: owner_id
+        data_type: VARCHAR(300)
+        description: "{{ doc('column_owner_id') }}"
+        constraints:
+          - type: not_null
+        data_tests:
+        - relationships:
+            to: ref('dim_employee')
+            field: employee_id
+
+      - name: pds_group
+        data_type: VARCHAR(33)
+        description: "{{ doc('column_pds_group') }}"
+        constraints:
+          - type: not_null
+        data_tests:
+          - accepted_values:
+              values: ['Professional Development Services', 'Service And Training', 'Assigned to an owner']
+
+      - name: alternate_end_date
+        data_type: DATE
+        description: "{{ doc('column_alternate_end_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: alternate_end_time_unrestricted
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_alternate_end_time_unrestricted') }}"
+        constraints:
+          - type: not_null
+
+      - name: alternate_start_date
+        data_type: DATE
+        description: "{{ doc('column_alternate_start_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: alternate_start_time_unrestricted
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_alternate_start_time_unrestricted') }}"
+        constraints:
+          - type: not_null
+
+      - name: cancel_reason
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_cancel_reason') }}"
+        constraints:
+          - type: not_null
+
+      - name: closed_date
+        data_type: DATE
+        description: "{{ doc('column_closed_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: created_by_id
+        data_type: VARCHAR(18)
+        description: "{{ doc('column_created_by_id') }}"
+        constraints:
+          - type: not_null
+
+      - name: created_date
+        data_type: TIMESTAMP WITHOUT TIME ZONE
+        description: "{{ doc('column_created_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: curriculum_examples
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_curriculum_examples') }}"
+        constraints:
+          - type: not_null
+
+      - name: district_library
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_district_library') }}"
+        constraints:
+          - type: not_null
+
+      - name: end_date
+        data_type: DATE
+        description: "{{ doc('column_ts_end_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: experience_level
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_experience_level') }}"
+        constraints:
+          - type: not_null
+
+      - name: impelmentation_i_pad_usage
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_impelmentation_i_pad_usage') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_advanced_topics
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_implementation_advanced_topics') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_elementary
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_implementation_elementary') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_frequency
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_implementation_frequency') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_goals
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_implementation_goals') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_google_classroom
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_implementation_google_classroom') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_notes
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_implementation_notes') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_statement
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_implementation_statement') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_topics
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_implementation_topics') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementation_type
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_implementation_type') }}"
+        constraints:
+          - type: not_null
+
+      - name: implementing_grades
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_implementing_grades') }}"
+        constraints:
+          - type: not_null
+
+      - name: is_closed
+        data_type: BOOLEAN
+        description: "{{ doc('column_is_closed') }}"
+        constraints:
+          - type: not_null
+
+      - name: last_modified_by_id
+        data_type: VARCHAR(18)
+        description: "{{ doc('column_last_modified_by_id') }}"
+        constraints:
+          - type: not_null
+
+      - name: last_modified_date
+        data_type: TIMESTAMP WITHOUT TIME ZONE
+        description: "{{ doc('column_last_modified_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: learning_path
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_learning_path') }}"
+        constraints:
+          - type: not_null
+
+      - name: new_district
+        data_type: BOOLEAN
+        description: "{{ doc('column_new_district') }}"
+        constraints:
+          - type: not_null
+
+      - name: notes
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_notes') }}"
+        constraints:
+          - type: not_null
+
+      - name: origin
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_origin') }}"
+        constraints:
+          - type: not_null
+
+      - name: participant_roles
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_participant_roles') }}"
+        constraints:
+          - type: not_null
+
+      - name: person_facilitating_group_tbd_learning_p
+        data_type: VARCHAR(75)
+        description: "{{ doc('column_person_facilitating_group_tbd_learning_p') }}"
+        constraints:
+          - type: not_null
+
+      - name: po_number
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_po_number') }}"
+        constraints:
+          - type: not_null
+
+      - name: presentation_quote
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_presentation_quote') }}"
+        constraints:
+          - type: not_null
+
+      - name: primary_contact
+        data_type: VARCHAR(363)
+        description: "{{ doc('column_primary_contact') }}"
+        constraints:
+          - type: not_null
+
+      - name: secondary_contact
+        data_type: VARCHAR(363)
+        description: "{{ doc('column_secondary_contact') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_attendee_count
+        data_type: DOUBLE PRECISION
+        description: "{{ doc('column_session_attendee_count') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_grades_attending
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_session_grades_attending') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_location_address
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_session_location_address') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_location_name
+        data_type: VARCHAR(240)
+        description: "{{ doc('column_session_location_name') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_location_room
+        data_type: VARCHAR(120)
+        description: "{{ doc('column_session_location_room') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_location_unknown
+        data_type: BOOLEAN
+        description: "{{ doc('column_session_location_unknown') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_notes
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_session_notes') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_participation_method
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_session_participation_method') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_subtype
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_session_subtype') }}"
+        constraints:
+          - type: not_null
+
+      - name: session_type
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_session_type') }}"
+        constraints:
+          - type: not_null
+
+      - name: sessions_per_week
+        data_type: DOUBLE PRECISION
+        description: "{{ doc('column_sessions_per_week') }}"
+        constraints:
+          - type: not_null
+
+      - name: setting_for_student_use_of_curriculum
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_setting_for_student_use_of_curriculum') }}"
+        constraints:
+          - type: not_null
+
+      - name: start_date
+        data_type: DATE
+        description: "{{ doc('column_ts_start_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: state_program_eligible_confirmation
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_state_program_eligible_confirmation') }}"
+        constraints:
+          - type: not_null
+
+      - name: status
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_status') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_action_items
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_survey_action_items') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_administrator_attendance
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_survey_administrator_attendance') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_attendee_challenges
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_survey_attendee_challenges') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_attendee_count
+        data_type: DOUBLE PRECISION
+        description: "{{ doc('column_survey_attendee_count') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_notable_discussions
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_survey_notable_discussions') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_notes
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_survey_notes') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_outcome_as_planned
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_survey_outcome_as_planned') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_outcome_issues
+        data_type: VARCHAR(4099)
+        description: "{{ doc('column_survey_outcome_issues') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_recommendations
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_survey_recommendations') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_teacher_engagement
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_survey_teacher_engagement') }}"
+        constraints:
+          - type: not_null
+
+      - name: survey_teacher_sentiment
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_survey_teacher_sentiment') }}"
+        constraints:
+          - type: not_null
+
+
+      - name: where_will_learning_path_be_implemented
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_where_will_learning_path_be_implemented') }}"
+        constraints:
+          - type: not_null
+
+      - name: who_chooses_and_assigns_curriculum
+        data_type: VARCHAR(65535)
+        description: "{{ doc('column_who_chooses_and_assigns_curriculum') }}"
+        constraints:
+          - type: not_null
+
+
+      - name: who_will_be_implementing
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_who_will_be_implementing') }}"
+        constraints:
+          - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null

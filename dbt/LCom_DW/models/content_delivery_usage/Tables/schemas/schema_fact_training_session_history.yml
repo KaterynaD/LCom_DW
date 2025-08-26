@@ -1,0 +1,133 @@
+---
+version: 2
+models:
+  - name: fact_training_session_history
+    data_tests:
+      - dbt_scd2_plus.scd2_plus_validation:
+          unique_key: 'training_session_id'
+          scd_valid_from_col_name: 'fromdate'
+          scd_valid_to_col_name:  'todate'
+    description: Fact Training Session (Salesforce Training_Session_c table) snapshots table when the status or owner changes. It`s a fact table, but history is tracked as SCD2 (fromdate - todate)
+    config:
+      contract:
+        enforced: false
+      tags:
+        - fact
+        - training         
+    columns:
+      - name: training_session_hist_id
+        data_type: varchar(300)
+        description: Primary Key of FACT_TRAINING_SESSION_HISTORY.
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+          - not_null
+
+
+      - name: fromdate
+        data_type: timestamp
+        description: "{{ doc('column_fromdate') }}"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null          
+      - name: todate
+        data_type: timestamp
+        description: "{{ doc('column_todate') }}"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null               
+      - name: record_version
+        data_type: integer
+        description: "{{ doc('column_record_version') }}"
+        constraints:
+          - type: not_null          
+        data_tests:
+          - not_null     
+
+
+
+      - name: training_session_id
+        data_type: varchar(300)
+        description: Fact Training Session FK - (Salesforce Training_Session_c ID column)
+        constraints:
+          - type: not_null         
+          - type: foreign_key
+            reference: ref('fact_training_session')
+            warn_unenforced: false    
+        data_tests:
+          - relationships:
+              to: ref('fact_training_session')
+              field: training_session_id       
+          - not_null 
+
+ 
+
+      - name: status
+        data_type: VARCHAR(765)
+        description: "{{ doc('column_status') }}"
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null     
+
+
+      - name: owner_id
+        data_type: varchar(300)
+        description: "{{ doc('column_owner_id') }}"
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_employee')
+            warn_unenforced: false
+        data_tests:
+          - relationships:
+              to: ref('dim_employee')
+              field: employee_id       
+          - not_null
+
+      - name: pds_group
+        data_type: VARCHAR(33)
+        description: "{{ doc('column_pds_group') }}"
+        constraints:
+          - type: not_null
+        data_tests:
+          - accepted_values:
+              values: ['Professional Development Services', 'Service And Training', 'Assigned to an owner']
+
+      - name: account_id
+        data_type: varchar(300)
+        description: "{{ doc('column_account_id') }}"
+        constraints:
+          - type: not_null
+          - type: foreign_key
+            reference: ref('dim_account')
+            warn_unenforced: false
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id       
+          - not_null
+
+
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null        
+
+      - name: updatedate
+        data_type: timestamp
+        description: "{{ doc('column_updatedate') }}"
+        constraints:
+          - type: not_null              
+
+      - name: scd_hash
+        data_type: VARCHAR(50)
+        description: "{{ doc('column_scd_hash') }}"
+        constraints:
+          - type: not_null     

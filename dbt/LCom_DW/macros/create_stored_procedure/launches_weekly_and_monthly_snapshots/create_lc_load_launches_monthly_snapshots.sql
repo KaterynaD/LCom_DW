@@ -51,7 +51,7 @@ count(0) as Launches,
 count(distinct fal.learning_object_id) as DistinctItemsStudent
 from content_delivery_usage.dbo.fact_assignment_launch fal
 join dim_date dt
-on TIMEZONE('UTC', launch_datetime) between dt.SchoolYear_StartDate and dt.mon_lastday
+on TIMEZONE('UTC', launch_datetime) between dt.SchoolYear_StartDate and DATEADD(day,1,dt.mon_lastday) 
 AND TIMEZONE('UTC', launch_datetime) < SchoolYear_EndDate
 group by
 dt.mon_lastday,
