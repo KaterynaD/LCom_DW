@@ -40,7 +40,12 @@
 'sfdc_billing_country',
 'sfdc_billing_country_code',
 'sfdc_district_enrollment',
-'sfdc_school_enrollment'],
+'sfdc_school_enrollment',
+'sfdc_state_program_eligible',
+'sfdc_county_name',
+'sfdc_customer_level',
+'sfdc_customer_level_override'
+],
 
    punch_thru_cols=['sfdc_account_id'],
 
@@ -104,6 +109,10 @@ sfdc_billing_country,
 sfdc_billing_country_code,
 sfdc_district_enrollment,
 sfdc_school_enrollment,
+case when sfdc_state_program_eligible then 1 else 0 end sfdc_state_program_eligible,
+sfdc_county_name,
+sfdc_customer_level,
+sfdc_customer_level_override,
 GREATEST(lcom_modified_datetime, sfdc_last_modified_date, lcom_created_datetime,sfdc_created_date,'1900-01-01'::date):: timestamp  last_modified_date
 from {{ ref("dim_account") }}
 {% if is_incremental() %}
@@ -148,5 +157,9 @@ sfdc_billing_country,
 sfdc_billing_country_code,
 sfdc_district_enrollment,
 sfdc_school_enrollment,
+sfdc_state_program_eligible,
+sfdc_county_name,
+sfdc_customer_level,
+sfdc_customer_level_override,
 last_modified_date
 from data

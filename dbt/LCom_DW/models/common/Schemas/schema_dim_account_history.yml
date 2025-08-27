@@ -330,3 +330,23 @@ models:
     description: 'Aggregated current renewal ARR across all ultimate parent account child accounts.'
     constraints:
     - type: not_null 
+  - name: sfdc_state_program_eligible
+    data_type: boolean
+    description: State Program Eligible?
+    constraints:
+    - type: not_null
+  - name: sfdc_county_name
+    data_type: varchar(780)
+    description: 'County Name (Integrations: Gainsight.)'
+    constraints:
+    - type: not_null        
+  - name: sfdc_customer_level
+    data_type: varchar(765)
+    description: 'Customer Level. Strategic level of customer.  Integrations: Gainsight.'
+    constraints:
+    - type: not_null
+  - name: sfdc_customer_level_override
+    data_type: varchar(765)
+    description: 'Customer Level Override is used to allow CSMs to override the automation from the Customer Level Flow'
+    constraints:
+    - type: not_null    
