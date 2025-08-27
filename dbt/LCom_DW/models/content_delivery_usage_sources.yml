@@ -1,40 +1,527 @@
----
+version: 2
 sources:
-  - name: dbo
-    description: "Source tables for content delivery usage models. The tables in dbo schema are transformed data (facts) from staging schema in content_delivery_usage database using Redshift Stored Procedures.." 
-    database: content_delivery_usage
-    quoting:
-      database: false
-      schema: false
-      identifier: false
-    tables:
-      - name: context
-      - name: organization
-      - name: mv_teacher_account
-      - name: learning_object
-      - name: content_instruction_type
-      - name: content_topic
-      - name: content_subtopic
-      - name: learning_pathway
-      - name: fact_assignment_completion
-      - name: fact_assignment_launch
-      - name: state_province
-      - name: country
-      - name: mv_student_account
-      - name: user_account
+- name: dbo
+  description: Source tables for content delivery usage models. The tables in dbo schema are
+    transformed data (facts) from staging schema in content_delivery_usage database using
+    Redshift Stored Procedures..
+  database: content_delivery_usage
+  quoting:
+    database: false
+    schema: false
+    identifier: false
+  tables:
+  - name: context
+    columns:
+    - name: context_id
+      data_type: varchar(255)
+      description: 'unique id for context — Source: SQL LearningPlatform.dbo.CourseGroup.CourseGroupId;
+        lower'
+    - name: context_name
+      data_type: varchar(255)
+      description: 'name of collection of resources with a common set of users and roles,
+        such as a class, group, section, etc. — Source: SQL LearningPlatform.dbo.CourseGroup.CourseGroupName
+        & Course.CourseName'
+    - name: context_nickname
+      data_type: varchar(75)
+      description: 'teacher provided name for a class, typically used to override name provided
+        from student information system — Source: SQL LearningPlatform.dbo.CourseNickname.Name'
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date the context was added, stored in UTC — Source: derived; SQL LearningPlatform.dbo.CourseGroup.auditCreateDate
+        or SQL CDSWarehouse.dbo.LTIContext.auditCreateDate; created_datetime'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: "date the context was deleted, stored in UTC — Source: derived; deleted_datetime;\
+        \ cast(CASE WHEN crs.Valid = TRUE AND cg.IsValid = FALSE THEN cg.auditUpdateDate\n\
+        \                 WHEN crs.Valid = FALSE THEN crs.auditUpdateDate\n              \
+        \   ELSE NULL\n            END as timestamp)"
+    - name: external_sis_id
+      data_type: varchar(255)
+      description: 'unique id for class representing entity from SIS sync provider (Clever
+        Id or unique id given to OneRoster SourcedId) — Source: SQL WorkingImport.sis.Course.CourseExternalId'
+    - name: grade_level_code
+      data_type: char(2)
+      description: 'two-character code representing the grade level designation of the class
+        — Source: SQL LearningPlatform.dbo.Course.Grade'
+    - name: modified_datetime
+      data_type: timestamp with time zone
+      description: "date the context was modified, stored in UTC — Source: derived; CASE WHEN\
+        \ cg.CourseGroupTypeId = 1 AND crs.LastUpdateDate >= cg.LastUpdatedDate THEN crs.LastUpdateDate\n\
+        \            WHEN cg.CourseGroupTypeId = 1 AND cg.LastUpdatedDate > crs.LastUpdateDate\
+        \ THEN cg.LastUpdatedDate\n            ELSE cg.LastUpdatedDate\n       END; modified_datetime,\
+        \ CURRENT_TIMESTAMP"
+    - name: organization_district_id
+      data_type: varchar(255)
+      description: 'id of district associated with the context — Source: derived; lookup based
+        on LearningPlatform.dbo.School.SchoolDistrictId or CDSWarehouse.dbo.UserAccount.OrganizationId;
+        lower'
+    - name: organization_school_id
+      data_type: varchar(255)
+      description: 'id of school associated with the context — Source: SQL LearningPlatform.dbo.Course.SchoolId;
+        lower'
+    - name: parent_context_id
+      data_type: varchar(255)
+      description: 'id of the class that the group belongs to — Source: SQL LearningPlatform.dbo.CourseGroup.CourseGroupId;
+        lower'
+    - name: user_primary_teacher_id
+      data_type: varchar(255)
+      description: 'id of the principal teacher currently associated with the context — Source:
+        SQL LearningPlatform.dbo.Course.TeacherId; lower'
+  - name: organization
+    columns:
+    - name: country_code
+      data_type: char(2)
+      description: 'country associated with the organization (district or school) — Source:
+        SQL LearningPlatform.dbo.SchoolDistrict.CountryId'
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date the organization record was added, stored in UTC — Source: SQL LearningPlatform.dbo.SchoolDistrict/School.auditCreateDate'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date the organization record was deleted, stored in UTC — Source: SQL
+        LearningPlatform.dbo.SchoolDistrict/School.auditUpdateDate, CURRENT_TIMESTAMP
+
+        SQL LearningPlatform.dbo.SchoolDistrict/School.LastUpdatedDate'
+    - name: external_sis_id
+      data_type: varchar(255)
+      description: 'unique id for organization (district or school) representing entity from
+        SIS sync provider (Clever Id or unique id given to OneRoster SourcedId) — Source:
+        SQL LearningPlatform.dbo.SchoolDistrict.SchoolDistrictExternalId'
+    - name: is_demo
+      data_type: boolean
+      description: 'flag indicating if the organization is for demo purposes — Source: SQL
+        LearningPlatform.dbo.DemoDistrict'
+    - name: is_trial
+      data_type: boolean
+      description: 'flag indicating if the organization is for eval/trial purposes — Source:
+        SQL LearningPlatform.dbo.SchoolDistrict.IsTrial'
+    - name: modified_datetime
+      data_type: timestamp with time zone
+      description: 'date the organization record was modified, stored in UTC — Source: SQL
+        LearningPlatform.dbo.SchoolDistrict/School.auditUpdateDate, CURRENT_TIMESTAMP'
+    - name: nces_id
+      data_type: varchar(12)
+      description: 'id for external data source (nces) that provides additional metadata about
+        public and private educational institutions — Source: SQL LearningPlatform.dbo.SchoolDistrict.NCESId'
+    - name: organization_id
+      data_type: varchar(255)
+      description: 'unique id for organization (district or school) — Source: SQL LearningPlatform.dbo.SchoolDistrict.SchoolDistrictId'
+    - name: organization_name
+      data_type: varchar(255)
+      description: 'name of the organization (district or school) — Source: SQL LearningPlatform.dbo.SchoolDistrict.SchoolDistrictName'
+    - name: organization_type
+      data_type: varchar(10)
+      description: 'type of organization (district or school) — Source: derived; based on
+        source table (district or school)'
+    - name: parent_organization_id
+      data_type: varchar(255)
+      description: 'id of the organization (district) that the school belongs to — Source:
+        SQL LearningPlatform.dbo.School.SchoolDistrictId'
+    - name: postal_code
+      data_type: varchar(10)
+      description: 'address postal code for the organization — Source: SQL LearningPlatform.dbo.SchoolDistrict.PostalCode'
+    - name: salesforce_id
+      data_type: varchar(18)
+      description: 'id of the organization in Salesforce — Source: SQL LearningPlatform.dbo.SchoolDistrict.SalesforceId'
+    - name: salesforce_name
+      data_type: varchar(150)
+      description: 'name of the organization in Salesforce — Source: SQL LearningPlatform.dbo.SchoolDistrict.SalesforceName'
+    - name: state_province_key
+      data_type: varchar(6)
+      description: 'state or province for the organization — Source: SQL LearningPlatform.dbo.SchoolDistrict.StateId'
+  - name: mv_teacher_account
+  - name: learning_object
+    columns:
+    - name: author_id
+      data_type: varchar(255)
+      description: 'user account id for educator that created a custom item (guided practice
+        or web link) — Source: SQL ContentCatalog.dbo.CurriculumItem.AuthorId; lower'
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date the learning object record was added, stored in UTC — Source: SQL
+        ContentCatalog.dbo.CurriculumItem.auditCreateDate ELSE auditUpdateDate'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date the learning object record was deleted, stored in UTC — Source: derived;
+        CURRENT_TIMESTAMP when is_valid = false and deleted_datetime IS NULL; on INSERT if
+        is_valid = false then use auditUpdateDate, auditCreateDate, CURRENT_TIMESTAMP'
+    - name: instruction_type_id
+      data_type: integer
+      description: 'id of the instruction type associated with the learning object — Source:
+        SQL ContentCatalog.CurriculumItem.LearningComponentTypeId'
+    - name: learning_object_id
+      data_type: varchar(50)
+      description: 'unique id for learning object (aka curriculum item or resource) — Source:
+        SQL ContentCatalog.CurriculumItem.CurriculumItemId; lower'
+    - name: learning_object_name
+      data_type: varchar(150)
+      description: 'name of the learning object — Source: SQL ContentCatalog.CurriculumItem.CurriculumItemName'
+    - name: subtopic_id
+      data_type: integer
+      description: 'id of the subtopic associated with the learning object — Source: SQL ContentCatalog.CurriculumItemSkill.SkillId
+        (IsGroup = false)'
+    - name: topic_id
+      data_type: integer
+      description: 'id of the topic associated with the learning object — Source: SQL ContentCatalog.CurriculumItemSkull.SkillId
+        (IsGroup = true)'
+  - name: content_instruction_type
+    columns:
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date the instruction type record was added, stored in UTC — Source: CURRENT_TIMESTAMP'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date the instruction type record was deleted, stored in UTC — Source:
+        when SQL ContentCatalog.dbo.LearningComponent.IsValid = false then CURRENT_TIMESTAMP'
+    - name: instruction_type_id
+      data_type: integer
+      description: 'unique id for instruction type — Source: SQL ContentCatalog.dbo.LearningComponent.LearningComponentId'
+    - name: instruction_type_name
+      data_type: varchar(100)
+      description: 'name of instruction type used to categorize content into areas of instruction
+        methods (Instruction, Video, Game, Practice, etc.) — Source: SQL ContentCatalog.dbo.LearningComponent.LearningComponentName'
+    - name: sort_order
+      data_type: integer
+      description: 'value to sort instruction type records (currently based on name alphabetically)
+        — Source: derived; alphabetical sort by instruction type name'
+  - name: content_topic
+    columns:
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date the topic was added, stored in UTC — Source: CURRENT_TIMESTAMP'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date the topic was deleted, stored in UTC — Source: when SQL ContentCatalog.dbo.Skill.IsValid
+        = false then CURRENT_TIMESTAMP'
+    - name: sort_order
+      data_type: integer
+      description: 'value to sort topic records (currently based on name alphabetically) —
+        Source: derived; alphabetical sort by topic name'
+    - name: topic_id
+      data_type: integer
+      description: 'unique id for topic — Source: SQL ContentCatalog.dbo.Skill.SkillId (IsGroup
+        = true)'
+    - name: topic_name
+      data_type: varchar(100)
+      description: 'name of topic used to categorize content into subject areas (Artificial
+        Intelligence, Computer Fundamentals, Keyboarding, etc.) — Source: SQL ContentCatalog.dbo.Skill.SkillName
+        (IsGroup = true)'
+  - name: content_subtopic
+    columns:
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date the subtopic record was added, stored in UTC — Source: CURRENT_TIMESTAMP'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date the subtopic record was deleted, stored in UTC — Source: when SQL
+        ContentCatalog.dbo.Skill.IsValid = false then CURRENT_TIMESTAMP'
+    - name: sort_order
+      data_type: integer
+      description: 'value to sort subtopic records (currently based on name alphabetically)
+        — Source: derived; alphabetical sort by subtopic name'
+    - name: subtopic_id
+      data_type: integer
+      description: 'unique id for subtopic — Source: SQL ContentCatalog.dbo.Skill.SkillId
+        (IsGroup = false)'
+    - name: subtopic_name
+      data_type: varchar(100)
+      description: 'name of subtopic used to further categorize content into more specific
+        subject areas (Presentations, Spreadsheets & Databases, Word Processing, etc.) — Source:
+        SQL ContentCatalog.dbo.Skill.SkillName (IsGroup = false)'
+  - name: learning_pathway
+    columns:
+    - name: catalog_sequence_id
+      data_type: varchar(50)
+      description: 'id of catalog sequence record that contains the items for a pathway (TechQuest
+        or Digital Readiness Pathway) — Source: SQL LearningPlatform.teacherxp.Pathway.SequenceId;
+        lower'
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date the pathway was added, stored in UTC — Source: derived; CURRENT_TIMESTAMP
+        when inserted; set manually for historical pathways'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date the pathway was deleted, stored in UTC — Source: derived; CURRENT_TIMESTAMP
+        when is_current = false and deleted_datetime IS NULL'
+    - name: grade_level_code
+      data_type: char(2)
+      description: 'grade level associated with the pathway — Source: SQL LearningPlatform.teacherxp.Pathway.Grade'
+    - name: learning_pathway_id
+      data_type: varchar(50)
+      description: 'unique id of the pathway (similar to a course group id) — Source: SQL
+        LearningPlatform.teacherxp.Pathway.CourseGroupId; lower'
+    - name: learning_pathway_name
+      data_type: varchar(150)
+      description: 'name of the pathway, typically includes the level, which is similar to
+        the grade level — Source: SQL LearningPlatform.teacherxp.Pathway.ClassName'
+  - name: fact_assignment_completion
+    columns:
+    - name: assignment_launch_id
+      data_type: varchar(255)
+      description: not used; reserved to record associated launch; not tracked as of 5/20/25
+    - name: context_id
+      data_type: varchar(255)
+      description: 'id of the context associated with the completed assignment — Source: Aurora
+        Postgres event.event_data:ContextId; if not pathway, lower if guid'
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date when the assignment was completed, stored in UTC — Source: Aurora
+        Postgres event.time_stamp'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date when the assignment was deleted, stored in UTC (can be deleted by
+        teacher from the gradebook) — Source: derived; Aurora Postgres event.time_stamp from
+        ItemScoreDeleted event; set for all non-deleted versions prior to deleted event'
+    - name: effective_score_end_date
+      data_type: timestamp with time zone
+      description: "date when the completed assignment's score was no longer the highest or\
+        \ most recent score on item type behavior — Source: derived; end if ItemScoreDeleted\
+        \ or when subsequent event has a different event.event_data:EffectiveScore; CASE TIMESTAMPTZ_CMP(coalesce(ese.next_eff_score_date,\
+        \ CURRENT_TIMESTAMP), coalesce(ese.next_deleted_date, CURRENT_TIMESTAMP))\n      \
+        \                           WHEN -1 THEN ese.next_eff_score_date \n              \
+        \                   WHEN 0 THEN ese.next_eff_score_date\n                        \
+        \         WHEN 1 THEN ese.next_deleted_date\n                                 ELSE\
+        \ NULL \n                               END"
+    - name: effective_score_start_date
+      data_type: timestamp with time zone
+      description: 'date when the completed assignment''s score became the highest or most
+        recent score depending on item type behavior — Source: derived; start if subsequent
+        event has a different event.event_data:EffectiveScore'
+    - name: event_aggregate_id
+      data_type: varchar(255)
+      description: 'id for the assignment — Source: Aurora Postgres aggregate.aggregate_id'
+    - name: event_data
+      data_type: super
+      description: 'json data containing the entire completion metadata for the assignment
+        — Source: Aurora Postgres event.event_data'
+    - name: event_type
+      data_type: varchar(50)
+      description: 'ScoreCreated or ScoreUpdated event — Source: Aurora Postgres event.event_type'
+    - name: event_version_number
+      data_type: integer
+      description: 'incremental number for each completion of the assignment (combines with
+        event_aggregate_id to make the unique id) — Source: Aurora Postgres event.version'
+    - name: is_imported
+      data_type: boolean
+      description: 'flag indicating if the completed assignment''s score was imported from
+        another class — Source: Aurora Postgres event.event_data:IsImported'
+    - name: is_manual
+      data_type: boolean
+      description: 'flag indicating if the completed assignment''s score was manually entered
+        by the teacher in the gradebook, possibly overriding an auto score — Source: Aurora
+        Postgres event.event_data:IsManual'
+    - name: learning_object_id
+      data_type: varchar(255)
+      description: 'id of the resource that was completed by the user — Source: derived; Aurora
+        Postgres event.event_data:LearningObjectId; lower'
+    - name: learning_object_language
+      data_type: char(2)
+      description: 'code representing the language of the assignment that was completed —
+        Source: Aurora Postgres event.event_data:Language; upper'
+    - name: learning_pathway_id
+      data_type: varchar(50)
+      description: 'id of the pathway from where the assignment was launched and completed
+        — Source: derived; Aurora Postgres event.event_data:ContextId; if pathway from dbo.learning_pathway'
+    - name: modified_datetime
+      data_type: timestamp with time zone
+      description: "date when the completed assignment record was updated, stored in UTC —\
+        \ Source: derived; CASE TIMESTAMPTZ_CMP(coalesce(ese.next_eff_score_date, CURRENT_TIMESTAMP),\
+        \ coalesce(ese.next_deleted_date, CURRENT_TIMESTAMP))\n                          WHEN\
+        \ -1 THEN ese.next_eff_score_date \n                          WHEN 0 THEN ese.next_eff_score_date\n\
+        \                          WHEN 1 THEN ese.next_deleted_date\n                   \
+        \       ELSE NULL \n                        END"
+    - name: organization_district_id
+      data_type: varchar(255)
+      description: 'id of the district associated with the completed assignment — Source:
+        Aurora Postgres event.event_data:OrganizationId; lower'
+    - name: organization_school_id
+      data_type: varchar(255)
+      description: 'id of the school assoicated with the completed assignment — Source: Aurora
+        Postgres event.event_data:SchoolId; lower'
+    - name: percentage_score
+      data_type: integer
+      description: "score represented as a percentage of score divided by possible score —\
+        \ Source: derived; CASE WHEN c.possible_score = 1 AND score > 1 THEN round((c.score::numeric(8,0)\
+        \ / 100) * 100)\n                                       WHEN c.possible_score > 1\
+        \ AND c.score > c.possible_score THEN 100\n                                      \
+        \ WHEN c.possible_score <> 0 THEN round((c.score::numeric(8,0) / c.possible_score::numeric(8,0))\
+        \ * 100)\n                                  END"
+    - name: possible_score
+      data_type: integer
+      description: 'total available points available to receive for the assignment — Source:
+        Aurora Postgres event.event_data:PossibleScore'
+    - name: raw_score
+      data_type: integer
+      description: not used; reserved to record raw points from items like games
+    - name: score
+      data_type: integer
+      description: 'points earned for the assignment — Source: Aurora Postgres event.event_data:Score'
+    - name: score_datetime
+      data_type: timestamp with time zone
+      description: 'date when the user completed the assignment, stored in UTC — Source: Aurora
+        Postgres event.time_stamp'
+    - name: time_spent_seconds
+      data_type: integer
+      description: 'amount of time that the user spent completing an instance of the assignment
+        — Source: Aurora Postgres event.event_data:InteractiveTimeSeconds'
+    - name: user_account_id
+      data_type: varchar(255)
+      description: 'id of the user that completed the assignment — Source: Aurora Postgres
+        event.event_data:UserId; lower of guid'
+    - name: user_grade_level_code
+      data_type: char(2)
+      description: 'grade level of the user that completed the assignment — Source: Aurora
+        Postgres event.event_data:Grade'
+    - name: user_primary_teacher_id
+      data_type: varchar(255)
+      description: 'id of the principal teacher associated with the context when the assignment
+        was completed — Source: Aurora Postgres event.event_data:TeacherId; lower if guid'
+  - name: fact_assignment_launch
+    columns:
+    - name: assignment_launch_id
+      data_type: varchar(255)
+      description: 'aggregate id used for launch events — Source: SQL CDSWarehouse.dbo.LearningObjectLaunch.AggregateId'
+    - name: context_id
+      data_type: varchar(255)
+      description: 'id of the context associated with the launched assignment — Source: SQL
+        CDSWarehouse.dbo.LearningObjectLaunch.ContextId'
+    - name: launch_datetime
+      data_type: timestamp with time zone
+      description: 'date when the user launched the assignment, stored in UTC — Source: SQL
+        CDSWarehouse.dbo.LearningObjectLaunch.TimeStamp'
+    - name: learning_object_id
+      data_type: varchar(255)
+      description: 'id of the resource that was launched by the user — Source: SQL CDSWarehouse.dbo.LearningObjectLaunch.LearningObjectId'
+    - name: learning_object_language
+      data_type: char(2)
+      description: 'code representing the language of the assignment that was launched — Source:
+        not available; default to EN'
+    - name: learning_pathway_id
+      data_type: varchar(50)
+      description: 'id of the pathway from where the assignment was launched — Source: derived;
+        SQL CDSWarehouse.dbo.LearningObjectLaunch.ContextId; if pathway from dbo.learning_pathway'
+    - name: organization_district_id
+      data_type: varchar(255)
+      description: 'id of the district associated with the launched assignment — Source: SQL
+        CDSWarehouse.dbo.LearningObjectLaunch.OrganizationId'
+    - name: organization_school_id
+      data_type: varchar(255)
+      description: 'id of the school associated with the launched assignment — Source: SQL
+        CDSWarehouse.dbo.LearningObjectLaunch.SchoolId'
+    - name: user_account_id
+      data_type: varchar(255)
+      description: 'id of the user that launched the assignment — Source: SQL CDSWarehouse.dbo.LearningObjectLaunch.UserId'
+    - name: user_grade_level_code
+      data_type: char(2)
+      description: 'grade level of the user that launched the assignment — Source: SQL CDSWarehouse.dbo.LearningObjectLaunch.Grade'
+    - name: user_primary_teacher_id
+      data_type: varchar(255)
+      description: 'id of the principal teacher associated with the context when the assignment
+        was launched — Source: SQL CDSWarehouse.dbo.LearningObjectLaunch.TeacherId'
+  - name: state_province
+    columns:
+    - name: country_code
+      data_type: char(2)
+      description: 'a two-letter code that represents the country name associated with the
+        state or province — Source: ISO 3166-1'
+    - name: state_province_code
+      data_type: varchar(3)
+      description: 'a two or three-character code that represents a prinicpal subdivision
+        (e.g province or state); duplicates exist if not preceded by the alpha-2 country code
+        — Source: ISO 3166-2'
+    - name: state_province_key
+      data_type: varchar(6)
+      description: 'unique id of state or province; a code that represents the name of a principal
+        subdivision (e.g province or state) of countries coded in ISO 3166-1. This code os
+        based on the two-letter code element from ISO 3166-1 followed by a separator and up
+        to three alphanumeric characters — Source: ISO 3166-2'
+    - name: state_province_name
+      data_type: varchar(40)
+      description: 'name of the state or province — Source: ISO 3166-2'
+  - name: country
+    columns:
+    - name: alpha3_code
+      data_type: char(3)
+      description: 'a three-letter code that represents a country name, which is usually more
+        closely related to the country name — Source: ISO 3166-1'
+    - name: country_code
+      data_type: char(2)
+      description: 'a two-letter code that represents a country name, recommended as the general
+        purpose code — Source: ISO 3166-1'
+    - name: country_name
+      data_type: varchar(60)
+      description: 'name of the country; short form used in day-to-day operations of the United
+        Nations — Source: ISO 3166-1 (The Country and Region Codes for Statistical Use maintained
+        by the United Nations Statistics Divisions)'
+    - name: numeric_code
+      data_type: char(3)
+      description: 'three-digit numeric code that represents a country name, which is useful
+        if you need to avoid using Latin script — Source: ISO 3166-1'
+  - name: mv_student_account
+  - name: user_account
+    columns:
+    - name: created_datetime
+      data_type: timestamp with time zone
+      description: 'date when user record was added, stored in UTC — Source: SQL LearningPlatform.dbo.User.auditCreateDate
+        OR SQL CDSWarehouse.dbo.UserAccount.auditCreateDate'
+    - name: deleted_datetime
+      data_type: timestamp with time zone
+      description: 'date when user record was deleted, stored in UTC — Source: SQL LearningPlatform.dbo.User.auditUpdateDate,
+        CURRENT_TIMESTAMP
+
+        SQL LearningPlatform.dbo.User.LastUpdatedDate'
+    - name: district_user_identifier
+      data_type: varchar(255)
+      description: 'id from district used to identify students and educators — Source: SQL
+        LearningPlatform.dbo.UserSchoolDistrictUserId'
+    - name: email
+      data_type: varchar(255)
+      description: 'email address for user — Source: SQL LearningPlatform.dbo.User.EmailAddress'
+    - name: external_sis_id
+      data_type: varchar(255)
+      description: 'unique id for user representing entity from SIS sync provider (Clever
+        Id or unique id given to OneRoster SourcedId) — Source: SQL LearningPlatform.dbo.User.UserExternalId'
+    - name: first_name
+      data_type: varchar(255)
+      description: 'given name of user — Source: SQL LearningPlatform.dbo.User.FirstName'
+    - name: grade_level_code
+      data_type: char(2)
+      description: 'grade level of student — Source: SQL LearningPlatform.dbo.User.Grade'
+    - name: last_name
+      data_type: varchar(255)
+      description: 'family name of user — Source: SQL LearningPlatform.dbo.User.LastName'
+    - name: modified_datetime
+      data_type: timestamp with time zone
+      description: 'date when user record was modified, stored in UTC — Source: SQL LearningPlatform.dbo.User.auditUpdateDate,
+        CURRENT_TIMESTAMP'
+    - name: organization_district_id
+      data_type: varchar(255)
+      description: 'id of district associated with user — Source: SQL LearningPlatform.dbo.User.SchoolDistrictId'
+    - name: roles
+      data_type: varchar(255)
+      description: 'the level(s) of privilege a user has been given (student, teacher, coordinator)
+        — Source: derived; SUM(UserTypeId) where in (2,4,8,16,1024) and conform using staging.map_roles'
+    - name: user_account_id
+      data_type: varchar(255)
+      description: 'unique id for user — Source: SQL LearningPlatform.dbo.User.UserId'
+    - name: username
+      data_type: varchar(255)
+      description: 'username credential for authentication via direct login — Source: SQL
+        LearningPlatform.dbo.User.UserName'
+
       
-  - name: staging
-    description: "Source tables for content delivery usage models. The tables in staging schema are from LCom Platform MS SQL Server databases loaded and processed by AWS Glue jobs and Redshift Stored Procedures."
-    database: content_delivery_usage
-    quoting:
-      database: false
-      schema: false
-      identifier: false
-    tables:
-      - name: license_order
-      - name: license_orderschool
-      - name: sku
-      - name: sku_learning_object_v2
-      - name: sku_suite   
-      - name: sequence      
-      - name: sequence_learning_object                       
+- name: staging
+  description: "Source tables for content delivery usage models. The tables in staging schema are from LCom Platform MS SQL Server databases loaded and processed by AWS Glue jobs and Redshift Stored Procedures."
+  database: content_delivery_usage
+  quoting:
+    database: false
+    schema: false
+    identifier: false
+  tables:
+    - name: license_order
+    - name: license_orderschool
+    - name: sku
+    - name: sku_learning_object_v2
+    - name: sku_suite   
+    - name: sequence      
+    - name: sequence_learning_object                       
