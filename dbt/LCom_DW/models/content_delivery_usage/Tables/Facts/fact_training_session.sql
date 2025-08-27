@@ -9,60 +9,12 @@
         )
 }}
 
-with opportunity_data as (
-select
-ts.id as training_session_id,
-o.opportunity_id,
-oli.opportunity_line_id ,
-ts.created_date,
-o.close_date,
-DATEDIFF(day, o.close_date, ts.created_date::date) diff,
-p.sfdc_product_name,
-ts.session_type_c,
-case
-when p.sfdc_product_name ilike '%webinar%' and ts.session_type_c ilike '%webinar%' then 1
-when p.sfdc_product_name ilike '%visit%' and ts.session_type_c ilike '%onsite%' then 1
-when ts.session_type_c ilike '%other%' then 0
-else -1
-end quality
-from {{ ref('dim_opportunity_line') }}  oli
-join {{ ref('dim_sfdc_product') }}  p
-on oli.sfdc_product_id = p.sfdc_product_id
-join {{ ref('fact_opportunity') }}  o
-on o.opportunity_id=oli.opportunity_id
-join {{ source('fivetran_salesforce_quickstart', 'training_session_c') }} ts
-on o.sfdc_account_id=ts.account_id_c
-where (p.sfdc_product_name ilike '%webinar%' or p.sfdc_product_name ilike '%train%')
-and o.stage_name='Closed Won'
-and o.invoiced_date != '1900-01-01'
-)
-,opportunity_data_close_to_session_creation_date as (
-select
-training_session_id,
-min(diff) min_diff
-from opportunity_data
-where
-abs(diff) between 0 and 60
-and quality >=0
-group by training_session_id
-)
-,opportunity_data_final as (
-select
-od.training_session_id,
-max(od.opportunity_line_id)  as opportunity_line_id /*excluding duplications if any. anyway we do not know at this point which one is right*/
-from opportunity_data od
-join opportunity_data_close_to_session_creation_date d2
-on od.training_session_id = d2.training_session_id
-and od.diff=d2.min_diff
-group by od.training_session_id
-)
-,data as (
+with data as (
 select 
 isnull(ts.id,'{{ var("default_varchar") }}') as training_session_id,
 isnull(ts.name,'{{ var("default_varchar") }}') as name,
 isnull(a.account_id, '{{ var("default_ID") }}') as account_id,
 isnull(ts.account_id_c, '{{ var("default_ID") }}') as sfdc_account_id,
-isnull(od.opportunity_line_id, '{{ var("default_ID") }}') as opportunity_line_id,
 isnull(e.employee_id, '{{ var("default_ID") }}') as owner_id,
   CASE
     WHEN ts.owner_id = '00GUZ00000KkN1J2AV' THEN 'Professional Development Services'
@@ -141,14 +93,12 @@ from
   left outer join {{ ref('dim_employee') }} as e on ts.owner_id = e.employee_id
   left outer join {{ source('fivetran_salesforce_quickstart','contact') }} as pc on ts.primary_contact_c = pc.id
   left outer join {{ source('fivetran_salesforce_quickstart','contact') }} as sc on ts.secondary_contact_c = sc.id
-  left outer join opportunity_data_final od on ts.id = od.training_session_id
 )
 select
   training_session_id::VARCHAR(300)    
 	,name::VARCHAR(240)    
 	,account_id::VARCHAR(300)    
 	,sfdc_account_id::VARCHAR(300)    
-	,opportunity_line_id::VARCHAR(300)
 	,owner_id::VARCHAR(300)    
 	,pds_group::VARCHAR(33)    
 	,alternate_end_date::DATE    
