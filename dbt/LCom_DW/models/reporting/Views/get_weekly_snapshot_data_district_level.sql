@@ -12,6 +12,7 @@ with raw_license_data as (
             dist.lcom_state_province_code district_state,
             dist.lcom_district_name district_name,
             dist.sfdc_district_name sfdc_district_name,
+            dist.sfdc_county_name,
             dist.SFDC_owner_name_text district_owner,
             case
                 when dist.sfdc_district_enrollment = 0 then dist.sfdc_school_enrollment
@@ -50,6 +51,7 @@ with raw_license_data as (
             dist.lcom_state_province_code,
             dist.lcom_district_name,
             dist.sfdc_district_name,
+            dist.sfdc_county_name,
             dist.SFDC_owner_name_text,
             case
                 when dist.sfdc_district_enrollment = 0 then dist.sfdc_school_enrollment
@@ -82,6 +84,7 @@ with raw_license_data as (
             rural_urban,
             district_name,
             sfdc_district_name,
+            sfdc_county_name,
             organization_district_id,
             skuname,
             sum(
@@ -114,6 +117,7 @@ with raw_license_data as (
             rural_urban,
             district_name,
             sfdc_district_name,
+            sfdc_county_name,
             organization_district_id,
             skuname
     ),
@@ -129,6 +133,7 @@ with raw_license_data as (
             rural_urban,
             district_name,
             sfdc_district_name,
+            sfdc_county_name,
             organization_district_id,
             case
             when state_initiative then sum(state_initiative_studentcount)
@@ -147,6 +152,7 @@ with raw_license_data as (
             rural_urban,
             district_name,
             sfdc_district_name,
+            sfdc_county_name,
             organization_district_id
     ),
     usage_data as (
@@ -173,6 +179,7 @@ with raw_license_data as (
         ld.district_owner DistrictOwner,
         ld.district_name DistrictName,
         ld.sfdc_district_name SFDC_DistrictName,
+        ld.sfdc_county_name SFDC_CountyName,
         ld.district_enrollment District_Enrollment,
         ld.rural_urban,
         ld.organization_district_id,
