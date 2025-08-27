@@ -44,9 +44,9 @@ The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/sr
 
 ### WHEN? 
 
-- End of day (5pm  PST) AWS GLUE jobs started
-- Fivetran Salesforce connection starts at 6pm PST
-- Fivetran dbt transformation starts at 1:28 am PST next day
+- End of day (5pm  pst) AWS GLUE jobs started
+- Fivetran Salesforce connection starts at 6pm pst
+- Fivetran dbt transformation starts at 1:28 am pst next day
 
 [Schedule](https://lcom.sharepoint.com/:x:/s/ReportingandAnalytics/EaLDW75RtPFKmxya5ynKbRUBNO8fRT9WW2FXrweDa8E3Zw?e=uy2trf)
 
