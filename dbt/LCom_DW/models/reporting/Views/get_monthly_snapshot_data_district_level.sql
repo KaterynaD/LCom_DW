@@ -9,6 +9,7 @@ dist.lcom_country_name district_country,
 dist.lcom_state_province_code district_state,
 dist.lcom_district_name district_name,
 dist.sfdc_district_name sfdc_district_name,
+dist.sfdc_county_name,
 dist.SFDC_owner_name_text district_owner,
 case
                 when dist.sfdc_district_enrollment = 0 then dist.sfdc_school_enrollment
@@ -55,7 +56,8 @@ flo.expirationdate,
 flo.enforcedaterestrictions,
 s.sku_name,
 flo.studentcount,
-dist.sfdc_district_name
+dist.sfdc_district_name,
+dist.sfdc_county_name
 )
 ,
     cal as (
@@ -83,6 +85,7 @@ district_enrollment,
 rural_urban,
 district_name,
 sfdc_district_name,
+sfdc_county_name,
 organization_district_id,
 skuname,
 sum(
@@ -116,6 +119,7 @@ district_enrollment,
 rural_urban,
 district_name,
 sfdc_district_name,
+sfdc_county_name,
 organization_district_id,
 skuname
 )
@@ -134,6 +138,7 @@ district_enrollment,
 rural_urban,
 district_name,
 sfdc_district_name,
+sfdc_county_name,
 organization_district_id,
 case
 when state_initiative then sum(state_initiative_studentcount)
@@ -155,6 +160,7 @@ district_enrollment,
 rural_urban,
 district_name,
 sfdc_district_name,
+sfdc_county_name,
 organization_district_id
 )
 , usage_data as (
@@ -186,6 +192,7 @@ ld.district_enrollment DistrictEnrollment,
 ld.rural_urban,
 ld.district_name DistrictName,
 ld.sfdc_district_name SFDC_DistrictName,
+ld.sfdc_county_name SFDC_CountyName,
 ld.organization_district_id,
 ld.State_Initiative_License_Provisioned Licenses_Provisioned_District,
 ld.Number_Of_Students,
