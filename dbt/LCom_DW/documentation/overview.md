@@ -42,13 +42,16 @@ AWS Glue (LCOM Platform) and Fivetran (Salesforce) extractes the data
 Dbt, AWS Redshift Stored Procedures Glue transforms and loads the data. (Prod dbt runs in Fivetran)
 The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/src/master/)
 
-### WHEN?
+### WHEN? 
 
-- End of day (4pm _TBD schedule_) AWS GLUE jobs started
+- End of day (5pm  PST) AWS GLUE jobs started
 - Fivetran Salesforce connection starts at 6pm PST
 - Fivetran dbt transformation starts at 1:28 am PST next day
 
-_TBD Tableau refresh schedule for individual data sets?_
+[Schedule](https://lcom.sharepoint.com/:x:/s/ReportingandAnalytics/EaLDW75RtPFKmxya5ynKbRUBNO8fRT9WW2FXrweDa8E3Zw?e=uy2trf)
+
+**The schedule can be changed without updating this documentation. Check the specific tool for the actual schedule**
+
 
 ## Diagrams
 
