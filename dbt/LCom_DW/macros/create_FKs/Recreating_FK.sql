@@ -33,9 +33,6 @@ ALTER TABLE support.fact_case_history ADD FOREIGN KEY (owner_id) REFERENCES comm
 ALTER TABLE content_delivery_usage.fact_training_session ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
 ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
 
--- TO revenue.dim_opportunity_line
-ALTER TABLE content_delivery_usage.fact_training_session ADD FOREIGN KEY (opportunity_line_id) REFERENCES revenue.dim_opportunity_line(opportunity_line_id);
-
 -- TO common.dim_lcom_sku
 ALTER TABLE licensing.fact_license_order ADD FOREIGN KEY (sku_id) REFERENCES common.dim_lcom_sku(sku_id);
 ALTER TABLE licensing.fact_license_order_history ADD FOREIGN KEY (sku_id) REFERENCES common.dim_lcom_sku(sku_id);
