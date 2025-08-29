@@ -1,0 +1,104 @@
+version: 2
+models:
+- name: vw_training_sessions_monthly
+  description: Monthly snapshot of training sessions with assignee and account context.
+  config:
+    tags:
+    - rep
+    - training  
+  columns:
+  - name: mon_year
+    description: "{{ doc('column_mon_year') }}"
+  - name: mon_lastday
+    description: "{{ doc('column_mon_lastday') }}"  
+
+  - name: FiscalYear
+    description: "{{ doc('column_fiscalyear') }} based on the training session start date"
+
+  - name: FiscalYear_mon
+    description: "{{ doc('column_fiscalyear_mon') }} based on the training session start date"    
+
+
+  - name: training_session_id
+    description: "{{ doc('column_training_session_id') }}"
+  - name: session_name
+    description: "{{ doc('column_training_name') }}"
+  - name: session_type
+    description: "{{ doc('column_session_type') }}"
+  - name: session_subtype
+    description: "{{ doc('column_session_subtype') }}"
+
+
+  - name: Requestor
+    description: "{{ doc('column_requestor_id') }}"
+  - name: session_start_date
+    description: "{{ doc('column_ts_start_date') }}"
+  - name: session_status
+    description: "Historical (related to Mon_Year) {{ doc('column_ts_status') }}"
+  - name: session_status_current
+    description:  "Current {{ doc('column_ts_status') }}"
+  - name: Assignee
+    description: "Historical owner (related to Mon_Year): {{ doc('column_sfdc_owner_name_text') }}"
+  - name: pds_group
+    description: "Historical (related to Mon_Year): {{ doc('column_pds_group') }}"
+  - name: Assignee_current
+    description: "Current owner: {{ doc('column_sfdc_owner_name_text') }}"
+  - name: pds_group_current
+    description: "Current{{ doc('column_pds_group') }}"
+  - name: sfdc_account_id
+    description: "{{ doc('column_sfdc_account_id') }}"
+
+  - name: account_name
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_name') }}"    
+
+  - name: account_customer_level
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_customer_level') }}"
+
+  - name: account_state
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_billing_state') }}"
+  - name: account_state_initiative
+    description: "Historical (related to Mon_Year):True if Account sfdc_state_initiative or sfdc_state_initiative_school  is True"
+  - name: account_state_program_eligible
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_state_program_eligible') }}"
+  - name: account_urban_rural
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_urban_rural') }}"
+  - name: account_district_enrollment
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_district_enrollment') }}  if not 0 or {{ doc('column_sfdc_school_enrollment') }}"
+  - name: account_owner_name
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_owner_name_text') }}"
+  - name: session_location_address
+    description: "{{ doc('column_session_location_address') }}"
+  - name: session_location_unknown
+    description: "{{ doc('column_session_location_unknown') }}"
+  - name: session_attendee_count
+    description: "{{ doc('column_session_attendee_count') }}"
+  - name: session_notes
+    description: "{{ doc('column_session_notes') }}"
+  - name: implementation_topics
+    description: "{{ doc('column_implementation_topics') }}"
+  - name: implementation_advanced_topics
+    description: "{{ doc('column_implementation_advanced_topics') }}"
+  - name: implementation_notes
+    description: "{{ doc('column_implementation_notes') }}"
+  - name: notes
+    description: "{{ doc('column_notes') }}"
+  - name: survey_action_items
+    description: "{{ doc('column_survey_action_items') }}"
+  - name: survey_administrator_attendance
+    description: "{{ doc('column_survey_administrator_attendance') }}"
+  - name: survey_attendee_challenges
+    description: "{{ doc('column_survey_attendee_challenges') }}"
+  - name: survey_attendee_count
+    description: "{{ doc('column_survey_attendee_count') }}"
+  - name: survey_teacher_engagement
+    description: "{{ doc('column_survey_teacher_engagement') }}"
+  - name: survey_teacher_sentiment
+    description: "{{ doc('column_survey_teacher_sentiment') }}"
+  - name: survey_notable_discussions
+    description: "{{ doc('column_survey_notable_discussions') }}"
+  - name: survey_notes
+    description: "{{ doc('column_survey_notes') }}"
+  - name: survey_outcome_issues
+    description: "{{ doc('column_survey_outcome_issues') }}"
+  - name: survey_recommendations
+    description: "{{ doc('column_survey_recommendations') }}"
