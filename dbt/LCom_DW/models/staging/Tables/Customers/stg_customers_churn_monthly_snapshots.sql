@@ -18,19 +18,22 @@ where
 )
 --
 ,existing_ultimate_parent_customers as 
---to check if it's "alive" ultimate parent when only one child churned  (Closed Won invoiced opportunities from other child account and it is not in a moment to create renewal)
+--to check if it's "alive" ultimate parent when only one child churned  
+--(Closed Won invoiced opportunities from other child account and it is not in a moment to create renewal)
 (select 
 mon.mon_year,
 case when a.sfdc_ultimate_parent_id='Unknown' then a.sfdc_account_id else a.sfdc_ultimate_parent_id end as sfdc_ultimate_parent_id,
-max(case when license_unenforced then '3000-01-01'::date else o.End_Date end) latest_date
-,listagg(distinct o.opportunity_id,',') existing_opportunities
+listagg(distinct o.opportunity_id,',') existing_opportunities
 from {{ ref("fact_opportunity") }} o
 join {{ ref("dim_account") }} a
 on o.account_id=a.account_id
 join dim_month mon
 on case when o.license_unenforced then '3000-01-01'::date else o.End_Date end > mon.mon_lastday --still active in next months, assuming if it's expired the processing month, renewal opportunity exist and current renewal ARR >0 
+left outer join {{ ref("fact_opportunity") }} ro
+on o.renewal_opportunity_id = ro.opportunity_id
 where
-Stage_name in ('Closed Won','Closed-Won Upsell') --Closed Won can be new or renewal 
+(ro.opportunity_id is null or not(ro.close_date<=mon.mon_lastday and ro.stage_name='Closed Lost')) --no Closed Lost renewals in this month or before
+and o.Stage_name in ('Closed Won','Closed-Won Upsell') --Closed Won can be new or renewal 
 and o.invoiced_date !='1900-01-01' --invoiced date is not null
 group by mon.mon_year,
 case when a.sfdc_ultimate_parent_id='Unknown' then a.sfdc_account_id else a.sfdc_ultimate_parent_id end

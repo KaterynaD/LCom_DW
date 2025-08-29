@@ -40,9 +40,13 @@ case when o.license_unenforced then '3000-01-01'::date else o.End_Date end >= mo
 and o.invoiced_date<=mon.mon_lastday --If it's invoiced AFTER start_date, there is a gap and it will be counted in the invoiced month
 --
 and o.invoiced_date !='1900-01-01' --invoiced
-where o.account_id != '{{ var("default_ID") }}'
+left outer join {{ ref("fact_opportunity") }} ro
+on o.renewal_opportunity_id = ro.opportunity_id
+where 
+(ro.opportunity_id is null or not(ro.close_date<=mon.mon_lastday and ro.stage_name='Closed Lost')) --no Closed Lost renewals in this month or before
+and o.account_id != '{{ var("default_ID") }}'
 and a.sfdc_account_id!='{{ var("default_varchar") }}'
-and Stage_name in ('Closed Won','Closed-Won Upsell')
+and o.Stage_name in ('Closed Won','Closed-Won Upsell')
 and not (o.name ilike '%negative%' or
 o.name ilike '%replacement%' or
 o.name ilike '%Early Access%' or

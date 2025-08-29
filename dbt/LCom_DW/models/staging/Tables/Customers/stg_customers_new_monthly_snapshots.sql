@@ -22,7 +22,8 @@ where
 mon.mon_year,
 a.sfdc_ultimate_parent_id,
 max(o.invoiced_date) latest_invoiced_date,
-max(case when license_unenforced then '3000-01-01'::date else o.End_Date end) latest_date
+max(case when o.license_unenforced and (ro.opportunity_id is null or not(ro.close_date<=mon.mon_lastday and ro.stage_name='Closed Lost')) /*no Closed Lost renewals in this month or before*/
+then '3000-01-01'::date else o.End_Date end) latest_date
 ,listagg(distinct o.opportunity_id,',') existing_opportunities
 from {{ ref("fact_opportunity") }} o
 join {{ ref("dim_account") }} a
@@ -30,11 +31,14 @@ on o.account_id=a.account_id
 join dim_month mon
 on o.invoiced_date < mon.mon_firstday --invoiced before the currently processing  month in any fiscal year!!!
 and o.invoiced_date !='1900-01-01' --invoiced date is not null
-where Stage_name in ('Closed Won','Closed-Won Upsell') 
-and not (name ilike '%negative%' or
-name ilike '%replacement%' or
-name ilike '%Early Access%' or
-name ilike '%LOI%')
+left outer join {{ ref("fact_opportunity") }} ro
+on o.renewal_opportunity_id = ro.opportunity_id
+where 
+o.Stage_name in ('Closed Won','Closed-Won Upsell') 
+and not (o.name ilike '%negative%' or
+o.name ilike '%replacement%' or
+o.name ilike '%Early Access%' or
+o.name ilike '%LOI%')
 and o.opp_record_type in ('New','Renewal','Upsell')
 group by mon.mon_year,
 a.sfdc_ultimate_parent_id)
