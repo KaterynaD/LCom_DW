@@ -58,6 +58,7 @@ isnull(ts.po_number_c,'{{ var("default_varchar") }}') as po_number,
 isnull(ts.presentation_quote_c,'{{ var("default_varchar") }}') as presentation_quote,
 isnull(pc.name,'{{ var("default_varchar") }}') as primary_contact,
 isnull(sc.name,'{{ var("default_varchar") }}') as secondary_contact,
+isnull(ts.requestor_c,'{{ var("default_ID") }}') as requestor_id,
 isnull(ts.session_attendee_count_c, {{ var("default_numeric") }}) as session_attendee_count,
 isnull(ts.session_grades_attending_c,'{{ var("default_varchar") }}') as session_grades_attending,
 isnull(ts.session_location_address_c,'{{ var("default_varchar") }}') as session_location_address,
@@ -70,7 +71,7 @@ isnull(ts.session_subtype_c,'{{ var("default_varchar") }}') as session_subtype,
 isnull(ts.session_type_c,'{{ var("default_varchar") }}') as session_type,
 isnull(ts.sessions_per_week_c, {{ var("default_numeric") }}) as sessions_per_week,
 isnull(ts.setting_for_student_use_of_curriculum_c,'{{ var("default_varchar") }}') as setting_for_student_use_of_curriculum,
-isnull(cast(ts.start_date_c as varchar), '{{ var("default_date") }}')::date as start_date,
+isnull(cast(ts.start_date_c as varchar), '{{ var("default_date") }}')::TIMESTAMP as start_date,
 isnull(ts.state_program_eligible_confirmation_c,'{{ var("default_varchar") }}') as state_program_eligible_confirmation,
 isnull(ts.status_c,'{{ var("default_varchar") }}') as status,
 isnull(ts.survey_action_items_c,'{{ var("default_varchar") }}') as survey_action_items,
@@ -137,6 +138,7 @@ select
 	,presentation_quote::VARCHAR(765)    
 	,primary_contact::VARCHAR(363)    
 	,secondary_contact::VARCHAR(363)    
+	,requestor_id::VARCHAR(300)
 	,session_attendee_count::DOUBLE PRECISION    
 	,session_grades_attending::VARCHAR(4099)    
 	,session_location_address::VARCHAR(65535)    
@@ -149,7 +151,7 @@ select
 	,session_type::VARCHAR(765)    
 	,sessions_per_week::DOUBLE PRECISION    
 	,setting_for_student_use_of_curriculum::VARCHAR(4099)    
-	,start_date::DATE    
+	,start_date::TIMESTAMP    
 	,state_program_eligible_confirmation::VARCHAR(765)    
 	,status::VARCHAR(765)    
 	,survey_action_items::VARCHAR(765)    

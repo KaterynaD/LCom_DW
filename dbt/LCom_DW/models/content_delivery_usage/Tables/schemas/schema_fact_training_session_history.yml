@@ -69,7 +69,7 @@ models:
 
       - name: status
         data_type: VARCHAR(765)
-        description: "{{ doc('column_status') }}"
+        description: "{{ doc('column_ts_status') }}"
         constraints:
           - type: not_null
         data_tests:

@@ -23,7 +23,7 @@ models:
 
       - name: name
         data_type: VARCHAR(240)
-        description: "{{ doc('column_name') }}"
+        description: "{{ doc('column_training_name') }}"
         constraints:
           - type: not_null
 
@@ -353,7 +353,7 @@ models:
           - type: not_null
 
       - name: start_date
-        data_type: DATE
+        data_type: TIMESTAMP
         description: "{{ doc('column_ts_start_date') }}"
         constraints:
           - type: not_null
@@ -366,7 +366,7 @@ models:
 
       - name: status
         data_type: VARCHAR(765)
-        description: "{{ doc('column_status') }}"
+        description: "{{ doc('column_ts_status') }}"
         constraints:
           - type: not_null
 
@@ -387,6 +387,12 @@ models:
         description: "{{ doc('column_survey_attendee_challenges') }}"
         constraints:
           - type: not_null
+
+      - name: requestor_id
+        data_type: varchar(300)
+        description: "{{ doc('column_requestor_id') }}"
+        constraints:
+          - type: not_null          
 
       - name: survey_attendee_count
         data_type: DOUBLE PRECISION
