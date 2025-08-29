@@ -1,0 +1,78 @@
+version: 2
+models:
+  - name: vw_opportunities
+    description: This model combines Salesforce opportunity data with account, product, line item, and calendar details to provide a comprehensive view of revenue-related metrics. The data are current. History is not included.
+    columns:
+      - name: fiscalyear
+        description: Fiscal Year  based on Invoiced Date
+      - name: opportunity_id
+        description: Primary Key of FACT_OPPORTUNITY. It`s Salesforce Opportunity ID column
+      - name: opportunity_name
+        description: "{{ doc('column_opportnity_name') }}"
+      - name: opp_record_type
+        description: "{{ doc('column_opp_record_type') }}"
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+      - name: start_date
+        description: "{{ doc('column_start_date') }}"
+      - name: end_date
+        description: "{{ doc('column_end_date') }}"
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+
+      - name: opportunity_owner_name
+        description: "{{ doc('column_employee_name') }} based on {{ doc('column_owner_id') }} in FACT_OPPORTUNITY"
+
+
+      - name: sfdc_account_id
+        description: "{{ doc('column_sfdc_account_id') }}"
+
+      - name: sfdc_account_id
+        description: "{{ doc('column_sfdc_account_id') }}"
+
+      - name: account_name
+        description: "{{ doc('column_sfdc_name') }}"
+
+      - name: account_customer_level
+        description: "{{ doc('column_sfdc_customer_level') }}"
+
+      - name: account_billing_state
+        description: "{{ doc('column_sfdc_billing_state') }}"
+
+
+      - name: account_state_initiative
+        description: True if Account sfdc_state_initiative or sfdc_state_initiative_school  is True
+
+      - name: account_state_program_eligible
+        description: "{{ doc('column_sfdc_state_program_eligible') }}"
+
+      - name: account_owner_name
+        description: "{{ doc('column_sfdc_owner_name_text') }}"
+
+      - name: account_urban_rural
+        description: "{{ doc('column_sfdc_urban_rural') }}"
+
+      - name: account_owner_name
+        description: "{{ doc('column_sfdc_district_enrollment') }}  if not 0 or {{ doc('column_sfdc_school_enrollment') }}"
+
+
+      - name: sfdc_product_name
+        description: "{{ doc('column_sfdc_product_name') }}"
+      - name: sfdc_product_code
+        description: "{{ doc('column_sfdc_product_code') }}"
+      - name: quantity
+        description: "{{ doc('column_quantity') }}"
+      - name: list_price
+        description: "{{ doc('column_list_price') }}"
+      - name: unit_price
+        description: "{{ doc('column_unit_price') }}"
+      - name: total_price
+        description: "{{ doc('column_total_price') }}"
+      - name: fiscalyear
+        description: Fiscal Year  based on Invoiced Date
+      - name: schoolyear
+        description: School Year  based on Start Date
+      - name: state_initiative
+        description: True if Account sfdc_state_initiative or sfdc_state_initiative_school  is True
