@@ -127,6 +127,42 @@ FROM  stg_calendar;
 
 drop table if exists stg_calendar;
 
+--Default data
+
+INSERT INTO common.dim_calendar
+(cal_date, date_int, day_of_week, day_of_week_name_short, day_of_week_name, week_in_year, day_of_month, mon, mon_name_short, mon_name, mon_year, quarter, quarter_year, "year", mon_weekstart, sun_weekend, mon_firstday, mon_lastday, schoolyear, schoolyear_startdate, schoolyear_enddate, schoolyear_mon, fiscalyear, fiscalyear_startdate, fiscalyear_enddate, fiscalyear_mon, fiscalquarter, fiscalquarter_year, isusfederalholiday)
+VALUES(
+'1/1/1900',
+0,
+0,
+'Unk',
+'Unknown',
+0,
+0,
+0,
+'Unk',
+'Unknown',
+0,
+0,
+0,
+0,
+'1/1/1900',
+'1/1/1900',
+'1/1/1900',
+'1/1/1900',
+'Unknown',
+'1/1/1900',
+'1/1/1900',
+0,
+'Unknown',
+'1/1/1900',
+'1/1/1900',
+0,
+0,
+0,
+FALSE
+);
+
 END;
 
 
