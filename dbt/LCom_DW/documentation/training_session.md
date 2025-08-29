@@ -99,17 +99,15 @@ Implementation Type
 Implementing Grades
 {% enddocs %}
 
-{% docs column_is_closed %}
-Closed
-{% enddocs %}
+
 
 
 {% docs column_learning_path %}
 *Learning Path
 {% enddocs %}
 
-{% docs column_name %}
-Name
+{% docs column_training_name %}
+Training Session Name
 {% enddocs %}
 
 {% docs column_new_district %}
@@ -133,9 +131,6 @@ Origin
 *Person Facilitating Group TBD Learning
 {% enddocs %}
 
-{% docs column_po_number %}
-PO Number
-{% enddocs %}
 
 {% docs column_presentation_quote %}
 Admin Quote to Present
@@ -147,6 +142,10 @@ Primary Contact Name
 
 {% docs column_secondary_contact %}
 Secondary Contact Name
+{% enddocs %}
+
+{% docs column_requestor_id %}
+Tarining Session Requester ID - DIM_EMPLOYEE FK
 {% enddocs %}
 
 {% docs column_session_attendee_count %}
@@ -205,7 +204,7 @@ Start Date
 State Program Eligible Confirmation
 {% enddocs %}
 
-{% docs column_status %}
+{% docs column_ts_status %}
 Status
 {% enddocs %}
 

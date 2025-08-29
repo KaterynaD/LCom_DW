@@ -2,6 +2,15 @@
 The datetime the record was loaded in PST
 {% enddocs %}
 
+{% docs column_mon_year %}
+Reporting Month and Year in the form YYYYMM (the data are in the reported state at the end of this Year and Month)
+{% enddocs %}
+
+{% docs column_mon_lastday %}
+Reporting Month last date (the data are in the reported state at the date)
+{% enddocs %}
+
+
 {% docs column_fiscalyear %}
 Fiscal year in YYYY/YYYY format e.g. 2024/2025.
 {% enddocs %}
@@ -32,13 +41,6 @@ Type of opportunity, such as New, Renewal, or Upsell.
 Salesforce Account ID.
 {% enddocs %}
 
-{% docs column_sfdc_state_initiative %}
-Boolean indicating if account is part of a state initiative.
-{% enddocs %}
-
-{% docs column_sfdc_ultimate_parent_id %}
-Salesforce ID of the ultimate parent account.
-{% enddocs %}
 
 {% docs column_invoiced_date %}
 Invoice date of the opportunity. Defaults to 1900-01-01 if null (cancellations).
@@ -118,3 +120,27 @@ Data updated at in PST
 {% docs column_scd_hash %}
 Hash of checked columns  to identify changes
 {% enddocs %}   
+
+{% docs column_description %}
+Description
+{% enddocs %}
+
+{% docs column_is_active %}
+Flag indicating whether the entity is active
+{% enddocs %}
+
+{% docs column_netsuite_id %}
+Netsuite ID (integration from Netsuite.)
+{% enddocs %}
+
+{% docs column_sfdc_product_id %}
+Foreighn Key to DIM_SFDC_Product. Salesforce product
+{% enddocs %}
+
+{% docs column_is_closed %}
+Closed
+{% enddocs %}
+
+{% docs column_po_number %}
+PO Number
+{% enddocs %}

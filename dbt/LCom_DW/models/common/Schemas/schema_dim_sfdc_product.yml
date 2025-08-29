@@ -20,165 +20,151 @@ models:
     - unique
   - name: sfdc_product_name
     data_type: varchar(765)
-    description: SFDC Product Name
+    description: "{{ doc('column_sfdc_product_name') }}"
     constraints:
     - type: not_null
   - name: is_active
     data_type: boolean
-    description: Active
+    description: "{{ doc('column_is_active') }}"
     constraints:
     - type: not_null
   - name: active_in_platform
     data_type: boolean
-    description: Active in Platform (Denotes if a given product has an active SKU
-      on the Learning.com platform)
+    description: "{{ doc('column_active_in_platform') }}"
     constraints:
     - type: not_null
   - name: sbqq_component
     data_type: boolean
-    description: Component (Marks this product as a component, excluding it from selection
-      in product lookup.)
+    description: "{{ doc('column_sbqq_component') }}"
     constraints:
     - type: not_null
   - name: sbqq_cost_editable
     data_type: boolean
-    description: Cost Editable (Controls whether cost for this product may be modified
-      on individual quotes.)
+    description: "{{ doc('column_sbqq_cost_editable') }}"
     constraints:
     - type: not_null
   - name: created_date
     data_type: timestamp
-    description: Created Date PST timestamp
+    description: "{{ doc('column_created_date') }}"
     constraints:
     - type: not_null
   - name: does_not_prorate
     data_type: boolean
-    description: Does not Prorate (Denotes if a product does not prorate based on
-      subscription period)
+    description: "{{ doc('column_does_not_prorate') }}"
     constraints:
     - type: not_null
   - name: sbqq_exclude_from_maintenance
     data_type: boolean
-    description: Exclude From Percent Of Total (Excludes this product from percent
-      of total maintenance calculations.)
+    description: "{{ doc('column_sbqq_exclude_from_maintenance') }}"
     constraints:
     - type: not_null
   - name: sbqq_hidden
     data_type: boolean
-    description: Hidden (Excludes this product from appearing on the quote PDF.)
+    description: "{{ doc('column_sbqq_hidden') }}"
     constraints:
     - type: not_null
   - name: sbqq_include_in_maintenance
     data_type: boolean
-    description: 'Include In Percent Of Total (Includes products in percent of total
-      calculations that are normally excluded (e.g.: subscription products).)'
+    description: "{{ doc('column_sbqq_include_in_maintenance') }}"
     constraints:
     - type: not_null
   - name: is_not_provisioned
     data_type: boolean
-    description: Is Not Provisioned (Denotes if a product is sold but is not provisioned
-      within the learning.com platform. Applies to PD, misc fees, and tiered service
-      product items. Removes these items from the licensing flow.)
+    description: "{{ doc('column_is_not_provisioned') }}"
     constraints:
     - type: not_null
   - name: last_modified_date
     data_type: timestamp
-    description: Last Modified Date
+    description: "{{ doc('column_last_modified_date') }}"
     constraints:
     - type: not_null
   - name: lcom_suite
     data_type: varchar(250)
-    description: LCOM Suite (The associated LCOM Suite of this product for provisioning
-      purposes)
+    description: "{{ doc('column_lcom_suite') }}"
     constraints:
     - type: not_null
   - name: multiplier
     data_type: double precision
-    description: Multiplier (Multiplier for auto-generating the correct license count
-      based on quote lines)
+    description: "{{ doc('column_multiplier') }}"
     constraints:
     - type: not_null
   - name: netsuite_link
     data_type: varchar(190)
-    description: Netsuite Link
+    description: "{{ doc('column_netsuite_link') }}"
     constraints:
     - type: not_null
   - name: net_suite_sku
     data_type: varchar(90)
-    description: NetSuite SKU
+    description: "{{ doc('column_net_suite_sku') }}"
     constraints:
     - type: not_null
   - name: sbqq_non_discountable
     data_type: boolean
-    description: Non Discountable (Marks this product as non discountable.)
+    description: "{{ doc('column_sbqq_non_discountable') }}"
     constraints:
     - type: not_null
   - name: nyc_license_quantity
     data_type: double precision
-    description: NYC License Quantity (Licenses included in product for NYC Price
-      Book)
+    description: "{{ doc('column_nyc_license_quantity') }}"
     constraints:
     - type: not_null
   - name: price_dimensions
     data_type: varchar(765)
-    description: Price Dimensions
+    description: "{{ doc('column_price_dimensions') }}"
     constraints:
     - type: not_null
   - name: sbqq_price_editable
     data_type: boolean
-    description: Price Editable (Indicates this product allows for price to be freely
-      editable when building a quote)
+    description: "{{ doc('column_sbqq_price_editable') }}"
     constraints:
     - type: not_null
   - name: sbqq_pricing_method
     data_type: varchar(765)
-    description: Pricing Method (Pricing method that should be applied to this product.)
+    description: "{{ doc('column_sbqq_pricing_method') }}"
     constraints:
     - type: not_null
   - name: sfdc_product_code
     data_type: varchar(765)
-    description: Product Code
+    description: "{{ doc('column_sfdc_product_code') }}"
     constraints:
     - type: not_null
   - name: sfdc_product_description
     data_type: varchar(4000)
-    description: Product Description
+    description: "{{ doc('column_sfdc_product_description') }}"
     constraints:
     - type: not_null
   - name: sfdc_product_family
     data_type: varchar(765)
-    description: Product Family
+    description: "{{ doc('column_sfdc_product_family') }}"
     constraints:
     - type: not_null
   - name: sfdc_product_sub_family
     data_type: varchar(765)
-    description: Product Sub Family
+    description: "{{ doc('column_sfdc_product_sub_family') }}"
     constraints:
     - type: not_null
   - name: sbqq_quantity_editable
     data_type: boolean
-    description: Quantity Editable (Flag that determines whether the quantity is editable.)
+    description: "{{ doc('column_sbqq_quantity_editable') }}"
     constraints:
     - type: not_null
   - name: sbqq_subscription_term
     data_type: double precision
-    description: Subscription Term (Term length of this subscription. Only applicable
-      if the product is a subscription.)
+    description: "{{ doc('column_sbqq_subscription_term') }}"
     constraints:
     - type: not_null
   - name: sbqq_subscription_type
     data_type: varchar(765)
-    description: Subscription Type (Renewable Subscriptions will transfer to Renewal
-      Quotes. One-time Subscriptions will not.)
+    description: "{{ doc('column_sbqq_subscription_type') }}"
     constraints:
     - type: not_null
   - name: vidcode_org_id
     data_type: varchar(75)
-    description: Vidcode Org Id
+    description: "{{ doc('column_vidcode_org_id') }}"
     constraints:
     - type: not_null
   - name: loaddate
     data_type: timestamp
-    description: The datetime the record was loaded (PST)
+    description: "{{ doc('column_loaddate') }}"
     constraints:
     - type: not_null

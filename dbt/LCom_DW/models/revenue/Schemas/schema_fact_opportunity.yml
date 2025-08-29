@@ -20,1029 +20,985 @@ models:
     - unique
   - name: name
     data_type: varchar(300)
-    description: Opportunity Name
+    description: "{{ doc('column_opportnity_name') }}"
     constraints:
     - type: not_null
   - name: account_id
     data_type: varchar(300)
-    description: DIM_ACCOUNT FK 
+    description: "{{ doc('column_account_id') }}"
     constraints:
     - type: not_null
     data_tests:
     - relationships:
         to: ref('dim_account')
         field: account_id
-        
   - name: sfdc_account_id
     data_type: varchar(300)
-    description: Salesforce Account ID
+    description: "{{ doc('column_sfdc_account_id') }}"
     constraints:
     - type: not_null
   - name: account_manager
     data_type: varchar(30)
-    description: Renewal Owner
+    description: "{{ doc('column_account_manager') }}"
     constraints:
     - type: not_null
   - name: account_name_email
     data_type: varchar(780)
-    description: Account Name (Email)
+    description: "{{ doc('column_account_name_email') }}"
     constraints:
     - type: not_null
   - name: activity_metric_id
     data_type: varchar(30)
-    description: Activity Metric
+    description: "{{ doc('column_activity_metric_id') }}"
     constraints:
     - type: not_null
   - name: already_booked
     data_type: boolean
-    description: Already Booked
+    description: "{{ doc('column_already_booked') }}"
     constraints:
     - type: not_null
   - name: amount
     data_type: numeric(35,10)
-    description: Amount
+    description: "{{ doc('column_amount') }}"
     constraints:
     - type: not_null
   - name: amount_won
     data_type: numeric(35,10)
-    description: Amount Won
+    description: "{{ doc('column_amount_won') }}"
     constraints:
     - type: not_null
   - name: arr_bands
     data_type: varchar(30)
-    description: ARR Bands
+    description: "{{ doc('column_arr_bands') }}"
     constraints:
     - type: not_null
   - name: arr
     data_type: double precision
-    description: ARR (implemented to capture ARR value of opportunity)
+    description: "{{ doc('column_arr') }}"
     constraints:
     - type: not_null
   - name: arr_new_business
     data_type: numeric(38,10)
-    description: ARR New Business (ARR New Business)
+    description: "{{ doc('column_arr_new_business') }}"
     constraints:
     - type: not_null
   - name: arr_renewal
     data_type: numeric(38,10)
-    description: ARR Renewal (ARR renewal)
+    description: "{{ doc('column_arr_renewal') }}"
     constraints:
     - type: not_null
   - name: arr_upsell
     data_type: numeric(38,10)
-    description: ARR Upsell (ARR Upsell)
+    description: "{{ doc('column_arr_upsell') }}"
     constraints:
     - type: not_null
   - name: arr_won
     data_type: numeric(38,10)
-    description: ARR Won
+    description: "{{ doc('column_arr_won') }}"
     constraints:
     - type: not_null
   - name: billing_addressee
     data_type: varchar(160)
-    description: Billing Addressee (Billing Addressee)
+    description: "{{ doc('column_billing_addressee') }}"
     constraints:
     - type: not_null
   - name: billing_city
     data_type: varchar(120)
-    description: Billing City (Billing City)
+    description: "{{ doc('column_billing_city') }}"
     constraints:
     - type: not_null
   - name: billing_state
     data_type: varchar(780)
-    description: Billing State (Billing State)
+    description: "{{ doc('column_billing_state') }}"
     constraints:
     - type: not_null
   - name: billing_street
     data_type: varchar(780)
-    description: Billing Street (Billing Street)
+    description: "{{ doc('column_billing_street') }}"
     constraints:
     - type: not_null
   - name: billing_zipcode
     data_type: varchar(120)
-    description: Billing Zipcode (Billing Zipcode)
+    description: "{{ doc('column_billing_zipcode') }}"
     constraints:
     - type: not_null
   - name: churn_date
     data_type: date
-    description: Churn Date
+    description: "{{ doc('column_churn_date') }}"
     constraints:
-    - type: not_null    
+    - type: not_null
   - name: churn_formula
     data_type: double precision
-    description: Churn (Formula) (If the opportunity is lost will calculate a negative
-      value for churn)
+    description: "{{ doc('column_churn_formula') }}"
     constraints:
     - type: not_null
   - name: close_date
     data_type: date
-    description: Close Date
+    description: "{{ doc('column_close_date') }}"
     constraints:
     - type: not_null
   - name: closed_won_date_time
     data_type: timestamp
-    description: Closed Won Date/Time (Used to Capture Closed Won Date and Time)
+    description: "{{ doc('column_closed_won_date_time') }}"
     constraints:
     - type: not_null
   - name: codesters_has_licenses_synced
     data_type: boolean
-    description: Has Licenses Synced
+    description: "{{ doc('column_codesters_has_licenses_synced') }}"
     constraints:
     - type: not_null
   - name: codesters_number_of_licenses
     data_type: bigint
-    description: Number of Licenses
+    description: "{{ doc('column_codesters_number_of_licenses') }}"
     constraints:
     - type: not_null
   - name: codesters_number_of_synced_licenses
     data_type: bigint
-    description: Number of Synced Licenses
+    description: "{{ doc('column_codesters_number_of_synced_licenses') }}"
     constraints:
     - type: not_null
   - name: codesters_order_to_be_extended
     data_type: boolean
-    description: Codesters Order to be Extended (Used as part of the Jun-23 order
-      unenforcement process. Denotes that an opp is an exception to the standard unenforcement
-      process (new licenses created to run 7/1 - 10/31) and instead has had their
-      existing licenses extended.)
+    description: "{{ doc('column_codesters_order_to_be_extended') }}"
     constraints:
     - type: not_null
   - name: codesters_order_to_be_unenforced
     data_type: boolean
-    description: Codesters Order to be Unenforced (Used as part of the Jun-23 order
-      unenforcement process. Denotes that an opp should be unenforced according to
-      standard process (new licenses created to run 7/1 - 10/31).)
+    description: "{{ doc('column_codesters_order_to_be_unenforced') }}"
     constraints:
     - type: not_null
   - name: codesters_renewal
     data_type: boolean
-    description: Codesters Renewal (Used for breaking out Codesters renewal opps for
-      CSM comp plans)
+    description: "{{ doc('column_codesters_renewal') }}"
     constraints:
     - type: not_null
   - name: combined_arr
     data_type: numeric(38,10)
-    description: Combined ARR
+    description: "{{ doc('column_combined_arr') }}"
     constraints:
     - type: not_null
   - name: contract_id
     data_type: varchar(30)
-    description: Contract
+    description: "{{ doc('column_contract_id') }}"
     constraints:
     - type: not_null
   - name: created_by_id
     data_type: varchar(30)
-    description: Created By
+    description: "{{ doc('column_created_by_id') }}"
     constraints:
     - type: not_null
   - name: created_date
     data_type: timestamp
-    description: Created Date in PST
+    description: "{{ doc('column_created_date') }}"
     constraints:
     - type: not_null
   - name: csm_email
     data_type: varchar(400)
-    description: CSM Email
+    description: "{{ doc('column_csm_email') }}"
     constraints:
     - type: not_null
   - name: csm_introduced
     data_type: boolean
-    description: CSM Introduced
+    description: "{{ doc('column_csm_introduced') }}"
     constraints:
     - type: not_null
   - name: csm_name
     data_type: varchar(380)
-    description: CSM Name
+    description: "{{ doc('column_csm_name') }}"
     constraints:
     - type: not_null
   - name: data_quality_description
     data_type: varchar(70)
-    description: Data Quality Description
+    description: "{{ doc('column_data_quality_description') }}"
     constraints:
     - type: not_null
   - name: data_quality_score
     data_type: integer
-    description: Data Quality Score
+    description: "{{ doc('column_data_quality_score') }}"
     constraints:
     - type: not_null
   - name: deal_docs_completed
     data_type: boolean
-    description: Deal Docs Completed?
+    description: "{{ doc('column_deal_docs_completed') }}"
     constraints:
     - type: not_null
   - name: description
     data_type: varchar(max)
-    description: Description
+    description: "{{ doc('column_description') }}"
     constraints:
     - type: not_null
   - name: disable_auto_renewal_opp
     data_type: boolean
-    description: Disable Auto Renewal
+    description: "{{ doc('column_disable_auto_renewal_opp') }}"
     constraints:
     - type: not_null
   - name: disable_odc
     data_type: boolean
-    description: Disable ODC
+    description: "{{ doc('column_disable_odc') }}"
     constraints:
     - type: not_null
   - name: district_business_sub_type
     data_type: varchar(20)
-    description: District Business Sub Type (Denotes if opp should be considered TX
-      or Non-TX business)
+    description: "{{ doc('column_district_business_sub_type') }}"
     constraints:
     - type: not_null
   - name: district_enrollment
     data_type: varchar(40)
-    description: District Enrollment
+    description: "{{ doc('column_district_enrollment') }}"
     constraints:
     - type: not_null
   - name: downsell
     data_type: double precision
-    description: Downsell (Automatically derives downsell)
+    description: "{{ doc('column_downsell') }}"
     constraints:
     - type: not_null
   - name: end_date
     data_type: date
-    description: End Date
+    description: "{{ doc('column_end_date') }}"
     constraints:
     - type: not_null
   - name: expected_new_business_arr
     data_type: double precision
-    description: Expected New Business ARR (captures ARR value based on probability
-      %)
+    description: "{{ doc('column_expected_new_business_arr') }}"
     constraints:
     - type: not_null
   - name: expected_revenue
     data_type: numeric(35,10)
-    description: Expected Revenue
+    description: "{{ doc('column_expected_revenue') }}"
     constraints:
     - type: not_null
   - name: fiscal
     data_type: varchar(20)
-    description: Fiscal Period
+    description: "{{ doc('column_fiscal') }}"
     constraints:
     - type: not_null
   - name: forecast_category
     data_type: varchar(130)
-    description: Forecast Category
+    description: "{{ doc('column_forecast_category') }}"
     constraints:
     - type: not_null
   - name: forecast_category_name
     data_type: varchar(780)
-    description: Forecast Category
+    description: "{{ doc('column_forecast_category_name') }}"
     constraints:
     - type: not_null
   - name: has_coding_discount
     data_type: boolean
-    description: Has Coding Discount
+    description: "{{ doc('column_has_coding_discount') }}"
     constraints:
     - type: not_null
   - name: has_easy_tech
     data_type: boolean
-    description: Has EasyTech
+    description: "{{ doc('column_has_easy_tech') }}"
     constraints:
     - type: not_null
   - name: has_open_activity
     data_type: boolean
-    description: Has Open Activity
+    description: "{{ doc('column_has_open_activity') }}"
     constraints:
     - type: not_null
   - name: has_opportunity_line_item
     data_type: boolean
-    description: Has Line Item
+    description: "{{ doc('column_has_opportunity_line_item') }}"
     constraints:
     - type: not_null
   - name: has_overdue_task
     data_type: boolean
-    description: Has Overdue Task
+    description: "{{ doc('column_has_overdue_task') }}"
     constraints:
     - type: not_null
   - name: has_started_with_students
     data_type: boolean
-    description: Has Started with Students
+    description: "{{ doc('column_has_started_with_students') }}"
     constraints:
     - type: not_null
   - name: house_account
     data_type: boolean
-    description: House Account (Small customer with no assigned Account Manager)
+    description: "{{ doc('column_house_account') }}"
     constraints:
     - type: not_null
   - name: initial_interest
     data_type: varchar(780)
-    description: Initial Interest (Reason for Initial Interest)
+    description: "{{ doc('column_initial_interest') }}"
     constraints:
     - type: not_null
   - name: international_reseller
     data_type: boolean
-    description: International Reseller (This checkbox is to facilitate reporting
-      of international reseller account management)
+    description: "{{ doc('column_international_reseller') }}"
     constraints:
     - type: not_null
   - name: introduction_of_quote
     data_type: varchar(780)
-    description: Introduction of Quote (Introduction of Quote)
+    description: "{{ doc('column_introduction_of_quote') }}"
     constraints:
     - type: not_null
   - name: invoiced_date
     data_type: date
-    description: Invoiced Date
+    description: "{{ doc('column_invoiced_date') }}"
     constraints:
-    - type: not_null    
+    - type: not_null
   - name: is_closed
     data_type: boolean
-    description: Closed
+    description: "{{ doc('column_is_closed') }}"
     constraints:
     - type: not_null
   - name: is_pd_resources_offered
     data_type: boolean
-    description: IS/PD Resources Offered
+    description: "{{ doc('column_is_pd_resources_offered') }}"
     constraints:
     - type: not_null
   - name: is_won
     data_type: boolean
-    description: Won
+    description: "{{ doc('column_is_won') }}"
     constraints:
     - type: not_null
   - name: jitterbit_fulfilled
     data_type: boolean
-    description: Jitterbit Fulfilled
+    description: "{{ doc('column_jitterbit_fulfilled') }}"
     constraints:
     - type: not_null
   - name: last_modified_by_id
     data_type: varchar(30)
-    description: Last Modified By
+    description: "{{ doc('column_last_modified_by_id') }}"
     constraints:
     - type: not_null
   - name: last_modified_date
     data_type: timestamp
-    description: Last Modified Date in PST
+    description: "{{ doc('column_last_modified_date') }}"
     constraints:
     - type: not_null
   - name: last_stage_change_date
     data_type: timestamp
-    description: Last Stage Change Date
+    description: "{{ doc('column_last_stage_change_date') }}"
     constraints:
     - type: not_null
   - name: les_opp
     data_type: boolean
-    description: Les Opp
+    description: "{{ doc('column_les_opp') }}"
     constraints:
     - type: not_null
   - name: license_provisioned_date
     data_type: date
-    description: License Provisioned Date
+    description: "{{ doc('column_license_provisioned_date') }}"
     constraints:
     - type: not_null
   - name: license_unenforced
     data_type: boolean
-    description: License Unenforced
+    description: "{{ doc('column_license_unenforced') }}"
     constraints:
     - type: not_null
-
   - name: loss_reason
     data_type: varchar(765)
-    description: Loss Reason
+    description: "{{ doc('column_loss_reason') }}"
     constraints:
     - type: not_null
-
   - name: loss_notes
     data_type: varchar(3000)
-    description: Lost Notes
+    description: "{{ doc('column_loss_notes') }}"
     constraints:
-    - type: not_null        
-
+    - type: not_null
   - name: migrated
     data_type: boolean
-    description: Migrated?
+    description: "{{ doc('column_migrated') }}"
     constraints:
     - type: not_null
   - name: multi_year_arr
     data_type: numeric(38,10)
-    description: Multi-Year ARR (Roll up summary of all opporunity products with Class
-      of ARR for creating multi-year calculations)
+    description: "{{ doc('column_multi_year_arr') }}"
     constraints:
     - type: not_null
   - name: multi_year
     data_type: boolean
-    description: Dummyfield 2 (Multi-Year QA)
+    description: "{{ doc('column_multi_year') }}"
     constraints:
     - type: not_null
   - name: multi_year_discussed
     data_type: boolean
-    description: Multi-year discussed?
+    description: "{{ doc('column_multi_year_discussed') }}"
     constraints:
     - type: not_null
   - name: multi_year_order
     data_type: boolean
-    description: Multi Year Upfront Order?
+    description: "{{ doc('column_multi_year_order') }}"
     constraints:
     - type: not_null
   - name: needs_analysis_conducted
     data_type: boolean
-    description: Needs analysis conducted
+    description: "{{ doc('column_needs_analysis_conducted') }}"
     constraints:
     - type: not_null
   - name: net_suite_order_id
     data_type: varchar(90)
-    description: NetSuite OrderId
+    description: "{{ doc('column_net_suite_order_id') }}"
     constraints:
     - type: not_null
   - name: netsuite_id
     data_type: varchar(780)
-    description: 'Netsuite Id (Integrations: Netsuite.)'
+    description: "{{ doc('column_netsuite_id') }}"
     constraints:
     - type: not_null
   - name: new_biz_arr_trigger
     data_type: numeric(38,10)
-    description: New Biz ARR Trigger
+    description: "{{ doc('column_new_biz_arr_trigger') }}"
     constraints:
     - type: not_null
   - name: next_step
     data_type: varchar(780)
-    description: Next Step
+    description: "{{ doc('column_next_step') }}"
     constraints:
     - type: not_null
   - name: nnarr
     data_type: double precision
-    description: NNARR (Calculates the change in ARR from the previous contract)
+    description: "{{ doc('column_nnarr') }}"
     constraints:
     - type: not_null
   - name: no_integration_needed
     data_type: boolean
-    description: No integration needed
+    description: "{{ doc('column_no_integration_needed') }}"
     constraints:
     - type: not_null
   - name: nrr_renewal
     data_type: numeric(38,10)
-    description: NRR Renewal
+    description: "{{ doc('column_nrr_renewal') }}"
     constraints:
     - type: not_null
   - name: number_of_products
     data_type: bigint
-    description: Number of Products
+    description: "{{ doc('column_number_of_products') }}"
     constraints:
     - type: not_null
   - name: number_of_schools
     data_type: double precision
-    description: Number of Schools
+    description: "{{ doc('column_number_of_schools') }}"
     constraints:
     - type: not_null
   - name: number_of_students
     data_type: double precision
-    description: Number of Students
+    description: "{{ doc('column_number_of_students') }}"
     constraints:
     - type: not_null
   - name: odc_sent
     data_type: boolean
-    description: ODC Sent
+    description: "{{ doc('column_odc_sent') }}"
     constraints:
     - type: not_null
   - name: of_months
     data_type: double precision
     constraints:
     - type: not_null
+    description: "{{ doc('column_of_months') }}"
   - name: opp_record_type
     data_type: varchar(20)
-    description: Opp Record Type (Gong does not support using record type as a field
-      we can filter by, therefore we need to duplicate our opportunity record types
-      with a formula field. We can keep this field hidden from users.)
+    description: "{{ doc('column_opp_record_type') }}"
     constraints:
     - type: not_null
   - name: opp_to_be_closed
     data_type: boolean
-    description: Opp to be Closed
+    description: "{{ doc('column_opp_to_be_closed') }}"
     constraints:
     - type: not_null
   - name: opportunity_number
     data_type: varchar(100)
-    description: Opportunity Number
+    description: "{{ doc('column_opportunity_number') }}"
     constraints:
     - type: not_null
   - name: opportunity_score_id
     data_type: varchar(30)
-    description: Opportunity Score
+    description: "{{ doc('column_opportunity_score_id') }}"
     constraints:
     - type: not_null
   - name: order_unenforced
     data_type: boolean
-    description: Order Unenforced (Used as part of the Jun-23 order unenforcement
-      process. Denotes that an opp has been unenforced according to standard process
-      (new licenses created to run 7/1 - 10/31).)
+    description: "{{ doc('column_order_unenforced') }}"
     constraints:
     - type: not_null
   - name: original_close_date
     data_type: date
-    description: Original Close Date (Original Close Date of Opp)
+    description: "{{ doc('column_original_close_date') }}"
     constraints:
     - type: not_null
   - name: original_opp_owner
     data_type: varchar(30)
-    description: Original Opp Owner
+    description: "{{ doc('column_original_opp_owner') }}"
     constraints:
     - type: not_null
   - name: otc_email_sent
     data_type: boolean
-    description: OTC Email Sent
+    description: "{{ doc('column_otc_email_sent') }}"
     constraints:
     - type: not_null
   - name: owner_closed_won
     data_type: double precision
-    description: Owner Closed Won
+    description: "{{ doc('column_owner_closed_won') }}"
     constraints:
     - type: not_null
   - name: owner_id
     data_type: varchar(30)
-    description: Opportunity Owner
+    description: "{{ doc('column_owner_id') }}"
     constraints:
     - type: not_null
   - name: owner_open_pipeline
     data_type: double precision
-    description: Owner Open Pipeline
+    description: "{{ doc('column_owner_open_pipeline') }}"
     constraints:
     - type: not_null
   - name: owner_quota
     data_type: double precision
-    description: Owner Pipeline Target
+    description: "{{ doc('column_owner_quota') }}"
     constraints:
     - type: not_null
   - name: owner_role
     data_type: varchar(250)
-    description: Owner Role
+    description: "{{ doc('column_owner_role') }}"
     constraints:
     - type: not_null
   - name: owner_sales_quota
     data_type: numeric(35,10)
-    description: Owner Sales Quota
+    description: "{{ doc('column_owner_sales_quota') }}"
     constraints:
     - type: not_null
   - name: paid_date
     data_type: date
-    description: Paid Date
+    description: "{{ doc('column_paid_date') }}"
     constraints:
     - type: not_null
   - name: payment_terms
     data_type: varchar(780)
-    description: Payment Terms (Payment term)
+    description: "{{ doc('column_payment_terms') }}"
     constraints:
     - type: not_null
   - name: pd_scheduled
     data_type: boolean
-    description: PD Scheduled?
+    description: "{{ doc('column_pd_scheduled') }}"
     constraints:
     - type: not_null
   - name: pd_services
     data_type: boolean
-    description: PD Services (PD Services)
+    description: "{{ doc('column_pd_services') }}"
     constraints:
     - type: not_null
   - name: pipeline_needed_to_hit_quota
     data_type: double precision
-    description: Pipeline Needed to Hit Quota
+    description: "{{ doc('column_pipeline_needed_to_hit_quota') }}"
     constraints:
     - type: not_null
   - name: platform_name
     data_type: varchar(250)
-    description: Platform Name
+    description: "{{ doc('column_platform_name') }}"
     constraints:
     - type: not_null
   - name: po_amount
     data_type: numeric(35,10)
-    description: PO Amount (PO Amount)
+    description: "{{ doc('column_po_amount') }}"
     constraints:
     - type: not_null
   - name: po_amount_matches_primary_quote_amount
     data_type: boolean
-    description: PO Amount Matches Primary Quote Amount (Checks if PO Amount equals
-      amount on primary quote. If Yes, checks box for true. If No, checkbox remains
-      blank. This is used as a criteria for displaying the screenflow for processing
-      an opportunity.)
+    description: "{{ doc('column_po_amount_matches_primary_quote_amount') }}"
     constraints:
     - type: not_null
   - name: po_hold
     data_type: boolean
-    description: PO Hold (Use by Sales Support to indicate they have received a PO
-      without triggering the PO received email)
+    description: "{{ doc('column_po_hold') }}"
     constraints:
     - type: not_null
   - name: po_number
     data_type: varchar(90)
-    description: PO Number (Po Number)
+    description: "{{ doc('column_po_number') }}"
     constraints:
     - type: not_null
   - name: po_received
     data_type: boolean
-    description: PO Received
+    description: "{{ doc('column_po_received') }}"
     constraints:
     - type: not_null
   - name: po_received_counter
     data_type: integer
-    description: PO received counter
+    description: "{{ doc('column_po_received_counter') }}"
     constraints:
     - type: not_null
   - name: po_received_date
     data_type: date
-    description: PO Received Date (PO Received Date)
+    description: "{{ doc('column_po_received_date') }}"
     constraints:
     - type: not_null
   - name: price_increase_arr
     data_type: double precision
-    description: Price Increase ARR
+    description: "{{ doc('column_price_increase_arr') }}"
     constraints:
     - type: not_null
   - name: pricebook_2_id
     data_type: varchar(30)
-    description: Price Book
+    description: "{{ doc('column_pricebook_2_id') }}"
     constraints:
     - type: not_null
   - name: primary_quote_approved
     data_type: boolean
-    description: Primary Quote approved (Primary Quote approved checked if status
-      is approved)
+    description: "{{ doc('column_primary_quote_approved') }}"
     constraints:
     - type: not_null
   - name: probability
     data_type: double precision
-    description: Probability (%)
+    description: "{{ doc('column_probability') }}"
     constraints:
     - type: not_null
   - name: progressive_billing
     data_type: boolean
-    description: Progressive Billing
+    description: "{{ doc('column_progressive_billing') }}"
     constraints:
     - type: not_null
   - name: purchase_level
     data_type: varchar(20)
-    description: Purchase Level
+    description: "{{ doc('column_purchase_level') }}"
     constraints:
     - type: not_null
   - name: purchase_level_number
     data_type: double precision
-    description: Purchase Level (Number)
+    description: "{{ doc('column_purchase_level_number') }}"
     constraints:
     - type: not_null
   - name: push_count
     data_type: bigint
-    description: Push Count
+    description: "{{ doc('column_push_count') }}"
     constraints:
     - type: not_null
   - name: pushed_out
     data_type: boolean
-    description: Pushed Out
+    description: "{{ doc('column_pushed_out') }}"
     constraints:
     - type: not_null
   - name: quota
     data_type: varchar(250)
-    description: Quota
+    description: "{{ doc('column_quota') }}"
     constraints:
     - type: not_null
   - name: quote_contract_type
     data_type: varchar(780)
-    description: Quote Contract Type
+    description: "{{ doc('column_quote_contract_type') }}"
     constraints:
     - type: not_null
   - name: quote_created_date
     data_type: date
-    description: Quote created Date
+    description: "{{ doc('column_quote_created_date') }}"
     constraints:
     - type: not_null
   - name: quote_expiry_date
     data_type: date
-    description: Quote Expiry Date
+    description: "{{ doc('column_quote_expiry_date') }}"
     constraints:
     - type: not_null
   - name: quote_list_amount
     data_type: double precision
-    description: Quote List Amount
+    description: "{{ doc('column_quote_list_amount') }}"
     constraints:
     - type: not_null
   - name: quote_name
     data_type: varchar(250)
-    description: Quote name
+    description: "{{ doc('column_quote_name') }}"
     constraints:
     - type: not_null
   - name: quote_notes
     data_type: varchar(780)
-    description: Quote Notes (Quote Notes)
+    description: "{{ doc('column_quote_notes') }}"
     constraints:
     - type: not_null
   - name: quote_start_date
     data_type: date
-    description: Quote Start Date
+    description: "{{ doc('column_quote_start_date') }}"
     constraints:
     - type: not_null
   - name: quote_synced
     data_type: boolean
-    description: Quote Synced
+    description: "{{ doc('column_quote_synced') }}"
     constraints:
     - type: not_null
   - name: quote_total_discount
     data_type: double precision
-    description: Quote Total Discount
+    description: "{{ doc('column_quote_total_discount') }}"
     constraints:
     - type: not_null
   - name: rai
     data_type: boolean
-    description: Send RAI (Renewal Advisory Invoice)
+    description: "{{ doc('column_rai') }}"
     constraints:
     - type: not_null
   - name: rebuilt_during_migration
     data_type: boolean
-    description: Rebuilt During Migration (Denotes if this opp was flagged to be rebuilt
-      during migration process)
+    description: "{{ doc('column_rebuilt_during_migration') }}"
     constraints:
     - type: not_null
   - name: record_type_id
     data_type: varchar(30)
-    description: Opportunity Record Type
+    description: "{{ doc('column_record_type_id') }}"
     constraints:
     - type: not_null
   - name: references_provided
     data_type: boolean
-    description: References Provided
+    description: "{{ doc('column_references_provided') }}"
     constraints:
     - type: not_null
   - name: remaining_quota
     data_type: double precision
-    description: Remaining Quota
+    description: "{{ doc('column_remaining_quota') }}"
     constraints:
     - type: not_null
   - name: renewable_revenue
     data_type: numeric(38,10)
-    description: Renewable Revenue
+    description: "{{ doc('column_renewable_revenue') }}"
     constraints:
     - type: not_null
   - name: renewal_at_79
     data_type: numeric(38,10)
-    description: Renewal at 79%
+    description: "{{ doc('column_renewal_at_79') }}"
     constraints:
     - type: not_null
   - name: renewal_biz_trigger
     data_type: numeric(38,10)
-    description: Renewal Biz Trigger
+    description: "{{ doc('column_renewal_biz_trigger') }}"
     constraints:
     - type: not_null
   - name: renewal_owner_email
     data_type: varchar(250)
-    description: Renewal Owner Email
+    description: "{{ doc('column_renewal_owner_email') }}"
     constraints:
     - type: not_null
-
   - name: renewal_opportunity_id
     data_type: varchar(300)
-    description: Renewal Opportunity Id
+    description: "{{ doc('column_renewal_opportunity_id') }}"
     constraints:
     - type: not_null
-
-
   - name: rep_says_go
     data_type: boolean
-    description: Rep Says Go! (Checking this box includes this opportunity in the
-      forecast for the quarter of the current close date.)
+    description: "{{ doc('column_rep_says_go') }}"
     constraints:
     - type: not_null
   - name: reseller_class_for_les
     data_type: boolean
-    description: Reseller Class for Les
+    description: "{{ doc('column_reseller_class_for_les') }}"
     constraints:
     - type: not_null
   - name: risk_identified
     data_type: boolean
-    description: Risk Identified
+    description: "{{ doc('column_risk_identified') }}"
     constraints:
     - type: not_null
   - name: risk_opportunity
     data_type: boolean
-    description: Risk opportunity (Pointing out opportunities at risk)
+    description: "{{ doc('column_risk_opportunity') }}"
     constraints:
     - type: not_null
   - name: sales_support_rep
     data_type: varchar(30)
-    description: Sales Support
+    description: "{{ doc('column_sales_support_rep') }}"
     constraints:
     - type: not_null
   - name: sbqq_contracted
     data_type: boolean
-    description: Contracted (Internal flag used to kick off automatic asset and subscription
-      conversion.)
+    description: "{{ doc('column_sbqq_contracted') }}"
     constraints:
     - type: not_null
   - name: sbqq_ordered
     data_type: boolean
-    description: Ordered (Internal flag that drives automatic order creation.)
+    description: "{{ doc('column_sbqq_ordered') }}"
     constraints:
     - type: not_null
   - name: sbqq_primary_quote
     data_type: varchar(30)
-    description: Primary Quote (Points to primary quote on this opportunity.)
+    description: "{{ doc('column_sbqq_primary_quote') }}"
     constraints:
     - type: not_null
   - name: sbqq_renewal
     data_type: boolean
-    description: Renewal (Indicates this opportunity is a renewal opportunity.)
+    description: "{{ doc('column_sbqq_renewal') }}"
     constraints:
     - type: not_null
   - name: school_year
     data_type: varchar(780)
-    description: School Year
+    description: "{{ doc('column_school_year') }}"
     constraints:
     - type: not_null
   - name: school_list
     data_type: varchar(max)
-    description: School List
+    description: "{{ doc('column_school_list') }}"
     constraints:
     - type: not_null
   - name: send_odc
     data_type: boolean
-    description: Send ODC
+    description: "{{ doc('column_send_odc') }}"
     constraints:
     - type: not_null
   - name: set_initial_new_biz_arr_amount
     data_type: boolean
-    description: Set initial new biz ARR Amount
+    description: "{{ doc('column_set_initial_new_biz_arr_amount') }}"
     constraints:
     - type: not_null
   - name: set_up_for_processing
     data_type: boolean
-    description: Set up for Processing
+    description: "{{ doc('column_set_up_for_processing') }}"
     constraints:
     - type: not_null
   - name: source_opp_arr
     data_type: numeric(38,10)
-    description: Source Opp ARR (ARR from account's most recent Closed Won Opportunity)
+    description: "{{ doc('column_source_opp_arr') }}"
     constraints:
     - type: not_null
   - name: spring_promo
     data_type: boolean
-    description: Spring Promo (Check if Spring Promo pricing was used to incentivize
-      customers to send PO early)
+    description: "{{ doc('column_spring_promo') }}"
     constraints:
     - type: not_null
   - name: stage_name
     data_type: varchar(780)
-    description: Stage
+    description: "{{ doc('column_stage_name') }}"
     constraints:
     - type: not_null
   - name: stakeholders_confirmed
     data_type: boolean
-    description: Stakeholders Confirmed (Have you confirmed Interest of all stakeholders?)
+    description: "{{ doc('column_stakeholders_confirmed') }}"
     constraints:
     - type: not_null
   - name: start_date
     data_type: date
-    description: Start Date (This is the date that licenses should start.)
+    description: "{{ doc('column_start_date') }}"
     constraints:
     - type: not_null
   - name: subscription_end_date
     data_type: date
-    description: Subscription End Date (Subscription End Date)
+    description: "{{ doc('column_subscription_end_date') }}"
     constraints:
     - type: not_null
   - name: subscription_start_date
     data_type: date
-    description: Subscription Start Date (Subscription Start Date)
+    description: "{{ doc('column_subscription_start_date') }}"
     constraints:
     - type: not_null
   - name: subscription_term
     data_type: double precision
-    description: Subscription Term
+    description: "{{ doc('column_subscription_term') }}"
     constraints:
     - type: not_null
   - name: success_plan_agreed_upon
     data_type: boolean
-    description: Success Plan Agreed Upon?
+    description: "{{ doc('column_success_plan_agreed_upon') }}"
     constraints:
     - type: not_null
   - name: success_plan_shared
     data_type: boolean
-    description: Success Plan Shared
+    description: "{{ doc('column_success_plan_shared') }}"
     constraints:
     - type: not_null
   - name: total_arr_bookings
     data_type: numeric(38,10)
-    description: Total ARR Bookings (Captures renewal ARR + Upsell ARR)
+    description: "{{ doc('column_total_arr_bookings') }}"
     constraints:
     - type: not_null
   - name: total_credit_from_opp_product
     data_type: double precision
-    description: Total credit from opp Product (Total Credit from opp Product)
+    description: "{{ doc('column_total_credit_from_opp_product') }}"
     constraints:
     - type: not_null
   - name: total_opportunity_quantity
     data_type: double precision
-    description: Quantity
+    description: "{{ doc('column_total_opportunity_quantity') }}"
     constraints:
     - type: not_null
   - name: training_session_created
     data_type: boolean
-    description: Training Session created (Training Session created)
+    description: "{{ doc('column_training_session_created') }}"
     constraints:
     - type: not_null
-
-
   - name: transacted_opp_id
     data_type: varchar(300)
-    description: Transacted Opportunity (for combine_upsell_arrs)
+    description: "{{ doc('column_transacted_opp_id') }}"
     constraints:
     - type: not_null
-
-
   - name: true_arr
     data_type: numeric(35,10)
-    description: True ARR (Denotes the true ARR value of an opportunity.  Populated
-      by a scheduled flow to allow for roll-up summary to be used on the account object
-      to report on true ARR)
+    description: "{{ doc('column_true_arr') }}"
     constraints:
     - type: not_null
   - name: true_arr_formula
     data_type: double precision
-    description: True ARR (Formula) (Looks at Override ARR and if that field is greater
-      than zero, returns Override, else returns Source Opp ARR from previous contract)
+    description: "{{ doc('column_true_arr_formula') }}"
     constraints:
     - type: not_null
   - name: true_renewal_arr
     data_type: double precision
-    description: True Renewal ARR
+    description: "{{ doc('column_true_renewal_arr') }}"
     constraints:
     - type: not_null
   - name: update_close_date
     data_type: boolean
-    description: Update Close Date
+    description: "{{ doc('column_update_close_date') }}"
     constraints:
     - type: not_null
   - name: validation_bypass_date_time
     data_type: timestamp
-    description: ValidationBypassDateTime (Adding delay to avoid flows and validation
-      rules running at the same time and erroring out https://admin.salesforce.com/blog/2022/how-i-solved-it-bypass-validation-rules-in-flows)
+    description: "{{ doc('column_validation_bypass_date_time') }}"
     constraints:
     - type: not_null
   - name: variance
     data_type: numeric(36,10)
-    description: Variance (Variance of Opp amount and PO amount)
+    description: "{{ doc('column_variance') }}"
     constraints:
     - type: not_null
   - name: vendor_of_choice
     data_type: boolean
-    description: Vendor of Choice
+    description: "{{ doc('column_vendor_of_choice') }}"
     constraints:
     - type: not_null
   - name: verbal_commitment
     data_type: boolean
-    description: Verbal Commitment
+    description: "{{ doc('column_verbal_commitment') }}"
     constraints:
     - type: not_null
   - name: x_1_st_contact
     data_type: varchar(30)
-    description: 1st Contact
+    description: "{{ doc('column_x_1_st_contact') }}"
     constraints:
     - type: not_null
   - name: x_1_st_contact_email
     data_type: varchar(250)
-    description: 1st Contact Email
+    description: "{{ doc('column_x_1_st_contact_email') }}"
     constraints:
     - type: not_null
   - name: x_1_st_contact_name
     data_type: varchar(780)
-    description: 1st Contact Name
+    description: "{{ doc('column_x_1_st_contact_name') }}"
     constraints:
     - type: not_null
   - name: x_1_st_contact_role
     data_type: varchar(780)
-    description: 1st Contact Role
+    description: "{{ doc('column_x_1_st_contact_role') }}"
     constraints:
     - type: not_null
   - name: x_18_for_12
     data_type: boolean
-    description: 18 for 12
+    description: "{{ doc('column_x_18_for_12') }}"
     constraints:
     - type: not_null
-
-
   - name: x_2_nd_contact_email
     data_type: varchar(250)
-    description: 2nd Contact Email
+    description: "{{ doc('column_x_2_nd_contact_email') }}"
     constraints:
     - type: not_null
   - name: x_2_nd_contact_name
     data_type: varchar(780)
-    description: 2nd Contact Name
+    description: "{{ doc('column_x_2_nd_contact_name') }}"
     constraints:
     - type: not_null
-
-
   - name: x_3_rd_contact_email
     data_type: varchar(250)
-    description: 3rd Contact Email
+    description: "{{ doc('column_x_3_rd_contact_email') }}"
     constraints:
     - type: not_null
   - name: x_3_rd_contact_name
     data_type: varchar(780)
-    description: 3rd Contact Name
+    description: "{{ doc('column_x_3_rd_contact_name') }}"
     constraints:
-    - type: not_null    
-
-
+    - type: not_null
   - name: loaddate
     data_type: timestamp
-    description: The datetime the record was loaded in PST
+    description: "{{ doc('column_loaddate') }}"
     constraints:
     - type: not_null

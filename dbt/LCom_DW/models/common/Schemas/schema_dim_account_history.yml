@@ -1,4 +1,3 @@
----
 version: 2
 models:
 - name: dim_account_history
@@ -27,84 +26,83 @@ models:
     - unique
   - name: fromdate
     data_type: timestamp
-    description: State of data valid from this date
+    description: "{{ doc('column_fromdate') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: todate
     data_type: timestamp
-    description: State of data valid to this date
+    description: "{{ doc('column_todate') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: record_version
     data_type: integer
-    description: State of data version
+    description: "{{ doc('column_record_version') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: account_id
     data_type: varchar(300)
-    description: "Unique and Distribution Key of DIM_ACCOUNT_HISTORY. Primary and Distribution Key of DIM_ACCOUNT. It's organization_id (school or district) or Salesforce Id if not available in LCom Platform. The PK in DIM_ACCOUNT is changed from Salesforce Account Id to LCOM Organization Id when 2 entities are joined. DIM_ACCOUNT is re-created each time (Table materialization).There is a process to update the key DIM_ACCOUNT_HISTORY (incremental load)."
+    description: "{{ doc('column_account_id') }}"
     constraints:
     - type: not_null
     - type: foreign_key
       reference: ref('dim_account')
-      warn_unenforced: false     
+      warn_unenforced: false
     data_tests:
     - not_null
     - relationships:
         to: ref('dim_account')
-        field: account_id    
-
+        field: account_id
   - name: lcom_trial
     data_type: integer
-    description: Trial use of LCOM products
+    description: "{{ doc('column_lcom_trial') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: lcom_demo
     data_type: integer
-    description: Demo use of LCOM products
+    description: "{{ doc('column_lcom_demo') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_parent_id
     data_type: varchar(300)
-    description: "Parent Account (Integrations: Gainsight.)"
+    description: "{{ doc('column_sfdc_parent_id') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_record_type
     data_type: varchar(780)
-    description: "Record Type (L is for district and B is for school  Integrations: Gainsight.)"
+    description: "{{ doc('column_sfdc_record_type') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_current_renewal_arr
     data_type: numeric(35,10)
-    description: "Current Renewal ARR (Integrations: Gainsight.)"
+    description: "{{ doc('column_sfdc_current_renewal_arr') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_state_initiative
     data_type: integer
-    description: 'State Initiative (Integrations: Gainsight.)'
+    description: "{{ doc('column_sfdc_state_initiative') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_state_initiative_school
     data_type: integer
-    description: State Initiative from the child(school) level. 1 if any school has True attribute
+    description: "{{ doc('column_sfdc_state_initiative_school') }}"
     constraints:
     - type: not_null
     data_tests:
@@ -125,228 +123,199 @@ models:
     - not_null
   - name: sfdc_owner_id
     data_type: varchar(30)
-    description: 'Account Owner (Integrations: Gainsight.)'
+    description: "{{ doc('column_sfdc_owner_id') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_owner_name_text
     data_type: varchar(380)
-    description: Owner Name (Text) (Text field for Owner Name for Zendesk integration)
+    description: "{{ doc('column_sfdc_owner_name_text') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: ishighschool
     data_type: integer
-    description: "For State progam reports where HS need to be excluded - Indicates
-      if the school is a high school only. No middle or elementary grades. Salesforce
-      Account grade_levels = 'High School' or (grade_levels is null and k_12_enrollment>0
-      and k_8_enrollment=0). For the most recent orders we should have all schools
-      in the table linked to a Salesforce account if they have an order"
+    description: "{{ doc('column_ishighschool') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: lcom_organization_id
     data_type: varchar(300)
-    description: "LCOM Organization ID Can be skew with default values if an account
-      does not exist in LCOM Platform. Can be used in joins with LCOM related tables
-      but better use account_id in joins because it's  a distribution key"
+    description: "{{ doc('column_lcom_organization_id') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: sfdc_account_id
     data_type: varchar(300)
-    description: "Salesforce Account ID. It's unique Salesforce Account Id. If there
-      are more then one LCom Organization related to the same account, there is `dup-`prefix
-      in the value. It's possible to have more then one Salesforce Id with `dup-'
-      prefix added, but `clean` Salesforce Id is unique and safe to be used in the
-      joins. Use account_id in joins because it's  a distribution key"
+    description: "{{ doc('column_sfdc_account_id') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: loaddate
     data_type: timestamp
-    description: The datetime the record was loaded in PST
+    description: "{{ doc('column_loaddate') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: updatedate
     data_type: timestamp
-    description: updatedate column
+    description: "{{ doc('column_updatedate') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: scd_hash
     data_type: varchar(50)
-    description: scd_hash column
+    description: "{{ doc('column_scd_hash') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: lcom_country_name
     data_type: varchar(70)
-    description: Country name from LCOM. Default is 'Unknown'.
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: lcom_organization_name
     data_type: varchar(270)
-    description: Organization name from LCOM. Default is 'Unknown'.
+    description: "{{ doc('column_lcom_organization_name') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: lcom_organization_type
     data_type: varchar(270)
-    description: Organization type from LCOM. Default is 'Unknown'.
+    description: "{{ doc('column_lcom_organization_type') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: lcom_parent_organization_name
     data_type: varchar(270)
-    description: Parent organization name from LCOM. Default is 'Unknown'.
+    description: "{{ doc('column_lcom_parent_organization_name') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: lcom_state_province_code
     data_type: varchar(20)
-    description: State or province code from LCOM. Default is 'Unknown'.
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_billing_state
     data_type: varchar(240)
-    description: Billing state from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_billing_state') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_billing_state_code
     data_type: varchar(30)
-    description: Billing state code from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_billing_state_code') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_grade_levels
     data_type: varchar(4110)
-    description: Grade levels from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_grade_levels') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_k_12_enrollment
     data_type: double precision
-    description: K-12 enrollment count from Salesforce. Default is 0.
+    description: "{{ doc('column_sfdc_k_12_enrollment') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_k_8_enrollment
     data_type: double precision
-    description: K-8 enrollment count from Salesforce. Default is 0.
+    description: "{{ doc('column_sfdc_k_8_enrollment') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_name
     data_type: varchar(780)
-    description: Account name from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_name') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_parent_name
     data_type: varchar(780)
-    description: Parent account name from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_parent_name') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_ultimate_account_owner
     data_type: varchar(380)
-    description: Ultimate account owner from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_ultimate_account_owner') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_ultimate_parent_account
     data_type: varchar(780)
-    description: Ultimate parent account name from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_ultimate_parent_account') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_ultimate_parent_billing_state
     data_type: varchar(250)
-    description: Billing state of the ultimate parent account. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_ultimate_parent_billing_state') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_ultimate_parent_id
     data_type: varchar(300)
-    description: Salesforce ID of the ultimate parent account. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_ultimate_parent_id') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: sfdc_urban_rural
     data_type: varchar(40)
-    description: Urban or rural designation from Salesforce. Default is 'Unknown'.
+    description: "{{ doc('column_sfdc_urban_rural') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
-
   - name: SFDC_ultimate_parent_current_renewal_arr
     data_type: numeric(38,10)
-    description: 'Aggregated current renewal ARR across all ultimate parent account child accounts.'
+    description: "{{ doc('column_SFDC_ultimate_parent_current_renewal_arr') }}"
     constraints:
-    - type: not_null 
+    - type: not_null
   - name: sfdc_state_program_eligible
     data_type: boolean
-    description: State Program Eligible?
+    description: "{{ doc('column_sfdc_state_program_eligible') }}"
     constraints:
     - type: not_null
   - name: sfdc_county_name
     data_type: varchar(780)
-    description: 'County Name (Integrations: Gainsight.)'
+    description: "{{ doc('column_sfdc_county_name') }}"
     constraints:
-    - type: not_null        
+    - type: not_null
   - name: sfdc_customer_level
     data_type: varchar(765)
-    description: 'Customer Level. Strategic level of customer.  Integrations: Gainsight.'
+    description: "{{ doc('column_sfdc_customer_level') }}"
     constraints:
     - type: not_null
   - name: sfdc_customer_level_override
     data_type: varchar(765)
-    description: 'Customer Level Override is used to allow CSMs to override the automation from the Customer Level Flow'
+    description: "{{ doc('column_sfdc_customer_level_override') }}"
     constraints:
-    - type: not_null    
+    - type: not_null
