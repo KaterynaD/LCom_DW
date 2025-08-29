@@ -19,3 +19,6 @@ COMMENT on schema reporting is 'Reporting schema is for objects (mostly views) c
 
 CREATE SCHEMA revenue;
 COMMENT on schema revenue is 'Revenue schema combines fact and dimensions objects related to Revenue, Sales and Finance.';
+
+create schema support;
+COMMENT on schema support is 'Support schema is for support cases, biz ops tickets ';
