@@ -34,22 +34,19 @@ and o.is_trial=false
 group by dt.SchoolYear
 )
 , vw_usage_scorecard_prev as 
-(select
-dt.SchoolYear,
-count(distinct fal.user_account_id) as unique_students,
-count(distinct fal.assignment_launch_id) as unique_students_launches,
-max(TIMEZONE('UTC', fal.launch_datetime)) latest_launch
-FROM {{ source("dbo","fact_assignment_launch") }} fal
-join {{ source("dbo","organization") }} o
-on fal.organization_district_id=o.organization_id
-join {{ source("dbo","mv_student_account") }} ua
-on fal.user_account_id = ua.user_account_id
-and fal.organization_district_id=ua.organization_district_id
+(
+select distinct
+fsums.schoolyear, 
+company_cnt_students  as unique_students,
+fsums.company_students_launches as unique_students_launches,
+dt.SchoolYear_EndDate as latest_launch
+from {{ ref("fact_students_usage_monthly_snapshots") }} fsums 
 join dim_date_prev dt
-on TIMEZONE('UTC', fal.launch_datetime) BETWEEN dt.SchoolYear_StartDate AND DATEADD(day,1,dt.SchoolYear_EndDate)
-where o.is_demo=false
-and o.is_trial=false
-group by dt.SchoolYear
+on dt.schoolyear = fsums.schoolyear
+and mon_year =  to_char(dt.SchoolYear_EndDate,'yyyymm')::int
+where topic='(All)'
+and grade_level='(All)'
+and product_category ='(All)'
 )
 select 
 'Actual' category,
