@@ -927,11 +927,6 @@ models:
     description: "{{ doc('column_true_renewal_arr') }}"
     constraints:
     - type: not_null
-  - name: update_close_date
-    data_type: boolean
-    description: "{{ doc('column_update_close_date') }}"
-    constraints:
-    - type: not_null
   - name: validation_bypass_date_time
     data_type: timestamp
     description: "{{ doc('column_validation_bypass_date_time') }}"

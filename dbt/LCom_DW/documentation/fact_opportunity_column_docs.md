@@ -648,9 +648,6 @@ True ARR (Formula) (Looks at Override ARR and if that field is greater than zero
 True Renewal ARR
 {% enddocs %}
 
-{% docs column_update_close_date %}
-Update Close Date
-{% enddocs %}
 
 {% docs column_validation_bypass_date_time %}
 ValidationBypassDateTime (Adding delay to avoid flows and validation rules running at the same time and erroring out https://admin.salesforce.com/blog/2022/how-i-solved-it-bypass-validation-rules-in-flows)
