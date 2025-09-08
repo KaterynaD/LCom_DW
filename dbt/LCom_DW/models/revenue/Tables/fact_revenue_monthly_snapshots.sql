@@ -119,7 +119,46 @@ join dim_month m on m.mon_year = fb.mon_year
 where
 fb.bucket in (
 'Sales : New Business : ARR',
-'Sales : New Business : Biz Dev',
+'Sales : New Business : Biz Dev'
+)
+and (fb.disable_auto_renewal_opp=false or fb.renewal_opportunity_id!='Unknown')
+and not(fb.renewal_close_date<=m.mon_lastday and fb.renewal_stage_name='Closed Lost') --no Closed Lost renewals in this month or before
+)
+--
+--
+,expected_add_monthly_upsell as (
+select distinct
+'ARR-MonthlyAdded' record_type,
+fb.mon_year,
+fb.mon_lastday,
+fb.fiscalyear,
+fb.fiscalyear_mon,
+fb.opportunity_id,
+fb.stage_name,
+fb.opp_record_type ,
+fb.sfdc_account_id,
+fb.sfdc_state_initiative,
+fb.sfdc_ultimate_parent_id,
+fb.invoiced_date ,
+fb.close_date,
+fb.start_date,
+fb.end_date,
+fb.renewal_opportunity_id,
+fb.renewal_stage_name,
+fb.renewal_invoiced_date,
+fb.renewal_close_date,
+fb.disable_auto_renewal_opp,
+fb.license_unenforced,
+fb.bucket Bucket_original,
+fb.Bucket,
+fb.amount,
+true include_flg,
+case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
+true new_opp_this_fy_flg
+from {{ ref('stg_revenue') }} fb
+join dim_month m on m.mon_year = fb.mon_year
+where
+fb.bucket in (
 'Sales : Upsell : ARR',
 'Sales : Upsell : Biz Dev',
 'Sales : Reseller ARR Upsell'
@@ -127,8 +166,6 @@ fb.bucket in (
 and (fb.disable_auto_renewal_opp=false or fb.renewal_opportunity_id!='Unknown')
 and not(fb.renewal_close_date<=m.mon_lastday and fb.renewal_stage_name='Closed Lost') --no Closed Lost renewals in this month or before
 )
---
---
 --==
 --Like New: if there is a renewal of an opportunity NOT included in Starting/New because there is a gap in payments, e.g. Month of Invoice Date > Month of Start Date or renewal in years after previous active opportunity
 --or multi-year renewal when previous started/invoiced years ago
@@ -159,9 +196,9 @@ fb.license_unenforced,
 fb.bucket Bucket_original,
 fb.Bucket,
 fb.amount,
-case when sd.opportunity_id is not null or ad.opportunity_id is not null  then false else true end include_flg,
+case when sd.opportunity_id is not null or ad.opportunity_id is not null or ud.opportunity_id is not null then false else true end include_flg,
 case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
-case when ad.opportunity_id is not null and ad.bucket in ('Sales : New Business : ARR','Sales : New Business : Biz Dev') then true else false end new_opp_this_fy_flg
+case when ad.opportunity_id is not null  then true else false end new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month m on m.mon_year = fb.mon_year
 join {{ ref('stg_opportunities_chain_of_renewals') }} ocr
@@ -172,13 +209,20 @@ on ocr.parent_opportunities like '%'+ sd.opportunity_id+'%'
 and sd.fiscalyear_mon=1
 and sd.fiscalyear=fb.fiscalyear
 and sd.include_flg=true
---Need to check the opportunity or it's parent renewals was NOT included in New as New or Upsell
---If there is Renewal from late invoiced + Upsell they will be included both
+--Need to check the opportunity or it's parent renewals was NOT included in New as New
 left outer join expected_add_monthly_new ad
 on ocr.parent_opportunities like '%'+ ad.opportunity_id+'%'
 and fb.fiscalyear=ad.fiscalyear
 and fb.fiscalyear_mon>=ad.fiscalyear_mon --renewal opportunity can be crenewed even in the same month as new added
 and ad.include_flg=True
+--Need to check the opportunit's parent is not included as Upsell
+--If the opportunity is Upsell + Renewal in one then having Upsell and Renewal is Ok
+left outer join expected_add_monthly_upsell ud
+on ocr.parent_opportunities like '%'+ ud.opportunity_id+'%'
+and fb.opportunity_id != ud.opportunity_id --separate Upsell in a parent, not included in this opportunity
+and fb.fiscalyear=ud.fiscalyear
+and fb.fiscalyear_mon>=ud.fiscalyear_mon --renewal opportunity can be renewed even in the same month as new added
+and ud.include_flg=True
 where fb.bucket in (
 'Sales : Renewal : ARR',
 'Sales : Renewal : Biz Dev',
@@ -222,7 +266,7 @@ join {{ ref('stg_opportunities_chain_of_renewals') }} ocr
 on fb.opportunity_id=ocr.opportunity_id
 --Check if the opportunity included in Starting is done in raw_expected_add_monthly_like_new
 --Check if the opportunity included in New/Upsell is done in raw_expected_add_monthly_like_new
---Now we need to check if the parent or grand parent opportunity was included in Renewals (raw_expected_add_monthly_like_new)
+--Now we need to check if the parent or grand parent opportunity was included in other Renewals (raw_expected_add_monthly_like_new)
 left outer join raw_expected_add_monthly_like_new ad
 on ocr.parent_opportunities like '%'+ ad.opportunity_id+'%' --parents
 and ad.opportunity_id!=fb.opportunity_id --but not itself
@@ -261,7 +305,7 @@ fb.bucket,
 fb.amount,
 case when ad.opportunity_id is null then true else false end include_flg,
 case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
-case when nad.opportunity_id is not null and nad.bucket in ('Sales : New Business : ARR','Sales : New Business : Biz Dev') then true else false end new_opp_this_fy_flg
+case when nad.opportunity_id is not null  then true else false end new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month m on m.mon_year = fb.mon_year
 join {{ ref('stg_opportunities_chain_of_renewals') }} ocr
@@ -277,10 +321,11 @@ and fb.fiscalyear_mon=ad.fiscalyear_mon
 and ad.include_flg=true
 --check if a parent or grand parent opportunity was new
 left outer join expected_add_monthly_new nad
-on ocr.parent_opportunities like '%'+ ad.opportunity_id+'%'
+on ocr.parent_opportunities like '%'+ nad.opportunity_id+'%'
 and fb.fiscalyear=nad.fiscalyear
 and fb.fiscalyear_mon>=nad.fiscalyear_mon --renewal opportunity can be crenewed even in the same month as new added
 and nad.include_flg=True
+--No need if a parent was Upsell, we add Price Increase based on full renewal amount added or not (ad)
 --
 where
 fb.bucket in (
@@ -294,6 +339,8 @@ and (fb.disable_auto_renewal_opp=false or fb.renewal_opportunity_id!='Unknown')
 --
 ,expected_add_monthly as (
 select * from expected_add_monthly_new
+union all
+select * from expected_add_monthly_upsell
 union all
 select * from expected_add_monthly_like_new
 union all
@@ -344,7 +391,7 @@ and sd.fiscalyear=fb.fiscalyear
 and sd.include_flg=True
 --cancelled amount was expected in this or any previous fiscal year month in this fiscal year
 --it's possible Newly added Opportunity is NOT a direct parent of the cancelled opportunity, but grand or garnd-grand father
---Need to compare Newly/Renewal like New added Opp Id to to ALL cancelled opportunity parents 
+--Need to compare New/Upsell/Renewal like New added Opp Id to to ALL cancelled opportunity parents 
 left outer join expected_add_monthly ad
 on ocr.parent_opportunities like '%'+ ad.opportunity_id+'%'
 and fb.fiscalyear=ad.fiscalyear
@@ -353,9 +400,10 @@ and ad.include_flg=True
 where
 fb.bucket in (
 'Sales : Cancellation : ARR',
-'Sales : Cancellation : Biz Dev')
+'Sales : Cancellation : Biz Dev'
 )
---
+)
+--reduction as like price increase
 ,expected_reduced_monthly_reduction as (
 select distinct
 'ARR-MonthlyReduced' record_type,
@@ -384,7 +432,7 @@ fb.bucket,
 fb.amount,
 case when ad.opportunity_id is null then true else false end include_flg,
 0 audit_id,
-case when nad.opportunity_id is not null and nad.bucket in ('Sales : New Business : ARR','Sales : New Business : Biz Dev') then true else false end new_opp_this_fy_flg
+case when nad.opportunity_id is not null  then true else false end new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month m on m.mon_year = fb.mon_year
 join {{ ref('stg_opportunities_chain_of_renewals') }} ocr
@@ -400,10 +448,12 @@ and fb.fiscalyear_mon=ad.fiscalyear_mon
 and ad.include_flg=true
 --check if a parent or grand parent opportunity was new
 left outer join expected_add_monthly_new nad
-on ocr.parent_opportunities like '%'+ ad.opportunity_id+'%'
+on ocr.parent_opportunities like '%'+ nad.opportunity_id+'%'
 and fb.fiscalyear=nad.fiscalyear
-and fb.fiscalyear_mon>=nad.fiscalyear_mon --renewal opportunity can be crenewed even in the same month as new added
+and fb.fiscalyear_mon>=nad.fiscalyear_mon --renewal opportunity can be renewed even in the same month as new added
 and nad.include_flg=True
+--No need if a parent was Upsell, we add Price Increase based on full renewal amount added or not (ad)
+--
 where
 fb.bucket in (
 'Sales : Reduction : ARR',
