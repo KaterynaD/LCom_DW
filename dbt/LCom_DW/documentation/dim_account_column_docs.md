@@ -690,13 +690,6 @@ NCES LEA ID
 NCES Unique ID
 {% enddocs %}
 
-{% docs column_sfdc_net_suite_id %}
-NetSuite ID
-{% enddocs %}
-
-{% docs column_sfdc_net_suite_link %}
-NetSuite Link (Netsuite Link for related Accounts)
-{% enddocs %}
 
 {% docs column_sfdc_netsuite_account_number %}
 Netsuite Account Number (This will be mapped to Netsuite Customer ID for Customer object.)

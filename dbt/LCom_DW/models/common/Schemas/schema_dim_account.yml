@@ -962,16 +962,6 @@ models:
     description: "{{ doc('column_sfdc_nces_unique_id') }}"
     constraints:
     - type: not_null
-  - name: sfdc_net_suite_id
-    data_type: varchar(780)
-    description: "{{ doc('column_sfdc_net_suite_id') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_net_suite_link
-    data_type: varchar(880)
-    description: "{{ doc('column_sfdc_net_suite_link') }}"
-    constraints:
-    - type: not_null
   - name: sfdc_netsuite_account_number
     data_type: varchar(100)
     description: "{{ doc('column_sfdc_netsuite_account_number') }}"
