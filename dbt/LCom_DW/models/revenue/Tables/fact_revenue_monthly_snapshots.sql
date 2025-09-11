@@ -32,148 +32,35 @@ from (select distinct fiscalyear from {{ source("common","dim_calendar") }}) c
 order by fiscalyear)
 --actual, not expired every month 
 ,starting_data as (
---before 202507 FY 25/26 we do not have history
---Starting based on Active Closed-Won opportunities at the end of the last month of the previous fiscal year
-select
-'ARR-Starting' record_type,
-to_char(date_add('day',1,mon.mon_lastday),'yyyymm')::int mon_year,
-Last_Day(date_add('day',1,mon.mon_lastday)) mon_lastday,
-fy.next_fisclayear fiscalyear,
-1 fiscalyear_mon,
-fb.opportunity_id,
-fb.stage_name,
-fb.opp_record_type ,
-fb.sfdc_account_id,
-fb.sfdc_state_initiative,
-fb.sfdc_ultimate_parent_id,
-fb.invoiced_date ,
-fb.close_date,
-fb.start_date,
-fb.end_date,
-fb.renewal_opportunity_id,
-fb.renewal_stage_name,
-fb.renewal_invoiced_date,
-fb.renewal_close_date,
-fb.disable_auto_renewal_opp,
-fb.license_unenforced,
-fb.bucket Bucket_original,
-'Expected' Bucket,
-fb.amount,
-true include_flg,
-case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
-false new_opp_this_fy_flg
-from {{ ref('stg_revenue') }} fb
-join dim_month mon
-on
-case when fb.license_unenforced  then '3000-01-01'::date else fb.End_Date end >= mon.mon_firstday --still active this month or expires in a future or unenforced, need to start from first day to include not expired this month 
-and fb.invoiced_date<=mon.mon_lastday --If it's invoiced AFTER start_date, there is a gap and it will be counted in the invoiced month 
-join fiscalyear fy
-on fy.current_fiscalyear = mon.fiscalyear
-where (fb.renewal_invoiced_date='1900-01-01' or fb.renewal_invoiced_date>mon.mon_lastday)--no invoiced renewals yet in this month
-and not(fb.renewal_close_date<=mon.mon_lastday and fb.renewal_stage_name='Closed Lost') --no Closed Lost renewals in this month or before
-and mon.fiscalyear_mon = 12 
-and mon.mon_year<=202407
-and fb.bucket in (
-'Sales : New Business : ARR',
-'Sales : New Business : Biz Dev',
-'Sales : Renewal : ARR',
-'Sales : Renewal : Biz Dev',
-'Sales : Upsell : ARR',
-'Sales : Upsell : Biz Dev',
-'Sales : Reseller ARR Renewal',
-'Sales : Reseller ARR Upsell'
-)
-and (fb.disable_auto_renewal_opp=false or fb.renewal_opportunity_id!='Unknown')
---
-union all
---Starting 202505 e.g. FY255/26 we can build Starting based on Active Renewals as they look like at the end of a previous fiscal year
-select
-'ARR-Starting' record_type,
-mon.mon_year,
-mon.mon_lastday,
-mon.fiscalyear,
-mon.fiscalyear_mon,
-fo.opportunity_id,
-fo.stage_name,
-fo.opp_record_type ,
-fo.sfdc_account_id,
-a.sfdc_state_initiative,
-a.sfdc_ultimate_parent_id,
-fo.invoiced_date ,
-fo.close_date,
-fo.start_date,
-fo.end_date,
-fo.renewal_opportunity_id,
-isnull(fro.stage_name,   '{{ var("default_varchar") }}') renewal_stage_name,
-isnull(fro.invoiced_date,   '{{ var("default_date") }}') renewal_invoiced_date,
-isnull(fro.close_date,   '{{ var("default_date") }}') renewal_close_date,
-fo.disable_auto_renewal_opp,
-fo.license_unenforced,
-'Expected' Bucket_original,
-'Expected' Bucket,
-case when foh.true_arr=0 then sum(rowo.true_arr) else foh.true_arr end amount,
-true include_flg,
-case when fo.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
-false new_opp_this_fy_flg
-from {{ ref('fact_opportunity') }}  fo
---
-join dim_month mon
-on mon.mon_year>=202507 --Starting from FY25/26
-and mon.fiscalyear_mon=1
---only direct renewals of won and invoiced opportunities from prev FY
-join 
-   (
-select
-p.renewal_opportunity_id, p.invoiced_Date, p.true_arr
-from {{ ref('fact_opportunity') }} p
-where p.stage_name ilike '%won%'
-and p.invoiced_date != '1900-01-01'
-) as rowo
-on fo.opportunity_id=rowo.renewal_opportunity_id
---How renewals looked like 2 months before the start of the fiscal year
---2 month is selected because most renewals are started 1-2 months before the start of the fiscal/school year
-join {{ ref('fact_opportunity_history') }} foh
-on fo.opportunity_id=foh.opportunity_id
-and DATEADD(month, -2, mon.fiscalyear_startdate) between foh.fromdate and foh.todate
---
---account details
-join {{ ref('dim_account') }} a
-on fo.sfdc_account_id=a.sfdc_account_id
---renewal opportunity details for consistancy with old Starting and other components of ARR
-left outer join {{ ref('fact_opportunity') }}  fro
-on fo.renewal_opportunity_id=fro.opportunity_id
---
-where
---not closed yet renewal opportunities (rowo: with won and invoiced opportunities before the start of the fiscal year)
-rowo.invoiced_Date<mon.fiscalyear_startdate
-and fo.opp_record_type in ('Renewal')
-and foh.stage_name not in ( 'Closed Won', 'Closed-Won Upsell','Closed Lost')
-and foh.invoiced_date='1900-01-01'
---which supposed to be renewed
-and (fo.disable_auto_renewal_opp=false or fo.renewal_opportunity_id!='Unknown')
-and fo.close_date >= DATEADD(month, -2, mon.fiscalyear_startdate)
-group by
-mon.mon_year,
-mon.mon_lastday,
-mon.fiscalyear,
-mon.fiscalyear_mon,
-fo.opportunity_id,
-fo.stage_name,
-fo.opp_record_type ,
-fo.sfdc_account_id,
-a.sfdc_state_initiative,
-a.sfdc_ultimate_parent_id,
-fo.invoiced_date ,
-fo.close_date,
-fo.start_date,
-fo.end_date,
-fo.renewal_opportunity_id,
-isnull(fro.stage_name,   '{{ var("default_varchar") }}'),
-isnull(fro.invoiced_date,   '{{ var("default_date") }}'),
-isnull(fro.close_date,   '{{ var("default_date") }}'),
-fo.disable_auto_renewal_opp,
-fo.license_unenforced,
-foh.true_arr
+select 
+record_type,
+mon_year,
+mon_lastday,
+fiscalyear,
+fiscalyear_mon,
+opportunity_id,
+stage_name,
+opp_record_type ,
+sfdc_account_id,
+sfdc_state_initiative,
+sfdc_ultimate_parent_id,
+invoiced_date ,
+close_date,
+start_date,
+end_date,
+renewal_opportunity_id,
+renewal_stage_name,
+renewal_invoiced_date,
+renewal_close_date,
+disable_auto_renewal_opp,
+license_unenforced,
+Bucket_original,
+Bucket,
+amount,
+include_flg,
+audit_id,
+new_opp_this_fy_flg
+from {{ ref('stg_expected_arr') }}
 )
 --
 --==
