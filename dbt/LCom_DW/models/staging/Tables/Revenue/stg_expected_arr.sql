@@ -58,7 +58,11 @@ fb.bucket Bucket_original,
 'Expected' Bucket,
 fb.amount,
 true include_flg,
-case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
+case 
+when fb.disable_auto_renewal_opp=false and fb.renewal_opportunity_id!='Unknown' then 0 
+when fb.disable_auto_renewal_opp=true and fb.renewal_opportunity_id!='Unknown' then 1
+else 2 
+end audit_id,
 false new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month mon
@@ -92,7 +96,7 @@ mon.mon_lastday,
 mon.fiscalyear,
 mon.fiscalyear_mon,
 fo.opportunity_id,
-fo.stage_name,
+foh.stage_name,
 fo.opp_record_type ,
 fo.sfdc_account_id,
 a.sfdc_state_initiative,
@@ -111,7 +115,11 @@ fo.license_unenforced,
 'Expected' Bucket,
 case when foh.true_arr=0 then sum(rowo.true_arr) else foh.true_arr end amount,
 true include_flg,
-case when fo.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
+case 
+when fo.disable_auto_renewal_opp=false and fo.renewal_opportunity_id!='Unknown' then 0 
+when fo.disable_auto_renewal_opp=true and fo.renewal_opportunity_id!='Unknown' then 1
+else 2 
+end audit_id,
 false new_opp_this_fy_flg
 from {{ ref('fact_opportunity') }}  fo
 --
@@ -155,7 +163,7 @@ mon.mon_lastday,
 mon.fiscalyear,
 mon.fiscalyear_mon,
 fo.opportunity_id,
-fo.stage_name,
+foh.stage_name,
 fo.opp_record_type ,
 fo.sfdc_account_id,
 a.sfdc_state_initiative,

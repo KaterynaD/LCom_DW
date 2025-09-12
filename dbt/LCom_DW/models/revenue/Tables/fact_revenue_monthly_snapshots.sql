@@ -92,7 +92,11 @@ fb.bucket Bucket_original,
 fb.Bucket,
 fb.amount,
 true include_flg,
-case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
+case 
+when fb.disable_auto_renewal_opp=false and fb.renewal_opportunity_id!='Unknown' then 0 
+when fb.disable_auto_renewal_opp=true and fb.renewal_opportunity_id!='Unknown' then 1
+else 2 
+end audit_id,
 true new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month m on m.mon_year = fb.mon_year
@@ -133,7 +137,11 @@ fb.bucket Bucket_original,
 fb.Bucket,
 fb.amount,
 true include_flg,
-case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
+case 
+when fb.disable_auto_renewal_opp=false and fb.renewal_opportunity_id!='Unknown' then 0 
+when fb.disable_auto_renewal_opp=true and fb.renewal_opportunity_id!='Unknown' then 1
+else 2 
+end audit_id,
 true new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month m on m.mon_year = fb.mon_year
@@ -177,7 +185,11 @@ fb.bucket Bucket_original,
 fb.Bucket,
 fb.amount,
 case when sd.opportunity_id is not null or ad.opportunity_id is not null or ud.opportunity_id is not null then false else true end include_flg,
-case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
+case 
+when fb.disable_auto_renewal_opp=false and fb.renewal_opportunity_id!='Unknown' then 0 
+when fb.disable_auto_renewal_opp=true and fb.renewal_opportunity_id!='Unknown' then 1
+else 2 
+end audit_id,
 case when ad.opportunity_id is not null  then true else false end new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month m on m.mon_year = fb.mon_year
@@ -238,7 +250,11 @@ fb.bucket Bucket_original,
 fb.Bucket,
 fb.amount,
 case when ad.opportunity_id is not null   then false else fb.include_flg end include_flg,
-fb.audit_id,
+case 
+when fb.disable_auto_renewal_opp=false and fb.renewal_opportunity_id!='Unknown' then 0 
+when fb.disable_auto_renewal_opp=true and fb.renewal_opportunity_id!='Unknown' then 1
+else 2 
+end audit_id,
 fb.new_opp_this_fy_flg
 from raw_expected_add_monthly_like_new fb
 join dim_month m on m.mon_year = fb.mon_year
@@ -284,7 +300,11 @@ fb.bucket Bucket_original,
 fb.bucket,
 fb.amount,
 case when ad.opportunity_id is null then true else false end include_flg,
-case when fb.renewal_opportunity_id!='Unknown' then 0 else 1 end audit_id,
+case 
+when fb.disable_auto_renewal_opp=false and fb.renewal_opportunity_id!='Unknown' then 0 
+when fb.disable_auto_renewal_opp=true and fb.renewal_opportunity_id!='Unknown' then 1
+else 2 
+end audit_id,
 case when nad.opportunity_id is not null  then true else false end new_opp_this_fy_flg
 from {{ ref('stg_revenue') }} fb
 join dim_month m on m.mon_year = fb.mon_year
