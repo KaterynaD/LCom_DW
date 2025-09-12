@@ -16,7 +16,7 @@ select
     BOOL_OR(state_initiative_c) as school_state_initiative_c,
     BOOL_OR(district_state_initiative_c) as school_district_state_initiative_c
 FROM {{ source('fivetran_salesforce_quickstart', 'account') }}
-where org_type_c='School'
+where isnull(record_type_c,'{{ var("default_varchar") }}') != 'L'
 group by parent_id
 )
 , sfdc_data as (
