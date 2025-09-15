@@ -11,9 +11,12 @@ dist.lcom_district_name district_name,
 dist.sfdc_district_name sfdc_district_name,
 dist.sfdc_county_name,
 dist.SFDC_owner_name_text district_owner,
-case
-                when dist.sfdc_district_enrollment = 0 then dist.sfdc_school_enrollment
-                else dist.sfdc_district_enrollment end as district_enrollment,
+case 
+    when acc.SFDC_record_type = 'L' then dist.sfdc_district_enrollment
+    else dist.sfdc_school_enrollment end as district_enrollment,
+case 
+    when acc.SFDC_record_type = 'L' then 'District' 
+    else 'School' END as account_type,
 dist.sfdc_urban_rural as rural_urban,
 flo.organization_district_id,
 flo.order_id,
@@ -28,6 +31,8 @@ count(lcom_school_name) Schools_Num
 from {{ ref("fact_license_order") }} flo
 join {{ ref("dim_district") }} dist
 on flo.organization_district_id = dist.district_id
+join {{ ref("dim_account") }} acc 
+on acc.account_id = dist.district_id
 --
 join {{ ref("dim_lcom_sku") }} s
 on flo.sku_id = s.sku_id
@@ -45,9 +50,10 @@ dist.lcom_country_name,
 dist.lcom_state_province_code,
 dist.lcom_district_name,
 dist.SFDC_owner_name_text,
-case
-                when dist.sfdc_district_enrollment = 0 then dist.sfdc_school_enrollment
-                else dist.sfdc_district_enrollment end ,
+case 
+    when acc.SFDC_record_type = 'L' then dist.sfdc_district_enrollment
+    else dist.sfdc_school_enrollment end,
+case when acc.SFDC_record_type = 'L' then 'District' else 'School' END,
 dist.sfdc_urban_rural,
 flo.organization_district_id,
 flo.order_id,
@@ -82,6 +88,7 @@ district_country,
 district_state,
 district_owner,
 district_enrollment,
+account_type,
 rural_urban,
 district_name,
 sfdc_district_name,
@@ -116,6 +123,7 @@ district_country,
 district_state,
 district_owner,
 district_enrollment,
+account_type,
 rural_urban,
 district_name,
 sfdc_district_name,
@@ -135,6 +143,7 @@ state_initiative,
 state_program_eligible,
 district_owner,
 district_enrollment,
+account_type,
 rural_urban,
 district_name,
 sfdc_district_name,
@@ -157,6 +166,7 @@ state_initiative,
 state_program_eligible,
 district_owner,
 district_enrollment,
+account_type,
 rural_urban,
 district_name,
 sfdc_district_name,
@@ -189,6 +199,7 @@ ld.state_initiative,
 ld.state_program_eligible,
 ld.district_owner DistrictOwner,
 ld.district_enrollment DistrictEnrollment,
+ld.account_type,
 ld.rural_urban,
 ld.district_name DistrictName,
 ld.sfdc_district_name SFDC_DistrictName,
