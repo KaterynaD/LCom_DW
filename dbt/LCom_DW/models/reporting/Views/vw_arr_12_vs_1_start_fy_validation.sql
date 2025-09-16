@@ -52,7 +52,7 @@ data.sfdc_ultimate_parent_id,
 data.mon_year_12,
 data.mon_year_1,
 data.is_in_12,									
-data.end is_in_1,									
+data.is_in_1,									
 data.amount_12,									
 data.amount_1,									
 data.diff

@@ -6,7 +6,7 @@
 
 with	
 Starting as (	
---Before 202507 Expected is based on Active at the end of June
+--Before 202507 Expected is based on Active June 30
 select	
 frms.fiscalyear,
 listagg(frms.opportunity_id, ',') parent_opportunities,	

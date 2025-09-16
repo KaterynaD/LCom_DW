@@ -1,6 +1,6 @@
 models:
   - name: vw_arr_quality
-    description: "The view provides insights into ARR (Annual Recurring Revenue) quality of applied Price Increase, Reduction and Cancellation. It compares aggregated amount of parent opportunities in Expected, New, Upsell and Renewals buckets plus Price Increase, Reduction, Cancellations in renewal opportunities to actual Renewal and Cancellations amounts in renewal opportunities. The view enriches the data with details about opportunities and accounts names, numbers and IDs, enabling analysis of fiscal year quality. This view is designed for technical users to analyze discrepancies in ARR calculations."
+    description: "The view provides insights into ARR  quality of applied Price Increase, Reduction and Cancellation. It compares aggregated amount of parent opportunities in Expected, New, Upsell and Renewals buckets plus Price Increase, Reduction, Cancellations in renewal opportunities to actual Renewal and Cancellations amounts in renewal opportunities. The view enriches the data with details about opportunities and accounts names, numbers and IDs, enabling analysis of fiscal year quality. This view is designed for technical users to analyze discrepancies in ARR calculations."
     columns:
       - name: fiscalyear
         description: "{{ doc('column_fiscalyear') }}"
