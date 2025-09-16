@@ -1,0 +1,44 @@
+models:
+  - name: vw_arr_quality
+    description: "The view provides insights into ARR (Annual Recurring Revenue) quality of applied Price Increase, Reduction and Cancellation. It compares aggregated amount of parent opportunities in Expected, New, Upsell and Renewals buckets plus Price Increase, Reduction, Cancellations in renewal opportunities to actual Renewal and Cancellations amounts in renewal opportunities. The view enriches the data with details about opportunities and accounts names, numbers and IDs, enabling analysis of fiscal year quality. This view is designed for technical users to analyze discrepancies in ARR calculations."
+    columns:
+      - name: fiscalyear
+        description: "{{ doc('column_fiscalyear') }}"
+      - name: starting_bucket
+        description: "Initial ARR bucket to be renewed or cancelled later: Expected, New, Upsell or Renew. There is many (parent opportunities) to one (renewal opportunity) relationships. That's why buckets from all parent opportunities with the same renewal opportunity are aggregated together. Besides the bucket name, there is also each parent opportunity ID, amount, included or not flag and audit id. If there are more then 1 renewal in the chain, only Expected maight be included, but not consequent Renewal. Audit id 0 means there are both true: notdisable_auto_renewal_opp and renewal opp is not blank. Audit id 1 means the auto renewal is disabled. Audit id 2 - all otehr combinations.  (Renewal ID can be Opportunity ID starting 2025/2026 FY because Expected based on Active renewals.)"
+      - name: starting_opportunities
+        description: "Concatanated list of parent opportunities IDs with teh same Renewal ID (Renewal ID can be Opportunity ID starting 2025/2026 FY because Expected based on Active renewals.)"
+      - name: starting_amount
+        description: "Sum  of all parent opportunities amounts with teh same Renewal ID (Renewal ID can be Opportunity ID starting 2025/2026 FY because Expected based on Active renewals.)"
+      - name: changed_ultimate_parent_account_id
+        description: "Ultimate parent account ID in the change (Price Increase, Reduction or Cancellation) opportunity."
+      - name: changed_ultimate_parent_account_name
+        description: "Ultimate parent account name in the change (Price Increase, Reduction or Cancellation) opportunity."
+      - name: changed_bucket
+        description: "Changed ARR bucket: Price Increase, Reduction or Cancellation."
+      - name: changed_opportunity_id
+        description: "Opportunity ID in the changed bucket (Price Increase, Reduction or Cancellation)."
+      - name: changed_opportunity_name
+        description: "Name of the changed opportunity (Price Increase, Reduction or Cancellation)."
+      - name: changed_opportunity_number
+        description: "Number of the changed opportunity (Price Increase, Reduction or Cancellation)."
+      - name: changed_amount
+        description: "Amount associated with the change  (Price Increase, Reduction or Cancellation)."
+      - name: actual_ultimate_parent_account_id
+        description: "Ultimate parent account ID in actual opportunity (Renewal or cancellation)."
+      - name: actual_ultimate_parent_account_name
+        description: "Ultimate parent account name  in actual opportunity (Renewal or cancellation)."
+      - name: actual_bucket
+        description: "Actual ARR bucket: Renewal (not included in ARR calculation, used for the quality check) or Cancellation."
+      - name: actual_opportunity_id
+        description: "Opportunity ID of the actual bucket - Renewal (not included in ARR calculation, used for the quality check) or Cancellation."
+      - name: actual_opportunity_name
+        description: "Name of the actual opportunity  - Renewal (not included in ARR calculation, used for the quality check) or Cancellation."
+      - name: actual_opportunity_number
+        description: "Number of the actual opportunity  - Renewal (not included in ARR calculation, used for the quality check) or Cancellation."
+      - name: actual_amount
+        description: "Amount associated with the actual  Renewal (not included in ARR calculation, used for the quality check) or Cancellation."
+      - name: ARR
+        description: "starting_amount plus changed_amount"
+      - name: diff
+        description: "actual_amount minus ARR"
