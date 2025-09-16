@@ -1,11 +1,11 @@
 select opportunity_id
 from {{ ref("fact_revenue_monthly_snapshots") }}
-where record_type='MonthlyAdded'
+where record_type='ARR-MonthlyAdded'
 and bucket ilike '%Renewal%'
 and include_flg=true
 intersect
 select opportunity_id
 from {{ ref("fact_revenue_monthly_snapshots") }}
-where record_type='MonthlyAdded'
+where record_type='ARR-MonthlyAdded'
 and bucket ilike 'Sales : Price%'
 and include_flg=True
