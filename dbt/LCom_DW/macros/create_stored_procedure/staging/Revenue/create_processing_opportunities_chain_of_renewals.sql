@@ -15,11 +15,12 @@ BEGIN
 RAISE INFO 'Creating temp table with list of renewable opportunities...';					
 drop table if exists temp_opportunities_ids;					
 create temporary table temp_opportunities_ids as					
-SELECT distinct					
+SELECT 		
 opportunity_id,					
-invoiced_date,					
+max(invoiced_date) as invoiced_date,					
 renewal_opportunity_id					
-FROM staging.stg_revenue a					
+FROM staging.stg_revenue a	
+group by opportunity_id, renewal_opportunity_id				
 order by opportunity_id;					
 SELECT count(opportunity_id) into record_count from temp_opportunities_ids;					
 RAISE INFO 'Count opportunities: %', record_count;					
