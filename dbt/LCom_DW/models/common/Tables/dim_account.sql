@@ -1550,7 +1550,7 @@ select
     sfdc_map_tracker :: boolean,
     sfdc_mdr_number :: varchar(60),
     sfdc_mi_pilot :: boolean,
-    sfdc_multi_tiered_account :: boolean,
+    sfdc_multi_tiered_account::boolean,
     sfdc_name_with_lcom_organization_info :: varchar(1280),
     sfdc_national_district_id :: varchar(780),
     sfdc_national_school_id :: varchar(1540),

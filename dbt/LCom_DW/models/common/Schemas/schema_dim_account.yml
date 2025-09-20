@@ -11,7 +11,7 @@ models:
   columns:
   - name: account_id
     data_type: varchar(300)
-    description: Primary and Distribution Key of DIM_ACCOUNT. It's organization_id
+    description: Primary and Distribution Key of DIM_ACCOUNT It's organization_id
       (school or district) or Salesforce Id if not available in LCom Platform. The
       PK in DIM_ACCOUNT is changed from Salesforce Account Id to LCOM Organization
       Id when 2 entities are joined. DIM_ACCOUNT is re-created each time (Table materialization).

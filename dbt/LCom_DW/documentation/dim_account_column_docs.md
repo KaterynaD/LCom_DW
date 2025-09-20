@@ -683,7 +683,7 @@ NC Tier 1
 {% enddocs %}
 
 {% docs column_sfdc_nces_lea_id %}
-NCES LEA ID
+NCES LEA Id
 {% enddocs %}
 
 {% docs column_sfdc_nces_unique_id %}
