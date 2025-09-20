@@ -967,11 +967,6 @@ models:
     description: "{{ doc('column_sfdc_netsuite_account_number') }}"
     constraints:
     - type: not_null
-  - name: sfdc_no_of_child_account
-    data_type: double precision
-    description: "{{ doc('column_sfdc_no_of_child_account') }}"
-    constraints:
-    - type: not_null
   - name: sfdc_nps_count
     data_type: bigint
     description: "{{ doc('column_sfdc_nps_count') }}"
