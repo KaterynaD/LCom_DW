@@ -1,0 +1,18 @@
+models:
+  - name: vw_usage_scorcard_wow_yoy
+    description: "Aggregates student assignment launch data to provide week-over-week and year-over-year usage metrics, including unique students, launches, and latest launch times for analysis of engagement trends  for comparisons across the same periods."
+    columns:
+      - name: date_range
+        description: "Date range for the school year period, formatted as MM/DD/YY - MM/DD/YY."
+      - name: school_year
+        description: "School year label (e.g., '2024/2025')."
+      - name: year_type
+        description: "Indicates whether the data is for the current or previous year."
+      - name: week_type
+        description: "Indicates whether the data is for the current or previous week."
+      - name: unique_students
+        description: "Count of distinct student user accounts who launched assignments in the period."
+      - name: unique_launches
+        description: "Count of distinct assignment launches in the period."
+      - name: latest_launch
+        description: "Timestamp of the most recent assignment launch in the period."
