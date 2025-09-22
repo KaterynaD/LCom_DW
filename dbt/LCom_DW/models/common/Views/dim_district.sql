@@ -49,7 +49,6 @@ SFDC_i_pad_schools_percent	,
 SFDC_last_activity_date	,
 SFDC_last_activity_logged_on	,
 SFDC_number_of_schools	,
-SFDC_no_of_child_account
 SFDC_number_of_elementary_schools,
 SFDC_number_of_high_schools,
 SFDC_number_of_k_8_buildings,

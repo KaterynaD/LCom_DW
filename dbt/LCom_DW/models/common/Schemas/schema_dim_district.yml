@@ -61,8 +61,6 @@ models:
         description: Last Activity Logged On
       - name: sfdc_number_of_schools
         description: Number of Schools
-      - name: sfdc_no_of_child_account
-        description: Number of Children
       - name: sfdc_number_of_elementary_schools
         description: "Number of Elementary Schools (Integrations: Gainsight.)"
       - name: sfdc_number_of_high_schools
