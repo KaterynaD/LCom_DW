@@ -80,17 +80,6 @@ with raw_license_data as (
             district_country,
             district_state,
             district_owner,
-            CASE 
-                WHEN (
-                    cal.Sun_WeekEnd BETWEEN d.StartDate AND d.ExpirationDate
-                )
-                THEN 'Current School Year Order'
-                WHEN (
-                    d.enforcedaterestrictions = 'n'
-                    AND d.StartDate <= cal.Mon_WeekStart
-                )
-                THEN 'Old School Year Order (Carried Over)'
-            END AS OrderType,
             district_enrollment,
             rural_urban,
             district_name,
@@ -124,17 +113,6 @@ with raw_license_data as (
             district_country,
             district_state,
             district_owner,
-            CASE 
-                WHEN (
-                    cal.Sun_WeekEnd BETWEEN d.StartDate AND d.ExpirationDate
-                )
-                THEN 'Current School Year Order'
-                WHEN (
-                    d.enforcedaterestrictions = 'n'
-                    AND d.StartDate <= cal.Mon_WeekStart
-                )
-                THEN 'Old School Year Order (Carried Over)'
-            END,
             district_enrollment,
             rural_urban,
             district_name,
@@ -151,7 +129,6 @@ with raw_license_data as (
             district_state,
             state_initiative,
             district_owner,
-            OrderType,
             district_enrollment,
             rural_urban,
             district_name,
@@ -171,7 +148,6 @@ with raw_license_data as (
             district_state,
             state_initiative,
             district_owner,
-            OrderType,
             district_enrollment,
             rural_urban,
             district_name,
@@ -204,7 +180,6 @@ with raw_license_data as (
         ld.district_name DistrictName,
         ld.sfdc_district_name SFDC_DistrictName,
         ld.sfdc_county_name SFDC_CountyName,
-        ld.OrderType,
         ld.district_enrollment District_Enrollment,
         ld.rural_urban,
         ld.organization_district_id,
