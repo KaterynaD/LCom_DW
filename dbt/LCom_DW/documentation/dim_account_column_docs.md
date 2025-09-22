@@ -683,7 +683,7 @@ NC Tier 1
 {% enddocs %}
 
 {% docs column_sfdc_nces_lea_id %}
-NCES LEA ID
+NCES LEA Id
 {% enddocs %}
 
 {% docs column_sfdc_nces_unique_id %}
@@ -695,9 +695,6 @@ NCES Unique ID
 Netsuite Account Number (This will be mapped to Netsuite Customer ID for Customer object.)
 {% enddocs %}
 
-{% docs column_sfdc_no_of_child_account %}
-Number of Children
-{% enddocs %}
 
 {% docs column_sfdc_nps_count %}
 NPS Count (total number of NPS Surveys -to be used in NPS)
