@@ -56,6 +56,17 @@ ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY
 
 --TO common.dim_sfdc_product
 ALTER TABLE revenue.dim_opportunity_line ADD FOREIGN KEY (sfdc_product_id) REFERENCES common.dim_sfdc_product(sfdc_product_id);
+
+-- TO content_delivery_usage.dim_topic
+ALTER TABLE content_delivery_usage.dim_training_session_topic ADD FOREIGN KEY (topic_id) REFERENCES content_delivery_usage.dim_topic(topic_id);
+
+-- TO content_delivery_usage.fact_training_session
+ALTER TABLE content_delivery_usage.dim_training_session_topic ADD FOREIGN KEY (training_session_id) REFERENCES content_delivery_usage.fact_training_session(training_session_id);
+
+
+
+
+
 {% endset %}
 
 {% do run_query(create_FKs_operation) %}

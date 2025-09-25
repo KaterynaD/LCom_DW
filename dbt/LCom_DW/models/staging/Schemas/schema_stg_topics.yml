@@ -1,0 +1,32 @@
+version: 2
+models:
+- name: stg_topics
+  description: Staging model for topics extracted from training sessions. Splits semicolon-delimited topics into individual rows, assigns topic IDs, and ensures all topics are non-null and trimmed. The model is based on RECURSIVE and no way to inforce Contract due to dbt wrapping in CTE.
+  config:
+    contract:
+      enforced: false
+    tags:
+      - staging
+      - training
+  columns:
+    - name: training_session_id
+      data_type: varchar(300)
+      description: Unique identifier for the training session.
+      data_tests:
+      - not_null
+    - name: topic
+      data_type: varchar(200)
+      description: Individual topic extracted from the semicolon-delimited list in implementation_topics.
+      data_tests:
+      - not_null
+    - name: topic_id
+      data_type: varchar(300)
+      description: MD5 hash of the topic string, or default ID if topic is default_varchar.
+      data_tests:
+      - not_null
+      
+    - name: loaddate
+      data_type: timestamp
+      description: "{{ doc('column_loaddate') }}"
+      data_tests:
+      - not_null

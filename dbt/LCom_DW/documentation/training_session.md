@@ -115,7 +115,7 @@ Training Session Name
 {% enddocs %}
 
 {% docs column_notes %}
-Notes
+Notes from CSR
 {% enddocs %}
 
 {% docs column_origin %}
@@ -173,7 +173,7 @@ Location Unknown
 {% enddocs %}
 
 {% docs column_session_notes %}
-Session Notes
+Session Notes from Trainer
 {% enddocs %}
 
 {% docs column_session_participation_method %}
@@ -229,7 +229,7 @@ Notable Discussions
 {% enddocs %}
 
 {% docs column_survey_notes %}
-Post Training Notes
+Post Training Notes from Trainer
 {% enddocs %}
 
 {% docs column_survey_outcome_as_planned %}
