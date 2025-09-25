@@ -73,6 +73,7 @@ select
     ,f.survey_notes  
     ,f.survey_outcome_issues
     ,f.survey_recommendations
+    ,t.topic
     from dim_month m
     join {{ ref('fact_training_session_history') }} fh
     on case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between fh.fromdate and fh.todate
@@ -89,4 +90,8 @@ select
       and case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between a.fromdate and a.todate
     join {{ source("common","dim_calendar") }} dc
       on trunc(f.start_date) = dc.cal_date
+    join {{ ref('dim_training_session_topic') }} tst
+      on f.training_session_id = tst.training_session_id
+    join {{ ref('dim_topic') }} t
+      on tst.topic_id = t.topic_id
 

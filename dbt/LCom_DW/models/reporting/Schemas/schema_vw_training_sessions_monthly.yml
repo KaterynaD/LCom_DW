@@ -1,7 +1,7 @@
 version: 2
 models:
 - name: vw_training_sessions_monthly
-  description: Monthly snapshot of training sessions with assignee and account context.
+  description: Monthly snapshot of training sessions with assignee and account context. It's possible to have more then one record per training session because there is Topic column added separately, extracted from implementation_topics where more then 1 topic possible in a semicolon-separated list
   config:
     tags:
     - rep
@@ -102,3 +102,5 @@ models:
     description: "{{ doc('column_survey_outcome_issues') }}"
   - name: survey_recommendations
     description: "{{ doc('column_survey_recommendations') }}"
+  - name: topic
+    description: Topic separated from implementation_topics    
