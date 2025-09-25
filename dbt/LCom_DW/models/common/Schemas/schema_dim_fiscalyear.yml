@@ -1,0 +1,59 @@
+version: 2
+models:
+- name: dim_fiscalyear
+  description: Dimension table for fiscal years, including start/end dates and previous/next year navigation. Built from distinct fiscal years in the calendar source.
+  config:
+    contract:
+      enforced: true
+    tags:
+      - dim
+  columns:
+    - name: fiscalyear
+      data_type: varchar(10)
+      description: Fiscal year (primary key).
+      constraints:
+        - type: not_null
+        - type: primary_key
+          warn_unenforced: false
+      data_tests:
+        - unique
+    - name: prev_fiscalyear
+      data_type: varchar(10)
+      description: Previous fiscal year value.
+      constraints:
+        - type: not_null
+    - name: next_fiscalyear
+      data_type: varchar(10)
+      description: Next fiscal year value.
+      constraints:
+        - type: not_null
+    - name: fiscalyear_startdate
+      data_type: date
+      description: Start date of the fiscal year.
+      constraints:
+        - type: not_null
+    - name: prev_fiscalyear_startdate
+      data_type: date
+      description: Start date of the previous fiscal year.
+      constraints:
+        - type: not_null
+    - name: next_fiscalyear_startdate
+      data_type: date
+      description: Start date of the next fiscal year.
+      constraints:
+        - type: not_null
+    - name: fiscalyear_enddate
+      data_type: date
+      description: End date of the fiscal year.
+      constraints:
+        - type: not_null
+    - name: prev_fiscalyear_enddate
+      data_type: date
+      description: End date of the previous fiscal year.
+      constraints:
+        - type: not_null
+    - name: next_fiscalyear_enddate
+      data_type: date
+      description: End date of the next fiscal year.
+      constraints:
+        - type: not_null

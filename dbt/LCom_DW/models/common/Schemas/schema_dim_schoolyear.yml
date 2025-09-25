@@ -1,0 +1,60 @@
+version: 2
+models:
+- name: dim_schoolyear
+  description: Dimension table for school years, including start/end dates and previous/next year navigation. Built from distinct school years in the calendar source.
+  config:
+    contract:
+      enforced: true
+    tags:
+      - dim
+      - common
+  columns:
+    - name: schoolyear
+      data_type: varchar(10)
+      description: School year (primary key).
+      constraints:
+        - type: not_null
+        - type: primary_key
+          warn_unenforced: false
+      data_tests:
+        - unique
+    - name: prev_schoolyear
+      data_type: varchar(10)
+      description: Previous school year value.
+      constraints:
+        - type: not_null
+    - name: next_schoolyear
+      data_type: varchar(10)
+      description: Next school year value.
+      constraints:
+        - type: not_null
+    - name: schoolyear_startdate
+      data_type: date
+      description: Start date of the school year.
+      constraints:
+        - type: not_null
+    - name: prev_schoolyear_startdate
+      data_type: date
+      description: Start date of the previous school year.
+      constraints:
+        - type: not_null
+    - name: next_schoolyear_startdate
+      data_type: date
+      description: Start date of the next school year.
+      constraints:
+        - type: not_null
+    - name: schoolyear_enddate
+      data_type: date
+      description: End date of the school year.
+      constraints:
+        - type: not_null
+    - name: prev_schoolyear_enddate
+      data_type: date
+      description: End date of the previous school year.
+      constraints:
+        - type: not_null
+    - name: next_schoolyear_enddate
+      data_type: date
+      description: End date of the next school year.
+      constraints:
+        - type: not_null

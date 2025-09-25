@@ -1,0 +1,239 @@
+version: 2
+models:
+- name: dim_month
+  description: Dimension table for months, including fiscal and school year navigation, start/end dates, and previous/next month, year, and period columns. Built from distinct months in the calendar source.
+  config:
+    contract:
+      enforced: true
+    tags:
+      - dim
+  columns:
+    - name: mon_year
+      data_type: integer
+      description: Year and month in yyyymm format (primary key).
+      constraints:
+        - type: not_null
+        - type: primary_key
+          warn_unenforced: false
+      data_tests:
+        - unique
+    - name: prev_mon_year
+      data_type: integer
+      description: Previous month (yyyymm).
+      constraints:
+        - type: not_null
+    - name: next_mon_year
+      data_type: integer
+      description: Next month (yyyymm).
+      constraints:
+        - type: not_null
+    - name: mon_firstday
+      data_type: date
+      description: First day of the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_firstday
+      data_type: date
+      description: First day of the previous month.
+      constraints:
+        - type: not_null
+    - name: next_mon_firstday
+      data_type: date
+      description: First day of the next month.
+      constraints:
+        - type: not_null
+    - name: mon_lastday
+      data_type: date
+      description: Last day of the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_lastday
+      data_type: date
+      description: Last day of the previous month.
+      constraints:
+        - type: not_null
+    - name: next_mon_lastday
+      data_type: date
+      description: Last day of the next month.
+      constraints:
+        - type: not_null
+    - name: fiscalyear
+      data_type: varchar(10)
+      description: Fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_fiscalyear
+      data_type: varchar(10)
+      description: Previous fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: next_mon_fiscalyear
+      data_type: varchar(10)
+      description: Next fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: fiscalyear_mon
+      data_type: integer
+      description: Month number within the fiscal year.
+      constraints:
+        - type: not_null
+    - name: prev_mon_fiscalyear_mon
+      data_type: integer
+      description: Previous month number within the fiscal year.
+      constraints:
+        - type: not_null
+    - name: next_mon_fiscalyear_mon
+      data_type: integer
+      description: Next month number within the fiscal year.
+      constraints:
+        - type: not_null
+    - name: fiscalyear_startdate
+      data_type: date
+      description: Start date of the fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_fiscalyear_startdate
+      data_type: date
+      description: Start date of the previous fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: next_mon_fiscalyear_startdate
+      data_type: date
+      description: Start date of the next fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: fiscalyear_enddate
+      data_type: date
+      description: End date of the fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_fiscalyear_enddate
+      data_type: date
+      description: End date of the previous fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: next_mon_fiscalyear_enddate
+      data_type: date
+      description: End date of the next fiscal year for the month.
+      constraints:
+        - type: not_null
+    - name: schoolyear
+      data_type: varchar(10)
+      description: School year for the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_schoolyear
+      data_type: varchar(10)
+      description: Previous school year for the month.
+      constraints:
+        - type: not_null
+    - name: next_mon_schoolyear
+      data_type: varchar(10)
+      description: Next school year for the month.
+      constraints:
+        - type: not_null
+    - name: schoolyear_mon
+      data_type: integer
+      description: Month number within the school year.
+      constraints:
+        - type: not_null
+    - name: prev_mon_schoolyear_mon
+      data_type: integer
+      description: Previous month number within the school year.
+      constraints:
+        - type: not_null
+    - name: next_mon_schoolyear_mon
+      data_type: integer
+      description: Next month number within the school year.
+      constraints:
+        - type: not_null
+    - name: schoolyear_startdate
+      data_type: date
+      description: Start date of the school year for the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_schoolyear_startdate
+      data_type: date
+      description: Start date of the previous school year for the month.
+      constraints:
+        - type: not_null
+    - name: next_mon_schoolyear_startdate
+      data_type: date
+      description: Start date of the next school year for the month.
+      constraints:
+        - type: not_null
+    - name: schoolyear_enddate
+      data_type: date
+      description: End date of the school year for the month.
+      constraints:
+        - type: not_null
+    - name: prev_mon_schoolyear_enddate
+      data_type: date
+      description: End date of the previous school year for the month.
+      constraints:
+        - type: not_null
+    - name: next_mon_schoolyear_enddate
+      data_type: date
+      description: End date of the next school year for the month.
+      constraints:
+        - type: not_null
+    - name: prev_fiscalyear
+      data_type: varchar(10)
+      description: Previous fiscal year (from dim_fiscalyear).
+      constraints:
+        - type: not_null
+    - name: next_fiscalyear
+      data_type: varchar(10)
+      description: Next fiscal year (from dim_fiscalyear).
+      constraints:
+        - type: not_null
+    - name: prev_fiscalyear_startdate
+      data_type: date
+      description: Start date of previous fiscal year (from dim_fiscalyear).
+      constraints:
+        - type: not_null
+    - name: next_fiscalyear_startdate
+      data_type: date
+      description: Start date of next fiscal year (from dim_fiscalyear).
+      constraints:
+        - type: not_null
+    - name: prev_fiscalyear_enddate
+      data_type: date
+      description: End date of previous fiscal year (from dim_fiscalyear).
+      constraints:
+        - type: not_null
+    - name: next_fiscalyear_enddate
+      data_type: date
+      description: End date of next fiscal year (from dim_fiscalyear).
+      constraints:
+        - type: not_null
+    - name: prev_schoolyear
+      data_type: varchar(10)
+      description: Previous school year (from dim_schoolyear).
+      constraints:
+        - type: not_null
+    - name: next_schoolyear
+      data_type: varchar(10)
+      description: Next school year (from dim_schoolyear).
+      constraints:
+        - type: not_null
+    - name: prev_schoolyear_startdate
+      data_type: date
+      description: Start date of previous school year (from dim_schoolyear).
+      constraints:
+        - type: not_null
+    - name: next_schoolyear_startdate
+      data_type: date
+      description: Start date of next school year (from dim_schoolyear).
+      constraints:
+        - type: not_null
+    - name: prev_schoolyear_enddate
+      data_type: date
+      description: End date of previous school year (from dim_schoolyear).
+      constraints:
+        - type: not_null
+    - name: next_schoolyear_enddate
+      data_type: date
+      description: End date of next school year (from dim_schoolyear).
+      constraints:
+        - type: not_null
