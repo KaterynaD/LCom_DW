@@ -744,10 +744,6 @@ Number of Middle Schools (Integrations: Gainsight.)
 Number of Open Opportunities
 {% enddocs %}
 
-{% docs column_sfdc_number_of_open_opps %}
-Number of Open Opps
-{% enddocs %}
-
 {% docs column_sfdc_number_of_page_views %}
 Number of Page Views
 {% enddocs %}

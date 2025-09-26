@@ -1027,11 +1027,7 @@ models:
     description: "{{ doc('column_sfdc_number_of_open_opportunities') }}"
     constraints:
     - type: not_null
-  - name: sfdc_number_of_open_opps
-    data_type: bigint
-    description: "{{ doc('column_sfdc_number_of_open_opps') }}"
-    constraints:
-    - type: not_null
+
   - name: sfdc_number_of_page_views
     data_type: double precision
     description: "{{ doc('column_sfdc_number_of_page_views') }}"
