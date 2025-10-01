@@ -215,7 +215,7 @@ models:
     - type: not_null
   - name: class
     data_type: VARCHAR(765)
-    description: "{{ doc('column_class') }}"
+    description: "{{ doc('column_class') }} or if class is empty, then business_type_opty_product - {{ doc('column_business_type_opty_product') }}"
     constraints:
     - type: not_null
   - name: created_date

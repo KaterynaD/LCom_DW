@@ -52,7 +52,7 @@ isnull(ol.total_price, {{ var("default_numeric") }}) as total_price	,
 isnull(ol.unit_price, {{ var("default_numeric") }}) as unit_price	,
 isnull(ol.weighted_total_price_c, {{ var("default_numeric") }}) as weighted_total_price	,
 isnull(ol.business_type_opty_product_c,  '{{ var("default_varchar") }}'  ) as business_type_opty_product	,
-isnull(ol.class_c,  '{{ var("default_varchar") }}'  ) as class
+coalesce(ol.class_c,  ol.business_type_opty_product_c, '{{ var("default_varchar") }}'  ) as class
 from
 {{ source('fivetran_salesforce_quickstart', 'opportunity_line_item') }} as ol
 join {{ ref('fact_opportunity') }} as o
