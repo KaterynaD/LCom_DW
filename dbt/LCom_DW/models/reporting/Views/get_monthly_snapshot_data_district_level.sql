@@ -8,7 +8,11 @@ dist.sfdc_state_program_eligible state_program_eligible,
 dist.lcom_country_name district_country,
 dist.lcom_state_province_code district_state,
 dist.lcom_district_name district_name,
-dist.sfdc_district_name sfdc_district_name,
+case 
+        when dist.sfdc_district_name = 'Unknown' 
+        then dist.lcom_district_name 
+        else dist.sfdc_district_name 
+    end as sfdc_district_name,
 dist.sfdc_county_name,
 dist.SFDC_owner_name_text district_owner,
 case 
@@ -62,7 +66,11 @@ flo.expirationdate,
 flo.enforcedaterestrictions,
 s.sku_name,
 flo.studentcount,
-dist.sfdc_district_name,
+case 
+        when dist.sfdc_district_name = 'Unknown' 
+        then dist.lcom_district_name 
+        else dist.sfdc_district_name 
+    end,
 dist.sfdc_county_name
 )
 ,
