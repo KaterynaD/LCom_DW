@@ -11,7 +11,11 @@ with raw_license_data as (
             dist.lcom_country_name district_country,
             dist.lcom_state_province_code district_state,
             dist.lcom_district_name district_name,
-            dist.sfdc_district_name sfdc_district_name,
+            case 
+                when dist.sfdc_district_name = 'Unknown' 
+                then dist.lcom_district_name 
+                else dist.sfdc_district_name 
+            end as sfdc_district_name,
             dist.sfdc_county_name,
             dist.SFDC_owner_name_text district_owner,
             case
@@ -50,7 +54,11 @@ with raw_license_data as (
             dist.lcom_country_name,
             dist.lcom_state_province_code,
             dist.lcom_district_name,
-            dist.sfdc_district_name,
+            case 
+                when dist.sfdc_district_name = 'Unknown' 
+                then dist.lcom_district_name 
+                else dist.sfdc_district_name 
+            end,
             dist.sfdc_county_name,
             dist.SFDC_owner_name_text,
             case
