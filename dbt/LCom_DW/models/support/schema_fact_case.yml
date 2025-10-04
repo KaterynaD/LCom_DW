@@ -188,11 +188,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: jira_ticket_submitted
-        data_type: boolean
-        description: Jira Ticket Submitted
-        constraints:
-          - type: not_null
 
       - name: last_modified_date
         data_type: timestamp

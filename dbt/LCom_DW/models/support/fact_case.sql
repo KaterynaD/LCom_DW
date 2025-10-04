@@ -38,7 +38,6 @@ isnull(stg.description , '{{ var("default_varchar") }}') as description	,
 isnull(stg.initial_response_captured_c , {{ var("default_boolean") }}) as initial_response_captured	,
 isnull(stg.is_closed, {{ var("default_boolean") }}) as is_closed	,
 isnull(stg.is_escalated, {{ var("default_boolean") }}) as is_escalated	,
-isnull(stg.jira_ticket_submitted_c , {{ var("default_boolean") }}) as jira_ticket_submitted	,
 isnull(stg.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date	,
 coalesce(location_of_issue_c,location_of_issues_c	, '{{ var("default_varchar") }}') as location_of_issue	,
 isnull(stg.net_suite_link_c, '{{ var("default_varchar") }}') as net_suite_link	,
@@ -100,7 +99,6 @@ select
  ,initial_response_captured::BOOLEAN
  ,is_closed::BOOLEAN
  ,is_escalated::BOOLEAN
- ,jira_ticket_submitted::BOOLEAN
  ,last_modified_date::TIMESTAMP
  ,location_of_issue::VARCHAR(5000)
  ,net_suite_link::VARCHAR(1000)
