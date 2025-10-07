@@ -38,17 +38,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: account_owner
-        data_type: varchar(400)
-        description: Account Owner
-        constraints:
-          - type: not_null
-
-      - name: account_owner_email
-        data_type: varchar(400)
-        description: Account Owner Email
-        constraints:
-          - type: not_null
 
       - name: already_closed
         data_type: boolean

@@ -13,8 +13,6 @@ select
 stg.id 	 as case_id	,
 isnull(a.account_id, '{{ var("default_ID") }}') as account_id	,
 isnull(stg.account_id, '{{ var("default_ID") }}') as sfdc_account_id	,
-isnull(stg.account_owner_c , '{{ var("default_varchar") }}') as account_owner	,
-isnull(stg.account_owner_email_c, '{{ var("default_varchar") }}') as account_owner_email	,
 isnull(stg.already_closed_c, {{ var("default_boolean") }}) as already_closed	,
 isnull(stg.case_auto_close_warning_sent_c , {{ var("default_boolean") }}) as case_auto_close_warning_sent	,
 isnull(stg.case_number , '{{ var("default_varchar") }}') as case_number	,
@@ -74,8 +72,6 @@ select
   case_id::VARCHAR(300)
  ,account_id::VARCHAR(300)
  ,sfdc_account_id::VARCHAR(300)
- ,account_owner::VARCHAR(400)
- ,account_owner_email::VARCHAR(400)
  ,already_closed::BOOLEAN
  ,case_auto_close_warning_sent::BOOLEAN
  ,case_number::VARCHAR(90)
