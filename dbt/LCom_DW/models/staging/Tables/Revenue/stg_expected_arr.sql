@@ -111,7 +111,7 @@ isnull(fro.invoiced_date,   '{{ var("default_date") }}') renewal_invoiced_date,
 isnull(fro.close_date,   '{{ var("default_date") }}') renewal_close_date,
 fo.disable_auto_renewal_opp,
 fo.license_unenforced,
-'Expected' Bucket_original,
+case when biz_dev.opportunity_id is not null then 'Expected Biz Dev' else 'Expected' end Bucket_original,
 'Expected' Bucket,
 case when foh.true_arr=0 then sum(rowo.true_arr) else foh.true_arr end amount,
 true include_flg,
@@ -132,7 +132,12 @@ on fo.opportunity_id=rowo.renewal_opportunity_id
 --How renewals looked like 1 day before the start of the new fiscal year
 join {{ ref('fact_opportunity_history') }} foh
 on fo.opportunity_id=foh.opportunity_id
-and DATEADD(day, -1, mon.fiscalyear_startdate) between foh.fromdate and foh.todate
+--and DATEADD(day, -1, mon.fiscalyear_startdate) between foh.fromdate and foh.todate
+--this is more accurate to take into account the change on the last day of a month
+--but 2025/2026 FY STarting is much worse with this condition
+--let's keep it for future FYs
+--example: opportunity 006UZ0000060DrRYAU is counted in 202507 Started but was lost on 20250630
+and case when mon_year>202507 then dateadd(minute,24*60-1,DATEADD(day, -1, mon.mon_firstday)) else DATEADD(day, -1, mon.mon_firstday) end between foh.fromdate and foh.todate
 --
 --account details
 join {{ ref('dim_account') }} a
@@ -141,6 +146,13 @@ on fo.sfdc_account_id=a.sfdc_account_id
 left outer join {{ ref('fact_opportunity') }}  fro
 on fo.renewal_opportunity_id=fro.opportunity_id
 --
+--Biz Dev details
+--
+left outer join (
+select distinct dol.opportunity_id
+from {{ ref('dim_opportunity_line') }} dol
+where dol.class like '%Biz_Dev%') biz_dev
+on fo.opportunity_id = biz_dev.opportunity_id
 where
 --only direct renewal of invoiced in prev FY Won opportunities
 rowo.stage_name ilike '%won%'
@@ -178,6 +190,7 @@ isnull(fro.invoiced_date,   '{{ var("default_date") }}'),
 isnull(fro.close_date,   '{{ var("default_date") }}'),
 fo.disable_auto_renewal_opp,
 fo.license_unenforced,
+case when biz_dev.opportunity_id is not null then 'Expected Biz Dev' else 'Expected' end,
 foh.true_arr
 )
 select

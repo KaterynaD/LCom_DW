@@ -3,7 +3,11 @@ version: 2
 models:
   - name: stg_revenue
     description: >-
-      Staging model that aggregates revenue-related data from opportunity and lines. Includes ARR, NRR, price increases, reductions, and cancellations, grouped by invoiced or close (Cancellation) month and opportunity attributes. It's used to create fact_revenue categories (ARR and Booking). 
+      Staging model that aggregates revenue-related data from opportunity and lines. 
+      Includes ARR, NRR, price increases, reductions, and cancellations, grouped by invoiced or close (Cancellation) 
+      month and opportunity attributes. 
+      It's used to create fact_revenue categories (ARR and Booking). 
+      Price Increase, Reduction and Cancellation has approximate Biz Dev bucket separation.
     
     config:
       contract:

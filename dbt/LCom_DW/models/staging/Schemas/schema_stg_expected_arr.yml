@@ -1,6 +1,8 @@
 models:
   - name: stg_expected_arr
-    description: This is one time a FY refreshed table with Starting(Expected) ARR. The calculation can be different each year.
+    description: This is one time a FY refreshed table with Starting(Expected) ARR. The calculation can be different each year. 
+                 Expected Biz Dev bucket original apprimate calculation was added but not used. Fact_revenue_monthly_snapshots were were just updated.
+                 Till the next year. maybe I will find a more accurate way to calculate Biz Dev bucket
     config:
       contract:
         enforced: true

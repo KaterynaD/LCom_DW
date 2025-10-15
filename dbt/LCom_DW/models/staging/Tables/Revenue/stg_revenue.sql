@@ -17,6 +17,11 @@ where
 {{ month_range_to_load() }}		
 
 )
+,biz_dev_opp as
+(
+select distinct dol.opportunity_id
+from {{ ref('dim_opportunity_line') }} dol
+where dol.class like '%Biz_Dev%') 
 , ARR_rawdata as (			
 select			
 cal.mon_year,			
@@ -128,7 +133,7 @@ fro.invoiced_date renewal_invoiced_date,
 fro.close_date renewal_close_date,			
 fo.disable_auto_renewal_opp,			
 fo.license_unenforced,			
-'Sales' +' : '+ 'Price Increased' + ' : ' +case when a.sfdc_state_initiative then 'Biz Dev'else 'ARR' end as Bucket,			
+'Sales' +' : '+ 'Price Increased' + ' : ' +case when bdo.opportunity_id is not null then 'Biz Dev'else 'ARR' end as Bucket,			
 fo.price_increase_arr as amount			
 from {{ ref('fact_opportunity') }} fo			
 left outer join {{ ref('fact_opportunity') }} fro			
@@ -136,7 +141,10 @@ on fro.opportunity_id=fo.renewal_opportunity_id
 join {{ ref('dim_account') }} a			
 on fo.account_id=a.account_id			
 join cal			
-on fo.invoiced_date between cal.mon_firstday and cal.mon_lastday			
+on fo.invoiced_date between cal.mon_firstday and cal.mon_lastday
+--Biz Dev estimation
+left outer join biz_dev_opp bdo
+on fo.opportunity_id = bdo.opportunity_id			
 where fo.stage_name in ( 'Closed Won', 'Closed-Won Upsell')			
 and fo.price_increase_arr>0			
 )			
@@ -162,7 +170,7 @@ fro.invoiced_date renewal_invoiced_date,
 fro.close_date renewal_close_date,			
 fo.disable_auto_renewal_opp,			
 fo.license_unenforced,			
-'Sales' +' : '+ 'Reduction' + ' : ' +case when a.sfdc_state_initiative then 'Biz Dev'else 'ARR' end as Bucket,			
+'Sales' +' : '+ 'Reduction' + ' : ' +case when bdo.opportunity_id is not null then 'Biz Dev'else 'ARR' end as Bucket,			
 case when fo.stage_name in ( 'Closed Won', 'Closed-Won Upsell') then fo.downsell else 0 end as amount			
 from {{ ref('fact_opportunity') }} fo			
 left outer join {{ ref('fact_opportunity') }} fro			
@@ -170,7 +178,10 @@ on fro.opportunity_id=fo.renewal_opportunity_id
 join {{ ref('dim_account') }} a			
 on fo.account_id=a.account_id			
 join cal			
-on fo.invoiced_date between cal.mon_firstday and cal.mon_lastday			
+on fo.invoiced_date between cal.mon_firstday and cal.mon_lastday
+--Biz Dev estimation
+left outer join biz_dev_opp bdo
+on fo.opportunity_id = bdo.opportunity_id				
 where fo.stage_name in ( 'Closed Won', 'Closed-Won Upsell')			
 and fo.opp_record_type='Renewal'	
 and not(fo.name ilike '%NEGATIVE OPP%' or fo.name ilike '%REPLACEMENT OPP%')	
@@ -198,7 +209,7 @@ fro.invoiced_date renewal_invoiced_date,
 fro.close_date renewal_close_date,			
 fo.disable_auto_renewal_opp,			
 fo.license_unenforced,			
-'Sales' +' : '+ 'Cancellation' + ' : ' +case when a.sfdc_state_initiative then 'Biz Dev'else 'ARR' end as Bucket,			
+'Sales' +' : '+ 'Cancellation' + ' : ' +case when bdo.opportunity_id is not null then 'Biz Dev'else 'ARR' end as Bucket,			
 -fo.true_arr_formula as amount			
 from {{ ref('fact_opportunity') }} fo			
 left outer join {{ ref('fact_opportunity') }} fro			
@@ -206,7 +217,10 @@ on fro.opportunity_id=fo.renewal_opportunity_id
 join {{ ref('dim_account') }} a			
 on fo.account_id=a.account_id			
 join cal			
-on fo.close_date between cal.mon_firstday and cal.mon_lastday			
+on fo.close_date between cal.mon_firstday and cal.mon_lastday	
+--Biz Dev estimation
+left outer join biz_dev_opp bdo
+on fo.opportunity_id = bdo.opportunity_id			
 where fo.stage_name = 'Closed Lost'			
 and fo.opp_record_type='Renewal'			
 )			
