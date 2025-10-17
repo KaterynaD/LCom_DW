@@ -9,7 +9,7 @@
 }}
 
 select distinct
-topic_id::varchar(300),
-topic::varchar(200)
+training_session_id::varchar(300),
+topic_id::varchar(300)
 ,'{{ var("loaddate") }}'::TIMESTAMP as loaddate
 from {{ ref("stg_topics") }}

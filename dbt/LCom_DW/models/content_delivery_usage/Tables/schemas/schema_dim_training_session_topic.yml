@@ -1,7 +1,7 @@
 version: 2
 models:
   - name: dim_training_session_topic
-    description: Mapping table between training sessions and topics. Each record links a training session to a topic, with load timestamp. Used for analyzing topic coverage across sessions.
+    description: Dimension table for unique training session topics. Each topic is assigned a unique topic_id (MD5 hash of topic name) and includes the topic text. Built from distinct topics in training sessions.
     config:
       contract:
         enforced: true
@@ -9,26 +9,24 @@ models:
         - dim
         - training
     columns:
-      - name: training_session_id
-        data_type: varchar(300)
-        description: Foreign key to fact_training_session; unique identifier for the training session.
-        constraints:
-          - type: not_null
-        data_tests:
-          - relationships:
-              to: ref('fact_training_session')
-              field: training_session_id
       - name: topic_id
         data_type: varchar(300)
-        description: Foreign key to dim_topic; unique topic identifier (MD5 hash of topic name).
+        description: Unique topic identifier (MD5 hash of topic name). Primary key.
         constraints:
           - type: not_null
+          - type: primary_key
+            warn_unenforced: false
         data_tests:
-          - relationships:
-              to: ref('dim_topic')
-              field: topic_id
+          - unique
+      - name: topic
+        data_type: varchar(200)
+        description: Individual topic extracted from training session implementation_topics.
+        constraints:
+          - type: not_null
+
       - name: loaddate
         data_type: timestamp
         description: "{{ doc('column_loaddate') }}"
         constraints:
           - type: not_null
+

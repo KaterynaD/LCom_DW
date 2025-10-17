@@ -37,6 +37,8 @@ models:
     description: "Historical (related to Mon_Year) {{ doc('column_ts_status') }}"
   - name: session_status_current
     description:  "Current {{ doc('column_ts_status') }}"
+  - name: start_date_timeframe
+    description: "Timeframe classification of the session start date (Upcoming, Current, Past)"
   - name: Assignee
     description: "Historical owner (related to Mon_Year): {{ doc('column_sfdc_owner_name_text') }}"
   - name: pds_group
@@ -45,17 +47,38 @@ models:
     description: "Current owner: {{ doc('column_sfdc_owner_name_text') }}"
   - name: pds_group_current
     description: "Current{{ doc('column_pds_group') }}"
+  - name: new_district
+    description: "{{ doc('column_new_district') }}"
+
   - name: sfdc_account_id
     description: "{{ doc('column_sfdc_account_id') }}"
+  - name: lcom_organization_id
+    description: "{{ doc('column_lcom_organization_id') }}"
+  - name: lcom_organization_type
+    description: "{{ doc('column_lcom_organization_type') }}"
 
   - name: account_name
-    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_name') }}"    
+    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_name') }}"   
 
+  - name: lcom_organization_name
+    description: "Historical (related to Mon_Year):{{ doc('column_lcom_organization_name') }}" 
+
+  - name: ultimate_parent_account_name
+    description: "Current Ultimate Parent Account Name (District if account is a school): {{ doc('column_sfdc_name') }}"   
+
+  - name: ultimate_parent_lcom_organization_name
+    description: "Current Ultimate Parent LCOM Organization Name (District if account is a school): {{ doc('column_lcom_organization_name') }}"       
+
+  - name: sfdc_category 
+    description: "{{ doc('column_sfdc_category') }}"
   - name: account_customer_level
     description: "Historical (related to Mon_Year):{{ doc('column_sfdc_customer_level') }}"
-
-  - name: account_state
-    description: "Historical (related to Mon_Year):{{ doc('column_sfdc_billing_state') }}"
+  - name: country
+    description: "Historical (related to Mon_Year): lcom_state_province_code or SFDC {{ doc('column_sfdc_billing_country') }}"
+  - name: state
+    description: "Historical (related to Mon_Year): lcom_state_province_code or SFDC {{ doc('column_sfdc_billing_state') }}"
+  - name: county
+    description: "Historical (related to Mon_Year): lcom_state_province_code or SFDC {{ doc('column_sfdc_county_name') }}"
   - name: account_state_initiative
     description: "Historical (related to Mon_Year):True if Account sfdc_state_initiative or sfdc_state_initiative_school  is True"
   - name: account_state_program_eligible
