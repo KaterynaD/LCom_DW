@@ -107,7 +107,7 @@ and case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDA
     join {{ ref('dim_account') }} a
       on f.account_id = a.account_id   
     join {{ ref('dim_account') }} pa
-      on a.sfdc_ultimate_parent_id = pa.account_id                
+      on a.sfdc_ultimate_parent_id = pa.sfdc_account_id                
     join {{ source("common","dim_calendar") }} dc
       on trunc(f.start_date) = dc.cal_date
     join {{ ref('dim_training_session_topic_session') }} tst
