@@ -14,7 +14,6 @@ stg.id 	 as case_id	,
 isnull(a.account_id, '{{ var("default_ID") }}') as account_id	,
 isnull(stg.account_id, '{{ var("default_ID") }}') as sfdc_account_id	,
 isnull(stg.already_closed_c, {{ var("default_boolean") }}) as already_closed	,
-isnull(stg.case_auto_close_warning_sent_c , {{ var("default_boolean") }}) as case_auto_close_warning_sent	,
 isnull(stg.case_number , '{{ var("default_varchar") }}') as case_number	,
 isnull(stg.case_owner_email_c , '{{ var("default_varchar") }}') as case_owner_email	,
 isnull(stg.case_ready_to_survey_c , {{ var("default_boolean") }}) as case_ready_to_survey	,
@@ -33,7 +32,6 @@ isnull(stg.csat_response_c , '{{ var("default_varchar") }}') as csat_response	,
 isnull(stg.data_quality_description_c , '{{ var("default_varchar") }}') as data_quality_description	,
 isnull(stg.data_quality_score_c, {{ var("default_numeric") }}) as data_quality_score	,
 isnull(stg.description , '{{ var("default_varchar") }}') as description	,
-isnull(stg.initial_response_captured_c , {{ var("default_boolean") }}) as initial_response_captured	,
 isnull(stg.is_closed, {{ var("default_boolean") }}) as is_closed	,
 isnull(stg.is_escalated, {{ var("default_boolean") }}) as is_escalated	,
 isnull(stg.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date	,
@@ -45,8 +43,6 @@ isnull(stg.origin , '{{ var("default_varchar") }}') as origin	,
 isnull(stg.owner_id, '{{ var("default_varchar") }}') as owner_id	,
 isnull(stg.platform_name_c , '{{ var("default_varchar") }}') as platform_name	,
 isnull(stg.priority, '{{ var("default_varchar") }}') as case_priority	,
-isnull(stg.product_feedback_submitted_c, {{ var("default_boolean") }}) as product_feedback_submitted	,
-isnull(stg.products_c , '{{ var("default_varchar") }}') as products	,
 isnull(rt.name , '{{ var("default_varchar") }}') as support_type	,
 isnull(stg.round_robin_id_c, {{ var("default_numeric") }}) as round_robin_id	,
 isnull(stg.sales_escalation_c , {{ var("default_boolean") }}) as sales_escalation	,
@@ -73,7 +69,6 @@ select
  ,account_id::VARCHAR(300)
  ,sfdc_account_id::VARCHAR(300)
  ,already_closed::BOOLEAN
- ,case_auto_close_warning_sent::BOOLEAN
  ,case_number::VARCHAR(90)
  ,case_owner_email::VARCHAR(400)
  ,case_ready_to_survey::BOOLEAN
@@ -92,7 +87,6 @@ select
  ,data_quality_description::VARCHAR(1000)
  ,data_quality_score::INTEGER
  ,description::VARCHAR(max)
- ,initial_response_captured::BOOLEAN
  ,is_closed::BOOLEAN
  ,is_escalated::BOOLEAN
  ,last_modified_date::TIMESTAMP
@@ -104,8 +98,6 @@ select
  ,owner_id::VARCHAR(300)
  ,platform_name::VARCHAR(300)
  ,case_priority::VARCHAR(1000)
- ,product_feedback_submitted::BOOLEAN
- ,products::VARCHAR(5000)
  ,support_type::VARCHAR(240)
  ,round_robin_id::NUMERIC(20,17)
  ,sales_escalation::BOOLEAN

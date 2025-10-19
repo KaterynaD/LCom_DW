@@ -45,12 +45,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: case_auto_close_warning_sent
-        data_type: boolean
-        description: Case Auto-Close Warning Sent
-        constraints:
-          - type: not_null
-
       - name: case_number
         data_type: varchar(90)
         description: Case Number
@@ -159,12 +153,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: initial_response_captured
-        data_type: boolean
-        description: Initial Response Captured
-        constraints:
-          - type: not_null
-
       - name: is_closed
         data_type: boolean
         description: Is Closed
@@ -233,18 +221,6 @@ models:
       - name: case_priority
         data_type: varchar(1000)
         description: Case Priority
-        constraints:
-          - type: not_null
-
-      - name: product_feedback_submitted
-        data_type: boolean
-        description: Product Feedback Submitted
-        constraints:
-          - type: not_null
-
-      - name: products
-        data_type: varchar(5000)
-        description: Products
         constraints:
           - type: not_null
 
