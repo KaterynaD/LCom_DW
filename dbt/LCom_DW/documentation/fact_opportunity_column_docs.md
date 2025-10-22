@@ -273,10 +273,6 @@ Multi Year Upfront Order?
 Needs analysis conducted
 {% enddocs %}
 
-{% docs column_net_suite_order_id %}
-NetSuite OrderId
-{% enddocs %}
-
 
 {% docs column_new_biz_arr_trigger %}
 New Biz ARR Trigger
@@ -323,7 +319,7 @@ Opp to be Closed
 {% enddocs %}
 
 {% docs column_opportunity_number %}
-Opportunity Number
+Opportunity Number - not available in SFDC as on 10/21/2025
 {% enddocs %}
 
 {% docs column_opportunity_score_id %}

@@ -11,7 +11,6 @@ f.fiscalyear,
 f.fiscalyear_mon,
 f.opportunity_id,
 o.netsuite_id,
-o.net_suite_order_id,
 o.opportunity_number,
 o.name as opportunity_name,
 f.stage_name,
@@ -50,5 +49,5 @@ and f.mon_lastday between uah.fromdate and  uah.todate
 join {{ ref("dim_account_history") }} ah
 on f.sfdc_account_id = ah.sfdc_account_id
 and f.mon_lastday between ah.fromdate and  ah.todate
-join {{ ref("fact_opportunity") }} o
+left outer join {{ ref("fact_opportunity") }} o
 on f.opportunity_id = o.opportunity_id

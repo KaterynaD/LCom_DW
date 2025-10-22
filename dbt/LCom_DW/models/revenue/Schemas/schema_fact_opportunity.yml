@@ -427,11 +427,6 @@ models:
     description: "{{ doc('column_needs_analysis_conducted') }}"
     constraints:
     - type: not_null
-  - name: net_suite_order_id
-    data_type: varchar(90)
-    description: "{{ doc('column_net_suite_order_id') }}"
-    constraints:
-    - type: not_null
   - name: netsuite_id
     data_type: varchar(780)
     description: "{{ doc('column_netsuite_id') }}"
