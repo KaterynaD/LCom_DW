@@ -494,7 +494,7 @@ models:
     - type: not_null
   - name: opportunity_number
     data_type: varchar(100)
-    description: "{{ doc('column_opportunity_number') }}"
+    description:  "{{ doc('column_opportunity_number') }}"
     constraints:
     - type: not_null
   - name: opportunity_score_id

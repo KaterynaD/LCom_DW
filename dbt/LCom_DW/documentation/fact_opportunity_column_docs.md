@@ -319,7 +319,7 @@ Opp to be Closed
 {% enddocs %}
 
 {% docs column_opportunity_number %}
-Opportunity Number - not available in SFDC as on 10/21/2025
+Opportunity Number - not available in SFDC as on 10/21/2025. Number__c SFDC Object attribute is used instead since opportunity_number column name is already widely used including Tableau and hard to fix everywhere.
 {% enddocs %}
 
 {% docs column_opportunity_score_id %}
