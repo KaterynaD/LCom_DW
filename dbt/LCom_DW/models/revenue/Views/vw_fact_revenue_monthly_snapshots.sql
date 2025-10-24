@@ -5,7 +5,6 @@
 
 with dim_month as --Thread to calculate monthly metrics 
 (select 
-distinct 
 c.mon_year, 
 c.mon_firstday, 
 c.mon_lastday, 
@@ -13,8 +12,8 @@ c.fiscalyear,
 c.fiscalyear_mon, 
 c.fiscalyear_startdate, 
 c.fiscalyear_enddate 
-from {{ source("common","dim_calendar") }} c 
-where 
+from {{ ref("dim_month") }} c 
+where mon_year>=201501 and
 mon_year<=to_char(Getdate(),'yyyymm')::int
 )
 ,ARR_data as
@@ -178,6 +177,37 @@ union all
 select 
 *
 from {{ ref('fact_revenue_monthly_snapshots') }}
+union all
+select 
+'Target' record_type,
+mon_year,
+mon_lastday,
+fiscalyear,
+fiscalyear_mon,
+null opportunity_id,
+null stage_name,
+null opp_record_type ,
+'{{ var("default_ID") }}' sfdc_account_id,
+False sfdc_state_initiative,
+'{{ var("default_ID") }}' sfdc_ultimate_parent_id,
+null invoiced_date ,
+null close_date,
+null start_date,
+null end_date,
+null renewal_opportunity_id,
+null renewal_stage_name,
+null renewal_invoiced_date,
+null renewal_close_date,
+null disable_auto_renewal_opp,
+null license_unenforced,
+'Target' Bucket_original,
+'Target' Bucket,
+case when fiscalyear = '2025/2026' then 25800000 else 0 end amount,
+true include_flg,
+0 audit_id,
+null new_opp_this_fy_flg,
+null loaddate 
+from dim_month
 )
 select 
 record_type,
