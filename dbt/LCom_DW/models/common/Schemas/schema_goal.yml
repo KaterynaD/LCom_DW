@@ -1,0 +1,62 @@
+models:
+  - name: goal
+    description: Goal table created based on manual compilation of data from separate Excel files. The idea of the table is name-value pairs due to variaty of goals and business cases. dbt model is needed because dbt seeds do not support contract in Redshift.  Specific records of the table are supposed to be used individually or combined by goal types in different views for Tableau reporting
+    config:
+      contract:
+        enforced: true
+      tags: 
+        - dim
+
+    columns:
+
+      - name: school_or_fiscal_year
+        data_type: varchar(10)
+        description: School or Fiscal Year in a form YYYY/YYYY
+        constraints:
+          - type: not_null    
+        data_tests:
+          - not_null  
+
+      - name: goal_type
+        data_type: varchar(150)
+        description: Goal Category
+        constraints:
+          - type: not_null               
+        data_tests:
+          - not_null  
+
+      - name: applied_to
+        data_type: varchar(10)
+        description: Goal is for a specific state or company wide
+        constraints:
+          - type: not_null    
+        data_tests:
+          - not_null  
+
+      - name: goal_name
+        data_type: varchar(150)
+        description: Goal Name
+        constraints:
+          - type: not_null              
+        data_tests:
+          - not_null  
+
+      - name: goal
+        data_type: double precision
+        description: Goal Value
+        constraints:
+          - type: not_null              
+        data_tests:
+          - not_null  
+
+      - name: attribute1
+        data_type: varchar(150)
+        description: Any additional info   
+
+      - name: loaddate
+        data_type: timestamp
+        description: Timestamp when the record was added.
+        constraints:
+          - type: not_null                         
+        data_tests:
+          - not_null     

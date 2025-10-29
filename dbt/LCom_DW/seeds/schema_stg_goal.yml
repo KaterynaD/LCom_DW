@@ -1,0 +1,70 @@
+version: 2
+
+seeds:
+  - name: stg_goal
+    description: |
+      Staging table for different level (state, company) and types goals. This table is used to populate a working table (model) as a source because dbt contract does not work in Redshift 
+      for seeds. The dbt seed can be replaced with an external table based on a file in S3 bucket if populated more then once a year.
+
+      The goals are manually created csv file from data in Excel files in different formats. 
+      It's name/value pairs approach per Fiscal or School Year/State or Company/Goal Type.
+    config:
+      schema: staging
+      contract:
+        enforced: true
+      tags: 
+        - dim
+
+    columns:
+
+      - name: School_or_Fiscal_Year
+        data_type: varchar(10)
+        description: School or Fiscal Year in a form YYYY/YYYY
+        constraints:
+          - type: not_null    
+        data_tests:
+          - not_null  
+
+      - name: Goal_Type
+        data_type: varchar(150)
+        description: Goal Category
+        constraints:
+          - type: not_null               
+        data_tests:
+          - not_null  
+
+      - name: Applied_To
+        data_type: varchar(10)
+        description: Goal is for a specific state or company wide
+        constraints:
+          - type: not_null    
+        data_tests:
+          - not_null  
+
+      - name: Goal_Name
+        data_type: varchar(150)
+        description: Goal Name
+        constraints:
+          - type: not_null              
+        data_tests:
+          - not_null  
+
+      - name: Goal
+        data_type: double precision
+        description: Goal Value
+        constraints:
+          - type: not_null              
+        data_tests:
+          - not_null  
+
+      - name: Attribute1
+        data_type: varchar(150)
+        description: Any additional info   
+
+      - name: loaddate
+        data_type: timestamp
+        description: Timestamp when the record was added in the file.
+        constraints:
+          - type: not_null                         
+        data_tests:
+          - not_null                 
