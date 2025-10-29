@@ -26,7 +26,6 @@ group by parent_id
     sfdc_account.name,
     --
     sfdc_account.account_last_activity_date_c,
-    sfdc_account.account_lifecycle_stage_c,
     sfdc_account.account_management_type_c,
     sfdc_account.act_id_c,
     sfdc_account.actively_prospecting_c,
@@ -214,7 +213,7 @@ group by parent_id
     sfdc_account.org_type_c,
     sfdc_account.otc_provisioned_c,
     sfdc_account.owner_id,
-    sfdc_account.owner_name_text_c,
+    sfdc_user."name" as owner_name_text_c,
     sfdc_account.parent_account_owner_c,
     sfdc_account.parent_and_child_match_c,
     sfdc_account.parent_churned_c,
@@ -312,7 +311,6 @@ group by parent_id
     sfdc_account.x_6_th_grade_enrollment_c,
     sfdc_account.x_7_th_grade_enrollment_c,
     sfdc_account.x_9_th_grade_enrollment_c,
-    sfdc_account.zendesk_domain_c,
     --School (some child accounts info)
     sch.school_state_initiative_c as state_initiative_school,
     sch.school_district_state_initiative_c as district_state_initiative_school,
@@ -325,6 +323,8 @@ group by parent_id
     sfdc_ultimate_parent.sfdc_current_renewal_arr as sfdc_ultimate_parent_current_renewal_arr
     --
 FROM {{ source('fivetran_salesforce_quickstart', 'account') }} sfdc_account
+left outer join {{ source('fivetran_salesforce_quickstart', 'user') }} sfdc_user
+on sfdc_account.owner_id= sfdc_user.id
 left outer join {{ source('fivetran_salesforce_quickstart', 'lcom_organization_c') }} loc
 on sfdc_account.lcom_organization_c = loc.id
 left outer join sch 
@@ -428,9 +428,7 @@ select
     isnull(SFDC_data.name,
     '{{ var("default_varchar") }}') as SFDC_name,
     isnull(SFDC_data.account_last_activity_date_c,
-    '{{ var("default_date") }}') as SFDC_account_last_activity_date,
-    isnull(SFDC_data.account_lifecycle_stage_c,
-    '{{ var("default_varchar") }}') as SFDC_account_lifecycle_stage,
+    '{{ var("default_date") }}')  as SFDC_account_last_activity_date,
     isnull(SFDC_data.account_management_type_c,
     '{{ var("default_varchar") }}') as SFDC_account_management_type,
     isnull(SFDC_data.act_id_c,
@@ -1001,8 +999,6 @@ select
     {{ var("default_numeric") }}) as SFDC_x_7_th_grade_enrollment,
     isnull(SFDC_data.x_9_th_grade_enrollment_c,
     {{ var("default_numeric") }}) as SFDC_x_9_th_grade_enrollment,
-    isnull(SFDC_data.zendesk_domain_c,
-    '{{ var("default_varchar") }}') as SFDC_zendesk_domain,
     isnull(SFDC_data.lcom_organization_id,
     '{{ var("default_varchar") }}') as  SFDC_lcom_organization_id,
     --School (some child accounts info)
@@ -1066,7 +1062,6 @@ select
  '{{ var("default_ID") }}' as SFDC_account_id,
  '{{ var("default_varchar") }}' as SFDC_name,
  '{{ var("default_date") }}' as SFDC_account_last_activity_date ,
-  '{{ var("default_varchar") }}' as SFDC_account_lifecycle_stage ,
   '{{ var("default_varchar") }}' as SFDC_account_management_type ,
   '{{ var("default_varchar") }}' as SFDC_act_id ,
    {{ var("default_boolean") }}   as   SFDC_actively_prospecting ,
@@ -1352,7 +1347,6 @@ select
    {{ var("default_numeric") }}   as   SFDC_x_6_th_grade_enrollment ,
    {{ var("default_numeric") }}   as   SFDC_x_7_th_grade_enrollment ,
    {{ var("default_numeric") }}   as   SFDC_x_9_th_grade_enrollment ,
-  '{{ var("default_varchar") }}'  as   SFDC_zendesk_domain	,
   '{{ var("default_varchar") }}'  as   SFDC_lcom_organization_id,
   --School (some child accounts info)
 {{ var("default_boolean") }} as SFDC_state_initiative_school,
@@ -1389,7 +1383,6 @@ select
     sfdc_account_id :: varchar(300),
     sfdc_name :: varchar(780),
     sfdc_account_last_activity_date :: date,
-    sfdc_account_lifecycle_stage :: varchar(780),
     sfdc_account_management_type :: varchar(20),
     sfdc_act_id :: varchar(30),
     sfdc_actively_prospecting :: boolean,
@@ -1675,7 +1668,6 @@ select
     sfdc_x_6_th_grade_enrollment :: double precision,
     sfdc_x_7_th_grade_enrollment :: double precision,
     sfdc_x_9_th_grade_enrollment :: double precision,
-    sfdc_zendesk_domain :: varchar(1550),
     SFDC_lcom_organization_id :: varchar(300),
     sfdc_state_initiative_school :: boolean,
     sfdc_district_state_initiative_school :: boolean,

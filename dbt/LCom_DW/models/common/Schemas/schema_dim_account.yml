@@ -140,11 +140,6 @@ models:
     description: "{{ doc('column_sfdc_account_last_activity_date') }}"
     constraints:
     - type: not_null
-  - name: sfdc_account_lifecycle_stage
-    data_type: varchar(780)
-    description: "{{ doc('column_sfdc_account_lifecycle_stage') }}"
-    constraints:
-    - type: not_null
   - name: sfdc_account_management_type
     data_type: varchar(20)
     description: "{{ doc('column_sfdc_account_management_type') }}"
@@ -1571,11 +1566,6 @@ models:
   - name: sfdc_x_9_th_grade_enrollment
     data_type: double precision
     description: "{{ doc('column_sfdc_x_9_th_grade_enrollment') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_zendesk_domain
-    data_type: varchar(1550)
-    description: "{{ doc('column_sfdc_zendesk_domain') }}"
     constraints:
     - type: not_null
   - name: SFDC_lcom_organization_id

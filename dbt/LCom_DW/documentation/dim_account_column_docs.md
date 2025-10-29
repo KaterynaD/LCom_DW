@@ -34,10 +34,6 @@ Account Name
 Account Last Activity Date
 {% enddocs %}
 
-{% docs column_sfdc_account_lifecycle_stage %}
-Account Lifecycle Stage
-{% enddocs %}
-
 {% docs column_sfdc_account_management_type %}
 Account Management Type
 {% enddocs %}
@@ -789,7 +785,7 @@ Account Owner (Integrations: Gainsight.)
 {% enddocs %}
 
 {% docs column_sfdc_owner_name_text %}
-Owner Name (Text) (Text field for Owner Name for Zendesk integration)
+populated from SFDC User object Name attribute
 {% enddocs %}
 
 {% docs column_sfdc_parent_account_owner %}
@@ -1178,11 +1174,8 @@ Website (Integrations: Gainsight.)
 
 {% docs column_sfdc_x_9_th_grade_enrollment %}
 9th Grade Enrollment (Integrations: Gainsight.)
-{% enddocs %}
+{% enddocs %}s
 
-{% docs column_sfdc_zendesk_domain %}
-Zendesk Domain (Concatenation of both email domain fields for optimum account matching for zendesk cases. Uses 'space' as the separating value)
-{% enddocs %}
 
 {% docs column_SFDC_lcom_organization_id %}
 LCom Organization linked to Salesforce account in Salesforce (Licensing project).
