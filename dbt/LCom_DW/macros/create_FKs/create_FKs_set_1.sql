@@ -7,7 +7,6 @@ ALTER TABLE licensing.fact_license_order ADD FOREIGN KEY (organization_district_
 ALTER TABLE licensing.fact_license_order ADD FOREIGN KEY (sku_id) REFERENCES common.dim_lcom_sku(sku_id);
 ALTER TABLE licensing.fact_license_order_history ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE licensing.fact_license_order_history ADD FOREIGN KEY (sku_id) REFERENCES common.dim_lcom_sku(sku_id);
-ALTER TABLE licensing.fact_license_order_history ADD FOREIGN KEY (order_id) REFERENCES licensing.fact_license_order(order_id);
 --
 --
 ALTER TABLE licensing.dim_license_order_school ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
