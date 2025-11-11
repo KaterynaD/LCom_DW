@@ -509,6 +509,68 @@ sources:
       description: 'username credential for authentication via direct login — Source: SQL
         LearningPlatform.dbo.User.UserName'
 
+  - name: standard
+    columns:
+    - name: standard_topic_id
+      data_type: integer
+      description: 'unique id for the educational strand/standard/benchmark — Source: SQL Standards.dbo.StandardTopic.StandardTopicId'
+    - name: standard_topic_name
+      data_type: varchar(2000)
+      description: 'descriptive text of the educational strand/standard/benchmark — Source: SQL Standards.dbo.StandardTopic.Description'
+    - name: standard_topic_level
+      data_type: integer
+      description: 'identifies the topic as a root, subject, strand, standard or benchmark — Source: SQL Standards.dbo.StandardTopic.Level'
+    - name: standard_topic_label
+      data_type: varchar(50)
+      description: 'codified identifier for the standard topic (ex: SC.5.CO.1.3) — Source: SQL Standards.dbo.StandardTopic.Label'
+    - name: standard_topic_sort_order
+      data_type: varchar(100)
+      description: 'hierarchical lineage of the standard topic that allows the standard to be ordered appropriately (ex: 0006/0004/0001/0003) — Source: SQL Standards.dbo.StandardTopic.Lineage'
+    - name: parent_topic_id
+      data_type: integer
+      description: 'hierarchy parent id for the educational standard topic — Source: SQL Standards.dbo.StandardTopic via StdId and ParentStdId'
+    - name: adoption_year
+      data_type: varchar(100)
+      description: 'year that the educational standard was adopted by state department of education — Source: EdGate --> SQL Standards.dbo.EgStateStandard and dbo.EgStandardTopic'
+    - name: subject
+      data_type: varchar(100)
+      description: 'subject associated with the educational standard — Source: derived from Standards.dbo.EgStateStandard.Subject and dbo.EgStandardTopic.Subject'
+    - name: grade_level_code
+      data_type: varchar(3)
+      description: 'grade level associated with the educational standard — Source: SQL Standards.dbo.StandardTopic'
+    - name: state_province_key
+      data_type: varchar(6)
+      description: 'state or province key for the standard set — Source: derived from Standards.dbo.EgStandardAbbreviation.StateId and dbo.EgStateStandard.State'
+    - name: country_code
+      data_type: char(2)
+      description: 'country associated with the educational standard — Source: derived from Standards.dbo.EgStandardAbbreviation.StateId and dbo.EgStateStandard.State'
+    - name: standard_name
+      data_type: varchar(255)
+      description: 'official name of the standard set — Source: SQL Standards.dbo.StandardAbbreviation.Fullname'
+    - name: standard_abbreviation
+      data_type: varchar(12)
+      description: 'code representing the educational standard, often the state code, an acronym or a variation — Source: SQL Standards.dbo.StandardAbbreviation.Abbreviation'
+    - name: is_cipa_digitalcitizenship
+      data_type: boolean
+      description: 'flag indicating if the educational standard satisfies the digital citizenship CIPA requirement — Source: derived from Description text (Appropriate%) and %ERATE% abbreviation'
+    - name: is_cipa_cyberbullying
+      data_type: boolean
+      description: 'flag indicating if the educational standard satisfies the cyberbullying CIPA requirement — Source: derived from Description text (Cyberbullying%) and %ERATE% abbreviation'  
+      
+  - name: learning_object_standard
+    columns:
+    - name: learning_object_id
+      data_type: varchar(50)
+      description: 'unique id for the learning object (curriculum item/resource) — Source: SQL dbo.learning_object_standard.learning_object_id'
+    - name: standard_topic_id
+      data_type: integer
+      description: 'unique id for the educational strand/standard/benchmark — Source: SQL dbo.learning_object_standard.standard_topic_id'
+    - name: is_manual
+      data_type: boolean
+      description: 'flag indicating if the standard alignment was added manually'
+    - name: alignment_start_date
+      data_type: timestamp with time zone
+      description: 'date the alignment became effective - According to Aaron: do not take it into account when join tables. For info only'
       
 - name: staging
   description: "Source tables for content delivery usage models. The tables in staging schema are from LCom Platform MS SQL Server databases loaded and processed by AWS Glue jobs and Redshift Stored Procedures."

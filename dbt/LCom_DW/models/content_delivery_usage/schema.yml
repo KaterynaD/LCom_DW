@@ -6,12 +6,6 @@ models:
     config:
       tags:
         - dim
-  - name: dim_learning_object
-    description: Learning Object (Lessons or curriculum items) dimension base on
-      content_delivery_usage.dbo.learning_object
-    config:
-      tags:
-        - dim
   - name: dim_learning_pathway
     description: Learning Pathway dimension base on
       content_delivery_usage.dbo.learning_pathway.

@@ -1,0 +1,78 @@
+---
+version: 2
+
+models:
+  - name: dim_learning_object
+    description: Dimension of learning objects (curriculum items / lessons).
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+        - product_usage
+
+    columns:
+      - name: learning_object_id
+        data_type: varchar(300)
+        description: 'unique id for learning object (aka curriculum item or resource) — Source: SQL ContentCatalog.dbo.CurriculumItem.CurriculumItemId'
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+      - name: learning_object_name
+        data_type: varchar(2000)
+        description: 'name of the learning object — Source: SQL ContentCatalog.dbo.CurriculumItem.CurriculumItemName'
+        constraints:
+          - type: not_null
+      - name: instruction_type
+        data_type: varchar(100)
+        description: 'name of the instruction type used to categorize content (Instruction, Video, Game, Practice, etc.) — Source: SQL ContentCatalog.dbo.LearningComponent.LearningComponentName'
+        constraints:
+          - type: not_null
+      - name: topic
+        data_type: varchar(100)
+        description: 'name of topic used to categorize content into subject areas — Source: SQL ContentCatalog.dbo.Skill.SkillName'
+        constraints:
+          - type: not_null
+      - name: subtopic
+        data_type: varchar(100)
+        description: 'name of subtopic used to further categorize content (more specific subject areas) — Source: SQL ContentCatalog.dbo.Skill.SkillName'
+        constraints:
+          - type: not_null
+      - name: meets_digital_citizenship_cipa
+        data_type: boolean
+        description: 'flag indicating if the learning object satisfies the digital citizenship CIPA requirement'
+        constraints:
+          - type: not_null
+      - name: meets_cyberbullying_cipa
+        data_type: boolean
+        description: 'flag indicating if the learning object satisfies the cyberbullying CIPA requirement'
+        constraints:
+          - type: not_null
+      - name: meets_both_cipa
+        data_type: boolean
+        description: 'flag indicating if the learning object satisfies both CIPA digital citizenship and cyberbullying requirements'
+        constraints:
+          - type: not_null
+      - name: satisfied_standards
+        data_type: integer
+        description: 'count of distinct standard topics aligned to the learning object'
+        constraints:
+          - type: not_null
+      - name: created_datetime
+        data_type: date
+        description: 'date the learning object record was added, stored in UTC — Source: SQL ContentCatalog.dbo.CurriculumItem.auditCreateDate ELSE auditUpdateDate'
+        constraints:
+          - type: not_null
+      - name: deleted_datetime
+        data_type: date
+        description: 'date the learning object record was deleted, stored in UTC — Source: derived; CURRENT_TIMESTAMP when is_valid = false and deleted_datetime IS NULL; on INSERT if is_valid = false then use auditUpdateDate, auditCreateDate, CURRENT_TIMESTAMP'
+        constraints:
+          - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
