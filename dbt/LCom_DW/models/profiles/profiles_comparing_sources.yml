@@ -1,0 +1,15 @@
+---
+sources:
+  - name: profiles
+    description: "Tables created from tests comparing dbt profiles of Salesforce source data over time."
+    database: rawdata
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+
+      - name: full_to_current_FY_comparing
+      - name: prev_to_current_FY_comparing
+      - name: full_to_1_month_ago_comparing     
+      - name: months_comparing   
