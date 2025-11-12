@@ -9,7 +9,7 @@ models:
         enforced: true
       tags:
         - dim
-        - product_usage
+        - cdu
 
     columns:
       - name: learning_object_id
