@@ -123,6 +123,12 @@ models:
         constraints:
           - type: not_null
 
+      - name: contact_name
+        data_type: varchar(400)
+        description: Contact Name
+        constraints:
+          - type: not_null          
+
       - name: created_date
         data_type: timestamp
         description: Created Date in PST timezone
@@ -153,6 +159,18 @@ models:
         constraints:
           - type: not_null
 
+      - name: escalation_status
+        data_type: varchar(20)
+        description: Case Escalation Status
+        constraints:
+          - type: not_null       
+
+      - name: jira_last_modified_date
+        data_type: timestamp
+        description: Jira Last Modified Date in PST timezone
+        constraints:
+          - type: not_null             
+
       - name: is_closed
         data_type: boolean
         description: Is Closed
@@ -172,11 +190,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: location_of_issue
-        data_type: varchar(5000)
-        description: Location of Issue
-        constraints:
-          - type: not_null
 
       - name: net_suite_link
         data_type: varchar(1000)
@@ -184,17 +197,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: netsuite_case_number
-        data_type: varchar(1000)
-        description: NetSuite Case Number
-        constraints:
-          - type: not_null
-
-      - name: netsuite_id
-        data_type: varchar(300)
-        description: NetSuite ID
-        constraints:
-          - type: not_null
 
       - name: origin
         data_type: varchar(1000)

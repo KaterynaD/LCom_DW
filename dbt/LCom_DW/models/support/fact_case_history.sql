@@ -5,7 +5,7 @@
    
    unique_key='case_id',
 
-   check_cols=['is_closed','is_escalated','closed_date','case_priority','owner_id'],
+   check_cols=['is_closed','is_escalated','closed_date','case_priority','owner_id','escalation_status'],
 
 
    punch_thru_cols=['account_id'],
@@ -37,6 +37,7 @@ closed_date,
 case_priority,
 account_id,
 owner_id,
+escalation_status,
 last_modified_date 
 from {{ ref("fact_case") }}
 {% if is_incremental() %}

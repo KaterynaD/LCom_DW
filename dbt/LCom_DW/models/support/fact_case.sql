@@ -27,18 +27,18 @@ isnull(stg.confirmed_resolution_c , {{ var("default_boolean") }}) as confirmed_r
 isnull(stg.contact_email, '{{ var("default_varchar") }}') as contact_email	,
 isnull(stg.contact_id , '{{ var("default_varchar") }}') as contact_id	,
 isnull(stg.contact_phone, '{{ var("default_varchar") }}') as contact_phone	,
+isnull(c.name, '{{ var("default_varchar") }}') as contact_name	,
 isnull(stg.created_date	 AT TIME ZONE 'PST','{{ var("default_date") }}') as created_date	,
 isnull(stg.csat_response_c , '{{ var("default_varchar") }}') as csat_response	,
 isnull(stg.data_quality_description_c , '{{ var("default_varchar") }}') as data_quality_description	,
 isnull(stg.data_quality_score_c, {{ var("default_numeric") }}) as data_quality_score	,
 isnull(stg.description , '{{ var("default_varchar") }}') as description	,
+isnull(stg.escalation_status_c, '{{ var("default_varchar") }}') as escalation_status  ,
+isnull(stg.jira_last_modified_date_c AT TIME ZONE 'PST', '{{ var("default_date") }}') as jira_last_modified_date	,
 isnull(stg.is_closed, {{ var("default_boolean") }}) as is_closed	,
 isnull(stg.is_escalated, {{ var("default_boolean") }}) as is_escalated	,
 isnull(stg.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date	,
-coalesce(location_of_issue_c,location_of_issues_c	, '{{ var("default_varchar") }}') as location_of_issue	,
 isnull(stg.net_suite_link_c, '{{ var("default_varchar") }}') as net_suite_link	,
-isnull(stg.netsuite_case_number_c , '{{ var("default_varchar") }}') as netsuite_case_number	,
-isnull(stg.netsuite_id_c, '{{ var("default_varchar") }}') as netsuite_id	,
 isnull(stg.origin , '{{ var("default_varchar") }}') as origin	,
 isnull(stg.owner_id, '{{ var("default_varchar") }}') as owner_id	,
 isnull(stg.platform_name_c , '{{ var("default_varchar") }}') as platform_name	,
@@ -62,6 +62,8 @@ left outer join  {{ ref("dim_account") }} as a
 on stg.account_id = a.SFDC_account_id
 left outer join  {{ source("fivetran_salesforce_quickstart", "record_type") }}  as rt
 on stg.record_type_id = rt.id
+left outer join {{ source("fivetran_salesforce_quickstart", "contact") }} as c
+on stg.contact_id = c.id
 where stg.is_deleted = false
 )
 select
@@ -82,18 +84,18 @@ select
  ,contact_email::VARCHAR(400)
  ,contact_id::VARCHAR(300)
  ,contact_phone::VARCHAR(120)
+ ,contact_name::VARCHAR(400)
  ,created_date::TIMESTAMP
  ,csat_response::VARCHAR(1000)
  ,data_quality_description::VARCHAR(1000)
  ,data_quality_score::INTEGER
  ,description::VARCHAR(max)
+ ,escalation_status::VARCHAR(20)  
+ ,jira_last_modified_date::TIMESTAMP
  ,is_closed::BOOLEAN
  ,is_escalated::BOOLEAN
  ,last_modified_date::TIMESTAMP
- ,location_of_issue::VARCHAR(5000)
  ,net_suite_link::VARCHAR(1000)
- ,netsuite_case_number::VARCHAR(1000)
- ,netsuite_id::VARCHAR(300)
  ,origin::VARCHAR(1000)
  ,owner_id::VARCHAR(300)
  ,platform_name::VARCHAR(300)
