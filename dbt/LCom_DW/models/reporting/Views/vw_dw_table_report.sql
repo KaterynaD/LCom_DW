@@ -134,12 +134,7 @@ select
 	,'content_delivery_usage' as schema_name
 	,'dim_learning_object' as table_name
 	,COUNT(*) as row_count
-	,MAX(greatest((
-		cast(created_datetime as date)), 
-		--(cast(modified_datetime as date)), 
-		(cast(deleted_datetime as date))
-		--(cast(launch_datetime as date))
-		)) as last_action_date
+	,MAX(loaddate) as last_action_date
 from content_delivery_usage.dim_learning_object
 
 
@@ -304,10 +299,10 @@ union all
 select
 	'dw' as database_name
 	,'revenue' as schema_name
-	,'fact_customers_monthly_snapshots' as table_name
+	,'fact_paying_customers' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_customers_monthly_snapshots
+from revenue.fact_paying_customers
 
 union all
 
