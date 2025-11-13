@@ -1,0 +1,76 @@
+version: 2
+
+models:
+  - name: vw_cases_monthly
+    description: Monthly snapshot of support cases with owner, status and account context.
+    config:
+      tags:
+        - rep
+        - support
+    columns:
+      - name: mon_year
+        description: "{{ doc('column_mon_year') }}"
+      - name: mon_lastday
+        description: "{{ doc('column_mon_lastday') }}"
+      - name: FiscalYear
+        description: "{{ doc('column_fiscalyear') }} based on the case created date"
+      - name: FiscalYear_mon
+        description: "{{ doc('column_fiscalyear_mon') }} based on the case created date"
+
+      # Case-level fields (from fact_case / fact_case_history)
+      - name: case_id
+        description: "Case ID"
+      - name: case_number
+        description: "Case Number"
+      - name: subject
+        description: "Case Subject"
+      - name: created_date
+        description: "Created Date in PST timezone"
+      - name: closed_date
+        description: "Date/Time Closed"
+      - name: last_modified_date
+        description: "Last Modified Date  in PST timezone"
+      - name: current_status
+        description: "Current Status from FACT_CASE."
+      - name: current_escalation_status
+        description: "Current Case Escalation Status from FACT_CASE."
+      - name: escalation_status
+        description: "Case Escalation Status as of month end from FACT_CASE_HISTORY."
+      - name: current_is_escalated
+        description: "Current Is Escalated flag from FACT_CASE."
+      - name: is_escalated
+        description: "1 if case is escalated, 0 otherwise. (from FACT_CASE_HISTORY)."
+      - name: case_type
+        description: "Case Type"
+      - name: origin
+        description: "Case Origin"
+      - name: jira_last_modified_date
+        description: "Jira Last Modified Date in PST timezone"
+      - name: curernt_case_owner
+        description: "Current Case Owner Name from DIM_EMPLOYEE (spelling of column name preserved)."
+      - name: case_owner
+        description: "Case Owner Name as of month end from DIM_EMPLOYEE / FACT_CASE_HISTORY."
+      - name: contact_name
+        description: "Contact Name"
+
+      # Account-level fields (existing, preserved)
+      - name: sfdc_account_id
+        description: "{{ doc('column_sfdc_account_id') }}"
+      - name: account_name
+        description: "Historical (related to Mon_Year):{{ doc('column_sfdc_name') }}"
+      - name: sfdc_ultimate_parent_account
+        description: "Historical Ultimate Parent Account (related to Mon_Year):{{ doc('column_sfdc_name') }}"
+      - name: country
+        description: "Historical (related to Mon_Year): lcom_state_province_code or SFDC {{ doc('column_sfdc_billing_country') }}"
+      - name: state
+        description: "Historical (related to Mon_Year): lcom_state_province_code or SFDC {{ doc('column_sfdc_billing_state') }}"
+      - name: account_state_initiative
+        description: "Historical (related to Mon_Year):True if Account sfdc_state_initiative or sfdc_state_initiative_school  is True"
+      - name: account_state_program_eligible
+        description: "Historical (related to Mon_Year):{{ doc('column_sfdc_state_program_eligible') }}"
+      - name: account_urban_rural
+        description: "Historical (related to Mon_Year):{{ doc('column_sfdc_urban_rural') }}"
+      - name: account_district_enrollment
+        description: "Historical (related to Mon_Year):{{ doc('column_sfdc_district_enrollment') }}  if not 0 or {{ doc('column_sfdc_school_enrollment') }}"
+      - name: account_owner_name
+        description: "Historical (related to Mon_Year):{{ doc('column_sfdc_owner_name_text') }}"
