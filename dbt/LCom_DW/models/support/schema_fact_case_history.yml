@@ -148,3 +148,11 @@ models:
           - type: not_null
         data_tests:
           - not_null    
+
+      - name: status
+        data_type: varchar(20)
+        description: Case Status
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null             
