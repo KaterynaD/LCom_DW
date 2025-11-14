@@ -1253,11 +1253,7 @@ models:
     description: "{{ doc('column_sfdc_resa_uid') }}"
     constraints:
     - type: not_null
-  - name: sfdc_sales_owner_field
-    data_type: varchar(30)
-    description: "{{ doc('column_sfdc_sales_owner_field') }}"
-    constraints:
-    - type: not_null
+
   - name: sfdc_sales_support_rep
     data_type: varchar(30)
     description: "{{ doc('column_sfdc_sales_support_rep') }}"

@@ -924,9 +924,6 @@ RESA Name Proper (Name of the RESA on Proper case. Populated by Agile)
 RESA UID (Agile UID of the Regional Education Service Agency (RESA) associated with the district or school. Populated by Agile)
 {% enddocs %}
 
-{% docs column_sfdc_sales_owner_field %}
-Sales Owner Field (Owner of upsell for an account  Integrations: Gainsight.)
-{% enddocs %}
 
 {% docs column_sfdc_sales_support_rep %}
 Sales Support Rep (Sales Support Rep  Integrations: Gainsight.)
