@@ -138,38 +138,6 @@ select
 from content_delivery_usage.dim_learning_object
 
 
---excluding table dim_learning_pathway - was a one-time action added at beginning of COVID, no longer used
-
-
-union all
-
-select
-	'dw' as database_name
-	,'content_delivery_usage' as schema_name
-	,'fact_assignment_completion' as table_name
-	,COUNT(*) as row_count
-	,MAX(greatest(
-		(cast(created_datetime as date)), 
-		(cast(modified_datetime as date)), 
-		(cast(deleted_datetime as date))
-		--(cast(launch_datetime as date))
-		)) as last_action_date
-from content_delivery_usage.fact_assignment_completion
-
-union all
-
-select
-	'dw' as database_name
-	,'content_delivery_usage' as schema_name
-	,'fact_assignment_launch' as table_name
-	,COUNT(*) as row_count
-	,MAX(greatest(
-		--(cast(created_datetime as date)), 
-		--(cast(modified_datetime as date)), 
-		--(cast(deleted_datetime as date))),
-		(cast(launch_datetime as date))
-				)) as last_action_date
-from content_delivery_usage.fact_assignment_launch
 
 union all
 
@@ -229,6 +197,16 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from content_delivery_usage.fact_students_usage_monthly_snapshots
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'fact_students_completions_monthly_snapshots' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.fact_students_completions_monthly_snapshots
 
 union all
 
