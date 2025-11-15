@@ -418,9 +418,6 @@ Enrollment - Advanced Placement
 Enrollment Band (Integrations: Gainsight.)
 {% enddocs %}
 
-{% docs column_sfdc_enrollment_tier %}
-Enrollment Tier
-{% enddocs %}
 
 {% docs column_sfdc_esser_funding %}
 ESSER Funding

@@ -622,11 +622,6 @@ models:
     description: "{{ doc('column_sfdc_enrollment_band') }}"
     constraints:
     - type: not_null
-  - name: sfdc_enrollment_tier
-    data_type: varchar(20)
-    description: "{{ doc('column_sfdc_enrollment_tier') }}"
-    constraints:
-    - type: not_null
   - name: sfdc_esser_funding
     data_type: varchar(210)
     description: "{{ doc('column_sfdc_esser_funding') }}"
