@@ -2,6 +2,11 @@
 version: 2
 models:
   - name: fact_license_order_history
+    data_tests:
+    - scd2_plus_validation:
+        unique_key: order_id
+        scd_valid_from_col_name: fromdate
+        scd_valid_to_col_name: todate  
     description: "The table records changes in FACT_LICENSE_ORDER using Slowly Changing Dimension Type 2 method (fromdate - todate)"
     config:
       contract:

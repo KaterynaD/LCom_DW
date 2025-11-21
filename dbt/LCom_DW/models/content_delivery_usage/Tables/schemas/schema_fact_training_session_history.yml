@@ -3,7 +3,7 @@ version: 2
 models:
   - name: fact_training_session_history
     data_tests:
-      - dbt_scd2_plus.scd2_plus_validation:
+      - scd2_plus_validation:
           unique_key: 'training_session_id'
           scd_valid_from_col_name: 'fromdate'
           scd_valid_to_col_name:  'todate'

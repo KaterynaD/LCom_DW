@@ -13,7 +13,7 @@ models:
         - dim
         - product_usage
     data_tests:
-    - dbt_scd2_plus.scd2_plus_validation:
+    - scd2_plus_validation:
         unique_key: product_category + product_id
         scd_valid_from_col_name: fromdate
         scd_valid_to_col_name: todate        
