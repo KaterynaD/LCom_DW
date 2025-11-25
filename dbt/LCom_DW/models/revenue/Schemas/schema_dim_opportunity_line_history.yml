@@ -1,0 +1,276 @@
+version: 2
+models:
+- name: dim_opportunity_line_history
+  data_tests:
+  - scd2_plus_validation:
+      unique_key: opportunity_line_id
+      scd_valid_from_col_name: fromdate
+      scd_valid_to_col_name: todate
+  description: Salesforce opportunity line-level product and pricing history snapshots table
+    when the line attributes change. The history is tracked as
+    SCD2 (fromdate - todate).
+  config:
+    contract:
+      enforced: false
+    tags:
+    - dim
+    - revenue
+  columns:
+  - name: opportunity_line_hist_id
+    data_type: VARCHAR(50)
+    description: Primary Key of DIM_OPPORTUNITY_LINE_HISTORY.
+    constraints:
+    - type: not_null
+    - type: primary_key
+      warn_unenforced: false
+    data_tests:
+    - unique
+    - not_null
+
+  - name: fromdate
+    data_type: TIMESTAMP WITHOUT TIME ZONE
+    description: "{{ doc('column_fromdate') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: todate
+    data_type: TIMESTAMP WITHOUT TIME ZONE
+    description: "{{ doc('column_todate') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: record_version
+    data_type: INTEGER
+    description: "{{ doc('column_record_version') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: opportunity_line_id
+    data_type: VARCHAR(300)
+    description: Primary Key of DIM_OPPORTUNITY_LINE. Opportunity Line Item ID
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sfdc_product_id
+    data_type: VARCHAR(300)
+    description: "{{ doc('column_sfdc_product_id') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: opportunity_id
+    data_type: VARCHAR(300)
+    description: "{{ doc('column_opportunity_id') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: pricebook_entry_id
+    data_type: VARCHAR(18)
+    description: "{{ doc('column_pricebook_entry_id') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: pricebook_id
+    data_type: VARCHAR(18)
+    description: "{{ doc('column_pricebook_id') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: netsuite_id
+    data_type: VARCHAR(50)
+    description: "{{ doc('column_netsuite_id') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: netsuite_sku
+    data_type: VARCHAR(90)
+    description: "{{ doc('column_netsuite_sku') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: sbqq_quote_line
+    data_type: VARCHAR(50)
+    description: "{{ doc('column_sbqq_quote_line') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: name
+    data_type: VARCHAR(1200)
+    description: "{{ doc('column_opportunity_line_name') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: quantity
+    data_type: INTEGER
+    description: "{{ doc('column_quantity') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: total_price
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_total_price') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: unit_price
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_unit_price') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: weighted_total_price
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_weighted_total_price') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: combine_new_biz_arr
+    data_type: NUMERIC(36,17)
+    description: "{{ doc('column_combine_new_biz_arr') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: combine_renewal_arrs
+    data_type: NUMERIC(37,17)
+    description: "{{ doc('column_combine_renewal_arrs') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: combine_upsell_arrs
+    data_type: NUMERIC(37,17)
+    description: "{{ doc('column_combine_upsell_arrs') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: discount_applied
+    data_type: VARCHAR(25)
+    description: "{{ doc('column_discount_applied') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: list_price
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_list_price') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: net_price_display
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_net_price_display') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: net_unit_price
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_net_unit_price') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: opportunity_product_arr
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_opportunity_product_arr') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: pro_rate_adj_term
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_pro_rate_adj_term') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: record_type
+    data_type: VARCHAR(765)
+    description: "{{ doc('column_record_type') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: business_type_opty_product
+    data_type: VARCHAR(765)
+    description: "{{ doc('column_business_type_opty_product') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: class
+    data_type: VARCHAR(765)
+    description: "{{ doc('column_class') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+    
+  - name: loaddate
+    data_type: TIMESTAMP WITHOUT TIME ZONE
+    description: "{{ doc('column_loaddate') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: updatedate
+    data_type: TIMESTAMP WITHOUT TIME ZONE
+    description: "{{ doc('column_updatedate') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
+
+  - name: scd_hash
+    data_type: VARCHAR(50)
+    description: "{{ doc('column_scd_hash') }}"
+    constraints:
+    - type: not_null
+    data_tests:
+    - not_null
