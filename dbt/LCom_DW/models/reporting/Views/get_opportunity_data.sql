@@ -64,7 +64,6 @@
         opp.close_date,
         opp.paid_date,
         opp.license_provisioned_date,
-        opp.multi_year,
         opp.number_of_students AS opp_student_count,
         opp.number_of_schools AS opp_school_count,
         opp_li.quantity AS opp_li_student_count,
