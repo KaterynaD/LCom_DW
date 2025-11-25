@@ -192,21 +192,6 @@ models:
     description: "{{ doc('column_created_date') }}"
     constraints:
     - type: not_null
-  - name: csm_email
-    data_type: varchar(400)
-    description: "{{ doc('column_csm_email') }}"
-    constraints:
-    - type: not_null
-  - name: csm_introduced
-    data_type: boolean
-    description: "{{ doc('column_csm_introduced') }}"
-    constraints:
-    - type: not_null
-  - name: csm_name
-    data_type: varchar(380)
-    description: "{{ doc('column_csm_name') }}"
-    constraints:
-    - type: not_null
   - name: data_quality_description
     data_type: varchar(70)
     description: "{{ doc('column_data_quality_description') }}"
@@ -235,16 +220,6 @@ models:
   - name: disable_odc
     data_type: boolean
     description: "{{ doc('column_disable_odc') }}"
-    constraints:
-    - type: not_null
-  - name: district_business_sub_type
-    data_type: varchar(20)
-    description: "{{ doc('column_district_business_sub_type') }}"
-    constraints:
-    - type: not_null
-  - name: district_enrollment
-    data_type: varchar(40)
-    description: "{{ doc('column_district_enrollment') }}"
     constraints:
     - type: not_null
   - name: downsell
@@ -407,11 +382,6 @@ models:
     description: "{{ doc('column_multi_year_arr') }}"
     constraints:
     - type: not_null
-  - name: multi_year
-    data_type: boolean
-    description: "{{ doc('column_multi_year') }}"
-    constraints:
-    - type: not_null
   - name: multi_year_discussed
     data_type: boolean
     description: "{{ doc('column_multi_year_discussed') }}"
@@ -477,11 +447,7 @@ models:
     description: "{{ doc('column_odc_sent') }}"
     constraints:
     - type: not_null
-  - name: of_months
-    data_type: double precision
-    constraints:
-    - type: not_null
-    description: "{{ doc('column_of_months') }}"
+
   - name: opp_record_type
     data_type: varchar(20)
     description: "{{ doc('column_opp_record_type') }}"

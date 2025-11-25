@@ -114,17 +114,6 @@ Combined ARR
 Contract
 {% enddocs %}
 
-{% docs column_csm_email %}
-CSM Email
-{% enddocs %}
-
-{% docs column_csm_introduced %}
-CSM Introduced
-{% enddocs %}
-
-{% docs column_csm_name %}
-CSM Name
-{% enddocs %}
 
 {% docs column_data_quality_description %}
 Data Quality Description
@@ -143,13 +132,6 @@ Deal Docs Completed?
 Disable ODC
 {% enddocs %}
 
-{% docs column_district_business_sub_type %}
-District Business Sub Type (Denotes if opp should be considered TX or Non-TX business)
-{% enddocs %}
-
-{% docs column_district_enrollment %}
-District Enrollment
-{% enddocs %}
 
 {% docs column_downsell %}
 Downsell (Automatically derives downsell)
@@ -257,9 +239,6 @@ Migrated?
 Multi-Year ARR (Roll up summary of all opporunity products with Class of ARR for creating multi-year calculations)
 {% enddocs %}
 
-{% docs column_multi_year %}
-Dummyfield 2 (Multi-Year QA)
-{% enddocs %}
 
 {% docs column_multi_year_discussed %}
 Multi-year discussed?
@@ -310,9 +289,6 @@ Number of Students
 ODC Sent
 {% enddocs %}
 
-{% docs column_of_months %}
-
-{% enddocs %}
 
 {% docs column_opp_to_be_closed %}
 Opp to be Closed
