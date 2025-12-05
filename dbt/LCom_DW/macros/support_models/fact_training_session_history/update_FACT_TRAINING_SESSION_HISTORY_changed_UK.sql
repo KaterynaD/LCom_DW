@@ -24,8 +24,8 @@ where data.sfdc_account_id=content_delivery_usage.fact_training_session_history.
 
 /*Some training sessions are deleted in SFDC*/
 /*and not included in FACT_TRAINING_SESSION next day               */
-delete from content_delivery_usage.fact_training_session_history 
-where training_session_id not in (select training_session_id from content_delivery_usage.fact_training_session);
+/*delete from content_delivery_usage.fact_training_session_history */
+/*where training_session_id not in (select training_session_id from content_delivery_usage.fact_training_session);*/
 
  {% endset %}
 

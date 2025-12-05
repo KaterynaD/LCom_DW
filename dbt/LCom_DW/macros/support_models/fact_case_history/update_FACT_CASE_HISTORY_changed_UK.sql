@@ -24,8 +24,8 @@ where data.sfdc_account_id=support.fact_case_history.account_id;
 
 /*Some cases are deleted in SFDC*/
 /*and not included in FACT_CASE next day               */
-delete from support.fact_case_history 
-where case_id not in (select case_id from support.fact_case);
+/*delete from support.fact_case_history */
+/*where case_id not in (select case_id from support.fact_case);*/
 
  {% endset %}
 

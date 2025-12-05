@@ -23,9 +23,9 @@ from data
 where data.sfdc_account_id=revenue.fact_opportunity_history.account_id;
 
 /*Some opportunities are deleted in SFDC*/
-/*and not included in FACT_OPPORTUNITY next day               */
-delete from revenue.fact_opportunity_history 
-where opportunity_id not in (select opportunity_id from revenue.fact_opportunity);
+/*and not included in FACT_OPPORTUNITY next day*/
+/*delete from revenue.fact_opportunity_history*/ 
+/*where opportunity_id not in (select opportunity_id from revenue.fact_opportunity);*/
 
  {% endset %}
 
