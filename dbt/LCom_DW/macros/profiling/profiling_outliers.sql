@@ -233,5 +233,5 @@
     {{ log('Outliers: finished ' ~ col, info=True) }}
 
   {% endfor %}
-a
+
 {% endmacro %}

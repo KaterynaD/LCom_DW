@@ -49,7 +49,7 @@ works only if both tables are "table" materialization
 If one of the table is incremental - it does not work.
 "Table" materialization drops manually created FKs (Add in post-hook?)
 I removed constraint declarations from the schema/contract. There is still a test which checks integrity.
-There is also a macro to re-create constraints after the run for all tables 
+There is also a macro to drop and re-create constraints before and after the run for all tables 
 - dbt does not hide packages in documentation if there are only macros. There is a reported bug for a long time but they do not fix.
 - dbt can not grant select for Redshift roles. It grants directly to users now (see dbt_project.yml, model configuration) and there is a grant at the level of Redshift database like 
 ```

@@ -1,0 +1,105 @@
+version: 2
+
+macros:
+  - name: scd2_plus
+    description: |
+      Custom SCD Type 2 materialization that builds and maintains a history table using a
+      hash of the unique key and updated_at, with support for:
+      - Type II "check_cols" (changes create new versions)
+      - Type I "punch_thru_cols" (backfilled across all versions)
+      - "update_cols" (only maintained on the latest version)
+      It creates the table on first run and performs incremental SCD2 updates on subsequent runs.
+
+
+  - name: scd2_plus_build_table_sql
+    description: |
+      Internal helper macro used by the `scd2_plus` materialization to transform the
+      source SELECT into a fully prepared SCD2 result set. It:
+      - de-duplicates rows per (unique_key, updated_at, loaded_at)
+      - computes SCD hashes and IDs
+      - derives valid_from / valid_to ranges and record_version
+      - applies Type I (punch_thru_cols) and update_cols rules
+      - adds SCD service columns (loaddate, updatedate, scd_hash, etc.)
+      The same macro is used both for initial table creation and for incremental loads.
+    arguments:
+      - name: config
+        type: dict
+        description: |
+          Model configuration dictionary (read from `model['config']`). Must include:
+          - unique_key (string expression)
+          - updated_at (timestamp expression)
+          - check_cols (list of column names to track as Type II)
+          Optional keys:
+          - loaded_at
+          - punch_thru_cols
+          - update_cols
+          - loaddate
+          - scd_id_col_name
+          - scd_valid_from_col_name
+          - scd_valid_to_col_name
+          - scd_record_version_col_name
+          - scd_loaddate_col_name
+          - scd_updatedate_col_name
+          - scd_valid_from_min_date
+          - scd_valid_to_max_date
+      - name: sql
+        type: string
+        description: |
+          Compiled SELECT statement for the source (non-SCD) dataset, usually
+          `model['compiled_code']`.
+      - name: create_flg
+        type: boolean
+        description: |
+          When true, applies `scd_valid_from_min_date` to the first record version
+          (for initial table creation). When false, uses the raw valid_from value
+          (for incremental loads).
+
+
+  - name: scd2_plus_merge_sql
+    description: |
+      Internal helper macro used by the `scd2_plus` materialization to merge new
+      data into an existing SCD2 table. It:
+      - builds new SCD2 rows via `scd2_plus_build_table_sql`
+      - stages new/changed rows in a temporary table
+      - inserts new history versions
+      - updates existing versions when duplicates exist for the same key/timestamp
+      - recalculates valid_from / valid_to / record_version for back-dated changes
+      - applies Type I punch_thru_cols and update_cols across existing rows
+    arguments:
+      - name: target
+        type: Relation
+        description: Existing SCD2 target relation (the dimension table).
+      - name: config
+        type: dict
+        description: |
+          Same configuration dictionary as in `scd2_plus_build_table_sql`, read from
+          the model config (unique_key, updated_at, check_cols, and optional fields).
+      - name: sql
+        type: string
+        description: |
+          Compiled SELECT statement for the source (non-SCD) dataset, usually
+          `model['compiled_code']`.
+
+  - name: scd2_plus_validation
+    description: |
+      Generic test that validates SCD2 validity ranges per unique key. It fails if:
+      - valid_from is greater than valid_to
+      - there are gaps or overlaps in the timeline, i.e. current valid_from does
+        not equal the previous row’s valid_to (for the same key), except for the
+        first row.
+    arguments:
+      - name: model
+        type: relation
+        description: SCD2 model to validate.
+      - name: unique_key
+        type: string
+        description: Column name that identifies the business key whose history is tracked.
+
+      - name: scd_valid_from_col_name
+        type: string
+        description: Column name that stores the start of the validity period.
+
+      - name: scd_valid_to_col_name
+        type: string
+        description: Column name that stores the end of the validity period.
+

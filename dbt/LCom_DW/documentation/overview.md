@@ -55,11 +55,21 @@ The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/sr
 
 ## Diagrams
 
-- [Conceptual](https://miro.com/app/board/uXjVLq6srOM=/) ([Licenses](https://miro.com/app/board/uXjVIMuj8bw=/), [Products](https://miro.com/app/board/uXjVLlSWsTM=/), [Users and Accounts](https://miro.com/app/board/uXjVIYkFN_Y=/))
-- [DW Logical Schema](https://miro.com/app/board/uXjVI9BzYks=/) (use this diagram to understand how to join tables)
-- [Content Delivery Usage Physical Schema](https://miro.com/app/board/uXjVKJqV1uE=/)
+- [Conceptual](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427368974) ([Licenses](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427401754), [Products](https://miro.com/app/board/uXjVLlSWsTM=/), [Users and Accounts](https://miro.com/app/board/uXjVIYkFN_Y=/))
+- [DW Logical Schema](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3488841816?atl_f=PAGETREE) (use this diagram to understand how to join tables)
+
 {% enddocs %}
 
+## Foreighn Keys
+
+FK are not enforced in Redshift. The relations are tested in dbt except history tables because it's possible to have historical entities deleted and without related data in current data tables. The FK are dropped before transformatioms starts and re-created after. If there is a manual run, a FK can be dropped but not restored automatically. They are added to show how the tables can be join.
+
+# Slowly Changing Dimension Type 2 (scd2) Custom Materialization
+
+It's used to track historical data
+
+The original source of the project is in [github](https://github.com/KaterynaD/dbt_scd2_plus)
+but the scripts are part of LCom_DW projects (macros/dbt_scd2_plus) and no need to install the package.
 
 {% docs __dbt_utils__ %}
 # Utility macros
@@ -78,14 +88,6 @@ Our dbt project may use this package for surrogate keys, etc.
 
 {% enddocs %}
 
-{% docs __dbt_scd2_plus__ %}
-# Slowly Changing Dimension Type 2 (scd2) Custom Materialization
-It's used to track historical data
-
-The source of the project is in [github](https://github.com/KaterynaD/dbt_scd2_plus)
-This is my personal project and I plan to add it directly in LCom_DW instead of github.
-
-{% enddocs %}
 
 {% docs __dbt_postgres__ %}
 # This is a base for dbt Redshift

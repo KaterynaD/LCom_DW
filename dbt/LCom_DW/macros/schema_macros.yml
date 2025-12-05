@@ -20,35 +20,17 @@ macros:
     description: It's used to set loaddate var in dbt_project and then populate loaddate column in all table
 
   - name: run_vacuum_and_analyze_main_set
-    description: Executes vacuum and analyze commands for the tables in "LCOM" man set of tables. It's executes seprately after the main transformations run. We can not run v&a commands in post-hooks because we can not run 2 v&a commands in the same time in Redshift and with dbt parallel execution it may happen. 
+    description: No need to do in Serverless Redshift. Executes vacuum and analyze commands for the tables in "LCOM" man set of tables. It's executes seprately after the main transformations run. We can not run v&a commands in post-hooks because we can not run 2 v&a commands in the same time in Redshift and with dbt parallel execution it may happen. 
 
   - name: run_vacuum_and_analyze_product_usage
-    description: Executes vacuum and analyze commands for the tables in Product Usage tables subset. 
+    description: No need to do in Serverless Redshift. Executes vacuum and analyze commands for the tables in Product Usage tables subset. 
+ 
 
-  
-  - name: create_FK
-    description: Creates Foreign Key for a specific database.schema.table.column to database.refschema.reftable.refcolumn if they exist. It's needed to re-create FK to models with "Table" materialization after the models run to the models with "Incremental" materialization. The call is done from "Table" materialized models post-hooks
-    arguments:
-      - name: database
-        description: The database where the tables are located
-      - name: schema
-        description: The schema where the "Incremental" table is located
-      - name: table
-        description: The "Incremental" table where the foreign key will be created
-      - name: column
-        description: The column in the "Incremental" table that will be a foreign key
-      - name: refschema
-        description: The schema of the reference table (Table that contains the primary key and materialized as "Table")
-      - name: reftable
-        description: Table that contains the primary key and materialized as "Table"
-      - name: refcolumn
-        description: The column in the reference table that is the primary key  
+  - name: Recreatinging_all_FK
+    description: Recreating a set of FKs for all tables and columns where it's needed in LCom_DW database. It's used after the main transformations run to ensure all FKs are in place.        
 
-  - name: create_FKs_set_1
-    description: One time run to create a set of FKs for some tables which are incremental and FKs are not removed in every day refresh 
-
-  - name: Recreating_FK
-    description: Recreating a set of FKs for full refresh tables and FKs are removed each run        
+  - name: Droping_all_FK
+    description: Drops all FKs in LCom_DW database. It's used before the main transformations run
 
   - name: create_lc_load_launches_monthly_snapshots
     description: Creates a set of overloading stored procedures lc_load_launches_monthly_snapshots in content_delivery_usage schema. The stored procedure populates content_delivery_usage.fact_launches_monthly_snapshots table and was created before the start of dbt project. The stored procedure is used in fact_launches_monthly_snapshots model with custom materialization.
