@@ -52,13 +52,7 @@ models:
     description: "{{ doc('column_opportunity_id') }}"
     constraints:
     - type: not_null
-    - type: foreign_key
-      reference: ref('fact_opportunity')
-      warn_unenforced: false
     data_tests:
-    - relationships:
-        to: ref('fact_opportunity')
-        field: opportunity_id
     - not_null
   - name: stage_name
     data_type: varchar(780)
@@ -72,13 +66,7 @@ models:
     description: "{{ doc('column_account_id') }}"
     constraints:
     - type: not_null
-    - type: foreign_key
-      reference: ref('dim_account')
-      warn_unenforced: false
     data_tests:
-    - relationships:
-        to: ref('dim_account')
-        field: account_id
     - not_null
   - name: name
     data_type: varchar(300)

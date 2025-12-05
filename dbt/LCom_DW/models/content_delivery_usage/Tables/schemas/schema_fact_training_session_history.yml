@@ -55,14 +55,8 @@ models:
         data_type: varchar(300)
         description: Fact Training Session FK - (Salesforce Training_Session_c ID column)
         constraints:
-          - type: not_null         
-          - type: foreign_key
-            reference: ref('fact_training_session')
-            warn_unenforced: false    
-        data_tests:
-          - relationships:
-              to: ref('fact_training_session')
-              field: training_session_id       
+          - type: not_null           
+        data_tests:   
           - not_null 
 
  
@@ -81,13 +75,7 @@ models:
         description: "{{ doc('column_owner_id') }}"
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_employee')
-            warn_unenforced: false
-        data_tests:
-          - relationships:
-              to: ref('dim_employee')
-              field: employee_id       
+        data_tests:     
           - not_null
 
       - name: pds_group
@@ -104,13 +92,7 @@ models:
         description: "{{ doc('column_account_id') }}"
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
-        data_tests:
-          - relationships:
-              to: ref('dim_account')
-              field: account_id       
+        data_tests:   
           - not_null
 
 

@@ -22,7 +22,7 @@ models:
         data_type: varchar(300)
         description: Foreign key to dim_training_session_topic; unique topic identifier (MD5 hash of topic name).
         constraints:
-          - type: not_null
+          - type: not_null         
         data_tests:
           - relationships:
               to: ref('dim_training_session_topic')

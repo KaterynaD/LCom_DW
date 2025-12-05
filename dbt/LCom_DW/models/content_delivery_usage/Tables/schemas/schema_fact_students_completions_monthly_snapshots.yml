@@ -78,6 +78,9 @@ models:
           - type: not_null
         data_tests:
           - not_null
+          - relationships:
+              to: ref('dim_account')
+              field: account_id          
 
       - name: organization_school_id
         description: "School-level identifier for *_school_cnt_* metrics; the lowest level in this table."
@@ -85,6 +88,9 @@ models:
           - type: not_null
         data_tests:
           - not_null
+          - relationships:
+              to: ref('dim_account')
+              field: account_id           
 
       - name: grade_level
         description: >
@@ -97,6 +103,10 @@ models:
 
       - name: topic
         description: "Learning topic grouping; includes individual topics and '(All)'."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null        
 
       - name: school_cnt_completions
         description: "Number of completion records (attempts, scored or not) at school level."

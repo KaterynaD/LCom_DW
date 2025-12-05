@@ -52,8 +52,12 @@ models:
       - name: learning_object_id
         data_type: varchar(50)
         description: FK to dim_learning_object representing curriculum content
-
-
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_learning_object')
+              field: learning_object_id
       - name: fromdate
         data_type: date
         description: Valid start date of this category assignment

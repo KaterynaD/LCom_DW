@@ -19,10 +19,10 @@ models:
         description: FACT_LICENSE_ORDER FK LearningPlatform.dbo.Order_School.OrderId
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('fact_license_order')
-            warn_unenforced: false
-
+        data_tests:
+          - relationships:
+              to: ref('fact_license_order')
+              field: order_id
 
       - name: organization_district_id
         data_type: varchar(300)

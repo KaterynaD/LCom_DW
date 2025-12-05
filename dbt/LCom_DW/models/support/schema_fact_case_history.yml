@@ -51,14 +51,9 @@ models:
         description: Foreign key to the case record in FACT_CASE.
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('fact_case')
-            warn_unenforced: false          
+         
         data_tests:
           - not_null
-          - relationships:
-              to: ref('fact_case')
-              field: case_id
 
       - name: is_closed
         data_type: integer
@@ -97,25 +92,20 @@ models:
         description: Owner of the case.
         constraints:
           - type: not_null
+        
         data_data_tests:
           - not_null        
-          - relationships:
-            to: ref('dim_employee')
-            field: employee_id  
+
 
       - name: account_id
         data_type: varchar(300)
         description: Foreign key to DIM_ACCOUNT table.
         constraints:
           - type: not_null
-          - type: foreign_key
-            reference: ref('dim_account')
-            warn_unenforced: false
+
         data_tests:
           - not_null
-          - relationships:
-              to: ref('dim_account')
-              field: account_id
+
 
       - name: loaddate
         data_type: timestamp

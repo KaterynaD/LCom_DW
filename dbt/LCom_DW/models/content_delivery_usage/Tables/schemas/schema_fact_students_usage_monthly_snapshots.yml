@@ -74,6 +74,7 @@ models:
         description: "Defines District level for district_cnt_students and district_students_launches along with Country and State."
         constraints:
           - type: not_null
+          
         data_tests:
           - not_null
           - relationships:
