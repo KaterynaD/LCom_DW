@@ -1,4 +1,4 @@
-{% macro Droping_all_FK()  %}
+{% macro Dropping_all_FK()  %}
 
 {% set fks %}
 
