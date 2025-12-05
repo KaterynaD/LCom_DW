@@ -56,20 +56,14 @@ The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/sr
 ## Diagrams
 
 - [Conceptual](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427368974) ([Licenses](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427401754), [Products](https://miro.com/app/board/uXjVLlSWsTM=/), [Users and Accounts](https://miro.com/app/board/uXjVIYkFN_Y=/))
-- [DW Logical Schema](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3488841816?atl_f=PAGETREE) (use this diagram to understand how to join tables)
+- [DW Logical Schema](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3488841816?atl_f=PAGETREE)
+- DW Physical Schema - TBD (use this diagram to understand how to join tables)
+
+
 
 {% enddocs %}
 
-## Foreighn Keys
 
-FK are not enforced in Redshift. The relations are tested in dbt except history tables because it's possible to have historical entities deleted and without related data in current data tables. The FK are dropped before transformatioms starts and re-created after. If there is a manual run, a FK can be dropped but not restored automatically. They are added to show how the tables can be join.
-
-# Slowly Changing Dimension Type 2 (scd2) Custom Materialization
-
-It's used to track historical data
-
-The original source of the project is in [github](https://github.com/KaterynaD/dbt_scd2_plus)
-but the scripts are part of LCom_DW projects (macros/dbt_scd2_plus) and no need to install the package.
 
 {% docs __dbt_utils__ %}
 # Utility macros
@@ -85,6 +79,18 @@ Our dbt project may use this package for surrogate keys, etc.
 - Each dbt model run in Prod target is logged in audit.dbt_run_log table. It's configured for all models in dbt_project.yml (Pre and Post hooks)
 - Null values are replaced with default values from variables in dbt_project.yml Like "Unknown" for varchar columns etc.
 - audit.dbt_run_log table is a not part of the transformation models and **must be created outside of the dbt project** because every run of dbt need the table for logs. The table creation statement is in [bitbucket](https://bitbucket.org/learningcom/redshift/src/master/DW/audit/Tables/dbt_run_log.sql) and in project_setup_folder in [bitbucket](https://bitbucket.org/learningcom/transformations/src/master/dbt/LCom_DW/project_setup_scripts/)
+
+
+## Foreighn Keys
+
+FK are not enforced in Redshift. The relations are tested in dbt except history tables because it's possible to have historical entities deleted and without related data in current data tables. The FK are dropped before transformatioms starts and re-created after. If there is a manual run, a FK can be dropped but not restored automatically. They are added to show how the tables can be join.
+
+# Slowly Changing Dimension Type 2 (scd2) Custom Materialization
+
+It's used to track historical data
+
+The original source of the project is in [github](https://github.com/KaterynaD/dbt_scd2_plus)
+but the scripts are part of LCom_DW projects (macros/dbt_scd2_plus) and no need to install the package.
 
 {% enddocs %}
 
