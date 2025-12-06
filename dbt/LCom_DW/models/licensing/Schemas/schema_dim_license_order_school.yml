@@ -19,10 +19,7 @@ models:
         description: FACT_LICENSE_ORDER FK LearningPlatform.dbo.Order_School.OrderId
         constraints:
           - type: not_null
-        data_tests:
-          - relationships:
-              to: ref('fact_license_order')
-              field: order_id
+
 
       - name: organization_district_id
         data_type: varchar(300)

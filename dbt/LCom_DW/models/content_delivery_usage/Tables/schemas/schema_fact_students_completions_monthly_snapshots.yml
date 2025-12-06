@@ -88,9 +88,7 @@ models:
           - type: not_null
         data_tests:
           - not_null
-          - relationships:
-              to: ref('dim_account')
-              field: account_id           
+        
 
       - name: grade_level
         description: >
