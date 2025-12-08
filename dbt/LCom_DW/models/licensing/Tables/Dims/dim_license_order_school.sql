@@ -5,7 +5,8 @@
         incremental_strategy='merge',
         on_schema_change='append_new_columns',
         dist='organization_district_id',
-        sort='order_id'
+        sort='order_id',
+        post_hook='DELETE FROM {{ this }} WHERE order_id in ( select orderid from {{ source("staging","license_order") }} stg where stg.valid_boolean=false)'
 )
  }}
 
