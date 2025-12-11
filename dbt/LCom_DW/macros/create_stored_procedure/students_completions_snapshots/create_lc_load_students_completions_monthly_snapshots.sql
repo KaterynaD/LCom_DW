@@ -259,7 +259,7 @@ fac.organization_district_id
 when len(fac.organization_school_id)<2 then
 fac.organization_district_id
 else
-isnull(fac.organization_school_id,fac.organization_district_id)
+isnull(SPLIT_PART(fac.organization_school_id, ',', 1),fac.organization_district_id)
 end as organization_school_id,
 isnull(fac.user_grade_level_code,'Unknown') as user_grade_level_code,
 fac.user_account_id,
