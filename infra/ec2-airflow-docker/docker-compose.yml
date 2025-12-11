@@ -1,0 +1,160 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  airflow-webserver:
+    build: .
+    image: airflow-dbt:2.10.2-py3.12
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__SMTP__SMTP_HOST: "smtp.gmail.com"
+      AIRFLOW__SMTP__SMTP_STARTTLS: "True"
+      AIRFLOW__SMTP__SMTP_SSL: "False"
+      AIRFLOW__SMTP__SMTP_PORT: "587"
+      AIRFLOW__SMTP__SMTP_MAIL_FROM: "drogaieva.kateryna.noreply@gmail.com"
+      AIRFLOW__SMTP__SMTP_USER: "drogaieva.kateryna.noreply@gmail.com"
+      AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
+
+
+      # DAGs live inside the mounted repo
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/transformations/airflow/dags
+
+      # dbt profiles location inside container
+      DBT_PROFILES_DIR: /home/airflow/.dbt
+
+      # dbt project location
+      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
+
+      # repo
+      REPO_DIR: /opt/airflow/transformations
+
+    volumes:
+      # Airflow runtime stuff
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+
+      # dbt profiles (host -> container)
+      - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
+
+      # Full transformations repo (host -> container)
+      - /home/kdrogaieva/transformations:/opt/airflow/transformations
+
+      # SSH keys from EC2 host → container /root/.ssh
+      - /home/kdrogaieva/.ssh:/root/.ssh:ro
+
+      # smtp password
+      - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
+
+    
+    ports:
+      - "8080:8080"
+    command:
+    - bash
+    - -c
+    - |
+        echo ">>> Bootstrapping Airflow Variable ALERT_EMAIL..."
+
+        # Create Variable only if missing
+        # ----------------------------------------
+        # ALERT_EMAIL
+        # ----------------------------------------
+         if ! airflow variables get ALERT_EMAIL >/dev/null 2>&1; then
+          airflow variables set ALERT_EMAIL "kdrogaieva@learning.com"
+          echo "Variable ALERT_EMAIL created: kdrogaieva@learning.com"
+        else
+          echo "Variable ALERT_EMAIL already exists — skipping."
+        fi
+
+        # ----------------------------------------
+        # INIT_DBT_PROJECT (YES by default)
+        # This will be changed to NO by CI/CD pipeline later.
+        # ----------------------------------------
+        if ! airflow variables get INIT_DBT_PROJECT >/dev/null 2>&1; then
+          airflow variables set INIT_DBT_PROJECT "YES"
+          echo "Variable INIT_DBT_PROJECT created: YES"
+        else
+          echo "Variable INIT_DBT_PROJECT already exists — skipping."
+        fi
+
+
+
+        echo ">>> Starting Airflow Webserver..."
+        exec airflow webserver
+
+  airflow-scheduler:
+    image: airflow-dbt:2.10.2-py3.12
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/transformations/airflow/dags
+      AIRFLOW__SMTP__SMTP_HOST: "smtp.gmail.com"
+      AIRFLOW__SMTP__SMTP_STARTTLS: "True"
+      AIRFLOW__SMTP__SMTP_SSL: "False"
+      AIRFLOW__SMTP__SMTP_PORT: "587"
+      AIRFLOW__SMTP__SMTP_MAIL_FROM: "drogaieva.kateryna.noreply@gmail.com"
+      AIRFLOW__SMTP__SMTP_USER: "drogaieva.kateryna.noreply@gmail.com"
+      AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
+
+      REPO_DIR: /opt/airflow/transformations
+
+      DBT_PROFILES_DIR: /home/airflow/.dbt
+
+    volumes:
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
+      - /home/kdrogaieva/transformations:/opt/airflow/transformations
+      - /home/kdrogaieva/.ssh:/root/.ssh:ro
+      - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
+
+    command: scheduler
+
+  airflow-init:
+    image: airflow-dbt:2.10.2-py3.12
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      DBT_PROFILES_DIR: /home/airflow/.dbt
+      REPO_DIR: /opt/airflow/transformations
+
+
+
+    volumes:
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
+      - /home/kdrogaieva/transformations:/opt/airflow/transformations
+      - /home/kdrogaieva/.ssh:/root/.ssh:ro
+      - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
+    command:
+      - bash
+      - -c
+      - "airflow db migrate && airflow users create --username admin --password admin --firstname Kate --lastname Drogaieva --role Admin --email kdrogaieva@learning.com || true"
