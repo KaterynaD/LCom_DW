@@ -1,6 +1,19 @@
 ---
 version: 2
 models:
+
+  - name: vw_alive_accounts
+    description: View to represent historical monthly and current basic info about accounts with opportunities, licenses or usage
+    config:
+      tags:
+        - rep
+
+  - name: vw_licenses_provioned_monthly
+    description: View to represent current monthly active licenses provisioned at district and school levels with a complex set of attributes
+    config:
+      tags:
+        - rep        
+
   - name: get_weekly_snapshot_data_district_level
     description: View to use in Weekly Provisioning Licensing and Utilization dashboard
     config:
