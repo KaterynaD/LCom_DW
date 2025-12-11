@@ -316,3 +316,8 @@ models:
     description: "{{ doc('column_sfdc_customer_level_override') }}"
     constraints:
     - type: not_null
+  - name: lcom_parent_organization_id
+    data_type: varchar(300)
+    description: "{{ doc('column_lcom_parent_organization_id') }}"
+    constraints:
+    - type: not_null

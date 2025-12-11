@@ -44,7 +44,8 @@
 'sfdc_state_program_eligible',
 'sfdc_county_name',
 'sfdc_customer_level',
-'sfdc_customer_level_override'
+'sfdc_customer_level_override',
+'lcom_parent_organization_id'
 ],
 
    punch_thru_cols=['sfdc_account_id'],
@@ -113,6 +114,7 @@ case when sfdc_state_program_eligible then 1 else 0 end sfdc_state_program_eligi
 sfdc_county_name,
 sfdc_customer_level,
 sfdc_customer_level_override,
+lcom_parent_organization_id,
 GREATEST(lcom_modified_datetime, sfdc_last_modified_date, lcom_created_datetime,sfdc_created_date,'1900-01-01'::date):: timestamp  last_modified_date
 from {{ ref("dim_account") }}
 {% if is_incremental() %}
@@ -161,5 +163,6 @@ sfdc_state_program_eligible,
 sfdc_county_name,
 sfdc_customer_level,
 sfdc_customer_level_override,
+lcom_parent_organization_id,
 last_modified_date
 from data
