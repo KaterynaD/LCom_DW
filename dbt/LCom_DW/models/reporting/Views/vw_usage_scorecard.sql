@@ -45,7 +45,7 @@ join dim_date_prev dt
 on dt.schoolyear = fsums.schoolyear
 and mon_year =  to_char(dt.SchoolYear_EndDate,'yyyymm')::int
 where topic='(All)'
-and grade_level='(All)'
+and grade_level='All Students'
 and product_category ='(All)'
 )
 select 

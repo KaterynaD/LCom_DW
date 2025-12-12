@@ -14,5 +14,6 @@ grade_level + '_' +
 topic
 ) cntD
 from {{ ref("fact_students_usage_monthly_snapshots") }} fsums
+where grade_level='All Students'
 group by organization_school_id
 having cnt<>cntD

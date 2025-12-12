@@ -6,7 +6,7 @@ school_cnt_students ,
 school_students_launches
 from {{ ref("fact_students_usage_monthly_snapshots") }}
 where product_category = 'EasyTech'
-and grade_level='(All)'
+and grade_level='All Students'
 and topic='(All)'
 )
 ,data2 as (
@@ -17,7 +17,7 @@ school_cnt_students ,
 school_students_launches
 from {{ ref("fact_students_usage_monthly_snapshots") }}
 where product_category = 'EasyTech without Common Sense Education'
-and grade_level='(All)'
+and grade_level='All Students'
 and topic='(All)'
 )
 select
