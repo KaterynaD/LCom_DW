@@ -7,12 +7,17 @@ models:
       Cumulative activity from the start of a school year (YTD) till end of month
       aggregated at different levels: school, district, state, country, company,
       grade_level (elementary-middle-high), topic, some selected SKU and sequences
-      (product_category). Only student and not demo or trial districts.
+      (product_category). Student and Non Students (special Grade Level category) and not demo or trial districts.
       The lowest granularity of the table is: school-product category-grade level-topic
       (school_cnt_students and school_students_launches).
       The other measures (starting district_, state_, country_ or company_) are repeated
       at the lowest level. This structure is chosen because the measures, generally
       speaking, are not additive (count distinct).
+
+      The table is built using Redshift Stored Procud ased on temporary tables.
+      The base query in SP uses content_delivery_usage.dbo.fact_assignment_launch left outer join content_delivery_usage.dbo.mv_student_account
+      If a user is not in mv_student_account, then that user is considered Non-Student.
+      The same aggregation can be slightly different (0.2%) then the historically calculated if mv_student_account content is changed.
     config:
       contract:
         enforced: false
@@ -195,6 +200,86 @@ models:
           - type: not_null
         data_tests:
           - not_null
+      - name: school_cnt_students_month
+        data_type: bigint
+        description: "Unique Count of Students launched an assignment at least once per school from the first to the last day of a month including."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: school_students_launches_month
+        data_type: bigint
+        description: "Unique Count of assignments launches from students per school."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: district_cnt_students_month
+        data_type: bigint
+        description: "Unique Count of Students launched an assignment at least once per district from the first to the last day of a month including. The same district-level number is repeated for each School."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: district_students_launches_month
+        data_type: bigint
+        description: "Unique Count of assignments launches from students per district from the first to the last day of a month including. The same district-level number is repeated for each School."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: state_cnt_students_month
+        data_type: bigint
+        description: "Unique Count of Students launched an assignment at least once per state from the first to the last day of a month including. The same state-level number is repeated for each School and District."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: state_students_launches_month
+        data_type: bigint
+        description: "Unique Count of assignments launches from students per state from the first to the last day of a month including. The same state-level number is repeated for each School and District."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: country_cnt_students_month
+        data_type: bigint
+        description: "Unique Count of Students launched an assignment at least once per country from the first to the last day of a month including. The same country-level number is repeated for each State, School, and District."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: country_students_launches_month
+        data_type: bigint
+        description: "Unique Count of assignments launches from students per country from the first to the last day of a month including. The same country-level number is repeated for each State, School, and District."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: company_cnt_students_month
+        data_type: bigint
+        description: "Total Unique Count of Students launched an assignment at least once from the first to the last day of a month including. The same Company (LCOM)-level number is repeated for each Country, State, School, and District."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: company_students_launches_month
+        data_type: bigint
+        description: "Total Unique Count of assignments launches from students from the first to the last day of a month including. The same Company (LCOM)-level number is repeated for each Country, State, School, and District."
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
 
       - name: loaddate
         data_type: timestamp
