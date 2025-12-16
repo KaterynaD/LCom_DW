@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16
+    restart: unless-stopped
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
@@ -16,6 +17,7 @@ services:
   airflow-webserver:
     build: .
     image: airflow-dbt:2.10.2-py3.12
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -65,6 +67,15 @@ services:
     
     ports:
       - "8080:8080"
+
+
+    # Healthcheck for Airflow webserver
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
     command:
     - bash
     - -c
@@ -100,6 +111,7 @@ services:
 
   airflow-scheduler:
     image: airflow-dbt:2.10.2-py3.12
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -158,3 +170,9 @@ services:
       - bash
       - -c
       - "airflow db migrate && airflow users create --username admin --password admin --firstname Kate --lastname Drogaieva --role Admin --email kdrogaieva@learning.com || true"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'airflow scheduler' >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
