@@ -6,6 +6,8 @@
 
 
 -- TO common.dim_account
+ALTER TABLE common.dim_account_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
+--
 ALTER TABLE licensing.dim_license_order_school ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE licensing.dim_license_order_school ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE licensing.fact_license_order ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
@@ -57,6 +59,7 @@ ALTER TABLE support.fact_case_history ADD FOREIGN KEY (case_id) REFERENCES suppo
 
 -- TO revenue.fact_opportunity
 ALTER TABLE revenue.fact_opportunity_history ADD FOREIGN KEY (opportunity_id) REFERENCES revenue.fact_opportunity(opportunity_id);
+ALTER TABLE revenue.dim_opportunity_line ADD FOREIGN KEY (opportunity_id) REFERENCES revenue.fact_opportunity(opportunity_id);
 
 -- TO content_delivery_usage.dim_sequence
 ALTER TABLE content_delivery_usage.dim_sequence_learning_object ADD FOREIGN KEY (sequence_id) REFERENCES content_delivery_usage.dim_sequence(sequence_id);
@@ -79,6 +82,7 @@ ALTER TABLE revenue.dim_opportunity_line_history ADD FOREIGN KEY (opportunity_li
 
 --TO licensing.fact_license_order
 ALTER TABLE licensing.dim_license_order_school ADD FOREIGN KEY (order_id) REFERENCES licensing.fact_license_order(order_id);
+ALTER TABLE licensing.fact_license_order_history ADD FOREIGN KEY (order_id) REFERENCES licensing.fact_license_order(order_id);
 
 
 
