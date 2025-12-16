@@ -7,12 +7,14 @@ It's a conformed dimension and many systems contribute records in this table.
 
 ## Primary and Distribution Key
 
-![Accounts can be created in HubSpot, GainsightCloud or LCom Platform and imported/integrated between the systems or not.](/assets/accounts_created_in_different systems.png)
+![Accounts can be created in HubSpot, GainsightCloud or LCom Platform and imported/integrated between the systems or not.](/assets/accounts_created_in_different%20systems.png)
+
+
 
 Accounts can be created in HubSpot, GainsightCloud or LCom Platform and imported/integrated between the systems or not. 
 DIM_ACCOUNT is design in a way to join in one record accounts from different systems if they are integrated and have not linked accounts by itself.
 
-![DIM_ACCOUNT is design in a way to join in one record accounts from different systems if they are integrated and have not linked accounts by itself.](/assets/dim_account_populated withaccounts_from-different_systems.png)
+![DIM_ACCOUNT is design in a way to join in one record accounts from different systems if they are integrated and have not linked accounts by itself.](/assets/dim_account_populated%20withaccounts_from-different_systems.png)
 
 There are existing large fact tables with usage data built based on LCom Organization Id as a distribution key. Practically, it is not possible to re-create the tables based on a surrogate key from newly created conformed DIM_ACCOUNT. 
 

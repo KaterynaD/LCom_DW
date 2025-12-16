@@ -53,11 +53,43 @@ The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/sr
 **The schedule can be changed without updating this documentation. Check the specific tool for the actual schedule**
 
 
-## Diagrams
+## Conceptual and Logical Diagrams
 
 - [Conceptual](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427368974) ([Licenses](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427401754), [Products](https://miro.com/app/board/uXjVLlSWsTM=/), [Users and Accounts](https://miro.com/app/board/uXjVIYkFN_Y=/))
 - [DW Logical Schema](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3488841816?atl_f=PAGETREE)
-- DW Physical Schema - TBD (use this diagram to understand how to join tables)
+
+## DW Physical Schemas Diagrams
+
+(use this diagram to understand how to join tables): 
+
+### Common
+
+The dimensions in this schema are used in relations with fact tables in other schemas or in transformations.
+
+![Common](/diagrams/Common.png)
+
+### Revenue
+
+Snapshot tables may contain all needed information or joined to DIM_ACCOUNT using sfdc_account_id or FACT_OPPORTUNITY.
+
+![Revenue](/diagrams/Revenue.png)
+
+### Licensing
+![Licensing](/diagrams/Licensing.png)
+
+### Training Sessions
+![Training Sessions](/diagrams/Training Sessions.png)
+
+### Support Cases
+![Support Cases](/diagrams/Support Cases.png)
+
+### Content Delivery Usage
+![Content Delivery Usage](/diagrams/Content Delivery Usage.png)
+
+### Content Delivery Usage Dimensions
+The dimensions in this schema are used in transformations mosly
+
+![Content Delivery Usage Dimensions](/diagrams/Content Delivery Usage Dimensions.png)
 
 
 
