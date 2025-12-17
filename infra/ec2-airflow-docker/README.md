@@ -178,7 +178,7 @@ nano .env
 ```
 3. Make sh executable
 ```
-chmod +x airflow.sh stop_airflow.sh init_airflow.sh
+chmod +x start_airflow.sh stop_airflow.sh init_airflow.sh
 ```
 4. Build the image
 ```
