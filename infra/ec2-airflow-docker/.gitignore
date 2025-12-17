@@ -1,0 +1,4 @@
+logs/
+pgdata/
+.env
+plugins/
