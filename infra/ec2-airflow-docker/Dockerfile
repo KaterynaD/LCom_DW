@@ -2,7 +2,10 @@ FROM apache/airflow:2.10.2-python3.12
 
 # Install git inside the container (needed for dbt git-based packages)
 USER root
-RUN apt-get update && apt-get install -y --no-install-recommends git \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      git \
+      procps \
+      curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

@@ -144,6 +144,12 @@ services:
 
     command: scheduler
 
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'airflow scheduler' >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   airflow-init:
     image: airflow-dbt:2.10.2-py3.12
     depends_on:
@@ -171,8 +177,3 @@ services:
       - -c
       - "airflow db migrate && airflow users create --username admin --password admin --firstname Kate --lastname Drogaieva --role Admin --email kdrogaieva@learning.com || true"
 
-    healthcheck:
-      test: ["CMD-SHELL", "pgrep -f 'airflow scheduler' >/dev/null || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5

@@ -1,0 +1,17 @@
+[Unit]
+Description=Airflow Docker Stack (safe start/stop)
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/kdrogaieva/transformations/infra/ec2-airflow-docker
+
+ExecStart=/usr/bin/docker compose start airflow-webserver airflow-scheduler
+ExecStop=/usr/bin/docker compose stop airflow-webserver airflow-scheduler postgres
+
+RemainAfterExit=yes
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
