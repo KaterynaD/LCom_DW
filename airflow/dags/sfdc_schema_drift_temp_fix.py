@@ -151,7 +151,7 @@ with DAG(
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
             "dbt run-operation create_profile "
-            "--args \"{'database_name':'rawdata', 'schema_name':'fivetran_salesforce_quickstart','table_name':'account', 'profiles_db':'rawdata', 'profiles_schema':'profiles', 'profiles_table':'sfdc_schema_audit', 'profile_name':'current','exclude_stats_numeric':['placeholder','min','max','avg','stddev_pop','cnt_neg','cnt_zero','cnt_pos','cnt_int'],'exclude_stats_varchar':['placeholder','min_length','max_length','avg_length','cnt_leading_ws','cnt_trailing_ws','cnt_empty_after_trim','cnt_lower','cnt_upper','cnt_mixed','cnt_cast_int','cnt_cast_decimal','cnt_cast_date','cnt_cast_timestamp'],'exclude_stats_datetime':['placeholder','min','max'],'exclude_columns':['num_opps_c','nc_tier_1_c','last_activity_logged_on_c','district_nces_c']}\""
+            "--args \"{'database_name':'rawdata', 'schema_name':'fivetran_salesforce_quickstart','table_name':'account', 'profiles_db':'rawdata', 'profiles_schema':'profiles', 'profiles_table':'sfdc_schema_audit', 'profile_name':'current','exclude_stats_numeric':['placeholder','min','max','avg','stddev_pop','cnt_neg','cnt_zero','cnt_pos','cnt_int'],'exclude_stats_varchar':['placeholder','min_length','max_length','avg_length','cnt_leading_ws','cnt_trailing_ws','cnt_empty_after_trim','cnt_lower','cnt_upper','cnt_mixed','cnt_cast_int','cnt_cast_decimal','cnt_cast_date','cnt_cast_timestamp'],'exclude_stats_datetime':['placeholder','min','max'],'exclude_columns':['num_opps_c','nc_tier_1_c','last_activity_logged_on_c','district_nces_c']}\" "
             "--target sfdc "
         ),
         on_failure_callback=notify_task_failure,
