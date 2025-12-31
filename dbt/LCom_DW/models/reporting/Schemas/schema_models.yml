@@ -8,7 +8,7 @@ models:
       tags:
         - rep
 
-  - name: vw_licenses_provioned_monthly
+  - name: vw_licenses_provisioning_monthly
     description: View to represent current monthly active licenses provisioned at district and school levels with a complex set of attributes
     config:
       tags:

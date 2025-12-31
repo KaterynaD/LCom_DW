@@ -17,3 +17,13 @@ sources:
       identifier: false
     tables:
       - name: dbt_run_log      
+
+  - name: profiles
+    description: "SFDC Profiles"
+    database: rawdata
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: sfdc_schema_audit
