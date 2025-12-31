@@ -103,14 +103,26 @@ def create_init_branch(dag, repo_dir=None, dbt_project_dir=None):
         dag=dag,
     )
 
+    # refresh_git_repo = BashOperator(
+    #         task_id="refresh_git_repo",
+    #         bash_command=(
+    #             f"cd {repo_dir} && "
+    #             "git pull origin master"
+    #        ),
+    #         on_failure_callback=notify_task_failure,
+    #         dag=dag,
+    #     )
+
     refresh_git_repo = BashOperator(
         task_id="refresh_git_repo",
         bash_command=(
             f"cd {repo_dir} && "
-            "git pull origin master"
-        ),
-        on_failure_callback=notify_task_failure,
-        dag=dag,
+            "git fetch origin && "
+            "git reset --hard origin/master && "
+            "git clean -fd"
+       ),
+       on_failure_callback=notify_task_failure,
+       dag=dag,
     )
 
     run_dbt_deps = BashOperator(
