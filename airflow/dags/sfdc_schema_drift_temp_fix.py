@@ -6,6 +6,7 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.models import Connection, Variable
+from airflow import settings
 import pandas as pd
 
 from dag_utils import (
@@ -36,23 +37,39 @@ def create_or_update_redshift_connection():
 
     default_target = profiles['LCom_DW']['target']
     target_config = profiles['LCom_DW']['outputs'][default_target]
+    conn_type=target_config['type']
     host = target_config['host']
     port = target_config.get('port', 5439)
     user = target_config['user']
     password = target_config['password']
     dbname = target_config['dbname']
 
-    conn_id = 'redshift_default'
-    conn = Connection(
-        conn_id=conn_id,
-        conn_type='postgres',
-        host=host,
-        port=port,
-        schema=dbname,
-        login=user,
-        password=password,
-    )
-    conn.upsert()  # This will create or update the connection
+
+    dbt_conn_id = 'redshift_default'
+    session = settings.Session()           
+
+    try:
+                
+                new_conn = session.query(Connection).filter(Connection.conn_id == dbt_conn_id).one()
+                new_conn.conn_type = conn_type
+                new_conn.login = user
+                new_conn.password = password
+                new_conn.host = host
+                new_conn.port = port
+                new_conn.schema = dbname                     
+
+    except:
+
+                new_conn = Connection(conn_id=dbt_conn_id,
+                                  conn_type=conn_type,
+                                  login=user,
+                                  password=password,
+                                  host=host,
+                                  port=port,
+                                  schema=dbname)   
+            
+    session.add(new_conn)
+    session.commit()    
 
 def execute_missing_columns_sql():
     """Execute the compiled missing_columns.sql and return results."""
@@ -189,4 +206,5 @@ with DAG(
     )
 
     # Wiring
-    init_done >> run_profile >> compile_query >> create_connection >> process_columns >> notify_drift
+    # init_done >> run_profile >> compile_query >> create_connection >> process_columns >> notify_drift
+    init_done >> compile_query >> create_connection >> process_columns >> notify_drift
