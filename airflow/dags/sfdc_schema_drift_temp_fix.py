@@ -140,7 +140,7 @@ def send_schema_drift_notification(**context):
         <ul>
         """
         for col in missing_columns:
-            html_content += f"<li>{col['missing_source_column']} in {col['model_name']} (table: {col['table_name']})</li>"
+            html_content += f"<li>{col['column_name']} in {col['model_name']} (table: {col['table_name']})</li>"
         html_content += "</ul><p><b>Review the models and rebase SFDC data profiles!!!</b></p>"
     else:
         subject = "SFDC Schema Drift Check - No Changes"
@@ -206,5 +206,4 @@ with DAG(
     )
 
     # Wiring
-    # init_done >> run_profile >> compile_query >> create_connection >> process_columns >> notify_drift
-    init_done >> compile_query >> create_connection >> process_columns >> notify_drift
+    init_done >> run_profile >> compile_query >> create_connection >> process_columns >> notify_drift
