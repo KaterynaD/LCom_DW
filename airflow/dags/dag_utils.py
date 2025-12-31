@@ -13,6 +13,10 @@ from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 # Shared config
 # ------------------------------------------------------------------------
 REPO_DIR = os.environ.get("REPO_DIR", "/opt/airflow/transformations")
+DBT_PROFILES_DIR = os.environ.get(
+    "DBT_PROFILES_DIR",
+    "/home/airflow/.dbt"
+)
 DBT_LCOM_DW_PROJECT_DIR = os.environ.get(
     "DBT_LCOM_DW_PROJECT_DIR",
     "/opt/airflow/transformations/dbt/LCom_DW"

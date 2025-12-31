@@ -9,6 +9,7 @@ from airflow.models import Connection, Variable
 import pandas as pd
 
 from dag_utils import (
+    DBT_PROFILES_DIR,
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
     create_init_branch,
@@ -29,7 +30,7 @@ def get_compiled_sql_path():
 
 def create_or_update_redshift_connection():
     """Create or update Airflow Redshift connection based on dbt profile."""
-    profiles_path = os.path.join(DBT_LCOM_DW_PROJECT_DIR, "profiles.yml")
+    profiles_path = os.path.join(DBT_PROFILES_DIR, "profiles.yml")
     with open(profiles_path, 'r') as f:
         profiles = yaml.safe_load(f)
 
