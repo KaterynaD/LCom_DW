@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+from pathlib import Path,PurePosixPath
 import yaml
 import json
 import logging
@@ -19,6 +20,8 @@ from dag_utils import (
     notify_task_failure,
     create_init_branch,
     create_notify_summary_task,
+    create_set_load_date_task,
+    create_create_connection_task,
 )
 
 # SQL queries for base profile management
@@ -32,87 +35,9 @@ set profile_name='base'
 where profile_name='current';
 """
 
-# ------------------------------------------------------------------------
-# Set Load Date via XCom
-# ------------------------------------------------------------------------
-def set_load_date(ti, **kwargs):
-    # No microseconds for nicer string; ISO is safe to pass into dbt vars
-    load_date = datetime.today().replace(microsecond=0).isoformat()
-    ti.xcom_push(key="LoadDate", value=load_date)
 
-# ------------------------------------------------------------------------
-# Create or update Redshift connection
-# ------------------------------------------------------------------------
-def create_or_update_redshift_connection():
-    """Create or update Airflow Redshift connections based on dbt profile."""
-    profiles_path = os.path.join(DBT_PROFILES_DIR, "profiles.yml")
-    with open(profiles_path, 'r') as f:
-        profiles = yaml.safe_load(f)
 
-    # Keep original redshift_default for default target
-    default_target = profiles['LCom_DW']['target']
-    target_config = profiles['LCom_DW']['outputs'][default_target]
-    conn_type = target_config['type']
-    host = target_config['host']
-    port = target_config.get('port', 5439)
-    user = target_config['user']
-    password = target_config['password']
-    dbname = target_config['dbname']
 
-    dbt_conn_id = 'redshift_default'
-    session = settings.Session()
-
-    try:
-        new_conn = session.query(Connection).filter(Connection.conn_id == dbt_conn_id).one()
-        new_conn.conn_type = conn_type
-        new_conn.login = user
-        new_conn.password = password
-        new_conn.host = host
-        new_conn.port = port
-        new_conn.schema = dbname
-    except:
-        new_conn = Connection(conn_id=dbt_conn_id,
-                              conn_type=conn_type,
-                              login=user,
-                              password=password,
-                              host=host,
-                              port=port,
-                              schema=dbname)
-        session.add(new_conn)
-
-    # Now create connections for all outputs as redshift_<output_name>
-    lcom_dw_outputs = profiles['LCom_DW']['outputs']
-
-    for output_name, target_config in lcom_dw_outputs.items():
-        conn_id = f'redshift_{output_name}'
-        conn_type = target_config['type']
-        host = target_config['host']
-        port = target_config.get('port', 5439)
-        user = target_config['user']
-        password = target_config['password']
-        dbname = target_config['dbname']
-
-        try:
-            existing_conn = session.query(Connection).filter(Connection.conn_id == conn_id).one()
-            existing_conn.conn_type = conn_type
-            existing_conn.login = user
-            existing_conn.password = password
-            existing_conn.host = host
-            existing_conn.port = port
-            existing_conn.schema = dbname
-        except:
-            new_conn = Connection(
-                conn_id=conn_id,
-                conn_type=conn_type,
-                login=user,
-                password=password,
-                host=host,
-                port=port,
-                schema=dbname
-            )
-            session.add(new_conn)
-
-    session.commit()
 
 # ------------------------------------------------------------------------
 # Manage base profile based on Airflow variable
@@ -210,7 +135,11 @@ def check_column_in_model(model_path, column_name):
     if not model_path or not column_name:
         return "N/A"
 
-    full_path = os.path.join(DBT_LCOM_DW_PROJECT_DIR, model_path.lstrip('/'))
+    full_path = PurePosixPath(DBT_LCOM_DW_PROJECT_DIR) / model_path.lstrip("/")
+
+    logging.info(f"Analyzing file:  {str(full_path)} rows")
+
+    
     try:
         with open(full_path, 'r') as f:
             content = f.read()
@@ -297,19 +226,10 @@ with DAG(
     init_done = create_init_branch(dag)
 
     # 2. Set LoadDate (XCom)
-    set_load_date_task = PythonOperator(
-        task_id="Start_Load.Set_Load_Date",
-        python_callable=set_load_date,
-        provide_context=True,
-        on_failure_callback=notify_task_failure,
-    )
+    set_load_date_task = create_set_load_date_task(dag)
 
     # 3. Create/update Redshift connection
-    create_connection = PythonOperator(
-        task_id="create_redshift_connection",
-        python_callable=create_or_update_redshift_connection,
-        on_failure_callback=notify_task_failure,
-    )
+    create_connection = create_create_connection_task(dag)
 
     # 4. Manage base profile based on Airflow variable
     manage_base_profile_task = PythonOperator(

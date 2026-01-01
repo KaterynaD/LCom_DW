@@ -18,17 +18,12 @@ from dag_utils import (
     create_init_branch,
     create_notify_summary_task,
     init_flag,
+    create_set_load_date_task,
 )
 
 
 
-# ------------------------------------------------------------------------
-# Set Load Date via XCom
-# ------------------------------------------------------------------------
-def set_load_date(ti, **kwargs):
-    # No microseconds for nicer string; ISO is safe to pass into dbt vars
-    load_date = datetime.today().replace(microsecond=0).isoformat()
-    ti.xcom_push(key="LoadDate", value=load_date)
+
 
 
 
@@ -91,12 +86,7 @@ with DAG(
     init_done = create_init_branch(dag)
 
     # 3. Set LoadDate (XCom)
-    set_load_date_task = PythonOperator(
-        task_id="Start_Load.Set_Load_Date",
-        python_callable=set_load_date,
-        provide_context=True,
-        trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
-  ) 
+    set_load_date_task = create_set_load_date_task(dag, trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS)
 
     # 4. drop_all_fk
     drop_all_fk = BashOperator(

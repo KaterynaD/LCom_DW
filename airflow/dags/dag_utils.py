@@ -6,7 +6,7 @@ from airflow.operators.empty import EmptyOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow.utils.email import send_email
 from airflow.models import Variable
-#from airflow.configuration import conf
+from datetime import datetime
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
 # ------------------------------------------------------------------------
@@ -241,5 +241,115 @@ def create_notify_summary_task(dag, run_name: str, task_id: str = "notify_summar
         op_kwargs={"run_name": run_name},
         provide_context=True,
         trigger_rule=TriggerRule.ALL_DONE,
+        dag=dag,
+    )
+
+# ------------------------------------------------------------------------
+# Set Load Date via XCom
+# ------------------------------------------------------------------------
+def set_load_date(ti, **kwargs):
+    # No microseconds for nicer string; ISO is safe to pass into dbt vars
+    load_date = datetime.today().replace(microsecond=0).isoformat()
+    ti.xcom_push(key="LoadDate", value=load_date)
+
+def create_set_load_date_task(dag, trigger_rule=None):
+    kwargs = {
+        'task_id': "Start_Load.Set_Load_Date",
+        'python_callable': set_load_date,
+        'provide_context': True,
+        'on_failure_callback': notify_task_failure,
+        'dag': dag,
+    }
+    if trigger_rule is not None:
+        kwargs['trigger_rule'] = trigger_rule
+    return PythonOperator(**kwargs)
+
+# ------------------------------------------------------------------------
+# Create or update Redshift connection
+# ------------------------------------------------------------------------
+def create_or_update_redshift_connection():
+    """Create or update Airflow Redshift connections based on dbt profile."""
+    profiles_path = os.path.join(DBT_PROFILES_DIR, "profiles.yml")
+    with open(profiles_path, 'r') as f:
+        profiles = yaml.safe_load(f)
+
+    # Keep original redshift_default for default target
+    default_target = profiles['LCom_DW']['target']
+    target_config = profiles['LCom_DW']['outputs'][default_target]
+    conn_type = target_config['type']
+    host = target_config['host']
+    port = target_config.get('port', 5439)
+    user = target_config['user']
+    password = target_config['password']
+    dbname = target_config['dbname']
+
+    dbt_conn_id = 'redshift_default'
+    session = settings.Session()
+
+    try:
+        new_conn = session.query(Connection).filter(Connection.conn_id == dbt_conn_id).one()
+        new_conn.conn_type = conn_type
+        new_conn.login = user
+        new_conn.password = password
+        new_conn.host = host
+        new_conn.port = port
+        new_conn.schema = dbname
+    except:
+        new_conn = Connection(conn_id=dbt_conn_id,
+                              conn_type=conn_type,
+                              login=user,
+                              password=password,
+                              host=host,
+                              port=port,
+                              schema=dbname)
+        session.add(new_conn)
+
+    # Now create connections for all outputs as redshift_<output_name>
+    lcom_dw_outputs = profiles['LCom_DW']['outputs']
+
+    for output_name, target_config in lcom_dw_outputs.items():
+        conn_id = f'redshift_{output_name}'
+        conn_type = target_config['type']
+        host = target_config['host']
+        port = target_config.get('port', 5439)
+        user = target_config['user']
+        password = target_config['password']
+        dbname = target_config['dbname']
+
+        try:
+            existing_conn = session.query(Connection).filter(Connection.conn_id == conn_id).one()
+            existing_conn.conn_type = conn_type
+            existing_conn.login = user
+            existing_conn.password = password
+            existing_conn.host = host
+            existing_conn.port = port
+            existing_conn.schema = dbname
+        except:
+            new_conn = Connection(
+                conn_id=conn_id,
+                conn_type=conn_type,
+                login=user,
+                password=password,
+                host=host,
+                port=port,
+                schema=dbname
+            )
+            session.add(new_conn)
+
+    session.commit()
+
+def create_manage_base_profile_task(dag):
+    return PythonOperator(
+        task_id="manage_base_profile",
+        python_callable=manage_base_profile,
+        on_failure_callback=notify_task_failure,
+        dag=dag,
+    )
+
+def create_create_connection_task(dag):
+    return PythonOperator(
+        task_id="create_redshift_connection",
+        python_callable=create_or_update_redshift_connection,
+        on_failure_callback=notify_task_failure,
         dag=dag,
     )

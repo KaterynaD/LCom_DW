@@ -11,6 +11,7 @@ from dag_utils import (
     notify_task_failure,
     create_init_branch,
     create_notify_summary_task,
+    create_set_load_date_task,
 )
 
 default_args = {
@@ -21,13 +22,7 @@ default_args = {
     "email_on_retry": False,
 }
 
-# ------------------------------------------------------------------------
-# Set Load Date via XCom
-# ------------------------------------------------------------------------
-def set_load_date(ti, **kwargs):
-    # No microseconds for nicer string; ISO is safe to pass into dbt vars
-    load_date = datetime.today().replace(microsecond=0).isoformat()
-    ti.xcom_push(key="LoadDate", value=load_date)
+
 
 def create_profile_task(table_name):
     """Create a profile task for a given SFDC table."""
@@ -71,13 +66,8 @@ with DAG(
     init_done = create_init_branch(dag)
 
     # 2. Set LoadDate (XCom)
-    set_load_date_task = PythonOperator(
-        task_id="Start_Load.Set_Load_Date",
-        python_callable=set_load_date,
-        provide_context=True,
-        on_failure_callback=notify_task_failure,
-    ) 
-
+    set_load_date_task = create_set_load_date_task(dag)
+    
     # Profile tasks for different SFDC tables - run in parallel
     profile_account = create_profile_task("account")
     profile_opportunity = create_profile_task("opportunity")
