@@ -119,7 +119,7 @@ def generate_html_report(profiles_results, missing_columns_results):
         html += "<tr><th>Table Name</th><th>Model Path</th><th>Column Name</th><th>Present in Model</th></tr>"
 
         for row in missing_columns_results:
-            table_name, model_name, column_name = row
+            model_name, table_name,  column_name = row
             present_in_model = check_column_in_model(model_name, column_name) if column_name else "N/A"
             html += f"<tr><td>{table_name}</td><td>{model_name}</td><td>{column_name or 'N/A'}</td><td>{present_in_model}</td></tr>"
 
