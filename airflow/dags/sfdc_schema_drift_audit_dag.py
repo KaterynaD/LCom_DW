@@ -15,6 +15,7 @@ from airflow.utils.email import send_email
 from dag_utils import (
     DBT_PROFILES_DIR,
     DBT_LCOM_DW_PROJECT_DIR,
+    ALERT_EMAIL,
     notify_task_failure,
     create_init_branch,
     create_notify_summary_task,
@@ -221,7 +222,7 @@ def send_email_report(html_content):
     """Send email with the schema drift report."""
     logging.info("Preparing to send email report")
     subject = "SFDC Schema Drift Audit Report"
-    to = ["data-team@learning.com"]  # Update with actual recipients
+    to = ALERT_EMAIL
     body = f"""
     <html>
     <body>
