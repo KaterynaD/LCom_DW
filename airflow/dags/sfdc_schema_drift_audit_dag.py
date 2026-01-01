@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 import yaml
+import json
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
@@ -196,12 +197,26 @@ def send_email_report(html_content):
 
 def create_profile_task(table_name):
     """Create a profile task for a given SFDC table."""
+    args_dict = {
+        'database_name': 'rawdata',
+        'schema_name': 'fivetran_salesforce_quickstart',
+        'table_name': table_name,
+        'profiles_db': 'rawdata',
+        'profiles_schema': 'profiles',
+        'profiles_table': 'sfdc_schema_audit',
+        'profile_name': 'current',
+        'exclude_stats_numeric': ['placeholder', 'min', 'max', 'avg', 'stddev_pop', 'cnt_neg', 'cnt_zero', 'cnt_pos', 'cnt_int'],
+        'exclude_stats_varchar': ['placeholder', 'min_length', 'max_length', 'avg_length', 'cnt_leading_ws', 'cnt_trailing_ws', 'cnt_empty_after_trim', 'cnt_lower', 'cnt_upper', 'cnt_mixed', 'cnt_cast_int', 'cnt_cast_decimal', 'cnt_cast_date', 'cnt_cast_timestamp'],
+        'exclude_stats_datetime': ['placeholder', 'min', 'max'],
+        'loaddate': '{{ ti.xcom_pull(task_ids=\'Start_Load.Set_Load_Date\', key=\'LoadDate\') }}'
+    }
+    args_str = json.dumps(args_dict)
     return BashOperator(
         task_id=f"profile_{table_name.replace('_', '_')}",
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
             "dbt run-operation create_profile "
-            f"--args \"{{'database_name':'rawdata', 'schema_name':'fivetran_salesforce_quickstart','table_name':'{table_name}', 'profiles_db':'rawdata', 'profiles_schema':'profiles', 'profiles_table':'sfdc_schema_audit', 'profile_name':'current','exclude_stats_numeric':['placeholder','min','max','avg','stddev_pop','cnt_neg','cnt_zero','cnt_pos','cnt_int'],'exclude_stats_varchar':['placeholder','min_length','max_length','avg_length','cnt_leading_ws','cnt_trailing_ws','cnt_empty_after_trim','cnt_lower','cnt_upper','cnt_mixed','cnt_cast_int','cnt_cast_decimal','cnt_cast_date','cnt_cast_timestamp'],'exclude_stats_datetime':['placeholder','min','max'], 'loaddate': '{{ ti.xcom_pull(task_ids=\"Start_Load.Set_Load_Date\", key=\"LoadDate\") }}'}}\" "
+            f"--args '{args_str}' "
             "--target sfdc"
         ),
         on_failure_callback=notify_task_failure,
