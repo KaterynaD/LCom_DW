@@ -127,7 +127,7 @@ def manage_base_profile():
 
     if use_existing.upper() == "NO":
         # Delete existing base profile and rename current to base
-        hook = PostgresHook(postgres_conn_id='redshift_default')
+        hook = PostgresHook(postgres_conn_id='redshift_sfdc')
         hook.run(DELETE_BASE_PROFILE_SQL)
         hook.run(RENAME_CURRENT_TO_BASE_SQL)
 
