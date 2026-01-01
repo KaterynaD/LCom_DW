@@ -1,5 +1,5 @@
 
-from airflow.models import DagBag
+from airflow.models.dagbag import DagBag
 from airflow.configuration import conf
 
 def main() -> None:

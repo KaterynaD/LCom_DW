@@ -2,6 +2,7 @@ from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 
 from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
@@ -18,6 +19,14 @@ default_args = {
     "email_on_retry": False,
 }
 
+# ------------------------------------------------------------------------
+# Set Load Date via XCom
+# ------------------------------------------------------------------------
+def set_load_date(ti, **kwargs):
+    # No microseconds for nicer string; ISO is safe to pass into dbt vars
+    load_date = datetime.today().replace(microsecond=0).isoformat()
+    ti.xcom_push(key="LoadDate", value=load_date)
+
 def create_profile_task(table_name):
     """Create a profile task for a given SFDC table."""
     return BashOperator(
@@ -25,7 +34,7 @@ def create_profile_task(table_name):
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
             "dbt run-operation create_profile "
-            f"--args \"{{'database_name':'rawdata', 'schema_name':'fivetran_salesforce_quickstart','table_name':'{table_name}', 'profiles_db':'rawdata', 'profiles_schema':'profiles', 'profiles_table':'sfdc_schema_audit', 'profile_name':'base','exclude_stats_numeric':['placeholder','min','max','avg','stddev_pop','cnt_neg','cnt_zero','cnt_pos','cnt_int'],'exclude_stats_varchar':['placeholder','min_length','max_length','avg_length','cnt_leading_ws','cnt_trailing_ws','cnt_empty_after_trim','cnt_lower','cnt_upper','cnt_mixed','cnt_cast_int','cnt_cast_decimal','cnt_cast_date','cnt_cast_timestamp'],'exclude_stats_datetime':['placeholder','min','max']}}\" "
+            f"--args \"{{'database_name':'rawdata', 'schema_name':'fivetran_salesforce_quickstart','table_name':'{table_name}', 'profiles_db':'rawdata', 'profiles_schema':'profiles', 'profiles_table':'sfdc_schema_audit', 'profile_name':'base','exclude_stats_numeric':['placeholder','min','max','avg','stddev_pop','cnt_neg','cnt_zero','cnt_pos','cnt_int'],'exclude_stats_varchar':['placeholder','min_length','max_length','avg_length','cnt_leading_ws','cnt_trailing_ws','cnt_empty_after_trim','cnt_lower','cnt_upper','cnt_mixed','cnt_cast_int','cnt_cast_decimal','cnt_cast_date','cnt_cast_timestamp'],'exclude_stats_datetime':['placeholder','min','max'], 'loaddate': '{{ ti.xcom_pull(task_ids=\'Start_Load.Set_Load_Date\', key=\'LoadDate\'}}\" "
             "--target sfdc"
         ),
         on_failure_callback=notify_task_failure,
@@ -45,6 +54,14 @@ with DAG(
     # decide_init -> [refresh_git_repo, skip_dbt_init] -> init_done
     init_done = create_init_branch(dag)
 
+    # 2. Set LoadDate (XCom)
+    set_load_date_task = PythonOperator(
+        task_id="Start_Load.Set_Load_Date",
+        python_callable=set_load_date,
+        provide_context=True,
+        on_failure_callback=notify_task_failure,
+    ) 
+
     # Profile tasks for different SFDC tables - run in parallel
     profile_account = create_profile_task("account")
     profile_opportunity = create_profile_task("opportunity")
@@ -60,4 +77,4 @@ with DAG(
     )
 
     # Final wiring - all profile tasks run in parallel after init, then all feed to notification
-    init_done >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case, profile_training_session_c, profile_product_2] >> notify_summary</content>
+    init_done >> set_load_date_task >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case, profile_training_session_c, profile_product_2] >> notify_summary
