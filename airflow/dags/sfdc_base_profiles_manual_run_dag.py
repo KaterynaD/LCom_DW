@@ -12,6 +12,7 @@ from dag_utils import (
     create_init_branch,
     create_notify_summary_task,
     create_set_load_date_task,
+    create_profile_task,
 )
 
 default_args = {
@@ -24,32 +25,7 @@ default_args = {
 
 
 
-def create_profile_task(table_name):
-    """Create a profile task for a given SFDC table."""
-    args_dict = {
-        'database_name': 'rawdata',
-        'schema_name': 'fivetran_salesforce_quickstart',
-        'table_name': table_name,
-        'profiles_db': 'rawdata',
-        'profiles_schema': 'profiles',
-        'profiles_table': 'sfdc_schema_audit',
-        'profile_name': 'base',
-        'exclude_stats_numeric': ['placeholder', 'min', 'max', 'avg', 'stddev_pop', 'cnt_neg', 'cnt_zero', 'cnt_pos', 'cnt_int'],
-        'exclude_stats_varchar': ['placeholder', 'min_length', 'max_length', 'avg_length', 'cnt_leading_ws', 'cnt_trailing_ws', 'cnt_empty_after_trim', 'cnt_lower', 'cnt_upper', 'cnt_mixed', 'cnt_cast_int', 'cnt_cast_decimal', 'cnt_cast_date', 'cnt_cast_timestamp'],
-        'exclude_stats_datetime': ['placeholder', 'min', 'max'],
-        'loaddate': '{{ ti.xcom_pull(task_ids=\'Start_Load.Set_Load_Date\', key=\'LoadDate\') }}'
-    }
-    args_str = json.dumps(args_dict)
-    return BashOperator(
-        task_id=f"profile_{table_name.replace('_', '_')}",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run-operation create_profile "
-            f"--args '{args_str}' "
-            "--target sfdc"
-        ),
-        on_failure_callback=notify_task_failure,
-    )
+
 
 with DAG(
     dag_id="sfdc_base_profiles_manual_run",
@@ -67,14 +43,14 @@ with DAG(
 
     # 2. Set LoadDate (XCom)
     set_load_date_task = create_set_load_date_task(dag)
-    
+
     # Profile tasks for different SFDC tables - run in parallel
-    profile_account = create_profile_task("account")
-    profile_opportunity = create_profile_task("opportunity")
-    profile_opportunity_line_item = create_profile_task("opportunity_line_item")
-    profile_case = create_profile_task("case")
-    profile_training_session_c = create_profile_task("training_session_c")
-    profile_product_2 = create_profile_task("product_2")
+    profile_account = create_profile_task("account", "base")
+    profile_opportunity = create_profile_task("opportunity", "base")
+    profile_opportunity_line_item = create_profile_task("opportunity_line_item", "base")
+    profile_case = create_profile_task("case", "base")
+    profile_training_session_c = create_profile_task("training_session_c", "base")
+    profile_product_2 = create_profile_task("product_2", "base")
 
     # Shared summary email at the end
     notify_summary = create_notify_summary_task(

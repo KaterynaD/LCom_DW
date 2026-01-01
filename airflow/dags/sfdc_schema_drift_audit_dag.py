@@ -22,6 +22,7 @@ from dag_utils import (
     create_notify_summary_task,
     create_set_load_date_task,
     create_create_connection_task,
+    create_profile_task,
 )
 
 # SQL queries for base profile management
@@ -172,33 +173,6 @@ def send_email_report(html_content):
         logging.error(f"Failed to send email: {e}")
         raise
 
-def create_profile_task(table_name):
-    """Create a profile task for a given SFDC table."""
-    args_dict = {
-        'database_name': 'rawdata',
-        'schema_name': 'fivetran_salesforce_quickstart',
-        'table_name': table_name,
-        'profiles_db': 'rawdata',
-        'profiles_schema': 'profiles',
-        'profiles_table': 'sfdc_schema_audit',
-        'profile_name': 'current',
-        'exclude_stats_numeric': ['placeholder', 'min', 'max', 'avg', 'stddev_pop', 'cnt_neg', 'cnt_zero', 'cnt_pos', 'cnt_int'],
-        'exclude_stats_varchar': ['placeholder', 'min_length', 'max_length', 'avg_length', 'cnt_leading_ws', 'cnt_trailing_ws', 'cnt_empty_after_trim', 'cnt_lower', 'cnt_upper', 'cnt_mixed', 'cnt_cast_int', 'cnt_cast_decimal', 'cnt_cast_date', 'cnt_cast_timestamp'],
-        'exclude_stats_datetime': ['placeholder', 'min', 'max'],
-        'exclude_columns':['num_opps_c','nc_tier_1_c','last_activity_logged_on_c','district_nces_c'],
-        'loaddate': '{{ ti.xcom_pull(task_ids=\'Start_Load.Set_Load_Date\', key=\'LoadDate\') }}'
-    }
-    args_str = json.dumps(args_dict)
-    return BashOperator(
-        task_id=f"profile_{table_name.replace('_', '_')}",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run-operation create_profile "
-            f"--args '{args_str}' "
-            "--target sfdc"
-        ),
-        on_failure_callback=notify_task_failure,
-    )
 
 # ------------------------------------------------------------------------
 # DAG definition
@@ -239,12 +213,12 @@ with DAG(
     )
 
     # 5. Create new current profiles in parallel
-    profile_account = create_profile_task("account")
-    profile_opportunity = create_profile_task("opportunity")
-    profile_opportunity_line_item = create_profile_task("opportunity_line_item")
-    profile_case = create_profile_task("case")
-    profile_training_session_c = create_profile_task("training_session_c")
-    profile_product_2 = create_profile_task("product_2")
+    profile_account = create_profile_task("account", "current")
+    profile_opportunity = create_profile_task("opportunity", "current")
+    profile_opportunity_line_item = create_profile_task("opportunity_line_item", "current")
+    profile_case = create_profile_task("case", "current")
+    profile_training_session_c = create_profile_task("training_session_c", "current")
+    profile_product_2 = create_profile_task("product_2", "current")
 
     # 6. Compile dbt analyses queries
     compile_query = BashOperator(
