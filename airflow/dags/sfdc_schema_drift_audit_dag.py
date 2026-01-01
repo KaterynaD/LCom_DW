@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 import yaml
 import json
+import logging
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
@@ -42,11 +43,12 @@ def set_load_date(ti, **kwargs):
 # Create or update Redshift connection
 # ------------------------------------------------------------------------
 def create_or_update_redshift_connection():
-    """Create or update Airflow Redshift connection based on dbt profile."""
+    """Create or update Airflow Redshift connections based on dbt profile."""
     profiles_path = os.path.join(DBT_PROFILES_DIR, "profiles.yml")
     with open(profiles_path, 'r') as f:
         profiles = yaml.safe_load(f)
 
+    # Keep original redshift_default for default target
     default_target = profiles['LCom_DW']['target']
     target_config = profiles['LCom_DW']['outputs'][default_target]
     conn_type = target_config['type']
@@ -75,8 +77,40 @@ def create_or_update_redshift_connection():
                               host=host,
                               port=port,
                               schema=dbname)
+        session.add(new_conn)
 
-    session.add(new_conn)
+    # Now create connections for all outputs as redshift_<output_name>
+    lcom_dw_outputs = profiles['LCom_DW']['outputs']
+
+    for output_name, target_config in lcom_dw_outputs.items():
+        conn_id = f'redshift_{output_name}'
+        conn_type = target_config['type']
+        host = target_config['host']
+        port = target_config.get('port', 5439)
+        user = target_config['user']
+        password = target_config['password']
+        dbname = target_config['dbname']
+
+        try:
+            existing_conn = session.query(Connection).filter(Connection.conn_id == conn_id).one()
+            existing_conn.conn_type = conn_type
+            existing_conn.login = user
+            existing_conn.password = password
+            existing_conn.host = host
+            existing_conn.port = port
+            existing_conn.schema = dbname
+        except:
+            new_conn = Connection(
+                conn_id=conn_id,
+                conn_type=conn_type,
+                login=user,
+                password=password,
+                host=host,
+                port=port,
+                schema=dbname
+            )
+            session.add(new_conn)
+
     session.commit()
 
 # ------------------------------------------------------------------------
@@ -109,6 +143,7 @@ def get_compiled_sql_path(filename):
 # ------------------------------------------------------------------------
 def run_schema_drift_analysis():
     """Run compiled SQL queries and generate schema drift report."""
+    logging.info("Starting schema drift analysis")
     hook = PostgresHook(postgres_conn_id='redshift_default')
 
     # Run profiles_stats.sql
@@ -117,6 +152,7 @@ def run_schema_drift_analysis():
         profiles_stats_sql = f.read()
 
     profiles_results = hook.get_records(profiles_stats_sql)
+    logging.info(f"Profiles stats query returned {len(profiles_results)} rows")
 
     # Run missing_columns.sql
     missing_columns_path = get_compiled_sql_path("missing_columns.sql")
@@ -124,6 +160,7 @@ def run_schema_drift_analysis():
         missing_columns_sql = f.read()
 
     missing_columns_results = hook.get_records(missing_columns_sql)
+    logging.info(f"Missing columns query returned {len(missing_columns_results)} rows")
 
     # Generate HTML report
     html_report = generate_html_report(profiles_results, missing_columns_results)
@@ -133,6 +170,7 @@ def run_schema_drift_analysis():
 
 def generate_html_report(profiles_results, missing_columns_results):
     """Generate HTML report from query results."""
+    logging.info(f"Generating HTML report: {len(profiles_results)} profile rows, {len(missing_columns_results)} missing column rows")
     html = "<h2>SFDC Schema Drift Audit Report</h2>"
 
     # Profiles stats table
@@ -150,6 +188,7 @@ def generate_html_report(profiles_results, missing_columns_results):
     # Missing columns table
     html += "<h3>Missing Columns Analysis</h3>"
     if missing_columns_results:
+        logging.info("Found missing columns, generating table")
         html += "<table border='1' style='border-collapse: collapse;'>"
         html += "<tr><th>Table Name</th><th>Model Path</th><th>Column Name</th><th>Present in Model</th></tr>"
 
@@ -160,6 +199,7 @@ def generate_html_report(profiles_results, missing_columns_results):
 
         html += "</table>"
     else:
+        logging.info("No missing columns detected")
         html += "<p>No schema drift detected today.</p>"
 
     return html
@@ -179,6 +219,7 @@ def check_column_in_model(model_path, column_name):
 
 def send_email_report(html_content):
     """Send email with the schema drift report."""
+    logging.info("Preparing to send email report")
     subject = "SFDC Schema Drift Audit Report"
     to = ["data-team@learning.com"]  # Update with actual recipients
     body = f"""
@@ -189,11 +230,17 @@ def send_email_report(html_content):
     </html>
     """
 
-    send_email(
-        to=to,
-        subject=subject,
-        html_content=body
-    )
+    try:
+        logging.info(f"Sending email to {to} with subject '{subject}'")
+        send_email(
+            to=to,
+            subject=subject,
+            html_content=body
+        )
+        logging.info("Email sent successfully")
+    except Exception as e:
+        logging.error(f"Failed to send email: {e}")
+        raise
 
 def create_profile_task(table_name):
     """Create a profile task for a given SFDC table."""
