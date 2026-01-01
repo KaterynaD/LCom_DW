@@ -7,6 +7,8 @@ from airflow.operators.empty import EmptyOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow.utils.email import send_email
 from airflow.models import Variable
+from airflow.models import Connection
+from airflow import settings
 from datetime import datetime
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 

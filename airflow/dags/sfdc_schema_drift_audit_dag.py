@@ -7,8 +7,8 @@ import logging
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-from airflow.models import Connection
-from airflow import settings
+
+
 from airflow.models import Variable
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.utils.email import send_email
