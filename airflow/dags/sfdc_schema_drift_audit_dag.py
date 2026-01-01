@@ -177,7 +177,7 @@ def generate_html_report(profiles_results, missing_columns_results):
     # Profiles stats table
     html += "<h3>Profile Statistics</h3>"
     html += "<table border='1' style='border-collapse: collapse;'>"
-    html += "<tr><th>Table Name</th><th>Base Load Date</th><th>Base Columns</th><th>Current Load Date</th><th>Current Columns</th><th>Difference</th></tr>"
+    html += "<tr><th>Table Name</th><th>Base Profile Collected On</th><th>Base Profile Columns Count</th><th>Current Profile Collected On</th><th>Current Profile Columns Count</th><th>Difference in Columns Counts</th></tr>"
 
     for row in profiles_results:
         table_name, base_date, base_cols, current_date, current_cols, diff = row
@@ -256,6 +256,7 @@ def create_profile_task(table_name):
         'exclude_stats_numeric': ['placeholder', 'min', 'max', 'avg', 'stddev_pop', 'cnt_neg', 'cnt_zero', 'cnt_pos', 'cnt_int'],
         'exclude_stats_varchar': ['placeholder', 'min_length', 'max_length', 'avg_length', 'cnt_leading_ws', 'cnt_trailing_ws', 'cnt_empty_after_trim', 'cnt_lower', 'cnt_upper', 'cnt_mixed', 'cnt_cast_int', 'cnt_cast_decimal', 'cnt_cast_date', 'cnt_cast_timestamp'],
         'exclude_stats_datetime': ['placeholder', 'min', 'max'],
+        'exclude_columns':['num_opps_c','nc_tier_1_c','last_activity_logged_on_c','district_nces_c'],
         'loaddate': '{{ ti.xcom_pull(task_ids=\'Start_Load.Set_Load_Date\', key=\'LoadDate\') }}'
     }
     args_str = json.dumps(args_dict)
