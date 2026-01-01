@@ -21,7 +21,7 @@ from dag_utils import (
 
 # SQL queries for base profile management
 DELETE_BASE_PROFILE_SQL = """
-delete from rawdata.profiles.sfdc_schema_audit a where profile_name='base';
+delete from rawdata.profiles.sfdc_schema_audit  where profile_name='base';
 """
 
 RENAME_CURRENT_TO_BASE_SQL = """
