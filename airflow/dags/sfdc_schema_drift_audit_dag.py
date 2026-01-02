@@ -7,11 +7,18 @@ import logging
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+from airflow.operators.empty import EmptyOperator
 
+from airflow.utils.trigger_rule import TriggerRule
+from airflow.exceptions import AirflowSkipException
 
 from airflow.models import Variable
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.utils.email import send_email
+
+import pendulum
+
+local_tz = pendulum.timezone("America/Los_Angeles")
 
 from dag_utils import (
     DBT_PROFILES_DIR,
@@ -36,7 +43,16 @@ set profile_name='base'
 where profile_name='current';
 """
 
+SCHEDULE_VAR = "sfdc_base_profiles_manual_run_schedule"
+DEFAULT_SCHEDULE = "0 20 * * *"  # 8 PM Pacific
 
+try:
+    schedule = Variable.get(SCHEDULE_VAR)
+    if not schedule or schedule.strip().lower() in {"none", "null"}:
+        schedule = DEFAULT_SCHEDULE
+except KeyError:
+    Variable.set(SCHEDULE_VAR, DEFAULT_SCHEDULE)
+    schedule = DEFAULT_SCHEDULE
 
 
 
@@ -185,13 +201,15 @@ default_args = {
     "email_on_retry": False,
 }
 
+
 with DAG(
     dag_id="sfdc_schema_drift_audit",
     description="SFDC: Schema drift audit - compare profiles and report missing columns (manual trigger only)",
-    default_args=default_args,
-    start_date=datetime(2024, 1, 1),
-    schedule_interval=None,  # Manual runs only for testing
+    start_date=datetime(2025, 1, 1, tzinfo=local_tz),
+    schedule=schedule,
     catchup=False,
+    max_active_runs=1,
+    default_args={"retries": 0},
     tags=["dbt", "sfdc", "profiles", "schema_drift", "audit", "maintenance"],
 ) as dag:
 
@@ -220,13 +238,47 @@ with DAG(
     profile_training_session_c = create_profile_task("training_session_c", "current")
     profile_product_2 = create_profile_task("product_2", "current")
 
-    # 6. Compile dbt analyses queries
+
+    # 6. Join + gate: wait for all profile tasks to finish, then require at least one success
+    profiles = [
+        profile_account,
+        profile_opportunity,
+        profile_opportunity_line_item,
+        profile_case,
+        profile_training_session_c,
+        profile_product_2,
+    ]
+
+    # Barrier: wait for ALL profile tasks to finish (success/failed/skipped)
+    profiles_done = EmptyOperator(
+        task_id="profiles_done",
+        trigger_rule=TriggerRule.ALL_DONE,
+    )
+
+    def require_one_profile_success(**context):
+        """Skip downstream if no profile_* task succeeded."""
+        tis = context["dag_run"].get_task_instances()
+        state_by_id = {ti.task_id: ti.state for ti in tis}
+        states = [state_by_id.get(t.task_id) for t in profiles]
+
+        if not any(s == "success" for s in states):
+            raise AirflowSkipException("No profile_* task succeeded; skipping compile/analysis.")
+
+    require_one_success = PythonOperator(
+        task_id="require_one_profile_success",
+        python_callable=require_one_profile_success,
+        trigger_rule=TriggerRule.ALL_DONE,
+        on_failure_callback=notify_task_failure,
+    )
+
+    # Compile dbt analyses queries (runs only if the gate task succeeds)
     compile_query = BashOperator(
         task_id="compile_analyses",
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
             "dbt compile --select missing_columns profiles_stats"
         ),
+        trigger_rule=TriggerRule.ALL_SUCCESS,
         on_failure_callback=notify_task_failure,
     )
 
@@ -245,4 +297,4 @@ with DAG(
 
     # Final wiring
     init_done >> set_load_date_task >> create_connection >> manage_base_profile_task
-    manage_base_profile_task >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case, profile_training_session_c, profile_product_2] >> compile_query >> run_analysis >> notify_summary
+    manage_base_profile_task >> profiles >> profiles_done >> require_one_success >> compile_query >> run_analysis >> notify_summary
