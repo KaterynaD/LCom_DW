@@ -2,9 +2,11 @@
  {% set create_sp_operation %}
 
 
-CREATE OR REPLACE PROCEDURE staging.processing_opportunities_chain_of_renewals(ploaddate timestamp)					
-LANGUAGE plpgsql					
-AS $$					
+CREATE OR REPLACE PROCEDURE staging.processing_opportunities_chain_of_renewals(ploaddate timestamp)
+	LANGUAGE plpgsql
+AS $$
+	
+						
 DECLARE					
 record_count int;					
 batch int := 100;					
@@ -27,14 +29,22 @@ RAISE INFO 'Count opportunities: %', record_count;
 batch_count := CEIL(record_count / batch::float) ;					
 RAISE INFO 'Num of batches: %', batch_count;
 
-truncate table staging.stg_opportunities_chain_of_renewals;		
+	
+
+CREATE temporary TABLE temp_opportunities_chain_of_renewals
+(
+	opportunity_id VARCHAR(300) NOT NULL  ENCODE RAW
+	,cnt_parents INTEGER NOT NULL  ENCODE az64
+	,parent_opportunities VARCHAR(65535) NOT NULL  ENCODE lzo
+	,loaddate TIMESTAMP WITHOUT TIME ZONE NOT NULL  ENCODE az64
+);
 
 FOR i IN 1..batch_count LOOP					
 RAISE INFO 'Batch: %', i;					
 offset_value := (i - 1) * 100;					
 RAISE INFO 'offset_value: %', offset_value;			
 		
-insert into staging.stg_opportunities_chain_of_renewals					
+insert into temp_opportunities_chain_of_renewals					
 (					
 opportunity_id					
 ,cnt_parents					
@@ -73,10 +83,21 @@ ploaddate loaddate
 FROM orders					
 group by id;					
 END LOOP;					
-drop table if exists temp_opportunities_ids;					
+
+drop table if exists temp_opportunities_ids;	
+
+truncate table staging.stg_opportunities_chain_of_renewals;	
+
+insert into staging.stg_opportunities_chain_of_renewals
+select distinct * from 	temp_opportunities_chain_of_renewals	;
+
+drop table if exists temp_opportunities_chain_of_renewals;
+			
 END;					
-$$					
-;					
+
+
+$$
+;
 
 
 {% endset %}
