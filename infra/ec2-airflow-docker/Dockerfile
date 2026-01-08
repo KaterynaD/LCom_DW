@@ -14,9 +14,11 @@ RUN git config --global --add safe.directory /opt/airflow/transformations
 
 # Install dbt as airflow user (Airflow image best practice)
 USER airflow
+
 RUN pip install \
       "dbt-core==1.10.3" \
-      "dbt-redshift==1.9.5"
+      "dbt-redshift==1.9.5" \
+      "dbt-colibri"      
 
 # Return to root (default for this image)
 USER root
