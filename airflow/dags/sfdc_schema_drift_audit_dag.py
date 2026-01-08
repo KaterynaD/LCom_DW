@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import sys
 from pathlib import Path,PurePosixPath
 
 import json
@@ -8,6 +9,7 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.empty import EmptyOperator
+from airflow.operators.python import PythonOperator, BranchPythonOperator
 
 from airflow.utils.trigger_rule import TriggerRule
 from airflow.exceptions import AirflowSkipException
@@ -15,6 +17,18 @@ from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.utils.email import send_email
+#from libcst import Any,Dict, List
+from typing import Any, Dict, List
+
+
+
+
+# Add ../../airflow/Utils to PYTHONPATH
+UTILS_DIR = (Path(__file__).resolve().parents[1] / "Utils")
+
+sys.path.insert(0, str(UTILS_DIR))
+
+from colibri_lineage import get_column_lineage  # noqa: E402
 
 import pendulum
 
@@ -32,6 +46,8 @@ from dag_utils import (
     create_profile_task,
 )
 
+MANIFEST_PATH = os.path.join(DBT_LCOM_DW_PROJECT_DIR,  "target/colibri-manifest.json") 
+
 # SQL queries for base profile management
 DELETE_BASE_PROFILE_SQL = """
 delete from rawdata.profiles.sfdc_schema_audit  where profile_name='base';
@@ -43,18 +59,11 @@ set profile_name='base'
 where profile_name='current';
 """
 
-SCHEDULE_VAR = "sfdc_base_profiles_manual_run_schedule"
-DEFAULT_SCHEDULE = "0 20 * * *"  # 8 PM Pacific
 
-try:
-    schedule = Variable.get(SCHEDULE_VAR)
-    if not schedule or schedule.strip().lower() in {"none", "null"}:
-        schedule = DEFAULT_SCHEDULE
-except KeyError:
-    Variable.set(SCHEDULE_VAR, DEFAULT_SCHEDULE)
-    schedule = DEFAULT_SCHEDULE
+# 8 PM Pacific by default
+SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT = Variable.get("SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT", default_var="0 20 * * *")
 
-
+RUN_COLUMN_LINEAGE_FLAG = Variable.get("RUN_COLUMN_LINEAGE_FLAG", default_var="YES").upper()
 
 # ------------------------------------------------------------------------
 # Manage base profile based on Airflow variable
@@ -97,19 +106,58 @@ def run_schema_drift_analysis():
     profiles_results = hook.get_records(profiles_stats_sql)
     logging.info(f"Profiles stats query returned {len(profiles_results)} rows")
 
-    # Run missing_columns.sql
-    missing_columns_path = get_compiled_sql_path("missing_columns.sql")
-    with open(missing_columns_path, 'r') as f:
-        missing_columns_sql = f.read()
+    # Run missing_columns_lineage.sql
+    missing_columns_lineage_path = get_compiled_sql_path("missing_columns_lineage.sql")
+    with open(missing_columns_lineage_path, 'r') as f:
+        missing_columns_lineage_sql = f.read()
 
-    missing_columns_results = hook.get_records(missing_columns_sql)
-    logging.info(f"Missing columns query returned {len(missing_columns_results)} rows")
+    missing_columns_lineage_results = hook.get_records(missing_columns_lineage_sql)
+    logging.info(f"Missing columns lineage query returned {len(missing_columns_lineage_results)} rows")
 
     # Generate HTML report
-    html_report = generate_html_report(profiles_results, missing_columns_results)
-
+    html_report = generate_html_report(profiles_results, missing_columns_lineage_results)
     # Send email with report
     send_email_report(html_report)
+
+def to_html_table(rows: List[Dict[str, Any]]) -> str:
+    headers = ["source", "source_column", "direct_usage", "downstream_usage", "error"]
+
+    def fmt_list(v: Any) -> str:
+        if isinstance(v, list):
+            return ", ".join(str(x) for x in v)
+        return "" if v is None else str(v)
+
+    parts: List[str] = []
+    
+    parts.append(
+        "<style>"
+        "body{font-family:Arial, sans-serif; padding:16px}"
+        "table{border-collapse:collapse; width:100%}"
+        "th,td{border:1px solid #ccc; padding:8px; vertical-align:top}"
+        "th{background:#f5f5f5; text-align:left}"
+        ".err{color:#b00020; font-weight:600}"
+        "</style>"
+    )
+    parts.append("</head><body>")
+    parts.append("<h2>Column Lineage Report</h2>")
+    parts.append("<table>")
+    parts.append("<thead><tr>" + "".join(f"<th>{html_escape(h)}</th>" for h in headers) + "</tr></thead>")
+    parts.append("<tbody>")
+
+    for r in rows:
+        tds: List[str] = []
+        for h in headers:
+            val = r.get(h, "")
+            cell = fmt_list(val)
+            if h == "error" and cell:
+                tds.append(f"<td class='err'>{html_escape(cell)}</td>")
+            else:
+                tds.append(f"<td>{html_escape(cell)}</td>")
+        parts.append("<tr>" + "".join(tds) + "</tr>")
+
+    parts.append("</tbody></table>")
+    
+    return "\n".join(parts)
 
 def generate_html_report(profiles_results, missing_columns_results):
     """Generate HTML report from query results."""
@@ -131,38 +179,27 @@ def generate_html_report(profiles_results, missing_columns_results):
     # Missing columns table
     html += "<h3>Missing Columns Analysis</h3>"
     if missing_columns_results:
-        logging.info("Found missing columns, generating table")
-        html += "<table border='1' style='border-collapse: collapse;'>"
-        html += "<tr><th>Table Name</th><th>Model Path</th><th>Column Name</th><th>Present in Model</th></tr>"
+        logging.info("Found missing columns, generating lineage table")
+
+
+        outputs: List[Dict[str, Any]] = []
 
         for row in missing_columns_results:
-            model_name, table_name,  column_name = row
-            present_in_model = check_column_in_model(model_name, column_name) if column_name else "N/A"
-            html += f"<tr><td>{table_name}</td><td>{model_name}</td><td>{column_name or 'N/A'}</td><td>{present_in_model}</td></tr>"
+            source_name, table_name,  column_name = row
+            outputs.append(get_column_lineage(MANIFEST_PATH, source_name, column_name))
+        
+        html_table = to_html_table(outputs)
 
-        html += "</table>"
+        html += html_table
+
+        
     else:
+
         logging.info("No missing columns detected")
         html += "<p>No schema drift detected today.</p>"
 
     return html
 
-def check_column_in_model(model_path, column_name):
-    """Check if column is present in the specified dbt model file."""
-    if not model_path or not column_name:
-        return "N/A"
-
-    full_path = PurePosixPath(DBT_LCOM_DW_PROJECT_DIR) / model_path.lstrip("/")
-
-    logging.info(f"Analyzing file:  {str(full_path)} rows")
-
-    
-    try:
-        with open(full_path, 'r') as f:
-            content = f.read()
-            return "Yes" if column_name.lower() in content.lower() else "No"
-    except:
-        return "Error reading file"
 
 def send_email_report(html_content):
     """Send email with the schema drift report."""
@@ -189,6 +226,10 @@ def send_email_report(html_content):
         logging.error(f"Failed to send email: {e}")
         raise
 
+    
+def branch_on_column_lineage_flag():
+    """Run lineage tasks only when RUN_COLUMN_LINEAGE_FLAG == 'YES'."""
+    return "compile_analyses" if RUN_COLUMN_LINEAGE_FLAG == "YES" else "skip_column_lineage"    
 
 # ------------------------------------------------------------------------
 # DAG definition
@@ -206,7 +247,7 @@ with DAG(
     dag_id="sfdc_schema_drift_audit",
     description="SFDC: Schema drift audit - compare profiles and report missing columns (manual trigger only)",
     start_date=datetime(2025, 1, 1, tzinfo=local_tz),
-    schedule=schedule,
+    schedule=SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT,
     catchup=False,
     max_active_runs=1,
     default_args={"retries": 0},
@@ -271,12 +312,59 @@ with DAG(
         on_failure_callback=notify_task_failure,
     )
 
+
+    # Creates columns lineage if variable set RUN_COLUMN_LINEAGE_FLAG to YES
+
+
+
+    branch_column_lineage = BranchPythonOperator(
+    task_id="branch_column_lineage",
+    python_callable=branch_on_column_lineage_flag,
+    trigger_rule=TriggerRule.ALL_SUCCESS,
+    on_failure_callback=notify_task_failure,
+  )
+
+    skip_column_lineage = EmptyOperator(
+    task_id="skip_column_lineage",
+  )
+
+    dbt_compile = BashOperator(
+        task_id="dbt_compile",
+        bash_command=(
+            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+            "dbt compile"
+        ),
+        trigger_rule=TriggerRule.ALL_SUCCESS,
+        on_failure_callback=notify_task_failure,
+    )    
+
+
+    dbt_docs_generate = BashOperator(
+        task_id="dbt_docs_generate",
+        bash_command=(
+            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+            "dbt docs generate"
+        ),
+        trigger_rule=TriggerRule.ALL_SUCCESS,
+        on_failure_callback=notify_task_failure,
+    )   
+
+    colibri_generate = BashOperator(
+        task_id="colibri_generate",
+        bash_command=(
+            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+            "colibri generate --output-dir target"
+        ),
+        trigger_rule=TriggerRule.ALL_SUCCESS,
+        on_failure_callback=notify_task_failure,
+    )    
+
     # Compile dbt analyses queries (runs only if the gate task succeeds)
     compile_query = BashOperator(
         task_id="compile_analyses",
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt compile --select missing_columns profiles_stats"
+            "dbt compile --select missing_columns_lineage profiles_stats"
         ),
         trigger_rule=TriggerRule.ALL_SUCCESS,
         on_failure_callback=notify_task_failure,
@@ -286,6 +374,7 @@ with DAG(
     run_analysis = PythonOperator(
         task_id="run_schema_drift_analysis",
         python_callable=run_schema_drift_analysis,
+        trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
         on_failure_callback=notify_task_failure,
     )
 
@@ -297,4 +386,8 @@ with DAG(
 
     # Final wiring
     init_done >> set_load_date_task >> create_connection >> manage_base_profile_task
-    manage_base_profile_task >> profiles >> profiles_done >> require_one_success >> compile_query >> run_analysis >> notify_summary
+    
+    # CHANGE Final wiring (replace the last line with this)
+    manage_base_profile_task >> profiles >> profiles_done >> require_one_success >> branch_column_lineage
+    branch_column_lineage >> compile_query >> dbt_compile >> dbt_docs_generate >> colibri_generate >> run_analysis >> notify_summary
+    branch_column_lineage >> skip_column_lineage >> run_analysis
