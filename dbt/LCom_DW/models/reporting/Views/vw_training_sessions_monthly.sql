@@ -77,6 +77,7 @@ select
     ,f.implementation_notes
     --
     ,f.notes
+    ,replace(f.cancel_reason, '{{ var("default_varchar") }}', '') as cancel_reason
     --
     --Session Survey details
     ,f.survey_action_items    
