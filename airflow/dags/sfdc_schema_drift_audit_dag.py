@@ -17,7 +17,8 @@ from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.utils.email import send_email
-#from libcst import Any,Dict, List
+
+from html import escape as html_escape
 from typing import Any, Dict, List
 
 
