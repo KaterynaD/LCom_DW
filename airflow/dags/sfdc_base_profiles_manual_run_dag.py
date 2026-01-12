@@ -3,6 +3,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+from airflow.operators.empty import EmptyOperator
 
 import json
 
@@ -53,7 +54,8 @@ with DAG(
     profile_product_2 = create_profile_task("product_2", "base")
     profile_user = create_profile_task("user", "base")
     profile_user_role = create_profile_task("user_role", "base")
-
+     
+    dummy = EmptyOperator(task_id="dummy")
     # Shared summary email at the end
     notify_summary = create_notify_summary_task(
         dag,
@@ -61,4 +63,4 @@ with DAG(
     )
 
     # Final wiring - all profile tasks run in parallel after init, then all feed to notification
-    init_done >> set_load_date_task >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case, profile_training_session_c, profile_product_2, profile_user, profile_user_role] >> notify_summary
+    init_done >> set_load_date_task >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case] >> dummy >> [profile_training_session_c, profile_product_2, profile_user, profile_user_role] >> notify_summary

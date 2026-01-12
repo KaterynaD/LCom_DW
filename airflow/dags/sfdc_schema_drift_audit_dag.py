@@ -288,7 +288,7 @@ with DAG(
         profile_account,
         profile_opportunity,
         profile_opportunity_line_item,
-         profile_case]
+        profile_case]
     
     profiles_2 = [       
         profile_training_session_c,
@@ -312,7 +312,7 @@ with DAG(
         """Skip downstream if no profile_* task succeeded."""
         tis = context["dag_run"].get_task_instances()
         state_by_id = {ti.task_id: ti.state for ti in tis}
-        states = [state_by_id.get(t.task_id) for t in profiles]
+        states = [state_by_id.get(t.task_id) for t in profiles_1 + profiles_2]
 
         if not any(s == "success" for s in states):
             raise AirflowSkipException("No profile_* task succeeded; skipping compile/analysis.")
