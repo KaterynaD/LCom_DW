@@ -48,11 +48,6 @@ models:
     description: "{{ doc('column_title') }}"
     constraints:
     - type: not_null
-  - name: user_role
-    data_type: varchar(240)
-    description: "{{ doc('column_user_role') }}"
-    constraints:
-    - type: not_null
   - name: email
     data_type: varchar(400)
     description: "{{ doc('column_email') }}"
