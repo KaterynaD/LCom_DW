@@ -41,8 +41,12 @@ uah.sfdc_billing_country country,
 case when uah.sfdc_district_enrollment=0 then uah.sfdc_school_enrollment else uah.sfdc_district_enrollment end as district_enrollment,
 case when (uah.sfdc_state_initiative or uah.sfdc_state_initiative_school) then true else false end as state_initiative,
 uah.sfdc_urban_rural as urban_rural ,
+uah.sfdc_owner_name_text as account_owner_name,
+ua.sfdc_owner_name_text as current_account_owner_name,
 f.loaddate 
 from {{ ref("vw_fact_revenue_monthly_snapshots") }} f
+join {{ ref("dim_account") }} ua
+on f.sfdc_ultimate_parent_id = ua.sfdc_account_id
 join {{ ref("dim_account_history") }} uah
 on f.sfdc_ultimate_parent_id = uah.sfdc_account_id
 and f.mon_lastday between uah.fromdate and  uah.todate
