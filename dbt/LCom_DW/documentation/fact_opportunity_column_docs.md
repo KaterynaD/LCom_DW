@@ -472,10 +472,6 @@ Send RAI (Renewal Advisory Invoice)
 Rebuilt During Migration (Denotes if this opp was flagged to be rebuilt during migration process)
 {% enddocs %}
 
-{% docs column_record_type_id %}
-Opportunity Record Type
-{% enddocs %}
-
 {% docs column_references_provided %}
 References Provided
 {% enddocs %}

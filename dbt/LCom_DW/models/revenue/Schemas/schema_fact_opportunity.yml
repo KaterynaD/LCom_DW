@@ -688,11 +688,6 @@ models:
     description: "{{ doc('column_rebuilt_during_migration') }}"
     constraints:
     - type: not_null
-  - name: record_type_id
-    data_type: varchar(30)
-    description: "{{ doc('column_record_type_id') }}"
-    constraints:
-    - type: not_null
   - name: references_provided
     data_type: boolean
     description: "{{ doc('column_references_provided') }}"

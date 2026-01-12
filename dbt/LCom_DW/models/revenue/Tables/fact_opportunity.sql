@@ -8,7 +8,77 @@
         
         )
 }}
-with data as (
+with 
+staging as (
+select
+    {{ safe_select_list_from_profiles(
+        table_name='opportunity',
+        alias='sfdc_opportunity',
+        used_columns=[ 
+            'id','name','account_id','account_manager_c','account_name_email_c',
+'activity_metric_id','already_booked_c','amount','amount_won_c','arr_bands_c',
+'arr_c','arr_new_business_c','arr_renewal_c','arr_upsell_c','arr_won_c',
+'billing_addressee_c','billing_city_c','billing_state_c','billing_street_c',
+'billing_zipcode_c','churn_date_c','churn_formula_c','close_date',
+'closed_won_date_time_c','codesters_has_licenses_synced_c',
+'codesters_number_of_licenses_c','codesters_number_of_synced_licenses_c',
+'codesters_order_to_be_extended_c','codesters_order_to_be_unenforced_c',
+'codesters_renewal_c','combined_arr_c','contract_id','created_by_id',
+'created_date','data_quality_description_c',
+'data_quality_score_c','deal_docs_completed_c','description',
+'disable_auto_renewal_opp_c','disable_odc_c','downsell_c','end_date_c',
+'expected_new_business_arr_c','expected_revenue','fiscal','forecast_category',
+'forecast_category_name','has_coding_discount_c','has_easy_tech_c',
+'has_open_activity','has_opportunity_line_item','has_overdue_task',
+'has_started_with_students_c','house_account_c','initial_interest_c',
+'international_reseller_c','introduction_of_quote_c','invoiced_date_c',
+'is_closed','is_pd_resources_offered_c','is_won','jitterbit_fulfilled_c',
+'last_modified_by_id','last_modified_date',
+'last_stage_change_date','les_opp_c','license_provisioned_date_c',
+'license_unenforced_c','loss_reason_c','loss_notes_c','migrated_c',
+'multi_year_arr_c','multi_year_discussed_c','multi_year_order_c',
+'needs_analysis_conducted_c','netsuite_id_c','new_biz_arr_trigger_c','next_step',
+'nnarr_c','no_integration_needed_c','nrr_renewal_c','number_of_products_c',
+'number_of_schools_c','number_of_students_c','odc_sent_c',
+'opp_to_be_closed_c','number_c','opportunity_score_id','order_unenforced_c',
+'original_close_date_c','original_opp_owner_1_c','otc_email_sent_c',
+'owner_closed_won_c','owner_id','owner_open_pipeline_c','owner_quota_c',
+'owner_role_c','owner_sales_quota_c','paid_date_c','payment_terms_c',
+'pd_scheduled_c','pd_services_c','pipeline_needed_to_hit_quota_c',
+'platform_name_c','po_amount_c','po_amount_matches_primary_quote_amount_c',
+'po_hold_c','po_number_c','po_received_c','po_received_counter_c',
+'po_received_date_c','price_increase_arr_c','pricebook_2_id',
+'primary_quote_approved_c','probability','progressive_billing_c',
+'purchase_level_c','purchase_level_number_c','push_count','pushed_out_c',
+'quota_c','quote_contract_type_c','quote_created_date_c','quote_expiry_date_c',
+'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c',
+'quote_synced_c','quote_total_discount_c','rai_c','rebuilt_during_migration_c',
+'record_type_id','references_provided_c','remaining_quota_c',
+'renewable_revenue_c','renewal_at_79_c','renewal_biz_trigger_c',
+'renewal_owner_email_c','renewal_opportunity_c','rep_says_go_c',
+'reseller_class_for_les_c','risk_identified_c','risk_opportunity_c',
+'sales_support_rep_c','sbqq_contracted_c','sbqq_ordered_c',
+'sbqq_primary_quote_c','sbqq_renewal_c','school_list_c','school_year_c',
+'send_odc_c','set_initial_new_biz_arr_amount_c','set_up_for_processing_c',
+'source_opp_arr_c','spring_promo_c','stage_name','stakeholders_confirmed_c',
+'start_date_c','subscription_end_date_c','subscription_start_date_c',
+'subscription_term_c','success_plan_agreed_upon_c','success_plan_shared_c',
+'total_arr_bookings_c','total_credit_from_opp_product_c',
+'total_opportunity_quantity','training_session_created_c','transacted_opp_c',
+'true_arr_c','true_arr_formula_c','true_renewal_arr_c',
+'validation_bypass_date_time_c','variance_c','vendor_of_choice_c',
+'verbal_commitment_c','x_1_st_contact_c','x_1_st_contact_email_c',
+'x_1_st_contact_name_c','x_1_st_contact_role_c','x_18_for_12_c',
+'x_2_nd_contact_email_c','x_2_nd_contact_name_c','x_3_rd_contact_email_c',
+'x_3_rd_contact_name_c','test_account_c'
+            ],
+        profile_src=('profiles','sfdc_schema_audit'),
+        base_profile='base',
+        current_profile='current'
+    ) }}
+from {{ source('fivetran_salesforce_quickstart', 'opportunity') }} sfdc_opportunity
+)
+,data as (
 select 
 isnull(o.id,   '{{ var("default_varchar") }}') as opportunity_id ,
 isnull(o.name,   '{{ var("default_varchar") }}') as name ,
@@ -96,7 +166,7 @@ isnull(o.number_of_products_c , {{ var("default_numeric") }}) as number_of_produ
 isnull(o.number_of_schools_c , {{ var("default_numeric") }}) as number_of_schools ,
 isnull(o.number_of_students_c, {{ var("default_numeric") }}) as number_of_students ,
 isnull(o.odc_sent_c, {{ var("default_boolean") }}) as odc_sent ,
-isnull(o.opp_record_type_c,   '{{ var("default_varchar") }}') as opp_record_type ,
+isnull(rt.name,   '{{ var("default_varchar") }}') as opp_record_type ,
 isnull(o.opp_to_be_closed_c, {{ var("default_boolean") }}) as opp_to_be_closed ,
 isnull(o.number_c,   '{{ var("default_varchar") }}') as opportunity_number ,
 isnull(o.opportunity_score_id,   '{{ var("default_varchar") }}') as opportunity_score_id ,
@@ -144,7 +214,6 @@ isnull(o.quote_synced_c, {{ var("default_boolean") }}) as quote_synced ,
 isnull(o.quote_total_discount_c , {{ var("default_numeric") }}) as quote_total_discount ,
 isnull(o.rai_c, {{ var("default_boolean") }}) as rai ,
 isnull(o.rebuilt_during_migration_c, {{ var("default_boolean") }}) as rebuilt_during_migration ,
-isnull(o.record_type_id,   '{{ var("default_varchar") }}') as record_type_id ,
 isnull(o.references_provided_c, {{ var("default_boolean") }}) as references_provided ,
 isnull(o.remaining_quota_c , {{ var("default_numeric") }}) as remaining_quota ,
 isnull(o.renewable_revenue_c , {{ var("default_numeric") }}) as renewable_revenue ,
@@ -198,9 +267,11 @@ isnull(o.x_2_nd_contact_name_c,   '{{ var("default_varchar") }}') as x_2_nd_cont
 isnull(o.x_3_rd_contact_email_c,   '{{ var("default_varchar") }}') as x_3_rd_contact_email ,
 isnull(o.x_3_rd_contact_name_c,   '{{ var("default_varchar") }}') as x_3_rd_contact_name 
 from
-{{ source('fivetran_salesforce_quickstart', 'opportunity') }} as o
+staging as o
 left outer join  {{ ref('dim_account') }} as a
 on o.account_id = a.SFDC_account_id
+left outer join {{ source('fivetran_salesforce_quickstart', 'record_type') }} rt
+on o.record_type_id = rt.id
 where o.test_account_c = false
 )
 select
@@ -338,7 +409,6 @@ quote_synced::boolean	,
 quote_total_discount::double precision	,
 rai::boolean	,
 rebuilt_during_migration::boolean	,
-record_type_id::varchar(30)	,
 references_provided::boolean	,
 remaining_quota::double precision	,
 renewable_revenue::numeric(38,10)	,
