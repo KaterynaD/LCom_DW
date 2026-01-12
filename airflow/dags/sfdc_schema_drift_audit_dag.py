@@ -279,21 +279,32 @@ with DAG(
     profile_case = create_profile_task("case", "current")
     profile_training_session_c = create_profile_task("training_session_c", "current")
     profile_product_2 = create_profile_task("product_2", "current")
+    profile_user = create_profile_task("user", "base")
+    profile_user_role = create_profile_task("user_role", "base")
 
 
     # 6. Join + gate: wait for all profile tasks to finish, then require at least one success
-    profiles = [
+    profiles_1 = [
         profile_account,
         profile_opportunity,
         profile_opportunity_line_item,
-        profile_case,
+         profile_case]
+    
+    profiles_2 = [       
         profile_training_session_c,
         profile_product_2,
+        profile_user,
+        profile_user_role,
     ]
 
     # Barrier: wait for ALL profile tasks to finish (success/failed/skipped)
-    profiles_done = EmptyOperator(
-        task_id="profiles_done",
+    profiles_1_done = EmptyOperator(
+        task_id="profiles_1_done",
+        trigger_rule=TriggerRule.ALL_DONE,
+    )
+
+    profiles_2_done = EmptyOperator(
+        task_id="profiles_2_done",
         trigger_rule=TriggerRule.ALL_DONE,
     )
 
@@ -389,6 +400,6 @@ with DAG(
     init_done >> set_load_date_task >> create_connection >> manage_base_profile_task
     
     # CHANGE Final wiring (replace the last line with this)
-    manage_base_profile_task >> profiles >> profiles_done >> require_one_success >> branch_column_lineage
+    manage_base_profile_task >> profiles_1 >> profiles_1_done >> profiles_2 >> profiles_2_done>> require_one_success >> branch_column_lineage
     branch_column_lineage >> compile_query >> dbt_compile >> dbt_docs_generate >> colibri_generate >> run_analysis >> notify_summary
     branch_column_lineage >> skip_column_lineage >> run_analysis
