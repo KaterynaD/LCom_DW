@@ -7,7 +7,32 @@
  )  
 }}
 
-with data as 
+with 
+rawdata_user as (
+select
+{{ safe_select_list_from_profiles(
+        table_name='user',
+        alias='sfdc_user',
+        used_columns=['id','name','alias','community_nickname','username','department','title','email','is_active','last_login_date','created_date','last_modified_date','user_role_id'],
+        profile_src=('profiles','sfdc_schema_audit'),
+        base_profile='base',
+        current_profile='current'
+    ) }}
+from {{ source("fivetran_salesforce_quickstart","user") }} sfdc_user
+)
+,rawdata_user_role as (
+select
+{{ safe_select_list_from_profiles(
+        table_name='user_role',
+        alias='sfdc_user_role',
+        used_columns=['rollup_description','id'],
+        profile_src=('profiles','sfdc_schema_audit'),
+        base_profile='base',
+        current_profile='current'
+    ) }}
+from {{ source("fivetran_salesforce_quickstart","user_role") }} sfdc_user_role
+)
+,data as 
 (select
 stg.id as employee_id,
 isnull(stg.name, '{{ var("default_varchar") }}') as name,
@@ -16,12 +41,14 @@ isnull(stg.community_nickname, '{{ var("default_varchar") }}') as community_nick
 isnull(stg.username, '{{ var("default_varchar") }}') as username,
 isnull(stg.department, '{{ var("default_varchar") }}') as department,
 isnull(stg.title, '{{ var("default_varchar") }}') as title,
+isnull(r.rollup_description, '{{ var("default_varchar") }}') as user_role,
 isnull(stg.email, '{{ var("default_varchar") }}') as email,
 isnull(stg.is_active, {{ var("default_boolean") }}) as is_active,
 isnull(stg.last_login_date	 AT TIME ZONE 'PST',	 '{{ var("default_date") }}') as last_login_date,
 isnull(stg.created_date	 AT TIME ZONE 'PST',	 '{{ var("default_date") }}') as created_date,
 isnull(stg.last_modified_date	 AT TIME ZONE 'PST',	 '{{ var("default_date") }}') as last_modified_date
-from {{ source("fivetran_salesforce_quickstart","user") }} stg
+from rawdata_user stg
+join rawdata_user_role r on stg.user_role_id = r.id
 union all
 select 
 '{{ var("default_ID") }}' as  employee_id,
@@ -31,6 +58,7 @@ select
 '{{ var("default_varchar") }}' as username,
 '{{ var("default_varchar") }}' as department,
 '{{ var("default_varchar") }}' as title,
+'{{ var("default_varchar") }}' as user_role,
 '{{ var("default_varchar") }}' as email,
 {{ var("default_boolean") }} as is_active,
 '{{ var("default_date") }}' as last_login_date,
@@ -45,6 +73,7 @@ community_nickname::VARCHAR(400),
 username::VARCHAR(240),
 department::VARCHAR(240),
 title::VARCHAR(240),
+user_role::VARCHAR(240),
 email::VARCHAR(400),
 is_active::BOOLEAN,
 last_login_date::TIMESTAMP WITHOUT TIME ZONE,
