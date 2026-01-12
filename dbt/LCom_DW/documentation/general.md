@@ -19,6 +19,15 @@ Fiscal year in YYYY/YYYY format e.g. 2024/2025.
 Fiscal year-month number
 {% enddocs %}
 
+
+{% docs column_schoolyear %}
+School year in YYYY/YYYY format e.g. 2024/2025.
+{% enddocs %}
+
+{% docs column_schoolyear_mon %}
+School year-month number
+{% enddocs %}
+
 {% docs column_include_flg %}
 Flag indicating whether the record should be included in the calculation.
 {% enddocs %}

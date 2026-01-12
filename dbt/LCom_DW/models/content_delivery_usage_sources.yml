@@ -10,6 +10,26 @@ sources:
     schema: false
     identifier: false
   tables:
+  - name: school_enrollment
+    columns:
+    - name: enrollment_end_date
+      data_type: timestamp with time zone
+      description: 'date the user was no longer enrolled in the school either by removal or user record invalidated, stored in UTC. derived; when user record Valid = false then SQL LearningPlatform.dbo.User.auditUpdateDate;  expire when user has been invalidated or enrollment no longer present (CURRENT_DATE)'
+    - name: enrollment_start_date
+      data_type: timestamp with time zone
+      description: 'date the user was enrolled in the school, stored in UTC. derived; SQL LearningPlatform.dbo.SchoolMembership.auditUpdateDate, auditCreateDate; on INSERT greatest(src.enrollment_start_date, CURRENT_DATE - 1)'
+    - name: organization_district_id
+      data_type: varchar(255)
+      description: 'id of district associated with the school. SQL LearningPlatform.dbo.School.SchoolDistrictId;lower'
+    - name: organization_school_id
+      data_type: varchar(255)
+      description: 'id of school associated with the school enrollment. SQL LearningPlatform.dbo.SchoolMembership.SchoolId; lower'
+    - name: user_account_id
+      data_type: varchar(255)
+      description: 'id of user enrolled in the school. SQL LearningPlatform.dbo.SchoolMembership.UserId; lower'
+    - name: user_grade_level_code
+      data_type: char(2)
+      description: 'grade level associated with student enrolled in school; new enrollment begins when student is promoted grade levels.SQL LearningPlatform.dbo.User.Grade'      
   - name: context
     columns:
     - name: context_id
