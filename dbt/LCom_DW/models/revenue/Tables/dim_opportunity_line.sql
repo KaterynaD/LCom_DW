@@ -9,7 +9,29 @@
 
   
 
-with data as (
+with rawdata as (select
+     {{ safe_select_list_from_profiles(
+        table_name='opportunity_line_item',
+        alias='sfdc_opp_line_item',
+        used_columns=[ 
+			'combine_new_biz_arr_c','combine_renewal_arrs_c','combine_upsell_arrs_c',
+'created_date','description','discount','discount_applied_c','easy_tech_arr_c',
+'end_date_c','gold_service_on_quote_c','id','is_active_opp_product_c',
+'last_modified_date','learning_sbxid_c','list_price','name',
+'net_price_display_c','net_unit_price_c','netsuite_id_c','netsuite_sku_c',
+'no_of_buildings_c','no_of_licenses_c','opp_probability_c','opportunity_id',
+'opportunity_product_arr_c','opportunity_product_line_id_c','pricebook_entry_id',
+'pricebook_id_c','pro_rate_adj_term_c','product_2_id','product_code',
+'product_description_c','quantity','record_type_c','sbqq_quote_line_c',
+'start_date_c','subscription_term_c','total_price','unit_price',
+'weighted_total_price_c','business_type_opty_product_c','class_c','is_deleted'
+			],
+        profile_src=('profiles','sfdc_schema_audit'),
+        base_profile='base',
+        current_profile='current'
+    ) }}
+			from {{ source('fivetran_salesforce_quickstart', 'opportunity_line_item') }} as sfdc_opp_line_item)
+,data as (
 select
 isnull(ol.combine_new_biz_arr_c, {{ var("default_numeric") }}) as combine_new_biz_arr	,
 isnull(ol.combine_renewal_arrs_c, {{ var("default_numeric") }}) as combine_renewal_arrs	,
@@ -54,7 +76,7 @@ isnull(ol.weighted_total_price_c, {{ var("default_numeric") }}) as weighted_tota
 isnull(ol.business_type_opty_product_c,  '{{ var("default_varchar") }}'  ) as business_type_opty_product	,
 coalesce(ol.class_c,  ol.business_type_opty_product_c, '{{ var("default_varchar") }}'  ) as class
 from
-{{ source('fivetran_salesforce_quickstart', 'opportunity_line_item') }} as ol
+rawdata as ol
 join {{ ref('fact_opportunity') }} as o
 on ol.opportunity_id = o.opportunity_id
 join {{ ref("dim_sfdc_product") }} as p

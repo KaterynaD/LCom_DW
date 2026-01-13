@@ -8,7 +8,30 @@
     )
 }}
 
-with data as (
+with rawdata as (select
+{{ safe_select_list_from_profiles(
+        table_name='case',
+        alias='sfdc_case',
+        used_columns=[ 
+      'id','account_id','already_closed_c','case_number','case_owner_email_c',
+'case_ready_to_survey_c','closed_date','codesters_case_c','codesters_classes_c',
+'codesters_i_2_c_student_avg_c','codesters_i_2_c_student_completion_c',
+'codesters_students_c','confirmed_resolution_c','contact_email','contact_id',
+'contact_phone','created_date','csat_response_c','data_quality_description_c',
+'data_quality_score_c','description','escalation_status_c',
+'jira_last_modified_date_c','is_closed','is_escalated','last_modified_date',
+'net_suite_link_c','origin','owner_id','platform_name_c','priority',
+'round_robin_id_c','sales_escalation_c','status','subject','supplied_email',
+'supplied_name','survey_send_date_time_c','thread_id_c','type',
+'ultimate_parent_account_c','validation_account_name_c','xcase_number_c','record_type_id','solution_c','is_deleted'
+        ],
+        profile_src=('profiles','sfdc_schema_audit'),
+        base_profile='base',  
+        current_profile='current'
+    ) }}  
+    from {{ source("fivetran_salesforce_quickstart", "case") }} as sfdc_case
+)
+,data as (
 select
 stg.id 	 as case_id	,
 isnull(a.account_id, '{{ var("default_ID") }}') as account_id	,
@@ -46,7 +69,7 @@ isnull(stg.priority, '{{ var("default_varchar") }}') as case_priority	,
 isnull(rt.name , '{{ var("default_varchar") }}') as support_type	,
 isnull(stg.round_robin_id_c, {{ var("default_numeric") }}) as round_robin_id	,
 isnull(stg.sales_escalation_c , {{ var("default_boolean") }}) as sales_escalation	,
-isnull(solution_c, '{{ var("default_varchar") }}') as solution	,
+isnull(stg.solution_c, '{{ var("default_varchar") }}') as solution	,
 isnull(stg.status , '{{ var("default_varchar") }}') as status	,
 isnull(stg.subject , '{{ var("default_varchar") }}') as subject	,
 isnull(stg.supplied_email , '{{ var("default_varchar") }}') as supplied_email	,
@@ -57,7 +80,7 @@ isnull(stg.type, '{{ var("default_varchar") }}') as case_type	,
 isnull(stg.ultimate_parent_account_c, '{{ var("default_varchar") }}') as ultimate_parent_account	,
 isnull(stg.validation_account_name_c, '{{ var("default_varchar") }}') as validation_account_name	,
 isnull(stg.xcase_number_c , '{{ var("default_varchar") }}') as xcase_number	
-from {{ source("fivetran_salesforce_quickstart", "case") }} as stg
+from rawdata as stg
 left outer join  {{ ref("dim_account") }} as a
 on stg.account_id = a.SFDC_account_id
 left outer join  {{ source("fivetran_salesforce_quickstart", "record_type") }}  as rt

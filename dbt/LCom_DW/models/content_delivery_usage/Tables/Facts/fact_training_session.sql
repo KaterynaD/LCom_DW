@@ -9,7 +9,44 @@
         )
 }}
 
-with data as (
+with 
+rawdata as (select
+{{ safe_select_list_from_profiles(
+		table_name='training_session_c',
+		alias='sfdc_training_session',
+		used_columns=['id','name','account_id_c','owner_id','alternate_end_date_c',
+'alternate_end_time_unrestricted_c','alternate_start_date_c',
+'alternate_start_time_unrestricted_c','cancel_reason_c','closed_date_c',
+'created_by_id','created_date','curriculum_examples_c','district_library_c',
+'end_date_c','experience_level_c','impelmentation_i_pad_usage_c',
+'implementation_advanced_topics_c','implementation_elementary_c',
+'implementation_frequency_c','implementation_goals_c',
+'implementation_google_classroom_c','implementation_notes_c',
+'implementation_statement_c','implementation_topics_c','implementation_type_c',
+'implementing_grades_c','is_closed_c','last_modified_by_id','last_modified_date',
+'learning_path_c','new_district_c','notes_c','origin_c','participant_roles_c',
+'person_facilitating_group_tbd_learning_p_c','po_number_c',
+'presentation_quote_c','requestor_c','session_attendee_count_c',
+'session_grades_attending_c','session_location_address_c',
+'session_location_name_c','session_location_room_c','session_location_unknown_c',
+'session_notes_c','session_participation_method_c','session_subtype_c',
+'session_type_c','sessions_per_week_c','setting_for_student_use_of_curriculum_c',
+'start_date_c','state_program_eligible_confirmation_c','status_c',
+'survey_action_items_c','survey_administrator_attendance_c',
+'survey_attendee_challenges_c','survey_attendee_count_c',
+'survey_notable_discussions_c','survey_notes_c','survey_outcome_as_planned_c',
+'survey_outcome_issues_c','survey_recommendations_c',
+'survey_teacher_engagement_c','survey_teacher_sentiment_c',
+'where_will_learning_path_be_implemented_c',
+'who_chooses_and_assigns_curriculum_c','who_will_be_implementing_c','primary_contact_c','secondary_contact_c'
+		],
+		profile_src=('profiles','sfdc_schema_audit'),
+		base_profile='base',
+		current_profile='current'
+	) }}
+		from {{ source('fivetran_salesforce_quickstart', 'training_session_c') }} as sfdc_training_session
+)
+,data as (
 select 
 isnull(ts.id,'{{ var("default_varchar") }}') as training_session_id,
 isnull(ts.name,'{{ var("default_varchar") }}') as name,
@@ -89,7 +126,7 @@ isnull(ts.where_will_learning_path_be_implemented_c,'{{ var("default_varchar") }
 isnull(ts.who_chooses_and_assigns_curriculum_c,'{{ var("default_varchar") }}') as who_chooses_and_assigns_curriculum,
 isnull(ts.who_will_be_implementing_c,'{{ var("default_varchar") }}') as who_will_be_implementing	
 from
-  {{ source('fivetran_salesforce_quickstart', 'training_session_c') }} as ts
+  rawdata as ts
   left outer join {{ ref('dim_account') }} as a on ts.account_id_c = a.SFDC_account_id
   left outer join {{ ref('dim_employee') }} as e on ts.owner_id = e.employee_id
   left outer join {{ source('fivetran_salesforce_quickstart','contact') }} as pc on ts.primary_contact_c = pc.id

@@ -7,7 +7,29 @@
  )  
 }}
 
-with data as 
+with 
+rawdata as (select
+{{ safe_select_list_from_profiles(
+		table_name='product_2',
+		alias='sfdc_product',
+		used_columns=[ 
+'id','name','is_active','active_in_platform_c','sbqq_component_c',
+'sbqq_cost_editable_c','created_date', 
+'does_not_prorate_c','sbqq_exclude_from_maintenance_c','sbqq_hidden_c',
+'sbqq_include_in_maintenance_c','is_not_provisioned_c','last_modified_date',
+'multiplier_c',
+'netsuite_link_c','net_suite_sku_c','sbqq_non_discountable_c',
+'nyc_license_quantity_c','price_dimensions_c','sbqq_price_editable_c',
+'sbqq_pricing_method_c','product_code','description','family',
+'product_sub_family_c','sbqq_quantity_editable_c','sbqq_subscription_term_c',
+'sbqq_subscription_type_c','vidcode_org_id_c','lcom_suite_c'
+		],
+		profile_src=('profiles','sfdc_schema_audit'),
+		base_profile='base',
+		current_profile='current'
+	) }}
+		from {{ source("fivetran_salesforce_quickstart","product_2") }} as sfdc_product)
+,data as 
 (select
 stg.id as sfdc_product_id,
 isnull(stg.name, '{{ var("default_varchar") }}') as sfdc_product_name,
@@ -39,7 +61,7 @@ isnull(stg.sbqq_quantity_editable_c, {{ var("default_boolean") }}) as sbqq_quant
 isnull(stg.sbqq_subscription_term_c, {{ var("default_numeric") }}) as sbqq_subscription_term,
 isnull(stg.sbqq_subscription_type_c, '{{ var("default_varchar") }}') as sbqq_subscription_type,
 isnull(stg.vidcode_org_id_c, '{{ var("default_varchar") }}') as vidcode_org_id
-from {{ source("fivetran_salesforce_quickstart","product_2") }} stg
+from rawdata as stg
 left outer join {{ ref("dim_lcom_suite") }} lcom_suite
 on stg.lcom_suite_c = lcom_suite.sfdc_suite_id
 union all
