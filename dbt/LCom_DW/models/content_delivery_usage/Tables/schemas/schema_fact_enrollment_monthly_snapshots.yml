@@ -1,0 +1,96 @@
+---
+version: 2
+
+models:
+  - name: fact_enrollment_monthly_snapshots
+    description: >
+      Monthly enrollment snapshot as of each month end (mon_lastday). Built by joining the
+      school_enrollment source to dim_month, where mon_lastday falls between enrollment_start_date
+      and enrollment_end_date (or 3000-12-31 when end date is null). Aggregated by district, school,
+      grade level, and month. Enrollment is computed as count(distinct user_account_id). Default
+      placeholder IDs/values are applied when source fields are null.
+    config:
+      contract:
+        enforced: true
+    tags:
+    - fact
+    - cdu
+    columns:
+      - name: schoolyear
+        data_type: varchar(10)
+        description: "{{ doc('column_schoolyear') }}"
+        constraints:
+          - type: not_null
+
+
+      - name: schoolyear_mon
+        data_type: integer      
+        description: "{{ doc('column_schoolyear_mon') }}"
+        constraints:
+          - type: not_null
+
+
+      - name: mon_year
+        data_type: integer    
+        description: "{{ doc('column_mon_year') }}"
+        constraints:
+          - type: not_null
+
+
+      - name: mon_lastday
+        data_type: date      
+        description: "{{ doc('column_mon_lastday') }}"
+        constraints:
+          - type: not_null
+
+
+      - name: organization_district_id
+        data_type: varchar(300)      
+        description: >
+          ID of district associated with the school enrollment.
+          Source: dbo.school_enrollment.organization_district_id (derived from LearningPlatform.dbo.School.SchoolDistrictId; lower).
+          If null, substituted with var('default_ID').
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: organization_school_id
+        data_type: varchar(300)      
+        description: >
+          ID of school associated with the school enrollment.
+          Source: dbo.school_enrollment.organization_school_id (derived from LearningPlatform.dbo.SchoolMembership.SchoolId; lower).
+          Normalized so that invalid/default/short values fall back to district_id; otherwise uses school_id,
+          with final fallback to var('default_ID').
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: user_grade_level_code
+        data_type: varchar(10)      
+        description: >
+          Grade level associated with student enrolled in school; new enrollment begins when student is promoted grade levels.
+          Source: dbo.school_enrollment.user_grade_level_code (derived from LearningPlatform.dbo.User.Grade).
+          If null, substituted with var('default_varchar').
+        constraints:
+          - type: not_null
+
+
+      - name: enrollment
+        data_type: integer    
+        description: >
+          Number of distinct users (count distinct user_account_id) enrolled as of month end (mon_lastday)
+          for the given district/school/grade/month.
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: timestamp    
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
