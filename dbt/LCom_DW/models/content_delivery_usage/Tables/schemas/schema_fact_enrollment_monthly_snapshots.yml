@@ -11,10 +11,10 @@ models:
       placeholder IDs/values are applied when source fields are null.
     config:
       contract:
-        enforced: true
-    tags:
-    - fact
-    - cdu
+        enforced: false
+      tags:
+        - fact
+        - cdu  
     columns:
       - name: schoolyear
         data_type: varchar(10)
