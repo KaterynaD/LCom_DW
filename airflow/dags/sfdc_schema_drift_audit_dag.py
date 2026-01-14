@@ -280,7 +280,7 @@ with DAG(
     profile_training_session_c = create_profile_task("training_session_c", "current")
     profile_product_2 = create_profile_task("product_2", "current")
     profile_user = create_profile_task("user", "current")
-    profile_user_role = create_profile_task("user_role", "current")
+
 
 
     # 6. Join + gate: wait for all profile tasks to finish, then require at least one success
