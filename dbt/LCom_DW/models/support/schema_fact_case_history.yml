@@ -133,7 +133,7 @@ models:
 
       - name: escalation_status
         data_type: varchar(20)
-        description: Case Escalation Status
+        description: Not Used - Case Escalation Status
         constraints:
           - type: not_null
         data_tests:

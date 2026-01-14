@@ -37,7 +37,7 @@ closed_date,
 case_priority,
 account_id,
 owner_id,
-escalation_status,
+'Not Used'::varchar escalation_status,
 status,
 last_modified_date 
 from {{ ref("fact_case") }}

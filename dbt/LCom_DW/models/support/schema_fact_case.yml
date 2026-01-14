@@ -39,12 +39,6 @@ models:
           - type: not_null
 
 
-      - name: already_closed
-        data_type: boolean
-        description: Already Closed
-        constraints:
-          - type: not_null
-
       - name: case_number
         data_type: varchar(90)
         description: Case Number
@@ -69,35 +63,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: codesters_case
-        data_type: boolean
-        description: Codesters Case
-        constraints:
-          - type: not_null
-
-      - name: codesters_classes
-        data_type: double precision
-        description: Codesters – Number of Classes
-        constraints:
-          - type: not_null
-
-      - name: codesters_i_2_c_student_avg
-        data_type: double precision
-        description: Codesters I2C Student Average
-        constraints:
-          - type: not_null
-
-      - name: codesters_i_2_c_student_completion
-        data_type: double precision
-        description: Codesters I2C Student % Completion
-        constraints:
-          - type: not_null
-
-      - name: codesters_students
-        data_type: double precision
-        description: Codesters – Number of Students
-        constraints:
-          - type: not_null
 
       - name: confirmed_resolution
         data_type: boolean
@@ -105,29 +70,13 @@ models:
         constraints:
           - type: not_null
 
-      - name: contact_email
-        data_type: varchar(400)
-        description: Contact Email
-        constraints:
-          - type: not_null
 
       - name: contact_id
         data_type: varchar(300)
         description: Contact ID
         constraints:
           - type: not_null
-
-      - name: contact_phone
-        data_type: varchar(120)
-        description: Contact Phone
-        constraints:
-          - type: not_null
-
-      - name: contact_name
-        data_type: varchar(400)
-        description: Contact Name
-        constraints:
-          - type: not_null          
+    
 
       - name: created_date
         data_type: timestamp
@@ -158,18 +107,7 @@ models:
         description: Case Description
         constraints:
           - type: not_null
-
-      - name: escalation_status
-        data_type: varchar(20)
-        description: Case Escalation Status
-        constraints:
-          - type: not_null       
-
-      - name: jira_last_modified_date
-        data_type: timestamp
-        description: Jira Last Modified Date in PST timezone
-        constraints:
-          - type: not_null             
+            
 
       - name: is_closed
         data_type: boolean
@@ -190,12 +128,6 @@ models:
         constraints:
           - type: not_null
 
-
-      - name: net_suite_link
-        data_type: varchar(1000)
-        description: NetSuite Link
-        constraints:
-          - type: not_null
 
 
       - name: origin
@@ -238,11 +170,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: sales_escalation
-        data_type: boolean
-        description: Sales Escalation
-        constraints:
-          - type: not_null
 
       - name: solution
         data_type: varchar(5000)
@@ -262,18 +189,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: supplied_email
-        data_type: varchar(400)
-        description: Supplied Email
-        constraints:
-          - type: not_null
-
-      - name: supplied_name
-        data_type: varchar(500)
-        description: Supplied Name
-        constraints:
-          - type: not_null
-
       - name: survey_send_date_time
         data_type: timestamp
         description: Survey Send Date Time
@@ -289,18 +204,6 @@ models:
       - name: case_type
         data_type: varchar(100)
         description: Case Type
-        constraints:
-          - type: not_null
-
-      - name: ultimate_parent_account
-        data_type: varchar(790)
-        description: Ultimate Parent Account
-        constraints:
-          - type: not_null
-
-      - name: validation_account_name
-        data_type: varchar(780)
-        description: Validation Account Name
         constraints:
           - type: not_null
 

@@ -13,17 +13,15 @@ with rawdata as (select
         table_name='case',
         alias='sfdc_case',
         used_columns=[ 
-      'id','account_id','already_closed_c','case_number','case_owner_email_c',
-'case_ready_to_survey_c','closed_date','codesters_case_c','codesters_classes_c',
-'codesters_i_2_c_student_avg_c','codesters_i_2_c_student_completion_c',
-'codesters_students_c','confirmed_resolution_c','contact_email','contact_id',
-'contact_phone','created_date','csat_response_c','data_quality_description_c',
-'data_quality_score_c','description','escalation_status_c',
-'jira_last_modified_date_c','is_closed','is_escalated','last_modified_date',
-'net_suite_link_c','origin','owner_id','platform_name_c','priority',
-'round_robin_id_c','sales_escalation_c','status','subject','supplied_email',
-'supplied_name','survey_send_date_time_c','thread_id_c','type',
-'ultimate_parent_account_c','validation_account_name_c','xcase_number_c','record_type_id','solution_c','is_deleted'
+      'id','account_id','case_number','case_owner_email_c',
+'case_ready_to_survey_c','closed_date','confirmed_resolution_c','contact_id',
+'created_date','csat_response_c','data_quality_description_c',
+'data_quality_score_c','description',
+'is_closed','is_escalated','last_modified_date',
+'origin','owner_id','platform_name_c','priority',
+'round_robin_id_c','status','subject',
+'survey_send_date_time_c','thread_id_c','type',
+'xcase_number_c','record_type_id','solution_c','is_deleted'
         ],
         profile_src=('profiles','sfdc_schema_audit'),
         base_profile='base',  
@@ -36,49 +34,32 @@ select
 stg.id 	 as case_id	,
 isnull(a.account_id, '{{ var("default_ID") }}') as account_id	,
 isnull(stg.account_id, '{{ var("default_ID") }}') as sfdc_account_id	,
-isnull(stg.already_closed_c, {{ var("default_boolean") }}) as already_closed	,
 isnull(stg.case_number , '{{ var("default_varchar") }}') as case_number	,
 isnull(stg.case_owner_email_c , '{{ var("default_varchar") }}') as case_owner_email	,
 isnull(stg.case_ready_to_survey_c , {{ var("default_boolean") }}) as case_ready_to_survey	,
 isnull(stg.closed_date ,'{{ var("default_date") }}') as closed_date	,
-isnull(stg.codesters_case_c, {{ var("default_boolean") }}) as codesters_case	,
-isnull(stg.codesters_classes_c , {{ var("default_numeric") }}) as codesters_classes	,
-isnull(stg.codesters_i_2_c_student_avg_c, {{ var("default_numeric") }}) as codesters_i_2_c_student_avg	,
-isnull(stg.codesters_i_2_c_student_completion_c, {{ var("default_numeric") }}) as codesters_i_2_c_student_completion	,
-isnull(stg.codesters_students_c, {{ var("default_numeric") }}) as codesters_students	,
 isnull(stg.confirmed_resolution_c , {{ var("default_boolean") }}) as confirmed_resolution	,
-isnull(stg.contact_email, '{{ var("default_varchar") }}') as contact_email	,
 isnull(stg.contact_id , '{{ var("default_varchar") }}') as contact_id	,
-isnull(stg.contact_phone, '{{ var("default_varchar") }}') as contact_phone	,
-isnull(c.name, '{{ var("default_varchar") }}') as contact_name	,
 isnull(stg.created_date	 AT TIME ZONE 'PST','{{ var("default_date") }}') as created_date	,
 isnull(stg.csat_response_c , '{{ var("default_varchar") }}') as csat_response	,
 isnull(stg.data_quality_description_c , '{{ var("default_varchar") }}') as data_quality_description	,
 isnull(stg.data_quality_score_c, {{ var("default_numeric") }}) as data_quality_score	,
 isnull(stg.description , '{{ var("default_varchar") }}') as description	,
-isnull(stg.escalation_status_c, '{{ var("default_varchar") }}') as escalation_status  ,
-isnull(stg.jira_last_modified_date_c AT TIME ZONE 'PST', '{{ var("default_date") }}') as jira_last_modified_date	,
 isnull(stg.is_closed, {{ var("default_boolean") }}) as is_closed	,
 isnull(stg.is_escalated, {{ var("default_boolean") }}) as is_escalated	,
 isnull(stg.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date	,
-isnull(stg.net_suite_link_c, '{{ var("default_varchar") }}') as net_suite_link	,
 isnull(stg.origin , '{{ var("default_varchar") }}') as origin	,
 isnull(stg.owner_id, '{{ var("default_varchar") }}') as owner_id	,
 isnull(stg.platform_name_c , '{{ var("default_varchar") }}') as platform_name	,
 isnull(stg.priority, '{{ var("default_varchar") }}') as case_priority	,
 isnull(rt.name , '{{ var("default_varchar") }}') as support_type	,
 isnull(stg.round_robin_id_c, {{ var("default_numeric") }}) as round_robin_id	,
-isnull(stg.sales_escalation_c , {{ var("default_boolean") }}) as sales_escalation	,
 isnull(stg.solution_c, '{{ var("default_varchar") }}') as solution	,
 isnull(stg.status , '{{ var("default_varchar") }}') as status	,
 isnull(stg.subject , '{{ var("default_varchar") }}') as subject	,
-isnull(stg.supplied_email , '{{ var("default_varchar") }}') as supplied_email	,
-isnull(stg.supplied_name, '{{ var("default_varchar") }}') as supplied_name	,
 isnull(stg.survey_send_date_time_c ,'{{ var("default_date") }}') as survey_send_date_time	,
 isnull(stg.thread_id_c , '{{ var("default_varchar") }}') as thread_id	,
 isnull(stg.type, '{{ var("default_varchar") }}') as case_type	,
-isnull(stg.ultimate_parent_account_c, '{{ var("default_varchar") }}') as ultimate_parent_account	,
-isnull(stg.validation_account_name_c, '{{ var("default_varchar") }}') as validation_account_name	,
 isnull(stg.xcase_number_c , '{{ var("default_varchar") }}') as xcase_number	
 from rawdata as stg
 left outer join  {{ ref("dim_account") }} as a
@@ -93,49 +74,32 @@ select
   case_id::VARCHAR(300)
  ,account_id::VARCHAR(300)
  ,sfdc_account_id::VARCHAR(300)
- ,already_closed::BOOLEAN
  ,case_number::VARCHAR(90)
  ,case_owner_email::VARCHAR(400)
  ,case_ready_to_survey::BOOLEAN
  ,closed_date::TIMESTAMP
- ,codesters_case::BOOLEAN
- ,codesters_classes::DOUBLE PRECISION
- ,codesters_i_2_c_student_avg::DOUBLE PRECISION
- ,codesters_i_2_c_student_completion::DOUBLE PRECISION
- ,codesters_students::DOUBLE PRECISION
  ,confirmed_resolution::BOOLEAN
- ,contact_email::VARCHAR(400)
  ,contact_id::VARCHAR(300)
- ,contact_phone::VARCHAR(120)
- ,contact_name::VARCHAR(400)
  ,created_date::TIMESTAMP
  ,csat_response::VARCHAR(1000)
  ,data_quality_description::VARCHAR(1000)
  ,data_quality_score::INTEGER
  ,description::VARCHAR(max)
- ,escalation_status::VARCHAR(20)  
- ,jira_last_modified_date::TIMESTAMP
  ,is_closed::BOOLEAN
  ,is_escalated::BOOLEAN
  ,last_modified_date::TIMESTAMP
- ,net_suite_link::VARCHAR(1000)
  ,origin::VARCHAR(1000)
  ,owner_id::VARCHAR(300)
  ,platform_name::VARCHAR(300)
  ,case_priority::VARCHAR(1000)
  ,support_type::VARCHAR(240)
  ,round_robin_id::NUMERIC(20,17)
- ,sales_escalation::BOOLEAN
  ,solution::VARCHAR(5000)
  ,status::VARCHAR(100)
  ,subject::VARCHAR(1000)
- ,supplied_email::VARCHAR(400)
- ,supplied_name::VARCHAR(500)
  ,survey_send_date_time::TIMESTAMP
  ,thread_id::VARCHAR(300)
  ,case_type::VARCHAR(100)
- ,ultimate_parent_account::VARCHAR(790)
- ,validation_account_name::VARCHAR(780)
  ,xcase_number::VARCHAR(100)
  ,'{{ var("loaddate") }}'::timestamp as loaddate
 from data

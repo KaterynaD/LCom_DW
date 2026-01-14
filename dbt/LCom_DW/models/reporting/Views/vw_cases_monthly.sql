@@ -23,16 +23,12 @@ select
     ,f.closed_date
     ,f.last_modified_date
     ,f.status current_status
-    ,f.escalation_status current_escalation_status
-    ,fh.escalation_status
     ,f.is_escalated current_is_escalated
     ,fh.is_escalated 
     ,f.case_type
     ,f.origin
-    ,f.jira_last_modified_date
     ,o.name curernt_case_owner
     ,oh.name case_owner
-    ,f.contact_name
     ,ah.sfdc_account_id
     ,ah.SFDC_name account_name
     ,ah.sfdc_ultimate_parent_account
