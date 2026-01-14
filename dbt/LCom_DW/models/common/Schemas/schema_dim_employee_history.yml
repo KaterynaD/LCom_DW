@@ -1,0 +1,133 @@
+version: 2
+models:
+- name: dim_employee_history
+  description: Dim Employee history table (Slowly Changing Dimension Type 2).
+  data_tests:
+    - scd2_plus_validation:
+        unique_key: employee_id
+        scd_valid_from_col_name: fromdate
+        scd_valid_to_col_name: todate  
+  config:
+    contract:
+      enforced: false
+    tags:
+      - dim
+      - common
+  columns:
+    - name: employee_hist_id
+      data_type: varchar(50)
+      description: Primary Key of DIM_EMPLOYEE_HISTORY
+      constraints:
+        - type: not_null
+        - type: primary_key
+          warn_unenforced: false
+      data_tests:
+        - not_null
+        - unique
+
+    - name: fromdate
+      data_type: timestamp
+      description: "{{ doc('column_fromdate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: todate
+      data_type: timestamp
+      description: "{{ doc('column_todate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: record_version
+      data_type: integer
+      description: "{{ doc('column_record_version') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: employee_id
+      data_type: varchar(300)
+      description: Unique employee identifier (primary key)
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+        - relationships:
+            to: ref('dim_employee')
+            field: employee_id
+
+    - name: name
+      data_type: varchar(400)
+      description: "{{ doc('column_employee_name') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: user_role
+      data_type: varchar(240)
+      description: "{{ doc('column_user_role') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: is_active
+      data_type: integer
+      description: "{{ doc('column_is_active') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: department
+      data_type: varchar(240)
+      description: "{{ doc('column_department') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: title
+      data_type: varchar(240)
+      description: "{{ doc('column_title') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: loaddate
+      data_type: timestamp
+      description: "{{ doc('column_loaddate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: updatedate
+      data_type: timestamp
+      description: "{{ doc('column_updatedate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: last_modified_date
+      data_type: timestamp
+      description: "{{ doc('column_last_modified_date') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: scd_hash
+      data_type: varchar(50)
+      description: "{{ doc('column_scd_hash') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null

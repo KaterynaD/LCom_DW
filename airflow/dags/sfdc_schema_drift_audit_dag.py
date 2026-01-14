@@ -294,7 +294,6 @@ with DAG(
         profile_training_session_c,
         profile_product_2,
         profile_user,
-        profile_user_role,
     ]
 
     # Barrier: wait for ALL profile tasks to finish (success/failed/skipped)
