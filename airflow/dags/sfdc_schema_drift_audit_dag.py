@@ -3,6 +3,10 @@ import os
 import sys
 from pathlib import Path,PurePosixPath
 
+# Add ../../airflow/Utils to PYTHONPATH
+UTILS_DIR = (Path(__file__).resolve().parents[1] / "utils")
+sys.path.insert(0, str(UTILS_DIR))
+
 import json
 import logging
 from airflow import DAG
@@ -26,13 +30,13 @@ from typing import Any, Dict, List
 
 
 
-from Utils.colibri_lineage import get_column_lineage  
+from colibri_lineage import get_column_lineage  
 
 import pendulum
 
 local_tz = pendulum.timezone("America/Los_Angeles")
 
-from Utils.dag_utils import (
+from dag_utils import (
     DBT_PROFILES_DIR,
     DBT_LCOM_DW_PROJECT_DIR,
     ALERT_EMAIL,
@@ -399,4 +403,6 @@ with DAG(
     manage_base_profile_task >> profiles_1 >> profiles_1_done >> profiles_2 >> profiles_2_done>> require_one_success >> branch_column_lineage
     branch_column_lineage >> compile_query >> dbt_compile >> dbt_docs_generate >> colibri_generate >> run_analysis >> notify_summary
     branch_column_lineage >> skip_column_lineage >> run_analysis
+
+
 

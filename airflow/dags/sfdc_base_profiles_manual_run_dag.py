@@ -1,3 +1,11 @@
+import os
+import sys
+from pathlib import Path
+
+# Add ../../airflow/Utils to PYTHONPATH
+UTILS_DIR = (Path(__file__).resolve().parents[1] / "utils")
+sys.path.insert(0, str(UTILS_DIR))
+
 from datetime import datetime
 
 from airflow import DAG
@@ -7,7 +15,7 @@ from airflow.operators.empty import EmptyOperator
 
 import json
 
-from Utils.dag_utils import (
+from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
     create_init_branch,
@@ -63,3 +71,7 @@ with DAG(
 
     # Final wiring - all profile tasks run in parallel after init, then all feed to notification
     init_done >> set_load_date_task >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case] >> dummy >> [profile_training_session_c, profile_product_2, profile_user] >> notify_summary
+
+
+
+

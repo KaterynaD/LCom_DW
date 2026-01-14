@@ -1,5 +1,10 @@
 from datetime import datetime
 import os
+import sys
+from pathlib import Path
+# Add ../../airflow/Utils to PYTHONPATH
+UTILS_DIR = (Path(__file__).resolve().parents[1] / "utils")
+sys.path.insert(0, str(UTILS_DIR))
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
@@ -12,7 +17,7 @@ from airflow.exceptions import AirflowException
 from airflow.models import Variable
 
 
-from Utils.dag_utils import (
+from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
     create_init_branch,
@@ -269,4 +274,6 @@ with DAG(
     run_common >> check_core_success
 
     [run_licensing, run_training_sessions, run_support, run_revenue, run_cdu, check_core_success] >> run_snapshots >> recreate_all_fk >> run_tests >> notify_summary
+
+
 

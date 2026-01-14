@@ -1,9 +1,16 @@
+import os
+import sys
+from pathlib import Path
+# Add ../../airflow/Utils to PYTHONPATH
+UTILS_DIR = (Path(__file__).resolve().parents[1] / "utils")
+sys.path.insert(0, str(UTILS_DIR))
+
 from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
-from Utils.dag_utils import (
+from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
     create_init_branch,
@@ -50,3 +57,7 @@ with DAG(
 
     # Final wiring
     init_done >> core_task >> notify_summary
+
+
+
+
