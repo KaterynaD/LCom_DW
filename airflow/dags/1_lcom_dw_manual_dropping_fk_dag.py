@@ -3,7 +3,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
-from dag_utils import (
+from Utils.dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
     create_init_branch,
@@ -50,3 +50,4 @@ with DAG(
 
     # Final wiring
     init_done >> core_task >> notify_summary
+

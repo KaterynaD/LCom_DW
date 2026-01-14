@@ -12,7 +12,7 @@ from airflow.exceptions import AirflowException
 from airflow.models import Variable
 
 
-from dag_utils import (
+from Utils.dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
     create_init_branch,
@@ -269,3 +269,4 @@ with DAG(
     run_common >> check_core_success
 
     [run_licensing, run_training_sessions, run_support, run_revenue, run_cdu, check_core_success] >> run_snapshots >> recreate_all_fk >> run_tests >> notify_summary
+
