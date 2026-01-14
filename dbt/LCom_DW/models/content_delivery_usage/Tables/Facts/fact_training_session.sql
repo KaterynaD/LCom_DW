@@ -14,31 +14,25 @@ rawdata as (select
 {{ safe_select_list_from_profiles(
 		table_name='training_session_c',
 		alias='sfdc_training_session',
-		used_columns=['id','name','account_id_c','owner_id','alternate_end_date_c',
-'alternate_end_time_unrestricted_c','alternate_start_date_c',
-'alternate_start_time_unrestricted_c','cancel_reason_c','closed_date_c',
-'created_by_id','created_date','curriculum_examples_c','district_library_c',
-'end_date_c','experience_level_c','impelmentation_i_pad_usage_c',
-'implementation_advanced_topics_c','implementation_elementary_c',
-'implementation_frequency_c','implementation_goals_c',
+		used_columns=['id','name','account_id_c','owner_id',
+ 'cancel_reason_c','closed_date_c',
+'created_by_id','created_date','curriculum_examples_c',
+'end_date_c',
 'implementation_google_classroom_c','implementation_notes_c',
 'implementation_statement_c','implementation_topics_c','implementation_type_c',
 'implementing_grades_c','is_closed_c','last_modified_by_id','last_modified_date',
-'learning_path_c','new_district_c','notes_c','origin_c','participant_roles_c',
-'person_facilitating_group_tbd_learning_p_c','po_number_c',
-'presentation_quote_c','requestor_c','session_attendee_count_c',
+'notes_c',
+'requestor_c','session_attendee_count_c',
 'session_grades_attending_c','session_location_address_c',
-'session_location_name_c','session_location_room_c','session_location_unknown_c',
 'session_notes_c','session_participation_method_c','session_subtype_c',
-'session_type_c','sessions_per_week_c','setting_for_student_use_of_curriculum_c',
-'start_date_c','state_program_eligible_confirmation_c','status_c',
+'session_type_c',
+'start_date_c','status_c',
 'survey_action_items_c','survey_administrator_attendance_c',
 'survey_attendee_challenges_c','survey_attendee_count_c',
 'survey_notable_discussions_c','survey_notes_c','survey_outcome_as_planned_c',
 'survey_outcome_issues_c','survey_recommendations_c',
 'survey_teacher_engagement_c','survey_teacher_sentiment_c',
-'where_will_learning_path_be_implemented_c',
-'who_chooses_and_assigns_curriculum_c','who_will_be_implementing_c','primary_contact_c','secondary_contact_c'
+'primary_contact_c','secondary_contact_c'
 		],
 		profile_src=('profiles','sfdc_schema_audit'),
 		base_profile='base',
@@ -59,23 +53,12 @@ isnull(e.employee_id, '{{ var("default_ID") }}') as owner_id,
     WHEN e.employee_id IS NOT NULL THEN 'Assigned to an owner'
     ELSE COALESCE(ts.owner_id, '')
   END as PDS_group,
-isnull(cast(alternate_end_date_c as varchar),'{{ var("default_date") }}')::date as alternate_end_date,
-isnull(alternate_end_time_unrestricted_c,'{{ var("default_varchar") }}') as alternate_end_time_unrestricted,
-isnull(cast(alternate_start_date_c as varchar),'{{ var("default_date") }}')::date as alternate_start_date,
-isnull(alternate_start_time_unrestricted_c,'{{ var("default_varchar") }}') as alternate_start_time_unrestricted,
 isnull(ts.cancel_reason_c,'{{ var("default_varchar") }}') as cancel_reason,
 isnull(cast(ts.closed_date_c as varchar),'{{ var("default_date") }}')::date as closed_date,
 isnull(ts.created_by_id,'{{ var("default_varchar") }}') as created_by_id,
 isnull(ts.created_date AT TIME ZONE 'PST','{{ var("default_date") }}') as created_date,
 isnull(ts.curriculum_examples_c,'{{ var("default_varchar") }}') as curriculum_examples,
-isnull(ts.district_library_c,'{{ var("default_varchar") }}') as district_library,
 isnull(cast(ts.end_date_c as varchar), '{{ var("default_date") }}')::date as end_date,
-isnull(ts.experience_level_c,'{{ var("default_varchar") }}') as experience_level,
-isnull(ts.impelmentation_i_pad_usage_c,'{{ var("default_varchar") }}') as impelmentation_i_pad_usage,
-isnull(ts.implementation_advanced_topics_c,'{{ var("default_varchar") }}') as implementation_advanced_topics,
-isnull(ts.implementation_elementary_c,'{{ var("default_varchar") }}') as implementation_elementary,
-isnull(ts.implementation_frequency_c,'{{ var("default_varchar") }}') as implementation_frequency,
-isnull(ts.implementation_goals_c,'{{ var("default_varchar") }}') as implementation_goals,
 isnull(ts.implementation_google_classroom_c,'{{ var("default_varchar") }}') as implementation_google_classroom,
 isnull(ts.implementation_notes_c,'{{ var("default_varchar") }}') as implementation_notes,
 isnull(ts.implementation_statement_c,'{{ var("default_varchar") }}') as implementation_statement,
@@ -85,31 +68,18 @@ isnull(ts.implementing_grades_c,'{{ var("default_varchar") }}') as implementing_
 isnull(ts.is_closed_c, {{ var("default_boolean") }}) as is_closed,
 isnull(ts.last_modified_by_id,'{{ var("default_varchar") }}') as last_modified_by_id,
 isnull(ts.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date,
-isnull(ts.learning_path_c,'{{ var("default_varchar") }}') as learning_path,
-isnull(ts.new_district_c, {{ var("default_boolean") }}) as new_district,
 isnull(ts.notes_c,'{{ var("default_varchar") }}') as notes,
-isnull(ts.origin_c,'{{ var("default_varchar") }}') as origin,
-isnull(ts.participant_roles_c,'{{ var("default_varchar") }}') as participant_roles,
-isnull(ts.person_facilitating_group_tbd_learning_p_c,'{{ var("default_varchar") }}') as person_facilitating_group_tbd_learning_p,
-isnull(ts.po_number_c,'{{ var("default_varchar") }}') as po_number,
-isnull(ts.presentation_quote_c,'{{ var("default_varchar") }}') as presentation_quote,
 isnull(pc.name,'{{ var("default_varchar") }}') as primary_contact,
 isnull(sc.name,'{{ var("default_varchar") }}') as secondary_contact,
 isnull(ts.requestor_c,'{{ var("default_ID") }}') as requestor_id,
 isnull(ts.session_attendee_count_c, {{ var("default_numeric") }}) as session_attendee_count,
 isnull(ts.session_grades_attending_c,'{{ var("default_varchar") }}') as session_grades_attending,
 isnull(ts.session_location_address_c,'{{ var("default_varchar") }}') as session_location_address,
-isnull(ts.session_location_name_c,'{{ var("default_varchar") }}') as session_location_name,
-isnull(ts.session_location_room_c,'{{ var("default_varchar") }}') as session_location_room,
-isnull(ts.session_location_unknown_c, {{ var("default_boolean") }}) as session_location_unknown,
 isnull(ts.session_notes_c,'{{ var("default_varchar") }}') as session_notes,
 isnull(ts.session_participation_method_c,'{{ var("default_varchar") }}') as session_participation_method,
 isnull(ts.session_subtype_c,'{{ var("default_varchar") }}') as session_subtype,
 isnull(ts.session_type_c,'{{ var("default_varchar") }}') as session_type,
-isnull(ts.sessions_per_week_c, {{ var("default_numeric") }}) as sessions_per_week,
-isnull(ts.setting_for_student_use_of_curriculum_c,'{{ var("default_varchar") }}') as setting_for_student_use_of_curriculum,
 isnull(cast(ts.start_date_c as varchar), '{{ var("default_date") }}')::TIMESTAMP as start_date,
-isnull(ts.state_program_eligible_confirmation_c,'{{ var("default_varchar") }}') as state_program_eligible_confirmation,
 isnull(ts.status_c,'{{ var("default_varchar") }}') as status,
 isnull(ts.survey_action_items_c,'{{ var("default_varchar") }}') as survey_action_items,
 isnull(ts.survey_administrator_attendance_c,'{{ var("default_varchar") }}') as survey_administrator_attendance,
@@ -121,10 +91,7 @@ isnull(ts.survey_outcome_as_planned_c,'{{ var("default_varchar") }}') as survey_
 isnull(ts.survey_outcome_issues_c,'{{ var("default_varchar") }}') as survey_outcome_issues,
 isnull(ts.survey_recommendations_c,'{{ var("default_varchar") }}') as survey_recommendations,
 isnull(ts.survey_teacher_engagement_c,'{{ var("default_varchar") }}') as survey_teacher_engagement,
-isnull(ts.survey_teacher_sentiment_c,'{{ var("default_varchar") }}') as survey_teacher_sentiment,
-isnull(ts.where_will_learning_path_be_implemented_c,'{{ var("default_varchar") }}') as where_will_learning_path_be_implemented,
-isnull(ts.who_chooses_and_assigns_curriculum_c,'{{ var("default_varchar") }}') as who_chooses_and_assigns_curriculum,
-isnull(ts.who_will_be_implementing_c,'{{ var("default_varchar") }}') as who_will_be_implementing	
+isnull(ts.survey_teacher_sentiment_c,'{{ var("default_varchar") }}') as survey_teacher_sentiment
 from
   rawdata as ts
   left outer join {{ ref('dim_account') }} as a on ts.account_id_c = a.SFDC_account_id
@@ -138,24 +105,13 @@ select
 	,account_id::VARCHAR(300)    
 	,sfdc_account_id::VARCHAR(300)    
 	,owner_id::VARCHAR(300)    
-	,pds_group::VARCHAR(33)    
-	,alternate_end_date::DATE    
-	,alternate_end_time_unrestricted::VARCHAR(765)    
-	,alternate_start_date::DATE    
-	,alternate_start_time_unrestricted::VARCHAR(765)    
+	,pds_group::VARCHAR(33)    	 
 	,cancel_reason::VARCHAR(765)    
 	,closed_date::DATE    
 	,created_by_id::VARCHAR(18)    
 	,created_date::TIMESTAMP WITHOUT TIME ZONE    
-	,curriculum_examples::VARCHAR(4099)    
-	,district_library::VARCHAR(765)    
-	,end_date::DATE    
-	,experience_level::VARCHAR(4099)    
-	,impelmentation_i_pad_usage::VARCHAR(4099)    
-	,implementation_advanced_topics::VARCHAR(4099)    
-	,implementation_elementary::VARCHAR(4099)    
-	,implementation_frequency::VARCHAR(765)    
-	,implementation_goals::VARCHAR(4099)    
+	,curriculum_examples::VARCHAR(4099)     
+	,end_date::DATE         
 	,implementation_google_classroom::VARCHAR(765)    
 	,implementation_notes::VARCHAR(65535)    
 	,implementation_statement::VARCHAR(65535)    
@@ -164,32 +120,19 @@ select
 	,implementing_grades::VARCHAR(4099)    
 	,is_closed::BOOLEAN    
 	,last_modified_by_id::VARCHAR(18)    
-	,last_modified_date::TIMESTAMP WITHOUT TIME ZONE    
-	,learning_path::VARCHAR(765)    
-	,new_district::BOOLEAN    
-	,notes::VARCHAR(65535)    
-	,origin::VARCHAR(765)    
-	,participant_roles::VARCHAR(4099)    
-	,person_facilitating_group_tbd_learning_p::VARCHAR(75)    
-	,po_number::VARCHAR(765)    
-	,presentation_quote::VARCHAR(765)    
+	,last_modified_date::TIMESTAMP WITHOUT TIME ZONE        
+	,notes::VARCHAR(65535)      	  
 	,primary_contact::VARCHAR(363)    
 	,secondary_contact::VARCHAR(363)    
 	,requestor_id::VARCHAR(300)
 	,session_attendee_count::DOUBLE PRECISION    
 	,session_grades_attending::VARCHAR(4099)    
-	,session_location_address::VARCHAR(65535)    
-	,session_location_name::VARCHAR(240)    
-	,session_location_room::VARCHAR(120)    
-	,session_location_unknown::BOOLEAN    
+	,session_location_address::VARCHAR(65535)    	
 	,session_notes::VARCHAR(65535)    
 	,session_participation_method::VARCHAR(765)    
 	,session_subtype::VARCHAR(765)    
-	,session_type::VARCHAR(765)    
-	,sessions_per_week::DOUBLE PRECISION    
-	,setting_for_student_use_of_curriculum::VARCHAR(4099)    
-	,start_date::TIMESTAMP    
-	,state_program_eligible_confirmation::VARCHAR(765)    
+	,session_type::VARCHAR(765)       
+	,start_date::TIMESTAMP      
 	,status::VARCHAR(765)    
 	,survey_action_items::VARCHAR(765)    
 	,survey_administrator_attendance::VARCHAR(765)    
@@ -202,8 +145,5 @@ select
 	,survey_recommendations::VARCHAR(65535)    
 	,survey_teacher_engagement::VARCHAR(765)    
 	,survey_teacher_sentiment::VARCHAR(765)         
-	,where_will_learning_path_be_implemented::VARCHAR(765)    
-	,who_chooses_and_assigns_curriculum::VARCHAR(65535)     
-	,who_will_be_implementing::VARCHAR(765)
   ,'{{ var("loaddate") }}'::TIMESTAMP as loaddate
 from data

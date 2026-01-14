@@ -47,8 +47,7 @@ models:
     description: "Current owner: {{ doc('column_sfdc_owner_name_text') }}"
   - name: pds_group_current
     description: "Current{{ doc('column_pds_group') }}"
-  - name: new_district
-    description: "{{ doc('column_new_district') }}"
+
 
   - name: sfdc_account_id
     description: "{{ doc('column_sfdc_account_id') }}"
@@ -91,16 +90,14 @@ models:
     description: "Historical (related to Mon_Year):{{ doc('column_sfdc_owner_name_text') }}"
   - name: session_location_address
     description: "{{ doc('column_session_location_address') }}"
-  - name: session_location_unknown
-    description: "{{ doc('column_session_location_unknown') }}"
+  
   - name: session_attendee_count
     description: "{{ doc('column_session_attendee_count') }}"
   - name: session_notes
     description: "{{ doc('column_session_notes') }}"
   - name: implementation_topics
     description: "{{ doc('column_implementation_topics') }}"
-  - name: implementation_advanced_topics
-    description: "{{ doc('column_implementation_advanced_topics') }}"
+
   - name: implementation_notes
     description: "{{ doc('column_implementation_notes') }}"
   - name: notes

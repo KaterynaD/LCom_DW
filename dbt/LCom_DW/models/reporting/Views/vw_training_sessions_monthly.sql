@@ -40,7 +40,6 @@ select
     ,f.pds_group  as  pds_group_current
 
     --Account
-    ,f.new_district
     ,ah.lcom_organization_id
     ,ah.lcom_organization_type
     ,ah.sfdc_account_id
@@ -67,13 +66,11 @@ select
     --
     --Session details
     ,f.session_location_address
-    ,f.session_location_unknown
     ,f.session_attendee_count
     ,f.session_notes
 
     --Implementation details
     ,f.implementation_topics
-    ,f.implementation_advanced_topics
     ,f.implementation_notes
     --
     ,f.notes
@@ -88,7 +85,6 @@ select
     ,f.survey_teacher_sentiment
     ,f.survey_notable_discussions  
     ,f.survey_notes  
-    ,f.survey_outcome_issues
     ,f.survey_recommendations
     ,t.topic
     from dim_month m

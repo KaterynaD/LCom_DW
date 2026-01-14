@@ -64,29 +64,6 @@ models:
           - accepted_values:
               values: ['Professional Development Services', 'Service And Training', 'Assigned to an owner']
 
-      - name: alternate_end_date
-        data_type: DATE
-        description: "{{ doc('column_alternate_end_date') }}"
-        constraints:
-          - type: not_null
-
-      - name: alternate_end_time_unrestricted
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_alternate_end_time_unrestricted') }}"
-        constraints:
-          - type: not_null
-
-      - name: alternate_start_date
-        data_type: DATE
-        description: "{{ doc('column_alternate_start_date') }}"
-        constraints:
-          - type: not_null
-
-      - name: alternate_start_time_unrestricted
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_alternate_start_time_unrestricted') }}"
-        constraints:
-          - type: not_null
 
       - name: cancel_reason
         data_type: VARCHAR(765)
@@ -118,51 +95,9 @@ models:
         constraints:
           - type: not_null
 
-      - name: district_library
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_district_library') }}"
-        constraints:
-          - type: not_null
-
       - name: end_date
         data_type: DATE
         description: "{{ doc('column_ts_end_date') }}"
-        constraints:
-          - type: not_null
-
-      - name: experience_level
-        data_type: VARCHAR(4099)
-        description: "{{ doc('column_experience_level') }}"
-        constraints:
-          - type: not_null
-
-      - name: impelmentation_i_pad_usage
-        data_type: VARCHAR(4099)
-        description: "{{ doc('column_impelmentation_i_pad_usage') }}"
-        constraints:
-          - type: not_null
-
-      - name: implementation_advanced_topics
-        data_type: VARCHAR(4099)
-        description: "{{ doc('column_implementation_advanced_topics') }}"
-        constraints:
-          - type: not_null
-
-      - name: implementation_elementary
-        data_type: VARCHAR(4099)
-        description: "{{ doc('column_implementation_elementary') }}"
-        constraints:
-          - type: not_null
-
-      - name: implementation_frequency
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_implementation_frequency') }}"
-        constraints:
-          - type: not_null
-
-      - name: implementation_goals
-        data_type: VARCHAR(4099)
-        description: "{{ doc('column_implementation_goals') }}"
         constraints:
           - type: not_null
 
@@ -220,53 +155,12 @@ models:
         constraints:
           - type: not_null
 
-      - name: learning_path
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_learning_path') }}"
-        constraints:
-          - type: not_null
-
-      - name: new_district
-        data_type: BOOLEAN
-        description: "{{ doc('column_new_district') }}"
-        constraints:
-          - type: not_null
-
       - name: notes
         data_type: VARCHAR(65535)
         description: "{{ doc('column_notes') }}"
         constraints:
           - type: not_null
 
-      - name: origin
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_origin') }}"
-        constraints:
-          - type: not_null
-
-      - name: participant_roles
-        data_type: VARCHAR(4099)
-        description: "{{ doc('column_participant_roles') }}"
-        constraints:
-          - type: not_null
-
-      - name: person_facilitating_group_tbd_learning_p
-        data_type: VARCHAR(75)
-        description: "{{ doc('column_person_facilitating_group_tbd_learning_p') }}"
-        constraints:
-          - type: not_null
-
-      - name: po_number
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_po_number') }}"
-        constraints:
-          - type: not_null
-
-      - name: presentation_quote
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_presentation_quote') }}"
-        constraints:
-          - type: not_null
 
       - name: primary_contact
         data_type: VARCHAR(363)
@@ -298,23 +192,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: session_location_name
-        data_type: VARCHAR(240)
-        description: "{{ doc('column_session_location_name') }}"
-        constraints:
-          - type: not_null
-
-      - name: session_location_room
-        data_type: VARCHAR(120)
-        description: "{{ doc('column_session_location_room') }}"
-        constraints:
-          - type: not_null
-
-      - name: session_location_unknown
-        data_type: BOOLEAN
-        description: "{{ doc('column_session_location_unknown') }}"
-        constraints:
-          - type: not_null
 
       - name: session_notes
         data_type: VARCHAR(65535)
@@ -340,17 +217,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: sessions_per_week
-        data_type: DOUBLE PRECISION
-        description: "{{ doc('column_sessions_per_week') }}"
-        constraints:
-          - type: not_null
-
-      - name: setting_for_student_use_of_curriculum
-        data_type: VARCHAR(4099)
-        description: "{{ doc('column_setting_for_student_use_of_curriculum') }}"
-        constraints:
-          - type: not_null
 
       - name: start_date
         data_type: TIMESTAMP
@@ -358,11 +224,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: state_program_eligible_confirmation
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_state_program_eligible_confirmation') }}"
-        constraints:
-          - type: not_null
 
       - name: status
         data_type: VARCHAR(765)
@@ -442,25 +303,6 @@ models:
         constraints:
           - type: not_null
 
-
-      - name: where_will_learning_path_be_implemented
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_where_will_learning_path_be_implemented') }}"
-        constraints:
-          - type: not_null
-
-      - name: who_chooses_and_assigns_curriculum
-        data_type: VARCHAR(65535)
-        description: "{{ doc('column_who_chooses_and_assigns_curriculum') }}"
-        constraints:
-          - type: not_null
-
-
-      - name: who_will_be_implementing
-        data_type: VARCHAR(765)
-        description: "{{ doc('column_who_will_be_implementing') }}"
-        constraints:
-          - type: not_null
       - name: loaddate
         data_type: timestamp
         description: "{{ doc('column_loaddate') }}"

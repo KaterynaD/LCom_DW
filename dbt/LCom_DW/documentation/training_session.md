@@ -6,25 +6,6 @@ Primary Key of FACT_TRAINING_SESSION. It`s Salesforce Training Session ID column
 Professional Development Services Group: Professional Development Services or Service And Training or Assigned to an owner. If a new group ID is added in Owner Id attribute Training Session SFDC object it will be added as is and need to be manually mapped in the transformation
 {% enddocs %}
 
-{% docs column_alternate_end_date %}
-Alternate End Date
-{% enddocs %}
-
-{% docs column_alternate_end_time_unrestricted %}
-Alternate End Time
-{% enddocs %}
-
-{% docs column_alternate_start_date %}
-Alternate Start Date
-{% enddocs %}
-
-{% docs column_alternate_start_date_date_only %}
-Alternate Start Date
-{% enddocs %}
-
-{% docs column_alternate_start_time_unrestricted %}
-Alternate Start Time
-{% enddocs %}
 
 {% docs column_cancel_reason %}
 Cancellation Reason
@@ -42,38 +23,14 @@ Date Closed
 Curriculum Examples
 {% enddocs %}
 
-{% docs column_district_library %}
-District Library
-{% enddocs %}
+
 
 {% docs column_ts_end_date %}
 End Date
 {% enddocs %}
 
-{% docs column_experience_level %}
-*Experience Level
-{% enddocs %}
 
 
-{% docs column_impelmentation_i_pad_usage %}
-iPad Usage
-{% enddocs %}
-
-{% docs column_implementation_advanced_topics %}
-Advanced Topics
-{% enddocs %}
-
-{% docs column_implementation_elementary %}
-Elementary Implementation
-{% enddocs %}
-
-{% docs column_implementation_frequency %}
-*Implementation Frequency
-{% enddocs %}
-
-{% docs column_implementation_goals %}
-*Implementation Goals
-{% enddocs %}
 
 {% docs column_implementation_google_classroom %}
 Google Classroom
@@ -102,39 +59,21 @@ Implementing Grades
 
 
 
-{% docs column_learning_path %}
-*Learning Path
-{% enddocs %}
 
 {% docs column_training_name %}
 Training Session Name
 {% enddocs %}
 
-{% docs column_new_district %}
-*New District
-{% enddocs %}
+
 
 {% docs column_notes %}
 Notes from CSR
 {% enddocs %}
 
-{% docs column_origin %}
-Origin
-{% enddocs %}
 
 
-{% docs column_participant_roles %}
-*Participant Roles
-{% enddocs %}
-
-{% docs column_person_facilitating_group_tbd_learning_p %}
-*Person Facilitating Group TBD Learning
-{% enddocs %}
 
 
-{% docs column_presentation_quote %}
-Admin Quote to Present
-{% enddocs %}
 
 {% docs column_primary_contact %}
 Primary Contact Name
@@ -160,17 +99,6 @@ Session Grades Attending
 Location Address
 {% enddocs %}
 
-{% docs column_session_location_name %}
-Location Name
-{% enddocs %}
-
-{% docs column_session_location_room %}
-Location Room
-{% enddocs %}
-
-{% docs column_session_location_unknown %}
-Location Unknown
-{% enddocs %}
 
 {% docs column_session_notes %}
 Session Notes from Trainer
@@ -188,21 +116,14 @@ Subtype
 Type
 {% enddocs %}
 
-{% docs column_sessions_per_week %}
-*Sessions Per Week
-{% enddocs %}
 
-{% docs column_setting_for_student_use_of_curriculum %}
-*Setting for Student Use of Curriculum
-{% enddocs %}
+
+
 
 {% docs column_ts_start_date %}
 Start Date
 {% enddocs %}
 
-{% docs column_state_program_eligible_confirmation %}
-State Program Eligible Confirmation
-{% enddocs %}
 
 {% docs column_ts_status %}
 Status
@@ -258,16 +179,3 @@ systemmodstamp
 {% enddocs %}
 
 
-{% docs column_where_will_learning_path_be_implemented %}
-*Where Will Learning Path be Implemented
-{% enddocs %}
-
-{% docs column_who_chooses_and_assigns_curriculum %}
-*Who chooses and assigns curriculum?
-{% enddocs %}
-
-
-
-{% docs column_who_will_be_implementing %}
-*Who will be Implementing
-{% enddocs %}
