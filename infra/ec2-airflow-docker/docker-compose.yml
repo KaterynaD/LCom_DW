@@ -122,12 +122,12 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
 
       AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/transformations/airflow/dags
-      AIRFLOW__SMTP__SMTP_HOST: "smtp.gmail.com"
+      AIRFLOW__SMTP__SMTP_HOST: "email-smtp.us-west-2.amazonaws.com"
       AIRFLOW__SMTP__SMTP_STARTTLS: "True"
       AIRFLOW__SMTP__SMTP_SSL: "False"
       AIRFLOW__SMTP__SMTP_PORT: "587"
-      AIRFLOW__SMTP__SMTP_MAIL_FROM: "drogaieva.kateryna.noreply@gmail.com"
-      AIRFLOW__SMTP__SMTP_USER: "drogaieva.kateryna.noreply@gmail.com"
+      AIRFLOW__SMTP__SMTP_MAIL_FROM: "kdrogaieva@learning.com"
+      AIRFLOW__SMTP__SMTP_USER: "AKIATT2JL77I26VH5X7R"
       AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
 
       REPO_DIR: /opt/airflow/transformations
