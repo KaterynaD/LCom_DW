@@ -116,14 +116,6 @@ models:
       data_tests:
         - not_null
 
-    - name: last_modified_date
-      data_type: timestamp
-      description: "{{ doc('column_last_modified_date') }}"
-      constraints:
-        - type: not_null
-      data_tests:
-        - not_null
-
     - name: scd_hash
       data_type: varchar(50)
       description: "{{ doc('column_scd_hash') }}"
