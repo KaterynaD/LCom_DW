@@ -281,7 +281,8 @@ with DAG(
     profile_training_session_c = create_profile_task("training_session_c", "current")
     profile_product_2 = create_profile_task("product_2", "current")
     profile_user = create_profile_task("user", "current")
-
+    profile_contact = create_profile_task("contact", "current")
+    profile_campaign = create_profile_task("campaign", "current")
 
 
     # 6. Join + gate: wait for all profile tasks to finish, then require at least one success
@@ -297,6 +298,12 @@ with DAG(
         profile_user,
     ]
 
+
+    profiles_3 = [       
+        profile_contact,
+        profile_campaign
+    ]   
+
     # Barrier: wait for ALL profile tasks to finish (success/failed/skipped)
     profiles_1_done = EmptyOperator(
         task_id="profiles_1_done",
@@ -308,11 +315,17 @@ with DAG(
         trigger_rule=TriggerRule.ALL_DONE,
     )
 
+    profiles_3_done = EmptyOperator(
+        task_id="profiles_3_done",
+        trigger_rule=TriggerRule.ALL_DONE,
+    )
+
+
     def require_one_profile_success(**context):
         """Skip downstream if no profile_* task succeeded."""
         tis = context["dag_run"].get_task_instances()
         state_by_id = {ti.task_id: ti.state for ti in tis}
-        states = [state_by_id.get(t.task_id) for t in profiles_1 + profiles_2]
+        states = [state_by_id.get(t.task_id) for t in profiles_1 + profiles_2 + profiles_3]
 
         if not any(s == "success" for s in states):
             raise AirflowSkipException("No profile_* task succeeded; skipping compile/analysis.")
@@ -400,7 +413,7 @@ with DAG(
     init_done >> set_load_date_task >> create_connection >> manage_base_profile_task
     
     # CHANGE Final wiring (replace the last line with this)
-    manage_base_profile_task >> profiles_1 >> profiles_1_done >> profiles_2 >> profiles_2_done>> require_one_success >> branch_column_lineage
+    manage_base_profile_task >> profiles_1 >> profiles_1_done >> profiles_2 >> profiles_2_done >> profiles_3 >> profiles_3_done >> require_one_success >> branch_column_lineage
     branch_column_lineage >> compile_query >> dbt_compile >> dbt_docs_generate >> colibri_generate >> run_analysis >> notify_summary
     branch_column_lineage >> skip_column_lineage >> run_analysis
 

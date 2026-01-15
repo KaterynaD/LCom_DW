@@ -61,8 +61,12 @@ with DAG(
     profile_training_session_c = create_profile_task("training_session_c", "base")
     profile_product_2 = create_profile_task("product_2", "base")
     profile_user = create_profile_task("user", "base")
-     
-    dummy = EmptyOperator(task_id="dummy")
+    profile_contact = create_profile_task("contact", "base")
+    profile_campaign = create_profile_task("campaign", "base")
+
+    dummy_1 = EmptyOperator(task_id="dummy_1")
+    dummy_2 = EmptyOperator(task_id="dummy_2")
+  
     # Shared summary email at the end
     notify_summary = create_notify_summary_task(
         dag,
@@ -70,8 +74,7 @@ with DAG(
     )
 
     # Final wiring - all profile tasks run in parallel after init, then all feed to notification
-    init_done >> set_load_date_task >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case] >> dummy >> [profile_training_session_c, profile_product_2, profile_user] >> notify_summary
-
+    init_done >> set_load_date_task >> [profile_account, profile_opportunity, profile_opportunity_line_item, profile_case] >> dummy_1 >> [profile_training_session_c, profile_product_2, profile_user] >> dummy_2 >> [profile_contact, profile_campaign] >> notify_summary
 
 
 
