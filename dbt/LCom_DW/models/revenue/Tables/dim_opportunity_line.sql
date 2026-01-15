@@ -15,11 +15,11 @@ with rawdata as (select
         alias='sfdc_opp_line_item',
         used_columns=[ 
 			'combine_new_biz_arr_c','combine_renewal_arrs_c','combine_upsell_arrs_c',
-'created_date','description','discount','discount_applied_c','easy_tech_arr_c',
-'end_date_c','gold_service_on_quote_c','id','is_active_opp_product_c',
-'last_modified_date','learning_sbxid_c','list_price','name',
-'net_price_display_c','net_unit_price_c','netsuite_id_c','netsuite_sku_c',
-'no_of_buildings_c','no_of_licenses_c','opp_probability_c','opportunity_id',
+'created_date','discount_applied_c',
+'end_date_c','id',
+'last_modified_date','list_price','name',
+'net_price_display_c','net_unit_price_c','netsuite_sku_c',
+'opp_probability_c','opportunity_id',
 'opportunity_product_arr_c','opportunity_product_line_id_c','pricebook_entry_id',
 'pricebook_id_c','pro_rate_adj_term_c','product_2_id','product_code',
 'product_description_c','quantity','record_type_c','sbqq_quote_line_c',
@@ -37,24 +37,15 @@ isnull(ol.combine_new_biz_arr_c, {{ var("default_numeric") }}) as combine_new_bi
 isnull(ol.combine_renewal_arrs_c, {{ var("default_numeric") }}) as combine_renewal_arrs	,
 isnull(ol.combine_upsell_arrs_c, {{ var("default_numeric") }}) as combine_upsell_arrs	,
 isnull(ol.created_date	 AT TIME ZONE 'PST'	,	 '{{ var("default_date") }}'  ) as created_date	,
-isnull(ol.description,  '{{ var("default_varchar") }}'  ) as description	,
-isnull(ol.discount, {{ var("default_numeric") }}) as discount	,
 isnull(ol.discount_applied_c,  '{{ var("default_varchar") }}'  ) as discount_applied	,
-isnull(ol.easy_tech_arr_c, {{ var("default_numeric") }}) as easy_tech_arr	,
 isnull(ol.end_date_c,  '{{ var("default_date") }}'  ) as end_date	,
-isnull(ol.gold_service_on_quote_c, {{ var("default_numeric") }}) as gold_service_on_quote	,
 isnull(ol.id,  '{{ var("default_ID") }}'  ) as opportunity_line_id	,
-isnull(ol.is_active_opp_product_c,   {{ var("default_boolean") }}) as is_active_opp_product	,
 isnull(ol.last_modified_date	 AT TIME ZONE 'PST'	,	 '{{ var("default_date") }}'  ) as last_modified_date	,
-isnull(ol.learning_sbxid_c,  '{{ var("default_varchar") }}'  ) as learning_sbxid	,
 isnull(ol.list_price, {{ var("default_numeric") }}) as list_price	,
 isnull(ol.name,  '{{ var("default_varchar") }}'  ) as name	,
 isnull(ol.net_price_display_c, {{ var("default_numeric") }}) as net_price_display	,
 isnull(ol.net_unit_price_c, {{ var("default_numeric") }}) as net_unit_price	,
-isnull(ol.netsuite_id_c,  '{{ var("default_varchar") }}'  ) as netsuite_id	,
 isnull(ol.netsuite_sku_c,  '{{ var("default_varchar") }}'  ) as netsuite_sku	,
-isnull(ol.no_of_buildings_c, {{ var("default_numeric") }}) as no_of_buildings	,
-isnull(ol.no_of_licenses_c, {{ var("default_numeric") }}) as no_of_licenses	,
 isnull(ol.opp_probability_c, {{ var("default_numeric") }}) as opp_probability	,
 isnull(ol.opportunity_id,  '{{ var("default_ID") }}'  ) as opportunity_id	,
 isnull(ol.opportunity_product_arr_c, {{ var("default_numeric") }}) as opportunity_product_arr	,
@@ -98,17 +89,8 @@ select
 	,combine_renewal_arrs::NUMERIC(37,17)
 	,combine_upsell_arrs::NUMERIC(37,17)
 	,name::VARCHAR(1200)
-	,description::VARCHAR(1200)
-	,netsuite_id::VARCHAR(50)
 	,netsuite_sku::VARCHAR(90)
-	,no_of_buildings::INTEGER
-	,no_of_licenses::INTEGER
-	,discount::NUMERIC(35,17)
 	,discount_applied::VARCHAR(25)
-	,easy_tech_arr::NUMERIC(35,17)
-	,gold_service_on_quote::INTEGER
-	,is_active_opp_product::BOOLEAN
-	,learning_sbxid::VARCHAR(55)
 	,list_price::NUMERIC(35,17)
 	,net_price_display::NUMERIC(35,17)
 	,net_unit_price::NUMERIC(35,17)
@@ -143,17 +125,8 @@ select
 {{ var("default_numeric") }} as combine_renewal_arrs	,
 {{ var("default_numeric") }} as combine_upsell_arrs	,
 '{{ var("default_varchar") }}' as name	,
-'{{ var("default_varchar") }}' as description	,
-'{{ var("default_varchar") }}' as netsuite_id	,
 '{{ var("default_varchar") }}' as netsuite_sku	,
-{{ var("default_numeric") }} as no_of_buildings	,
-{{ var("default_numeric") }} as no_of_licenses	,
-{{ var("default_numeric") }} as discount	,
 '{{ var("default_varchar") }}' as discount_applied	,
-{{ var("default_numeric") }} as easy_tech_arr	,
-{{ var("default_numeric") }} as gold_service_on_quote	,
-{{ var("default_boolean") }} as is_active_opp_product	,
-'{{ var("default_varchar") }}' as learning_sbxid	,
 {{ var("default_numeric") }} as list_price	,
 {{ var("default_numeric") }} as net_price_display	,
 {{ var("default_numeric") }} as net_unit_price	,

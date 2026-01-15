@@ -93,7 +93,7 @@ models:
 
   - name: netsuite_id
     data_type: VARCHAR(50)
-    description: "{{ doc('column_netsuite_id') }}"
+    description: Not Used Any Longer
     constraints:
     - type: not_null
     data_tests:

@@ -92,60 +92,15 @@ models:
     data_type: VARCHAR(1200)
     description: "{{ doc('column_opportunity_line_name') }}"
     constraints:
-    - type: not_null
-  - name: description
-    data_type: VARCHAR(1200)
-    description: "{{ doc('column_description') }}"
-    constraints:
-    - type: not_null
-  - name: netsuite_id
-    data_type: VARCHAR(50)
-    description: "{{ doc('column_netsuite_id') }}"
-    constraints:
-    - type: not_null
+    - type: not_null  
   - name: netsuite_sku
     data_type: VARCHAR(90)
     description: "{{ doc('column_netsuite_sku') }}"
     constraints:
     - type: not_null
-  - name: no_of_buildings
-    data_type: INTEGER
-    description: "{{ doc('column_no_of_buildings') }}"
-    constraints:
-    - type: not_null
-  - name: no_of_licenses
-    data_type: INTEGER
-    description: "{{ doc('column_no_of_licenses') }}"
-    constraints:
-    - type: not_null
-  - name: discount
-    data_type: NUMERIC(35,17)
-    description: "{{ doc('column_discount') }}"
-    constraints:
-    - type: not_null
   - name: discount_applied
     data_type: VARCHAR(25)
     description: "{{ doc('column_discount_applied') }}"
-    constraints:
-    - type: not_null
-  - name: easy_tech_arr
-    data_type: NUMERIC(35,17)
-    description: "{{ doc('column_easy_tech_arr') }}"
-    constraints:
-    - type: not_null
-  - name: gold_service_on_quote
-    data_type: INTEGER
-    description: "{{ doc('column_gold_service_on_quote') }}"
-    constraints:
-    - type: not_null
-  - name: is_active_opp_product
-    data_type: BOOLEAN
-    description: "{{ doc('column_is_active_opp_product') }}"
-    constraints:
-    - type: not_null
-  - name: learning_sbxid
-    data_type: VARCHAR(55)
-    description: "{{ doc('column_learning_sbxid') }}"
     constraints:
     - type: not_null
   - name: list_price

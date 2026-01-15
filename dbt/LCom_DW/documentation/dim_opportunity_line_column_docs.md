@@ -44,37 +44,14 @@ Opportunity Product Name
 Netsuite SKU
 {% enddocs %}
 
-{% docs column_no_of_buildings %}
-No. of Buildings
-{% enddocs %}
 
-{% docs column_no_of_licenses %}
-No. of Licenses
-{% enddocs %}
 
-{% docs column_discount %}
-Discount
-{% enddocs %}
 
 {% docs column_discount_applied %}
 Discount Applied
 {% enddocs %}
 
-{% docs column_easy_tech_arr %}
-EasyTech ARR
-{% enddocs %}
 
-{% docs column_gold_service_on_quote %}
-Gold Service on quote
-{% enddocs %}
-
-{% docs column_is_active_opp_product %}
-IsActiveOppProduct (Denotes if the opportunity product is active)
-{% enddocs %}
-
-{% docs column_learning_sbxid %}
-LearningSBXID
-{% enddocs %}
 
 {% docs column_list_price %}
 List Price
