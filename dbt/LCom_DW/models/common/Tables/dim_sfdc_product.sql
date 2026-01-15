@@ -19,10 +19,10 @@ rawdata as (select
 'sbqq_include_in_maintenance_c','is_not_provisioned_c','last_modified_date',
 'multiplier_c',
 'netsuite_link_c','net_suite_sku_c','sbqq_non_discountable_c',
-'nyc_license_quantity_c','price_dimensions_c','sbqq_price_editable_c',
+'price_dimensions_c','sbqq_price_editable_c',
 'sbqq_pricing_method_c','product_code','description','family',
 'product_sub_family_c','sbqq_quantity_editable_c','sbqq_subscription_term_c',
-'sbqq_subscription_type_c','vidcode_org_id_c','lcom_suite_c'
+'sbqq_subscription_type_c','lcom_suite_c'
 		],
 		profile_src=('profiles','sfdc_schema_audit'),
 		base_profile='base',
@@ -49,7 +49,6 @@ isnull(stg.multiplier_c, {{ var("default_numeric") }}) as multiplier,
 isnull(stg.netsuite_link_c, '{{ var("default_varchar") }}') as netsuite_link,
 isnull(stg.net_suite_sku_c, '{{ var("default_varchar") }}') as net_suite_sku,
 isnull(stg.sbqq_non_discountable_c, {{ var("default_boolean") }}) as sbqq_non_discountable,
-isnull(stg.nyc_license_quantity_c, {{ var("default_numeric") }}) as nyc_license_quantity,
 isnull(stg.price_dimensions_c, '{{ var("default_varchar") }}') as price_dimensions,
 isnull(stg.sbqq_price_editable_c, {{ var("default_boolean") }}) as sbqq_price_editable,
 isnull(stg.sbqq_pricing_method_c, '{{ var("default_varchar") }}') as sbqq_pricing_method,
@@ -59,8 +58,7 @@ isnull(stg.family, '{{ var("default_varchar") }}') as sfdc_product_family,
 isnull(stg.product_sub_family_c, '{{ var("default_varchar") }}') as sfdc_product_sub_family,
 isnull(stg.sbqq_quantity_editable_c, {{ var("default_boolean") }}) as sbqq_quantity_editable,
 isnull(stg.sbqq_subscription_term_c, {{ var("default_numeric") }}) as sbqq_subscription_term,
-isnull(stg.sbqq_subscription_type_c, '{{ var("default_varchar") }}') as sbqq_subscription_type,
-isnull(stg.vidcode_org_id_c, '{{ var("default_varchar") }}') as vidcode_org_id
+isnull(stg.sbqq_subscription_type_c, '{{ var("default_varchar") }}') as sbqq_subscription_type
 from rawdata as stg
 left outer join {{ ref("dim_lcom_suite") }} lcom_suite
 on stg.lcom_suite_c = lcom_suite.sfdc_suite_id
@@ -84,7 +82,6 @@ select
  '{{ var("default_varchar") }}' as netsuite_link,
  '{{ var("default_varchar") }}' as net_suite_sku,
  {{ var("default_boolean") }} as sbqq_non_discountable,
- {{ var("default_numeric") }} as nyc_license_quantity,
  '{{ var("default_varchar") }}' as price_dimensions,
  {{ var("default_boolean") }} as sbqq_price_editable,
  '{{ var("default_varchar") }}' as sbqq_pricing_method,
@@ -94,8 +91,7 @@ select
  '{{ var("default_varchar") }}' as sfdc_product_sub_family,
  {{ var("default_boolean") }} as sbqq_quantity_editable,
  {{ var("default_numeric") }} as sbqq_subscription_term,
- '{{ var("default_varchar") }}' as sbqq_subscription_type,
- '{{ var("default_varchar") }}' as vidcode_org_id
+ '{{ var("default_varchar") }}' as sbqq_subscription_type
 )
 select
      sfdc_product_id::VARCHAR(50)
@@ -116,7 +112,6 @@ select
 	,netsuite_link::VARCHAR(190)
 	,net_suite_sku::VARCHAR(90)
 	,sbqq_non_discountable::BOOLEAN
-	,nyc_license_quantity::DOUBLE PRECISION
 	,price_dimensions::VARCHAR(765)
 	,sbqq_price_editable::BOOLEAN
 	,sbqq_pricing_method::VARCHAR(765)
@@ -127,6 +122,5 @@ select
 	,sbqq_quantity_editable::BOOLEAN
 	,sbqq_subscription_term::DOUBLE PRECISION
 	,sbqq_subscription_type::VARCHAR(765)
-	,vidcode_org_id::VARCHAR(75),
-'{{ var("loaddate") }}'::timestamp as loaddate
+    ,'{{ var("loaddate") }}'::timestamp as loaddate
 from data

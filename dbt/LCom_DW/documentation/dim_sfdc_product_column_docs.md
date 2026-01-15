@@ -57,10 +57,6 @@ NetSuite SKU
 Non Discountable (Marks this product as non discountable.)
 {% enddocs %}
 
-{% docs column_nyc_license_quantity %}
-NYC License Quantity (Licenses included in product for NYC Price Book)
-{% enddocs %}
-
 {% docs column_price_dimensions %}
 Price Dimensions
 {% enddocs %}
@@ -99,8 +95,4 @@ Subscription Term (Term length of this subscription. Only applicable if the prod
 
 {% docs column_sbqq_subscription_type %}
 Subscription Type (Renewable Subscriptions will transfer to Renewal Quotes. One-time Subscriptions will not.)
-{% enddocs %}
-
-{% docs column_vidcode_org_id %}
-Vidcode Org Id
 {% enddocs %}

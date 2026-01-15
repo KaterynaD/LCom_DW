@@ -103,11 +103,6 @@ models:
     description: "{{ doc('column_sbqq_non_discountable') }}"
     constraints:
     - type: not_null
-  - name: nyc_license_quantity
-    data_type: double precision
-    description: "{{ doc('column_nyc_license_quantity') }}"
-    constraints:
-    - type: not_null
   - name: price_dimensions
     data_type: varchar(765)
     description: "{{ doc('column_price_dimensions') }}"
@@ -156,11 +151,6 @@ models:
   - name: sbqq_subscription_type
     data_type: varchar(765)
     description: "{{ doc('column_sbqq_subscription_type') }}"
-    constraints:
-    - type: not_null
-  - name: vidcode_org_id
-    data_type: varchar(75)
-    description: "{{ doc('column_vidcode_org_id') }}"
     constraints:
     - type: not_null
   - name: loaddate
