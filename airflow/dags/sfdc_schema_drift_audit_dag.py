@@ -38,6 +38,7 @@ local_tz = pendulum.timezone("America/Los_Angeles")
 
 from dag_utils import (
     DBT_PROFILES_DIR,
+    DBT_TARGET_DIR,
     DBT_LCOM_DW_PROJECT_DIR,
     ALERT_EMAIL,
     notify_task_failure,
@@ -48,7 +49,7 @@ from dag_utils import (
     create_profile_task,
 )
 
-MANIFEST_PATH = os.path.join(DBT_LCOM_DW_PROJECT_DIR,  "target/colibri-manifest.json") 
+MANIFEST_PATH = os.path.join(DBT_TARGET_DIR, "colibri-manifest.json")
 
 # SQL queries for base profile management
 DELETE_BASE_PROFILE_SQL = """
@@ -378,7 +379,7 @@ with DAG(
         task_id="colibri_generate",
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "colibri generate --output-dir target"
+            "colibri generate --output-dir $DBT_TARGET_PATH"
         ),
         trigger_rule=TriggerRule.ALL_SUCCESS,
         on_failure_callback=notify_task_failure,
