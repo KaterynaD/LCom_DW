@@ -160,5 +160,9 @@ PO Number
 {% enddocs %}
 
 {% docs column_contact_id %}
-Unique Contact ID (PK/FK)
+DIM_CONTACT (PK/FK)
+{% enddocs %}
+
+{% docs column_campaign_id %}
+DIM_CAMPAIGN (PK/FK)
 {% enddocs %}

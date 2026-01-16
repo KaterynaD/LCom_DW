@@ -138,20 +138,7 @@ models:
     - type: not_null
     data_tests:
     - not_null
-  - name: expected_new_business_arr
-    data_type: double precision
-    description: "{{ doc('column_expected_new_business_arr') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: expected_revenue
-    data_type: numeric(35,10)
-    description: "{{ doc('column_expected_revenue') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
+  
   - name: multi_year_arr
     data_type: numeric(38,10)
     description: "{{ doc('column_multi_year_arr') }}"
@@ -180,41 +167,7 @@ models:
     - type: not_null
     data_tests:
     - not_null
-  - name: owner_closed_won
-    data_type: double precision
-    description: "{{ doc('column_owner_closed_won') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: owner_open_pipeline
-    data_type: double precision
-    description: "{{ doc('column_owner_open_pipeline') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: owner_quota
-    data_type: double precision
-    description: "{{ doc('column_owner_quota') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: owner_sales_quota
-    data_type: numeric(35,10)
-    description: "{{ doc('column_owner_sales_quota') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: pipeline_needed_to_hit_quota
-    data_type: double precision
-    description: "{{ doc('column_pipeline_needed_to_hit_quota') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
+  
   - name: po_amount
     data_type: numeric(35,10)
     description: "{{ doc('column_po_amount') }}"
@@ -264,20 +217,7 @@ models:
     - type: not_null
     data_tests:
     - not_null
-  - name: renewal_at_79
-    data_type: numeric(38,10)
-    description: "{{ doc('column_renewal_at_79') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: renewal_biz_trigger
-    data_type: numeric(38,10)
-    description: "{{ doc('column_renewal_biz_trigger') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
+  
   - name: total_arr_bookings
     data_type: numeric(38,10)
     description: "{{ doc('column_total_arr_bookings') }}"
@@ -285,20 +225,7 @@ models:
     - type: not_null
     data_tests:
     - not_null
-  - name: total_credit_from_opp_product
-    data_type: double precision
-    description: "{{ doc('column_total_credit_from_opp_product') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: total_opportunity_quantity
-    data_type: double precision
-    description: "{{ doc('column_total_opportunity_quantity') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
+  
   - name: true_arr
     data_type: numeric(35,10)
     description: "{{ doc('column_true_arr') }}"
@@ -320,13 +247,7 @@ models:
     - type: not_null
     data_tests:
     - not_null
-  - name: variance
-    data_type: numeric(36,10)
-    description: "{{ doc('column_variance') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
+  
   - name: last_modified_date
     data_type: timestamp
     description: "{{ doc('column_last_modified_date') }}"
