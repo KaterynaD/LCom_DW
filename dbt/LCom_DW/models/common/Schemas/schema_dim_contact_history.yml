@@ -1,0 +1,125 @@
+version: 2
+models:
+- name: dim_contact_history
+  description: Dim Contact history table (Slowly Changing Dimension Type 2).
+  data_tests:
+    - scd2_plus_validation:
+        unique_key: contact_id
+        scd_valid_from_col_name: fromdate
+        scd_valid_to_col_name: todate  
+  config:
+    contract:
+      enforced: false
+    tags:
+      - dim
+      - common
+  columns:
+    - name: contact_hist_id
+      data_type: varchar(50)
+      description: Primary Key of DIM_CONTACT_HISTORY
+      constraints:
+        - type: not_null
+        - type: primary_key
+          warn_unenforced: false
+      data_tests:
+        - not_null
+        - unique
+
+    - name: fromdate
+      data_type: timestamp
+      description: "{{ doc('column_fromdate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: todate
+      data_type: timestamp
+      description: "{{ doc('column_todate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: record_version
+      data_type: integer
+      description: "{{ doc('column_record_version') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: contact_id
+      data_type: varchar(300)
+      description: "{{ doc('column_contact_id') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+        - relationships:
+            to: ref('dim_contact')
+            field: contact_id
+
+    - name: lead_status
+      data_type: varchar(10)
+      description: "{{ doc('column_lead_status') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: key_contact
+      data_type: integer
+      description: "{{ doc('column_key_contact') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: owner_id
+      data_type: varchar(300)
+      description: "{{ doc('column_owner_id') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: mailing_state_code
+      data_type: varchar(30)
+      description: "{{ doc('column_mailing_state_code') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: account_id
+      data_type: varchar(300)
+      description: "{{ doc('column_account_id') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: loaddate
+      data_type: timestamp
+      description: "{{ doc('column_loaddate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: updatedate
+      data_type: timestamp
+      description: "{{ doc('column_updatedate') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null
+
+    - name: scd_hash
+      data_type: varchar(50)
+      description: "{{ doc('column_scd_hash') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null

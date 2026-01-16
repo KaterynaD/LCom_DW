@@ -92,7 +92,12 @@ Last Modified By user. The ID allows to join COMMON.DIM_EMPLOYEE, but no FK is c
 {% enddocs %}
 
 {% docs column_last_modified_date %}
-The datetime the record was loaded in PST
+The datetime the record was modified in PST
+{% enddocs %}
+
+
+{% docs column_last_activity_date %}
+The datetime the record was active in PST
 {% enddocs %}
 
 {% docs column_account_id %}
@@ -152,4 +157,8 @@ Closed
 
 {% docs column_po_number %}
 PO Number
+{% enddocs %}
+
+{% docs column_contact_id %}
+Unique Contact ID (PK/FK)
 {% enddocs %}

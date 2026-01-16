@@ -1,0 +1,170 @@
+version: 2
+models:
+- name: dim_contact
+  description: Dimension table of Salesforce contacts (HubSpot and Gainsight integration to Salesforce), enriched with account attributes from dim_account and owner attributes from dim_employee. 
+  config:
+    contract:
+      enforced: true
+    tags:
+    - dim
+    - common
+  columns:
+  - name: contact_id
+    data_type: varchar(300)
+    description: "{{ doc('column_contact_id') }}"
+    data_tests:
+    - unique
+    constraints:
+    - type: not_null
+    - type: primary_key
+      warn_unenforced: false
+  - name: name
+    data_type: varchar(400)
+    description: "{{ doc('column_name') }}"
+    constraints:
+    - type: not_null
+  - name: first_name
+    data_type: varchar(120)
+    description: First Name
+    constraints:
+    - type: not_null
+  - name: last_name
+    data_type: varchar(240)
+    description: Last Name
+    constraints:
+    - type: not_null
+  - name: account_id
+    data_type: varchar(300)
+    description: "{{ doc('column_account_id') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_account_id
+    data_type: varchar(300)
+    description: "{{ doc('column_sfdc_account_id') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_account_name
+    data_type: varchar(780)
+    description: "{{ doc('column_sfdc_name') }}"
+    constraints:
+    - type: not_null
+  - name: lcom_organization_id
+    data_type: varchar(300)
+    description: "{{ doc('column_lcom_organization_id') }}"
+    constraints:
+    - type: not_null
+  - name: lcom_organization_name
+    data_type: varchar(270)
+    description: "{{ doc('column_lcom_organization_name') }}"
+    constraints:
+    - type: not_null
+  - name: contact_state
+    data_type: varchar(25)
+    description: "{{ doc('column_contact_state') }}"
+    constraints:
+    - type: not_null
+  - name: created_date
+    data_type: timestamp
+    description: "{{ doc('column_created_date') }}"
+    constraints:
+    - type: not_null
+  - name: email
+    data_type: varchar(240)
+    description: "{{ doc('column_contact_email') }}"
+    constraints:
+    - type: not_null
+  - name: key_contact
+    data_type: boolean
+    description: "{{ doc('column_key_contact') }}"
+    constraints:
+    - type: not_null
+  - name: last_activity_date
+    data_type: date
+    description: "{{ doc('column_last_activity_date') }}"
+    constraints:
+    - type: not_null
+  - name: last_modified_date
+    data_type: timestamp
+    description: "{{ doc('column_last_modified_date') }}"
+    constraints:
+    - type: not_null
+  - name: lead_status
+    data_type: varchar(10)
+    description: "{{ doc('column_lead_status') }}"
+    constraints:
+    - type: not_null
+  - name: mailing_state
+    data_type: varchar(240)
+    description: "{{ doc('column_mailing_state') }}"
+    constraints:
+    - type: not_null
+  - name: mailing_state_code
+    data_type: varchar(30)
+    description: "{{ doc('column_mailing_state_code') }}"
+    constraints:
+    - type: not_null
+  - name: mql_type
+    data_type: varchar(765)
+    description: "{{ doc('column_mql_type') }}"
+    constraints:
+    - type: not_null
+  - name: other_state
+    data_type: varchar(240)
+    description: "{{ doc('column_other_state') }}"
+    constraints:
+    - type: not_null
+  - name: owner_id
+    data_type: varchar(18)
+    description: "{{ doc('column_owner_id') }}"
+    constraints:
+    - type: not_null
+  - name: owner_name
+    data_type: varchar(400)
+    description: "{{ doc('column_employee_name') }}"
+    constraints:
+    - type: not_null
+  - name: owner_user_role
+    data_type: varchar(400)
+    description: "{{ doc('column_user_role') }}"
+    constraints:
+    - type: not_null
+  - name: phone
+    data_type: varchar(120)
+    description: "{{ doc('column_phone') }}"
+    constraints:
+    - type: not_null
+  - name: title
+    data_type: varchar(384)
+    description: "{{ doc('column_contact_title') }}"
+    constraints:
+    - type: not_null
+  - name: qualifying_date_hubspot
+    data_type: date
+    description: "{{ doc('column_qualifying_date_hubspot') }}"
+    constraints:
+    - type: not_null
+  - name: rejected_date_hubspot
+    data_type: date
+    description: "{{ doc('column_rejected_date_hubspot') }}"
+    constraints:
+    - type: not_null
+  - name: returned_date_hubspot
+    data_type: date
+    description: "{{ doc('column_returned_date_hubspot') }}"
+    constraints:
+    - type: not_null
+  - name: source_campaign
+    data_type: varchar(765)
+    description: "{{ doc('column_source_campaign') }}"
+    constraints:
+    - type: not_null
+  - name: sql_date_hubspot
+    data_type: date
+    description: "{{ doc('column_sql_date_hubspot') }}"
+    constraints:
+    - type: not_null
+  - name: loaddate
+    data_type: timestamp
+    description: "{{ doc('column_loaddate') }}"
+    constraints:
+    - type: not_null
