@@ -34,6 +34,7 @@ services:
       AIRFLOW__SMTP__SMTP_USER: "drogaieva.kateryna.noreply@gmail.com"
       AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
 
+      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
       DBT_TARGET_PATH: /home/airflow/dbt_target
       DBT_LOG_PATH: /home/airflow/dbt_logs      
 
@@ -138,12 +139,10 @@ services:
       AIRFLOW__SMTP__SMTP_USER: "AKIATT2JL77I26VH5X7R"
       AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
 
+      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
       DBT_TARGET_PATH: /home/airflow/dbt_target
-
       DBT_LOG_PATH: /home/airflow/dbt_logs
-
       REPO_DIR: /opt/airflow/transformations
-
       DBT_PROFILES_DIR: /home/airflow/.dbt
 
     volumes:
