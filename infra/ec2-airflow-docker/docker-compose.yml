@@ -21,7 +21,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    env_file: .env
+    env_file: .envs
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
@@ -33,7 +33,8 @@ services:
       AIRFLOW__SMTP__SMTP_MAIL_FROM: "drogaieva.kateryna.noreply@gmail.com"
       AIRFLOW__SMTP__SMTP_USER: "drogaieva.kateryna.noreply@gmail.com"
       AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
-
+      
+      #dbt locations
       DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
       DBT_TARGET_PATH: /home/airflow/dbt_target
       DBT_LOG_PATH: /home/airflow/dbt_logs      
@@ -44,8 +45,6 @@ services:
       # dbt profiles location inside container
       DBT_PROFILES_DIR: /home/airflow/.dbt
 
-      # dbt project location
-      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
 
       # repo
       REPO_DIR: /opt/airflow/transformations
