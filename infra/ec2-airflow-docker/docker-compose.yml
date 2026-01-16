@@ -34,6 +34,8 @@ services:
       AIRFLOW__SMTP__SMTP_USER: "drogaieva.kateryna.noreply@gmail.com"
       AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
 
+      DBT_TARGET_PATH: /home/airflow/dbt_target
+      DBT_LOG_PATH: /home/airflow/dbt_logs      
 
       # DAGs live inside the mounted repo
       AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/transformations/airflow/dags
@@ -54,6 +56,12 @@ services:
 
       # dbt profiles (host -> container)
       - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
+
+      # dbt target (host -> container)
+      - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target
+
+      # dbt logs (host -> container)
+      - /home/kdrogaieva/dbt_logs:/home/airflow/dbt_logs
 
       # Full transformations repo (host -> container)
       - /home/kdrogaieva/transformations:/opt/airflow/transformations
@@ -130,14 +138,20 @@ services:
       AIRFLOW__SMTP__SMTP_USER: "AKIATT2JL77I26VH5X7R"
       AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
 
+      DBT_TARGET_PATH: /home/airflow/dbt_target
+
+      DBT_LOG_PATH: /home/airflow/dbt_logs
+
       REPO_DIR: /opt/airflow/transformations
 
       DBT_PROFILES_DIR: /home/airflow/.dbt
 
     volumes:
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
+      - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
+      - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
       - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
+      - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target     
+      - /home/kdrogaieva/dbt_logs:/home/airflow/dbt_logs       
       - /home/kdrogaieva/transformations:/opt/airflow/transformations
       - /home/kdrogaieva/.ssh:/root/.ssh:ro
       - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
@@ -166,8 +180,8 @@ services:
 
 
     volumes:
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
+      - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
+      - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
       - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
       - /home/kdrogaieva/transformations:/opt/airflow/transformations
       - /home/kdrogaieva/.ssh:/root/.ssh:ro
