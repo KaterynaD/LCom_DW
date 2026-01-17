@@ -22,7 +22,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - /home/kdrogaieva/airflow.env
+      - /home/kdrogaieva/airflow_env/.env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
@@ -111,7 +111,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - /home/kdrogaieva/airflow.env
+      - /home/kdrogaieva/airflow_env/.env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
@@ -158,7 +158,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - /home/kdrogaieva/airflow.env
+      - /home/kdrogaieva/airflow_env/.env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
