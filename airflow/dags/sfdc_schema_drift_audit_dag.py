@@ -91,7 +91,7 @@ def manage_base_profile():
 # ------------------------------------------------------------------------
 def get_compiled_sql_path(filename):
     """Get the path to the compiled SQL file."""
-    return os.path.join(DBT_LCOM_DW_PROJECT_DIR, "target", "compiled", "LCom_DW", "analyses", "SFDC_schema_drift", filename)
+    return os.path.join(DBT_TARGET_DIR, "compiled", "LCom_DW", "analyses", "SFDC_schema_drift", filename)
 
 # ------------------------------------------------------------------------
 # Run schema drift analysis and send report
