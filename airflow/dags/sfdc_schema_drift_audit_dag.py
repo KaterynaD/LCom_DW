@@ -379,7 +379,7 @@ with DAG(
         task_id="colibri_generate",
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "colibri generate --output-dir $DBT_TARGET_PATH"
+            "colibri generate --manifest $DBT_TARGET_PATH/manifest.json --catalog $DBT_TARGET_PATH/catalog.json --output-dir $DBT_TARGET_PATH"
         ),
         trigger_rule=TriggerRule.ALL_SUCCESS,
         on_failure_callback=notify_task_failure,
