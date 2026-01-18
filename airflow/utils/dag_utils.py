@@ -257,6 +257,7 @@ def create_notify_summary_task(dag, run_name: str, task_id: str = "notify_summar
 # ------------------------------------------------------------------------
 def set_load_date(ti, **kwargs):
     # No microseconds for nicer string; ISO is safe to pass into dbt vars
+    print(DBT_LCOM_DW_PROJECT_DIR)
     load_date = datetime.today().replace(microsecond=0).isoformat()
     ti.xcom_push(key="LoadDate", value=load_date)
 
@@ -368,7 +369,7 @@ def create_create_connection_task(dag):
 
 def create_profile_task(table_name, profile_name):
     """Create a profile task for a given SFDC table."""
-    print(DBT_LCOM_DW_PROJECT_DIR)
+    
     args_dict = {
         'database_name': 'rawdata',
         'schema_name': 'fivetran_salesforce_quickstart',
