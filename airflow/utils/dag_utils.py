@@ -131,7 +131,7 @@ def create_init_branch(dag, repo_dir=None, dbt_project_dir=None):
     #        on_failure_callback=notify_task_failure,
     #        dag=dag,
     #     )
-    )
+    
 
     run_dbt_deps = BashOperator(
         task_id="run_dbt_deps",
