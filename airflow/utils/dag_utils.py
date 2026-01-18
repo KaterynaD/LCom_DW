@@ -15,7 +15,7 @@ from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 # ------------------------------------------------------------------------
 # Shared config
 # ------------------------------------------------------------------------
-REPO_DIR = os.environ.get("REPO_DIR", "/opt/airflow/transformations")
+REPO_DIR = os.environ.get("REPO_DIR", "/opt/airflow/releases/current/transformations")
 DBT_PROFILES_DIR = os.environ.get(
     "DBT_PROFILES_DIR",
     "/home/airflow/.dbt"
@@ -26,10 +26,10 @@ DBT_TARGET_DIR = os.environ.get(
 )
 DBT_LCOM_DW_PROJECT_DIR = os.environ.get(
     "DBT_LCOM_DW_PROJECT_DIR",
-    "/opt/airflow/transformations/dbt/LCom_DW"
+    "/opt/airflow/releases/current/transformations/dbt/LCom_DW"
 )
 ALERT_EMAIL = Variable.get("ALERT_EMAIL", default_var="reportinganalytics@learning.com")
-init_flag = Variable.get("INIT_DBT_PROJECT", default_var="YES").upper()
+init_flag = Variable.get("INIT_DBT_PROJECT", default_var="NO").upper()
 
 # ------------------------------------------------------------------------
 # Shared callbacks
@@ -120,16 +120,17 @@ def create_init_branch(dag, repo_dir=None, dbt_project_dir=None):
     #         dag=dag,
     #     )
 
-    refresh_git_repo = BashOperator(
-        task_id="refresh_git_repo",
-        bash_command=(
-            f"cd {repo_dir} && "
-            "git fetch origin && "
-            "git reset --hard origin/master && "
-            "git clean -fd"
-       ),
-       on_failure_callback=notify_task_failure,
-       dag=dag,
+    # refresh_git_repo = BashOperator(
+    #         task_id="refresh_git_repo",
+    #         bash_command=(
+    #             f"cd {repo_dir} && "
+    #             "git fetch origin && "
+    #             "git reset --hard origin/master && "
+    #             "git clean -fd"
+    #        ),
+    #        on_failure_callback=notify_task_failure,
+    #        dag=dag,
+    #     )
     )
 
     run_dbt_deps = BashOperator(
@@ -150,8 +151,8 @@ def create_init_branch(dag, repo_dir=None, dbt_project_dir=None):
     )
 
     # Wire the flow
-    decide_init >> [refresh_git_repo, skip_dbt_init]
-    refresh_git_repo >> run_dbt_deps >> init_done
+    decide_init >> [run_dbt_deps, skip_dbt_init]
+    run_dbt_deps >> init_done
     skip_dbt_init >> init_done
 
     return init_done
@@ -367,6 +368,7 @@ def create_create_connection_task(dag):
 
 def create_profile_task(table_name, profile_name):
     """Create a profile task for a given SFDC table."""
+    print(DBT_LCOM_DW_PROJECT_DIR)
     args_dict = {
         'database_name': 'rawdata',
         'schema_name': 'fivetran_salesforce_quickstart',
