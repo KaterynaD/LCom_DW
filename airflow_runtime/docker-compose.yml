@@ -27,7 +27,7 @@ services:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
-      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/transformations/airflow/dags
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/releases/current/transformations/airflow/dags
       AIRFLOW__SMTP__SMTP_HOST: "email-smtp.us-west-2.amazonaws.com"
       AIRFLOW__SMTP__SMTP_STARTTLS: "True"
       AIRFLOW__SMTP__SMTP_SSL: "False"
@@ -41,19 +41,19 @@ services:
 
       # dbt location inside container
       DBT_PROFILES_DIR: /home/airflow/.dbt
-      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
+      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/releases/current/transformations/dbt/LCom_DW
       DBT_TARGET_PATH: /home/airflow/dbt_target
       DBT_LOG_PATH: /home/airflow/dbt_logs   
 
       # repo
-      REPO_DIR: /opt/airflow/transformations
+      REPO_DIR: /opt/airflow/releases/current/transformations
 
     volumes:
       # Airflow runtime stuff
       - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
       - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
       - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
-      - /home/kdrogaieva/transformations:/opt/airflow/transformations
+      - /home/kdrogaieva/releases:/opt/airflow/releases
       - /home/kdrogaieva/.ssh:/root/.ssh:ro
       - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
       - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target
@@ -93,8 +93,8 @@ services:
         # This will be changed to NO by CI/CD pipeline later.
         # ----------------------------------------
         if ! airflow variables get INIT_DBT_PROJECT >/dev/null 2>&1; then
-          airflow variables set INIT_DBT_PROJECT "YES"
-          echo "Variable INIT_DBT_PROJECT created: YES"
+          airflow variables set INIT_DBT_PROJECT "NO"
+          echo "Variable INIT_DBT_PROJECT created: NO"
         else
           echo "Variable INIT_DBT_PROJECT already exists — skipping."
         fi
@@ -117,7 +117,7 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
 
-      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/transformations/airflow/dags
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/releases/current/transformations/airflow/dags
       AIRFLOW__SMTP__SMTP_HOST: "email-smtp.us-west-2.amazonaws.com"
       AIRFLOW__SMTP__SMTP_STARTTLS: "True"
       AIRFLOW__SMTP__SMTP_SSL: "False"
@@ -126,11 +126,11 @@ services:
       AIRFLOW__SMTP__SMTP_USER: "AKIATT2JL77I26VH5X7R"
       AIRFLOW__SMTP__SMTP_PASSWORD_CMD: cat /opt/airflow_secrets/.smtp_password
 
-      REPO_DIR: /opt/airflow/transformations
+      REPO_DIR:  /opt/airflow/releases/current/transformations
 
       # dbt location inside container
       DBT_PROFILES_DIR: /home/airflow/.dbt
-      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
+      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/releases/current/transformations/dbt/LCom_DW
       DBT_TARGET_PATH: /home/airflow/dbt_target
       DBT_LOG_PATH: /home/airflow/dbt_logs  
 
@@ -138,7 +138,7 @@ services:
       - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
       - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
       - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
-      - /home/kdrogaieva/transformations:/opt/airflow/transformations
+      - /home/kdrogaieva/releases:/opt/airflow/releases
       - /home/kdrogaieva/.ssh:/root/.ssh:ro
       - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
       - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target
@@ -166,12 +166,12 @@ services:
 
       # dbt location inside container
       DBT_PROFILES_DIR: /home/airflow/.dbt
-      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/transformations/dbt/LCom_DW
+      DBT_LCOM_DW_PROJECT_DIR: /opt/airflow/releases/current/transformations/dbt/LCom_DW
       DBT_TARGET_PATH: /home/airflow/dbt_target
       DBT_LOG_PATH: /home/airflow/dbt_logs   
 
       # repo
-      REPO_DIR: /opt/airflow/transformations
+      REPO_DIR:  /opt/airflow/releases/current/transformations
 
 
 
@@ -179,7 +179,7 @@ services:
       - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
       - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
       - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
-      - /home/kdrogaieva/transformations:/opt/airflow/transformations
+      - /home/kdrogaieva/releases:/opt/airflow/releases
       - /home/kdrogaieva/.ssh:/root/.ssh:ro
       - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
       - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target

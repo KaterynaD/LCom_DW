@@ -43,6 +43,17 @@ sudo chown ec2-user:ec2-user .smtp_password
 sudo chmod 600 profiles.yml
 sudo chown ec2-user:ec2-user profiles.yml 
 ```
+airflow and dbt logs, airflow plugins (if any) and dbt target folders also should be outside the repo:
+
+```
+cd /home/kdrogaieva
+
+mkdir airflow_logs
+mkdir airflow_plugins
+mkdir dbt_target
+mkdir dbt_logs
+```
+All these folders are mapped as volumes in docker-compose.yml
 
 ## 1. Prerequisites on EC2
 
@@ -111,20 +122,26 @@ git config --global --list
 
 
 
-Connect to Bitbucket
+Connect to GitHub/Bitbucket
 
-1. Generate key on host:
+1. Check if you already have a key on host:
+
+```
+ls -la ~/.ssh
+```
+
+2. If no, Generate key on host:
 ```
 ssh-keygen -t ed25519 -C "your.email@company.com"
 ```
-2. It creates id_ed25519.pub and  id_ed2551 files in /home/kdrogaieva/.ssh
+3. It creates id_ed25519.pub and  id_ed2551 files in /home/kdrogaieva/.ssh
 ```
 # Fix SSH Permissions (I did not do it. Is it requred?)
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_ed25519
 chmod 644 ~/.ssh/id_ed25519.pub
 ```
-3. Start SSH Agent and Add Key (I did not do it. Is it requred?)
+4. Start SSH Agent and Add Key (I did not do it. Is it requred?)
 ```
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
@@ -132,26 +149,48 @@ ssh-add -l
 # Confirm
 
 ```
-4. Copy the content of id_ed25519.pub to Bitbucket → Personal settings → SSH keys → Add key -> SSH Public Key*
+5. Copy the content of id_ed25519.pub to 
+GitHub → Repo → Settings → Deploy keys (read-only is fine)
+and/or 
+Bitbucket → Personal settings → SSH keys → Add key -> SSH Public Key*
 ```
 cat id_ed25519.pub
 ```
-5. Test 
+6. Test 
 ```
 ssh -T git@bitbucket.org
 ```
-6. In Docker, mount your SSH folder in docker-compose.yml
+If you get a host key prompt, type yes. A successful auth usually prints a greeting.
+
+Add github to the known hosts
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+or with sudo if you are not teh owner
+
+sudo ssh-keyscan github.com | sudo tee -a /home/kdrogaieva/.ssh/known_hosts > /dev/null
+
+and then, change the owner
+
+sudo chown -R kdrogaieva:kdrogaieva /home/kdrogaieva/.ssh
+chmod 700 /home/kdrogaieva/.ssh
+chmod 600 /home/kdrogaieva/.ssh/known_hosts
+
+
+
+7. In Docker, mount your SSH folder in docker-compose.yml
 ```
 # SSH keys from EC2 host → container /root/.ssh
       - /home/kdrogaieva/.ssh:/root/.ssh:ro
 ```
 
-7. Clone the repo
+8. Clone the repo
 ```
 git clone git@bitbucket.org:learningcom/transformations.git
 ```
 
-8. ### Transformation folder with dbt and dag scripts is mounted as a volume in docker-compose.yml
+### Transformation folder with dbt and dag scripts is mounted as a volume in docker-compose.yml
+
+
 
 ## 2. One-time setup
 
@@ -162,7 +201,7 @@ With all files available in transformations/infra/ec2-airflow-docker and profile
 ```
 cd transformations/infra/ec2-airflow-docker
 ```
-2. Create .env file for secrets in transformations/infra/ec2-airflow-docker
+2. Create airflow.env file for secrets in /home/kdrogaieva/
 ```
 # Fernet key
 Python3 - << 'PY'
@@ -173,8 +212,8 @@ PY
 # Secret key (random string)
 openssl rand -base64 32
 
-# Paste in .env
-nano .env
+# Paste in airflow.env
+nano airflow.env
 ```
 3. Make sh executable
 ```

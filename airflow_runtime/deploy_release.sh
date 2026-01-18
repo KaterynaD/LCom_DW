@@ -1,50 +1,32 @@
 #!/usr/bin/env bash
 # deploy_release.sh
-#
-# GitHub Actions–ready release deploy script (also runnable manually on host).
-# - Fetches latest origin/master into a mirror repo
-# - Creates a worktree release at /home/kdrogaieva/releases/<sha>/transformations
-# - Re-points /home/kdrogaieva/releases/current -> <sha>
-# - Runs dbt deps/compile/docs + colibri + dev_check_dags.py inside airflow-webserver container
-# - Success requires dev_check_dags.py output to contain: "No import errors"
-# - On any failure, rolls back /home/kdrogaieva/releases/current to previous SHA
-# - Logs everything (no email/SMTP)
-# - If NEW_SHA == OLD_SHA -> exits 0 early ("nothing to deploy")
-#
-# Exit codes:
-#  0 success
-#  1 failure (rolled back)
 
 set -euo pipefail
 
 ### ----------------------------
-### Config (edit if needed)
+### Config
 ### ----------------------------
 REPO_MIRROR_DIR="/home/kdrogaieva/repo-mirror"
 RELEASES_DIR="/home/kdrogaieva/releases"
 CURRENT_LINK="${RELEASES_DIR}/current"
 
-# Where your docker-compose.yml is (must be the directory you run `docker compose ...` from)
+# Per your note:
 COMPOSE_DIR="${COMPOSE_DIR:-/home/kdrogaieva/airflow_runtime}"
 SERVICE_NAME="${SERVICE_NAME:-airflow-webserver}"
 
-# In-container commands rely on these env vars existing inside the container:
-#   DBT_LCOM_DW_PROJECT_DIR
-#   DBT_TARGET_PATH
-#   AIRFLOW__CORE__DAGS_FOLDER
 DBT_TARGET_NAME="${DBT_TARGET_NAME:-Prod}"
 
-# Logging / locking
 LOG_DIR="/home/kdrogaieva/deploy/logs"
 LOCK_DIR="/home/kdrogaieva/deploy/locks"
 
-# Git ref to deploy
 REMOTE_REF="${REMOTE_REF:-origin/master}"
 
 ### ----------------------------
 ### Helpers
 ### ----------------------------
 ts() { date +"%Y-%m-%d %H:%M:%S%z"; }
+log() { echo "[$(ts)] $*"; }
+die() { log "ERROR: $*"; return 1; }
 
 mkdir -p "$LOG_DIR" "$LOCK_DIR"
 
@@ -55,15 +37,7 @@ if ! flock -n 200; then
   exit 1
 fi
 
-log() { echo "[$(ts)] $*"; }
-
-die() {
-  log "ERROR: $*"
-  return 1
-}
-
 read_current_sha() {
-  # Returns the SHA (basename) currently pointed to by releases/current (if exists)
   if [[ -L "$CURRENT_LINK" ]]; then
     local target
     target="$(readlink -f "$CURRENT_LINK" || true)"
@@ -73,22 +47,9 @@ read_current_sha() {
   fi
 }
 
-### ----------------------------
-### Main
-### ----------------------------
 OLD_SHA="$(read_current_sha)"
-log "Starting deploy. Current SHA: ${OLD_SHA:-<none>}"
-
-# Prepare log file (include NEW_SHA once known)
-LOG_FILE="${LOG_DIR}/deploy_$(date +%Y%m%d_%H%M%S)_pending.log"
-touch "$LOG_FILE"
-chmod 600 "$LOG_FILE" || true
-
-# Mirror all output to log
-exec > >(tee -a "$LOG_FILE") 2>&1
-
-ROLLBACK_NEEDED="YES"
 NEW_SHA=""
+ROLLBACK_NEEDED="YES"
 
 rollback() {
   set +e
@@ -103,19 +64,50 @@ rollback() {
   fi
 }
 
-trap 'rollback; log "DEPLOY FAILED — see log: $LOG_FILE"; exit 1' ERR INT TERM
+cleanup_failed_release() {
+  set +e
+  if [[ -n "${NEW_SHA:-}" ]]; then
+    local release_dir="${RELEASES_DIR}/${NEW_SHA}"
+    local wt_dir="${release_dir}/transformations"
 
+    log "Cleaning up failed release artifacts for SHA: ${NEW_SHA}"
+
+    if [[ -d "${wt_dir}" ]]; then
+      cd "$REPO_MIRROR_DIR" || true
+      git worktree remove --force "${wt_dir}" >/dev/null 2>&1 || true
+      rm -rf "${wt_dir}" || true
+    fi
+
+    if [[ -d "${release_dir}" ]]; then
+      rmdir "${release_dir}" >/dev/null 2>&1 || rm -rf "${release_dir}" || true
+    fi
+  fi
+}
+
+### ----------------------------
+### Logging
+### ----------------------------
+log "Starting deploy. Current SHA: ${OLD_SHA:-<none>}"
+
+LOG_FILE="${LOG_DIR}/deploy_$(date +%Y%m%d_%H%M%S)_pending.log"
+touch "$LOG_FILE"
+chmod 600 "$LOG_FILE" || true
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+trap 'rollback; cleanup_failed_release; log "DEPLOY FAILED — see log: $LOG_FILE"; exit 1' ERR INT TERM
+
+### ----------------------------
+### Fetch and resolve new SHA
+### ----------------------------
 log "Fetching latest from remote in: $REPO_MIRROR_DIR"
 cd "$REPO_MIRROR_DIR"
 
 git fetch --all --prune
-
 NEW_SHA="$(git rev-parse "$REMOTE_REF")"
 log "Resolved ${REMOTE_REF} -> ${NEW_SHA}"
 
-# If nothing changed, exit successfully without doing any work
+# No-op if nothing new
 if [[ -n "${OLD_SHA}" && "${NEW_SHA}" == "${OLD_SHA}" ]]; then
-  # Rename log to include SHA (nice-to-have)
   NEW_LOG_FILE="${LOG_DIR}/deploy_$(date +%Y%m%d_%H%M%S)_${NEW_SHA}_noop.log"
   mv "$LOG_FILE" "$NEW_LOG_FILE" || true
   LOG_FILE="$NEW_LOG_FILE"
@@ -124,22 +116,22 @@ if [[ -n "${OLD_SHA}" && "${NEW_SHA}" == "${OLD_SHA}" ]]; then
   exit 0
 fi
 
-# Update log filename now that we know SHA
 NEW_LOG_FILE="${LOG_DIR}/deploy_$(date +%Y%m%d_%H%M%S)_${NEW_SHA}.log"
 mv "$LOG_FILE" "$NEW_LOG_FILE" || true
 LOG_FILE="$NEW_LOG_FILE"
 log "Logging to: $LOG_FILE"
 
+### ----------------------------
+### Create release worktree
+### ----------------------------
 RELEASE_DIR="${RELEASES_DIR}/${NEW_SHA}"
 WT_DIR="${RELEASE_DIR}/transformations"
 
 log "Creating release dir: $RELEASE_DIR"
 mkdir -p "$RELEASE_DIR"
 
-# If an old worktree exists for this SHA, remove it safely
 if [[ -d "$WT_DIR/.git" || -d "$WT_DIR" ]]; then
   log "Worktree path already exists: $WT_DIR"
-  # Try to remove the worktree registration first (won't delete random dirs)
   git worktree remove --force "$WT_DIR" >/dev/null 2>&1 || true
   rm -rf "$WT_DIR" || true
 fi
@@ -150,18 +142,51 @@ git worktree add "$WT_DIR" "$NEW_SHA"
 log "Pointing current symlink: ${CURRENT_LINK} -> ${NEW_SHA}"
 ln -sfn "$NEW_SHA" "$CURRENT_LINK"
 
+### ----------------------------
+### Run in-container steps
+### ----------------------------
 log "Running in-container steps via docker compose..."
 cd "$COMPOSE_DIR"
 
-# 1) dbt deps/compile/docs + colibri (in DBT project dir)
-docker compose exec -T "$SERVICE_NAME" bash -lc "
+# IMPORTANT: force PATH so dbt is found in non-interactive shells
+# (common locations: /home/airflow/.local/bin, /usr/local/bin, etc.)
+docker compose exec -T "$SERVICE_NAME" bash -c "
 set -euo pipefail
+
+# Make dbt discoverable even in non-interactive shells
+export PATH=\"/home/airflow/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:\$PATH\"
+
+# Debug info (kept in log)
+echo '[container] whoami:' \$(whoami)
+echo '[container] PATH:' \"\$PATH\"
+command -v python || true
+command -v dbt || true
+
+# If dbt still not found, try common absolute locations before failing
+if ! command -v dbt >/dev/null 2>&1; then
+  for p in /home/airflow/.local/bin/dbt /usr/local/bin/dbt /usr/bin/dbt; do
+    if [[ -x \"\$p\" ]]; then
+      export DBT_BIN=\"\$p\"
+      break
+    fi
+  done
+else
+  export DBT_BIN=\"\$(command -v dbt)\"
+fi
+
+if [[ -z \"\${DBT_BIN:-}\" ]]; then
+  echo 'FATAL: dbt not found even after PATH fix.'
+  exit 1
+fi
+
+echo '[container] Using dbt at:' \"\$DBT_BIN\"
+
 echo '[container] DBT project dir:' \"\$DBT_LCOM_DW_PROJECT_DIR\"
 cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
-dbt deps
-dbt compile --target ${DBT_TARGET_NAME}
-dbt docs generate --static --target ${DBT_TARGET_NAME}
+\"\$DBT_BIN\" deps
+\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME}
+\"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME}
 
 echo '[container] Running colibri...'
 colibri generate \
@@ -170,9 +195,8 @@ colibri generate \
   --output-dir \"\$DBT_TARGET_PATH\"
 "
 
-# 2) dev_check_dags.py + success string check
 log "Running dev_check_dags.py and validating output..."
-DAG_CHECK_OUTPUT="$(docker compose exec -T "$SERVICE_NAME" bash -lc "
+DAG_CHECK_OUTPUT="$(docker compose exec -T "$SERVICE_NAME" bash -c "
 set -euo pipefail
 cd \"\$AIRFLOW__CORE__DAGS_FOLDER\"
 python dev_check_dags.py
