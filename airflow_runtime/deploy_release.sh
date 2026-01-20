@@ -211,6 +211,28 @@ fi
 log "All checks passed."
 ROLLBACK_NEEDED="NO"
 
+### ----------------------------
+### Cleanup old releases (keep only current + previous)
+### ----------------------------
+log "Cleaning up old releases (keeping current=${NEW_SHA} and previous=${OLD_SHA:-<none>})..."
+
+KEEP1="${NEW_SHA}"
+KEEP2="${OLD_SHA:-}"
+
+shopt -s nullglob
+for d in "${RELEASES_DIR}"/*; do
+  name="$(basename "$d")"
+
+  # Only consider real directories in releases (ignore symlinks like 'current')
+  if [[ -d "$d" && ! -L "$d" ]]; then
+    # Keep current + previous; delete everything else
+    if [[ "$name" != "$KEEP1" && ( -z "$KEEP2" || "$name" != "$KEEP2" ) ]]; then
+      log "Removing old release dir: ${d}"
+      rm -rf "$d"
+    fi
+  fi
+done
+shopt -u nullglob
+
 trap - ERR INT TERM
-log "DEPLOY SUCCESS — see log: $LOG_FILE"
-exit 0
+log "DEPLOY S
