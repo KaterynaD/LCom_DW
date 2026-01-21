@@ -1,0 +1,18 @@
+name: Self-hosted runner – minimal test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Prove runner works
+        shell: bash
+        run: |
+          echo "✅ Runner is alive"
+          echo "User: $(whoami)"
+          echo "Host: $(hostname)"
+          echo "Time: $(date -Is)"
+          echo "Working dir: $(pwd)"
