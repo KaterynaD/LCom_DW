@@ -1,0 +1,164 @@
+name: Build dbt docs + Colibri and publish to docs branch (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: self-hosted
+
+    env:
+      # Redshift secrets
+      REDSHIFT_HOST: ${{ secrets.REDSHIFT_HOST }}
+      REDSHIFT_PORT: ${{ secrets.REDSHIFT_PORT }}
+      REDSHIFT_USER: ${{ secrets.REDSHIFT_USER }}
+      REDSHIFT_PASSWORD: ${{ secrets.REDSHIFT_PASSWORD }}
+      REDSHIFT_DBNAME: ${{ secrets.REDSHIFT_DBNAME }}
+      REDSHIFT_SCHEMA: ${{ secrets.REDSHIFT_SCHEMA }}
+      REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
+
+      # Project location in repo
+      DBT_PROJECT_DIR: transformations/dbt/LCom_DW
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Set up Python 3.12.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.9"
+
+      - name: Install dbt + colibri
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install dbt-core==1.10.3 dbt-redshift
+          python -m pip install dbt-colibri
+          dbt --version
+          colibri --help >/dev/null 2>&1 || true
+
+      - name: Create dbt profile from secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Fail fast if required secrets are missing
+          : "${REDSHIFT_HOST:?Missing secret REDSHIFT_HOST}"
+          : "${REDSHIFT_USER:?Missing secret REDSHIFT_USER}"
+          : "${REDSHIFT_PASSWORD:?Missing secret REDSHIFT_PASSWORD}"
+
+          # Defaults (if you didn't set the optional secrets)
+          REDSHIFT_PORT="${REDSHIFT_PORT:-5439}"
+          REDSHIFT_DBNAME="${REDSHIFT_DBNAME:-dw}"
+          REDSHIFT_SCHEMA="${REDSHIFT_SCHEMA:-common}"
+          REDSHIFT_THREADS="${REDSHIFT_THREADS:-6}"
+
+          mkdir -p "$HOME/.dbt"
+
+          # Determine profile name from dbt_project.yml (profile: <name>)
+          PROJECT_PATH="${DBT_PROJECT_DIR}/dbt_project.yml"
+          if [[ ! -f "$PROJECT_PATH" ]]; then
+            echo "ERROR: dbt_project.yml not found at: $PROJECT_PATH"
+            exit 1
+          fi
+
+          PROFILE_NAME="$(grep -E '^\s*profile\s*:' "$PROJECT_PATH" | head -n 1 | awk -F: '{print $2}' | xargs || true)"
+          if [[ -z "${PROFILE_NAME:-}" ]]; then
+            echo "ERROR: Could not detect 'profile:' in $PROJECT_PATH"
+            exit 1
+          fi
+
+          echo "Using dbt profile name: $PROFILE_NAME"
+
+          cat > "$HOME/.dbt/profiles.yml" <<EOF
+          ${PROFILE_NAME}:
+            target: Prod
+            outputs:
+              Prod:
+                type: redshift
+                host: ${REDSHIFT_HOST}
+                port: ${REDSHIFT_PORT}
+                user: ${REDSHIFT_USER}
+                password: ${REDSHIFT_PASSWORD}
+                dbname: ${REDSHIFT_DBNAME}
+                schema: ${REDSHIFT_SCHEMA}
+                threads: ${REDSHIFT_THREADS}
+                ra3_node: true
+          EOF
+
+          chmod 600 "$HOME/.dbt/profiles.yml"
+          echo "Wrote $HOME/.dbt/profiles.yml"
+
+      - name: Build artifacts on master (dbt + docs + colibri)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$DBT_PROJECT_DIR"
+
+          dbt deps --target Prod
+          dbt compile --target Prod
+          dbt docs generate --static --target Prod
+
+          # Colibri output into target/
+          colibri generate --output-dir target
+
+          # Validate expected files exist
+          test -f target/static_index.html
+          test -f target/index.html
+
+      - name: Stage artifacts for docs branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/dbt_docs_artifacts"
+          cp "${DBT_PROJECT_DIR}/target/static_index.html" "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html"
+          cp "${DBT_PROJECT_DIR}/target/index.html" "$RUNNER_TEMP/dbt_docs_artifacts/index.html"
+          ls -la "$RUNNER_TEMP/dbt_docs_artifacts"
+
+      - name: Switch to docs branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin docs:docs
+          git checkout docs
+
+      - name: Copy artifacts into docs branch
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Per your requirements:
+          # - static_index.html -> index.html (replace existing)
+          # - index.html -> colibri_index.html
+          cp "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html" ./index.html
+          cp "$RUNNER_TEMP/dbt_docs_artifacts/index.html" ./colibri_index.html
+
+          git status --porcelain
+
+      - name: Set Git config
+        shell: bash
+        run: |
+          git config --local user.email "drogaieva@gmail.com"
+          git config --local user.name "KaterynaD"
+
+      - name: Commit and push to docs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git add index.html colibri_index.html
+          git commit -m "Publish dbt docs + colibri for $GITHUB_SHA"
+          git push origin docs
