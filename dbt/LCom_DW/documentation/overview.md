@@ -40,7 +40,7 @@ AWS Redshift hosts the data
 AWS Glue (LCOM Platform) and Fivetran (Salesforce) extractes the data
 
 Dbt, AWS Redshift Stored Procedures Glue transforms and loads the data. (Prod dbt runs in Fivetran)
-The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/src/master/)
+The code is in [github](https://github.com/learningcom/transformations/tree/master)
 
 ### WHEN? 
 
@@ -55,7 +55,7 @@ The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/sr
 
 ## Conceptual and Logical Diagrams
 
-- [Conceptual](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427368974) ([Licenses](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427401754), [Products](https://miro.com/app/board/uXjVLlSWsTM=/), [Users and Accounts](https://miro.com/app/board/uXjVIYkFN_Y=/))
+- [Conceptual](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3427368974) 
 - [DW Logical Schema](https://learningcom.atlassian.net/wiki/spaces/AC/whiteboard/3488841816?atl_f=PAGETREE)
 
 ## DW Physical Schemas Diagrams
@@ -66,32 +66,36 @@ The code are in [bitbucket](https://bitbucket.org/learningcom/transformations/sr
 
 The dimensions in this schema are used in relations with fact tables in other schemas or in transformations.
 
-![Common](/diagrams/Common.png)
+![Common](diagrams/Common.png)
+
 
 ### Revenue
 
 Snapshot tables may contain all needed information or joined to DIM_ACCOUNT using sfdc_account_id or FACT_OPPORTUNITY.
 
-![Revenue](/diagrams/Revenue.png)
+![Revenue](diagrams/Revenue.png)
 
 ### Licensing
-![Licensing](/diagrams/Licensing.png)
+![Licensing](diagrams/Licensing.png)
 
 ### Training Sessions
-![Training Sessions](/diagrams/Training Sessions.png)
+![Training Sessions](diagrams/Training Sessions.png)
+
 
 ### Support Cases
-![Support Cases](/diagrams/Support Cases.png)
+![Support Cases](diagrams/Support Cases.png)
+
 
 ### Content Delivery Usage
-![Content Delivery Usage](/diagrams/Content Delivery Usage.png)
+![Content Delivery Usage](diagrams/Content Delivery Usage.png)
 
 ### Content Delivery Usage Dimensions
 The dimensions in this schema are used in transformations mosly
 
-![Content Delivery Usage Dimensions](/diagrams/Content Delivery Usage Dimensions.png)
+![Content Delivery Usage Dimensions](diagrams/Content Delivery Usage Dimensions.png)
 
 
+## [Column Level Lineage](https://learningcom.github.io/transformations/colibri_index.html)
 
 {% enddocs %}
 
@@ -106,11 +110,12 @@ Our dbt project may use this package for surrogate keys, etc.
 # Main dbt project
 
 - Models in top-level models folders (Common, Revenue etc) are created in the database schemas with the same names. (Customized generate_schema_name macros and configuration in dbt_project.yml)
-- The schemas are created manually before the start of the project. The scripts are in [bitbucket](https://bitbucket.org/learningcom/redshift/src/master/DW/) and in project_setup_folder in [bitbucket](https://bitbucket.org/learningcom/transformations/src/master/dbt/LCom_DW/project_setup_scripts/)
+- The schemas are created manually before the start of the project. The scripts are in project_setup_folder in 
+[github](https://github.com/learningcom/transformations/tree/master/dbt/LCom_DW/project_setup_scripts)
 - Each dbt run in Prod target is logged in audit.dbt_run_log table. It's "dbt run Start/End" operation and "Scheduled Prod run" comment by default but the comment can be customized in run_type variable.
 - Each dbt model run in Prod target is logged in audit.dbt_run_log table. It's configured for all models in dbt_project.yml (Pre and Post hooks)
 - Null values are replaced with default values from variables in dbt_project.yml Like "Unknown" for varchar columns etc.
-- audit.dbt_run_log table is a not part of the transformation models and **must be created outside of the dbt project** because every run of dbt need the table for logs. The table creation statement is in [bitbucket](https://bitbucket.org/learningcom/redshift/src/master/DW/audit/Tables/dbt_run_log.sql) and in project_setup_folder in [bitbucket](https://bitbucket.org/learningcom/transformations/src/master/dbt/LCom_DW/project_setup_scripts/)
+- audit.dbt_run_log table is a not part of the transformation models and **must be created outside of the dbt project** because every run of dbt need the table for logs. The table creation statement is project_setup_folder [github](https://github.com/learningcom/transformations/tree/master/dbt/LCom_DW/project_setup_scripts)
 
 
 ## Foreighn Keys
