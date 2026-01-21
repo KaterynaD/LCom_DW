@@ -1,4 +1,4 @@
-services:
+services: 
   postgres:
     image: postgres:16
     restart: unless-stopped
@@ -17,6 +17,7 @@ services:
   airflow-webserver:
     build: .
     image: airflow-dbt:2.10.2-py3.12
+    user: "1002:0"
     restart: unless-stopped
     depends_on:
       postgres:
@@ -24,6 +25,7 @@ services:
     env_file:
       - /home/kdrogaieva/airflow_env/.env
     environment:
+      HOME: /home/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
@@ -106,6 +108,7 @@ services:
 
   airflow-scheduler:
     image: airflow-dbt:2.10.2-py3.12
+    user: "1002:0"
     restart: unless-stopped
     depends_on:
       postgres:
@@ -113,6 +116,7 @@ services:
     env_file:
       - /home/kdrogaieva/airflow_env/.env
     environment:
+      HOME: /home/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
@@ -154,12 +158,14 @@ services:
 
   airflow-init:
     image: airflow-dbt:2.10.2-py3.12
+    user: "1002:0"
     depends_on:
       postgres:
         condition: service_healthy
     env_file:
       - /home/kdrogaieva/airflow_env/.env
     environment:
+      HOME: /home/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
@@ -188,4 +194,3 @@ services:
       - bash
       - -c
       - "airflow db migrate && airflow users create --username admin --password admin --firstname Kate --lastname Drogaieva --role Admin --email kdrogaieva@learning.com || true"
-
