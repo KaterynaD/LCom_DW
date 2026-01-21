@@ -1,0 +1,100 @@
+version: 2
+
+macros:
+  - name: safe_select_list_from_profiles
+    description: >
+      Generate a stable, schema-drift-resilient SELECT list for a source table.
+      Compares the list of columns used in a dbt model against base and current
+      source table profiles and:
+        - emits the real column when it exists in the current profile
+        - substitutes a correctly typed default expression when the column is missing
+      Column order always follows `used_columns`.
+
+      Parse/compile behavior (execute == false): emits `alias.column AS column` placeholders only.
+      Runtime behavior (execute == true): detects missing columns via profiles and replaces them with defaults.
+
+    arguments:
+      - name: table_name
+        type: string
+        description: >
+          Name of the source table being queried (e.g. 'account', 'opportunity').
+
+      - name: alias
+        type: string
+        description: >
+          SQL alias used for the source relation in the model (e.g. 'sfdc_account' or 'stg_opportunity').
+
+      - name: used_columns
+        type: list
+        description: >
+          Ordered list of column names (strings) explicitly used by the dbt model.
+          Only these columns are checked for drift and rendered in the SELECT list.
+          Example: ['id', 'name', 'created_date', 'custom_field_c']
+
+      - name: profile_src
+        type: tuple[string,string]
+        description: >
+          dbt source (schema, table) that stores profiles.
+          Default: ('profiles', 'sfdc_schema_audit')
+
+      - name: base_profile
+        type: string
+        description: >
+          Name of the profile representing the expected / designed source table column set.
+          Used to retrieve data types and defaults for missing columns.
+          Default: 'base'
+
+      - name: current_profile
+        type: string
+        description: >
+          Name of the profile representing the current source table column set.
+          Used to detect which columns are missing today.
+          Default: 'current'
+
+
+  - name: missing_defaults_map
+    description: >
+      Identify columns that are expected (base profile) but currently missing from a source table
+      (current profile), limited to columns actually used by a dbt model, and return a mapping of
+      those columns to correctly typed default SQL expressions.
+
+      This macro is intended to be consumed by SELECT-list–generating macros
+      (e.g. safe_select_list_from_profiles) to transparently substitute defaults for missing columns
+      without failing dbt runs.
+
+      Parse/compile behavior (execute == false): returns an empty dictionary.
+      Runtime behavior (execute == true): queries the profiles table to detect missing columns and infer
+      default expressions using base profile data types.
+
+    arguments:
+      - name: table_name
+        type: string
+        description: >
+          Name of the source table being evaluated (e.g. 'account', 'opportunity').
+
+      - name: used_columns
+        type: list
+        description: >
+          Ordered list of column names (strings) referenced by the dbt model.
+          Only these columns are considered for drift detection and replacement.
+          Example: ['id', 'name', 'created_date', 'custom_field_c']
+
+      - name: profile_src
+        type: tuple[string,string]
+        description: >
+          dbt source (schema, table) that stores profiles.
+          Default: ('profiles', 'sfdc_schema_audit')
+
+      - name: base_profile
+        type: string
+        description: >
+          Name of the profile representing the expected / designed source table column set.
+          Used to retrieve data types and defaults for missing columns.
+          Default: 'base'
+
+      - name: current_profile
+        type: string
+        description: >
+          Name of the profile representing the current source table column set.
+          Used to detect which columns are missing today.
+          Default: 'current'
