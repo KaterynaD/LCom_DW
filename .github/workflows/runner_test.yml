@@ -10,8 +10,12 @@ jobs:
     steps:
       - name: Prove runner works
         shell: bash
-        run: |
+        env:
+          REDSHIFT_HOST: ${{ secrets.REDSHIFT_HOST }}        
+        run: |        
           echo "✅ Runner is alive"
+          echo "REDSHIFT_HOST=$REDSHIFT_HOST"
+          echo "Runner labels: $RUNNER_LABELS"
           echo "User: $(whoami)"
           echo "Host: $(hostname)"
           echo "Time: $(date -Is)"
