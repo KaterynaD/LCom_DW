@@ -28,8 +28,7 @@ with DAG(
     dag_id="0_lcom_dw_scheduled_product_usage_scheduled_run",
     description="LCom DW: Product Usage run",
     default_args=default_args,
-    start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
+    start_date=datetime(2024, 1, 1), 
     catchup=False,
     tags=["dbt", "lcom_dw", "product usage", "scheduled"],
 ) as dag:

@@ -29,7 +29,6 @@ with DAG(
     description="LCom DW: dbt Manual run - licensing (manual trigger only)",
     default_args=default_args,
     start_date=datetime(2024, 1, 1),
-    schedule_interval=None,   # manual run only
     catchup=False,
     tags=["dbt", "lcom_dw", "licensing", "maintenance" ],
 ) as dag:

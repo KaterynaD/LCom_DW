@@ -80,8 +80,7 @@ with DAG(
     dag_id="0_lcom_dw_full_scheduled_run",
     description="LCom DW: full run (git pull + dbt deps + main dbt runs)",
     default_args=default_args,
-    start_date=datetime(2024, 1, 1),
-    schedule_interval=None,   # change to cron when ready to schedule
+    start_date=datetime(2024, 1, 1), 
     catchup=False,
     tags=["dbt", "lcom_dw", "scheduled", "full_load" ],
 ) as dag:

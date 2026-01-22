@@ -29,7 +29,6 @@ with DAG(
     description="LCom DW: dbt run-operation Dropping_all_FK (manual trigger only)",
     default_args=default_args,
     start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
     catchup=False,
     tags=["dbt", "lcom_dw", "fk", "maintenance"],
 ) as dag:

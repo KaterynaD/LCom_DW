@@ -29,8 +29,7 @@ with DAG(
     dag_id="3_5_lcom_dw_manual_run_cdu",
     description="LCom DW: dbt Manual run - cdu (manual trigger only)",
     default_args=default_args,
-    start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
+    start_date=datetime(2024, 1, 1), 
     catchup=False,
     tags=["dbt", "lcom_dw", "cdu", "maintenance" ],
 ) as dag:

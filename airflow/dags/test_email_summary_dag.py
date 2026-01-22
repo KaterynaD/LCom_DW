@@ -35,7 +35,6 @@ def send_test_summary(**context):
 with DAG(
     dag_id="test_email_summary",
     start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
     catchup=False,
     tags=["test", "email"],
 ) as dag:
