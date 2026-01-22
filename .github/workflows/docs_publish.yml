@@ -11,15 +11,6 @@ jobs:
     runs-on: self-hosted
 
     env:
-      # Redshift secrets
-      REDSHIFT_HOST: ${{ secrets.REDSHIFT_HOST }}
-      REDSHIFT_PORT: ${{ secrets.REDSHIFT_PORT }}
-      REDSHIFT_USER: ${{ secrets.REDSHIFT_USER }}
-      REDSHIFT_PASSWORD: ${{ secrets.REDSHIFT_PASSWORD }}
-      REDSHIFT_DBNAME: ${{ secrets.REDSHIFT_DBNAME }}
-      REDSHIFT_SCHEMA: ${{ secrets.REDSHIFT_SCHEMA }}
-      REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
-
       # Project location in repo
       DBT_PROJECT_DIR: dbt/LCom_DW
       DBT_PROFILE_NAME: LCom_DW
@@ -41,51 +32,45 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           python3.12 -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/python -m pip install dbt-core==1.10.3 dbt-redshift dbt-colibri
-
           .venv/bin/dbt --version
           .venv/bin/colibri --help >/dev/null 2>&1 || true
 
-      - name: Create dbt profile from secrets
+      - name: Set up dbt profile (Redshift)
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p ~/.dbt
 
-          : "${REDSHIFT_HOST:?Missing secret REDSHIFT_HOST}"
-          : "${REDSHIFT_USER:?Missing secret REDSHIFT_USER}"
-          : "${REDSHIFT_PASSWORD:?Missing secret REDSHIFT_PASSWORD}"
+          echo "
+          ${DBT_PROFILE_NAME}:
+          target: Prod
+            outputs:
+              Prod:
+                type: redshift
+                host: ${REDSHIFT_HOST}
+                port: ${REDSHIFT_PORT}
+                user: ${REDSHIFT_USER}
+                password: ${REDSHIFT_PASSWORD}
+                dbname: ${REDSHIFT_DBNAME}
+                schema: ${REDSHIFT_SCHEMA}
+                threads: ${REDSHIFT_THREADS}
+                ra3_node: true
+          " > ~/.dbt/profiles.yml
 
-          REDSHIFT_PORT="${REDSHIFT_PORT:-5439}"
-          REDSHIFT_DBNAME="${REDSHIFT_DBNAME:-dw}"
-          REDSHIFT_SCHEMA="${REDSHIFT_SCHEMA:-common}"
-          REDSHIFT_THREADS="${REDSHIFT_THREADS:-6}"
+          chmod 600 ~/.dbt/profiles.yml
+          sed -E 's/(password:).*/\1 ****/' ~/.dbt/profiles.yml
+          env:
+          REDSHIFT_HOST: ${{ secrets.REDSHIFT_HOST }}
+          REDSHIFT_PORT: ${{ secrets.REDSHIFT_PORT }}
+          REDSHIFT_USER: ${{ secrets.REDSHIFT_USER }}
+          REDSHIFT_PASSWORD: ${{ secrets.REDSHIFT_PASSWORD }}
+          REDSHIFT_DBNAME: ${{ secrets.REDSHIFT_DBNAME }}
+          REDSHIFT_SCHEMA: ${{ secrets.REDSHIFT_SCHEMA }}
+          REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
 
-          mkdir -p "$HOME/.dbt"
-
-          cat > "$HOME/.dbt/profiles.yml" <<EOF
-${DBT_PROFILE_NAME}:
-  target: Prod
-  outputs:
-    Prod:
-      type: redshift
-      host: ${REDSHIFT_HOST}
-      port: ${REDSHIFT_PORT}
-      user: ${REDSHIFT_USER}
-      password: ${REDSHIFT_PASSWORD}
-      dbname: ${REDSHIFT_DBNAME}
-      schema: ${REDSHIFT_SCHEMA}
-      threads: ${REDSHIFT_THREADS}
-      ra3_node: true
-EOF
-
-          chmod 600 "$HOME/.dbt/profiles.yml"
-
-          echo "Wrote $HOME/.dbt/profiles.yml (sanitized preview):"
-          sed -E 's/(password:).*/\1 ****/' "$HOME/.dbt/profiles.yml"
-          
       - name: Build artifacts on master (dbt + docs + colibri)
         shell: bash
         run: |
@@ -94,8 +79,6 @@ EOF
           PROJECT_DIR="$GITHUB_WORKSPACE/$DBT_PROJECT_DIR"
           PROFILES_DIR="$HOME/.dbt"
 
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          echo "PROJECT_DIR=$PROJECT_DIR"
           ls -la "$PROJECT_DIR"
           test -f "$PROJECT_DIR/dbt_project.yml"
 
@@ -107,6 +90,7 @@ EOF
 
           test -f "$PROJECT_DIR/target/static_index.html"
           test -f "$PROJECT_DIR/target/index.html"
+
       - name: Stage artifacts for docs branch
         shell: bash
         run: |
@@ -114,7 +98,6 @@ EOF
           mkdir -p "$RUNNER_TEMP/dbt_docs_artifacts"
           cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/static_index.html" "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html"
           cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/index.html" "$RUNNER_TEMP/dbt_docs_artifacts/index.html"
-          ls -la "$RUNNER_TEMP/dbt_docs_artifacts"
 
       - name: Switch to docs branch
         shell: bash
@@ -127,13 +110,8 @@ EOF
         shell: bash
         run: |
           set -euo pipefail
-
-          # Per your requirements:
-          # - static_index.html -> index.html (replace existing)
-          # - index.html -> colibri_index.html
           cp "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html" ./index.html
           cp "$RUNNER_TEMP/dbt_docs_artifacts/index.html" ./colibri_index.html
-
           git status --porcelain
 
       - name: Set Git config
@@ -146,12 +124,10 @@ EOF
         shell: bash
         run: |
           set -euo pipefail
-
           if [[ -z "$(git status --porcelain)" ]]; then
             echo "No changes to commit."
             exit 0
           fi
-
           git add index.html colibri_index.html
           git commit -m "Publish dbt docs + colibri for $GITHUB_SHA"
           git push origin docs
