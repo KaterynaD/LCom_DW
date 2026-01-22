@@ -105,24 +105,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cd "$DBT_PROJECT_DIR"
 
-          "$GITHUB_WORKSPACE/.venv/bin/dbt" deps --target Prod
-          "$GITHUB_WORKSPACE/.venv/bin/dbt" compile --target Prod
-          "$GITHUB_WORKSPACE/.venv/bin/dbt" docs generate --static --target Prod
+          PROJECT_DIR="$GITHUB_WORKSPACE/$DBT_PROJECT_DIR"
+          PROFILES_DIR="$HOME/.dbt"
 
-          "$GITHUB_WORKSPACE/.venv/bin/colibri" generate --output-dir target
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "PROJECT_DIR=$PROJECT_DIR"
+          ls -la "$PROJECT_DIR"
+          test -f "$PROJECT_DIR/dbt_project.yml"
 
-          test -f target/static_index.html
-          test -f target/index.html
+          "$GITHUB_WORKSPACE/.venv/bin/dbt" deps --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
+          "$GITHUB_WORKSPACE/.venv/bin/dbt" compile --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
+          "$GITHUB_WORKSPACE/.venv/bin/dbt" docs generate --static --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
 
+          "$GITHUB_WORKSPACE/.venv/bin/colibri" generate --output-dir "$PROJECT_DIR/target"
+
+          test -f "$PROJECT_DIR/target/static_index.html"
+          test -f "$PROJECT_DIR/target/index.html"
       - name: Stage artifacts for docs branch
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/dbt_docs_artifacts"
-          cp "${DBT_PROJECT_DIR}/target/static_index.html" "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html"
-          cp "${DBT_PROJECT_DIR}/target/index.html" "$RUNNER_TEMP/dbt_docs_artifacts/index.html"
+          cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/static_index.html" "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html"
+          cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/index.html" "$RUNNER_TEMP/dbt_docs_artifacts/index.html"
           ls -la "$RUNNER_TEMP/dbt_docs_artifacts"
 
       - name: Switch to docs branch
