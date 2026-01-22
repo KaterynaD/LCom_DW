@@ -107,14 +107,12 @@ jobs:
           set -euo pipefail
           cd "$DBT_PROJECT_DIR"
 
-          ../..//../.venv/bin/dbt deps --target Prod
-          ../..//../.venv/bin/dbt compile --target Prod
-          ../..//../.venv/bin/dbt docs generate --static --target Prod
+          "$GITHUB_WORKSPACE/.venv/bin/dbt" deps --target Prod
+          "$GITHUB_WORKSPACE/.venv/bin/dbt" compile --target Prod
+          "$GITHUB_WORKSPACE/.venv/bin/dbt" docs generate --static --target Prod
 
-          # Colibri output into target/
-          ../..//../.venv/bin/colibri generate --output-dir target
+          "$GITHUB_WORKSPACE/.venv/bin/colibri" generate --output-dir target
 
-          # Validate expected files exist
           test -f target/static_index.html
           test -f target/index.html
 
