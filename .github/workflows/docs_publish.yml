@@ -96,6 +96,13 @@ jobs:
           cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/static_index.html" "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html"
           cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/index.html" "$RUNNER_TEMP/dbt_docs_artifacts/index.html"
 
+      - name: Clean working tree before switching branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git reset --hard
+          git clean -fd          
+
       - name: Switch to docs branch
         shell: bash
         run: |
@@ -110,12 +117,6 @@ jobs:
           cp "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html" ./index.html
           cp "$RUNNER_TEMP/dbt_docs_artifacts/index.html" ./colibri_index.html
           git status --porcelain
-
-      - name: Set Git config
-        shell: bash
-        run: |
-          git config --local user.email "drogaieva@gmail.com"
-          git config --local user.name "KaterynaD"
 
       - name: Commit and push to docs
         shell: bash
