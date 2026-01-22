@@ -1,4 +1,4 @@
-name: Docs Publish (manual)
+name: Docs Publish and Deployment (manual)
 
 on:
   workflow_dispatch:
