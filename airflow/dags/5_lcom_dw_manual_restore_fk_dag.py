@@ -8,7 +8,7 @@ sys.path.insert(0, str(UTILS_DIR))
 from datetime import datetime
 
 from airflow import DAG
-# from airflow.operators.bash import BashOperator
+from airflow.operators.bash import BashOperator
 
 from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
