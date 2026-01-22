@@ -83,7 +83,7 @@ jobs:
           "$GITHUB_WORKSPACE/.venv/bin/dbt" compile --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
           "$GITHUB_WORKSPACE/.venv/bin/dbt" docs generate --static --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
 
-          "$GITHUB_WORKSPACE/.venv/bin/colibri" generate --output-dir "$PROJECT_DIR/target"
+          "$GITHUB_WORKSPACE/.venv/bin/colibri" generate -manifest "$PROJECT_DIR/target/manifest.json" --catalog "$PROJECT_DIR/target/catalog.json" --output-dir "$PROJECT_DIR/target"
 
           test -f "$PROJECT_DIR/target/static_index.html"
           test -f "$PROJECT_DIR/target/index.html"
