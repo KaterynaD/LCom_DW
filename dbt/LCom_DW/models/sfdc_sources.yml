@@ -9,7 +9,7 @@ sources:
       identifier: false
     tables:
 
-      - name: accountttt
+      - name: account
       - name: opportunity
       - name: lcom_organization_c      
       - name: lcom_suite_c
