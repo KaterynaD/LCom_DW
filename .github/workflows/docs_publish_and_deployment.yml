@@ -16,7 +16,7 @@ jobs:
       DBT_PROFILE_NAME: LCom_DW
 
       # Airflow dags
-      DEV_CHECK_DAGS_PY: airflow/dags/dev_check_dags.py
+      AIRFLOW_DAGS_DIR: airflow/dags
 
     steps:
       - name: Checkout master
@@ -48,7 +48,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          DAGS_DIR="$GITHUB_WORKSPACE/$DEV_CHECK_DAGS_PY"
+          DAGS_DIR="$GITHUB_WORKSPACE/$AIRFLOW_DAGS_DIR"
           SCRIPT="$DAGS_DIR/dev_check_dags.py"
 
           if [[ ! -d "$DAGS_DIR" ]]; then
