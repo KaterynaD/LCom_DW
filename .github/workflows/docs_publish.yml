@@ -22,6 +22,7 @@ jobs:
 
       # Project location in repo
       DBT_PROJECT_DIR: dbt/LCom_DW
+      DBT_PROFILE_NAME: LCom_DW
 
     steps:
       - name: Checkout master
@@ -43,7 +44,6 @@ jobs:
 
           python3.12 -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-
           .venv/bin/python -m pip install dbt-core==1.10.3 dbt-redshift dbt-colibri
 
           .venv/bin/dbt --version
@@ -54,12 +54,10 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Fail fast if required secrets are missing
           : "${REDSHIFT_HOST:?Missing secret REDSHIFT_HOST}"
           : "${REDSHIFT_USER:?Missing secret REDSHIFT_USER}"
           : "${REDSHIFT_PASSWORD:?Missing secret REDSHIFT_PASSWORD}"
 
-          # Defaults (if you didn't set the optional secrets)
           REDSHIFT_PORT="${REDSHIFT_PORT:-5439}"
           REDSHIFT_DBNAME="${REDSHIFT_DBNAME:-dw}"
           REDSHIFT_SCHEMA="${REDSHIFT_SCHEMA:-common}"
@@ -67,40 +65,27 @@ jobs:
 
           mkdir -p "$HOME/.dbt"
 
-          # Determine profile name from dbt_project.yml (profile: <name>)
-          PROJECT_PATH="${DBT_PROJECT_DIR}/dbt_project.yml"
-          if [[ ! -f "$PROJECT_PATH" ]]; then
-            echo "ERROR: dbt_project.yml not found at: $PROJECT_PATH"
-            exit 1
-          fi
-
-          PROFILE_NAME="$(grep -E '^\s*profile\s*:' "$PROJECT_PATH" | head -n 1 | awk -F: '{print $2}' | xargs || true)"
-          if [[ -z "${PROFILE_NAME:-}" ]]; then
-            echo "ERROR: Could not detect 'profile:' in $PROJECT_PATH"
-            exit 1
-          fi
-
-          echo "Using dbt profile name: $PROFILE_NAME"
-
           cat > "$HOME/.dbt/profiles.yml" <<EOF
-          ${PROFILE_NAME}:
-            target: Prod
-            outputs:
-              Prod:
-                type: redshift
-                host: ${REDSHIFT_HOST}
-                port: ${REDSHIFT_PORT}
-                user: ${REDSHIFT_USER}
-                password: ${REDSHIFT_PASSWORD}
-                dbname: ${REDSHIFT_DBNAME}
-                schema: ${REDSHIFT_SCHEMA}
-                threads: ${REDSHIFT_THREADS}
-                ra3_node: true
-          EOF
+${DBT_PROFILE_NAME}:
+  target: Prod
+  outputs:
+    Prod:
+      type: redshift
+      host: ${REDSHIFT_HOST}
+      port: ${REDSHIFT_PORT}
+      user: ${REDSHIFT_USER}
+      password: ${REDSHIFT_PASSWORD}
+      dbname: ${REDSHIFT_DBNAME}
+      schema: ${REDSHIFT_SCHEMA}
+      threads: ${REDSHIFT_THREADS}
+      ra3_node: true
+EOF
 
           chmod 600 "$HOME/.dbt/profiles.yml"
-          echo "Wrote $HOME/.dbt/profiles.yml"
 
+          echo "Wrote $HOME/.dbt/profiles.yml (sanitized preview):"
+          sed -E 's/(password:).*/\1 ****/' "$HOME/.dbt/profiles.yml"
+          
       - name: Build artifacts on master (dbt + docs + colibri)
         shell: bash
         run: |
