@@ -45,6 +45,8 @@ jobs:
 
       - name: Run dev_check_dags.py (fail if import errors)
         shell: bash
+        env:
+          AIRFLOW__CORE__DAGS_FOLDER: ${{ github.workspace }}/$AIRFLOW_DAGS_DIR
         run: |
           set -euo pipefail
 
@@ -61,6 +63,7 @@ jobs:
             exit 1
           fi
 
+          echo "AIRFLOW__CORE__DAGS_FOLDER=$AIRFLOW__CORE__DAGS_FOLDER"
           cd "$DAGS_DIR"
           echo "PWD=$(pwd)"
 
