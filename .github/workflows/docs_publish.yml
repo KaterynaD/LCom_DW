@@ -49,12 +49,9 @@ jobs:
           REDSHIFT_SCHEMA: ${{ secrets.REDSHIFT_SCHEMA }}
           REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
         run: |
-          set -euo pipefail
           mkdir -p ~/.dbt
-
           echo "
-          ${DBT_PROFILE_NAME}:
-          target: Prod
+          ${DBT_PROFILE_NAME}:          
             outputs:
               Prod:
                 type: redshift
@@ -66,6 +63,7 @@ jobs:
                 schema: $REDSHIFT_SCHEMA
                 threads: $REDSHIFT_THREADS
                 ra3_node: true
+            target: Prod
           " > ~/.dbt/profiles.yml
 
 
