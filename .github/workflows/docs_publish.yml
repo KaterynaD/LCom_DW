@@ -30,20 +30,24 @@ jobs:
           ref: master
           fetch-depth: 0
 
-      - name: Set up Python 3.10.12
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.10.12
-
-      - name: Install dbt + colibri
+      - name: Verify host Python 3.12 exists
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --upgrade pip
-          python -m pip install dbt-core==1.10.3 dbt-redshift
-          python -m pip install dbt-colibri
-          dbt --version
-          colibri --help >/dev/null 2>&1 || true
+          python3.12 --version
+
+      - name: Create venv + install dbt + colibri
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python3.12 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+
+          .venv/bin/python -m pip install dbt-core==1.10.3 dbt-redshift dbt-colibri
+
+          .venv/bin/dbt --version
+          .venv/bin/colibri --help >/dev/null 2>&1 || true
 
       - name: Create dbt profile from secrets
         shell: bash
@@ -103,12 +107,12 @@ jobs:
           set -euo pipefail
           cd "$DBT_PROJECT_DIR"
 
-          dbt deps --target Prod
-          dbt compile --target Prod
-          dbt docs generate --static --target Prod
+          ../..//../.venv/bin/dbt deps --target Prod
+          ../..//../.venv/bin/dbt compile --target Prod
+          ../..//../.venv/bin/dbt docs generate --static --target Prod
 
           # Colibri output into target/
-          colibri generate --output-dir target
+          ../..//../.venv/bin/colibri generate --output-dir target
 
           # Validate expected files exist
           test -f target/static_index.html
