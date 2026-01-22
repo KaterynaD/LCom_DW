@@ -40,6 +40,14 @@ jobs:
 
       - name: Set up dbt profile (Redshift)
         shell: bash
+        env:
+          REDSHIFT_HOST: ${{ secrets.REDSHIFT_HOST }}
+          REDSHIFT_PORT: ${{ secrets.REDSHIFT_PORT }}
+          REDSHIFT_USER: ${{ secrets.REDSHIFT_USER }}
+          REDSHIFT_PASSWORD: ${{ secrets.REDSHIFT_PASSWORD }}
+          REDSHIFT_DBNAME: ${{ secrets.REDSHIFT_DBNAME }}
+          REDSHIFT_SCHEMA: ${{ secrets.REDSHIFT_SCHEMA }}
+          REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
         run: |
           set -euo pipefail
           mkdir -p ~/.dbt
@@ -60,16 +68,7 @@ jobs:
                 ra3_node: true
           " > ~/.dbt/profiles.yml
 
-          chmod 600 ~/.dbt/profiles.yml
-          sed -E 's/(password:).*/\1 ****/' ~/.dbt/profiles.yml
-          env:
-          REDSHIFT_HOST: ${{ secrets.REDSHIFT_HOST }}
-          REDSHIFT_PORT: ${{ secrets.REDSHIFT_PORT }}
-          REDSHIFT_USER: ${{ secrets.REDSHIFT_USER }}
-          REDSHIFT_PASSWORD: ${{ secrets.REDSHIFT_PASSWORD }}
-          REDSHIFT_DBNAME: ${{ secrets.REDSHIFT_DBNAME }}
-          REDSHIFT_SCHEMA: ${{ secrets.REDSHIFT_SCHEMA }}
-          REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
+
 
       - name: Build artifacts on master (dbt + docs + colibri)
         shell: bash
