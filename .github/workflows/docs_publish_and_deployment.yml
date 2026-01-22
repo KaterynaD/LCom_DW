@@ -15,6 +15,8 @@ jobs:
       DBT_PROJECT_DIR: dbt/LCom_DW
       DBT_PROFILE_NAME: LCom_DW
 
+      # Airflow dags
+      DEV_CHECK_DAGS_PY: airflow/dags/dev_check_dags.py
 
     steps:
       - name: Checkout master
@@ -38,6 +40,33 @@ jobs:
           .venv/bin/python -m pip install dbt-core==1.10.3 dbt-redshift dbt-colibri
           .venv/bin/dbt --version
           .venv/bin/colibri --help >/dev/null 2>&1 || true
+          .venv/bin/python -m pip install "apache-airflow-providers-postgres==5.10.0"
+
+
+      - name: Run dev_check_dags.py (fail if import errors)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SCRIPT_PATH="$GITHUB_WORKSPACE/$DEV_CHECK_DAGS_PY"
+          SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+          SCRIPT_FILE="$(basename "$SCRIPT_PATH")"
+
+          if [[ ! -f "$SCRIPT_PATH" ]]; then
+            echo "ERROR: dev_check_dags.py not found at: $SCRIPT_PATH"
+            exit 1
+          fi
+
+          cd "$SCRIPT_DIR"
+
+          echo "Running: $SCRIPT_PATH"
+          OUTPUT="$("$GITHUB_WORKSPACE/.venv/bin/python" "$SCRIPT_FILE" 2>&1)"
+          echo "$OUTPUT"
+
+          if ! echo "$OUTPUT" | grep -q "No import errors"; then
+            echo "ERROR: dev_check_dags.py did not report 'No import errors'. Failing the job."
+            exit 1
+          fi
 
 
 
