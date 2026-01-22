@@ -48,23 +48,27 @@ jobs:
         run: |
           set -euo pipefail
 
-          SCRIPT_PATH="$GITHUB_WORKSPACE/$DEV_CHECK_DAGS_PY"
-          SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
-          SCRIPT_FILE="$(basename "$SCRIPT_PATH")"
+          DAGS_DIR="$GITHUB_WORKSPACE/$DEV_CHECK_DAGS_PY"
+          SCRIPT="$DAGS_DIR/dev_check_dags.py"
 
-          if [[ ! -f "$SCRIPT_PATH" ]]; then
-            echo "ERROR: dev_check_dags.py not found at: $SCRIPT_PATH"
+          if [[ ! -d "$DAGS_DIR" ]]; then
+            echo "ERROR: dags dir not found: $DAGS_DIR"
             exit 1
           fi
 
-          cd "$SCRIPT_DIR"
+          if [[ ! -f "$SCRIPT" ]]; then
+            echo "ERROR: dev_check_dags.py not found: $SCRIPT"
+            exit 1
+          fi
 
-          echo "Running: $SCRIPT_PATH"
-          OUTPUT="$("$GITHUB_WORKSPACE/.venv/bin/python" "$SCRIPT_FILE" 2>&1)"
+          cd "$DAGS_DIR"
+          echo "PWD=$(pwd)"
+
+          OUTPUT="$("$GITHUB_WORKSPACE/.venv/bin/python" "./dev_check_dags.py" 2>&1)"
           echo "$OUTPUT"
 
           if ! echo "$OUTPUT" | grep -q "No import errors"; then
-            echo "ERROR: dev_check_dags.py did not report 'No import errors'. Failing the job."
+            echo "ERROR: Missing 'No import errors' in output. Failing."
             exit 1
           fi
 
