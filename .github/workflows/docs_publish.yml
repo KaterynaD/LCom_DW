@@ -21,7 +21,7 @@ jobs:
       REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
 
       # Project location in repo
-      DBT_PROJECT_DIR: transformations/dbt/LCom_DW
+      DBT_PROJECT_DIR: dbt/LCom_DW
 
     steps:
       - name: Checkout master
