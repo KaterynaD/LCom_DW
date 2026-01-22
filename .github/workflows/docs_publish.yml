@@ -50,13 +50,13 @@ jobs:
             outputs:
               Prod:
                 type: redshift
-                host: ${REDSHIFT_HOST}
-                port: ${REDSHIFT_PORT}
-                user: ${REDSHIFT_USER}
-                password: ${REDSHIFT_PASSWORD}
-                dbname: ${REDSHIFT_DBNAME}
-                schema: ${REDSHIFT_SCHEMA}
-                threads: ${REDSHIFT_THREADS}
+                host: $REDSHIFT_HOST
+                port: $REDSHIFT_PORT
+                user: $REDSHIFT_USER
+                password: $REDSHIFT_PASSWORD
+                dbname: $REDSHIFT_DBNAME
+                schema: $REDSHIFT_SCHEMA
+                threads: $REDSHIFT_THREADS
                 ra3_node: true
           " > ~/.dbt/profiles.yml
 
