@@ -209,7 +209,16 @@ if ! echo "$DAG_CHECK_OUTPUT" | grep -q "No import errors"; then
 fi
 
 log "All checks passed."
-ROLLBACK_NEEDED="NO"
+
+
+### ----------------------------
+### Publish dbt docs (merged logs)
+### ----------------------------
+log "Publishing dbt docs to docs branch..."
+/home/kdrogaieva/deploy/bin/publish_dbt_docs.sh
+log "Docs published."
+
+
 
 ### ----------------------------
 ### Cleanup old releases (keep only current + previous)
@@ -236,4 +245,5 @@ shopt -u nullglob
 
 trap - ERR INT TERM
 log "DEPLOY SUCCESS — see log: $LOG_FILE"
+ROLLBACK_NEEDED="NO"
 exit 0
