@@ -56,9 +56,6 @@ models:
         - type: not_null
       data_tests:
         - not_null
-        - relationships:
-            to: ref('dim_contact')
-            field: contact_id
 
     - name: lead_status
       data_type: varchar(10)
@@ -99,6 +96,14 @@ models:
         - type: not_null
       data_tests:
         - not_null
+
+    - name: sfdc_account_id
+      data_type: varchar(300)
+      description: "{{ doc('column_sfdc_account_id') }}"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null        
 
     - name: loaddate
       data_type: timestamp
