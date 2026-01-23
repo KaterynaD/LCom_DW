@@ -29,17 +29,15 @@
 ) }}
 
 select 
-isnull(r.id,'{{ var("default_ID") }}') as contact_id, 
-isnull(a.account_id,'{{ var("default_ID") }}') as account_id,
-isnull(r.lead_status_c,'{{ var("default_varchar") }}') as lead_status, 
-case when isnull(r.key_contact_c,{{ var("default_boolean") }}) then 1 else 0 end as key_contact,
-isnull(r.owner_id,'{{ var("default_ID") }}') as owner_id, 
-isnull(r.mailing_state_code,'{{ var("default_varchar") }}') as mailing_state_code,
-isnull(a.sfdc_account_id,'{{ var("default_ID") }}') as sfdc_account_id,
-isnull(r.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date
-from {{ source('fivetran_salesforce_quickstart', 'contact') }} as r
-left outer join {{ref('dim_account') }} as a
-        on r.account_id = a.sfdc_account_id
+contact_id, 
+account_id,
+lead_status,  
+case when key_contact then 1 else 0 end as key_contact,
+owner_id, 
+mailing_state_code,
+sfdc_account_id,
+last_modified_date
+from {{ ref("dim_contact") }}
 {% if is_incremental() %}
- where coalesce(r.last_modified_date AT TIME ZONE 'PST',r.created_date AT TIME ZONE 'PST','1900-01-01') >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }} t)
+ where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }} t)
 {% endif %}
