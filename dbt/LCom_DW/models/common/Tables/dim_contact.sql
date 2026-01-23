@@ -26,7 +26,7 @@ with rawdata as (select
 (
     select
 isnull(r.id,'{{ var("default_ID") }}') as contact_id, 
-isnull(r.name,'{{ var("default_varchar") }}') as nacd ../me,    
+isnull(r.name,'{{ var("default_varchar") }}') as name,  
 isnull(r.first_name,'{{ var("default_varchar") }}') as first_name,
 isnull(r.last_name,'{{ var("default_varchar") }}') as last_name, 
 isnull(a.account_id,'{{ var("default_ID") }}') as account_id,
