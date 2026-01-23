@@ -113,6 +113,35 @@ from common.dim_employee
 
 union all
 
+select
+	'dw' as database_name
+	,'common' as schema_name
+	,'dim_contact' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from common.dim_contact
+
+union all
+
+select
+	'dw' as database_name
+	,'common' as schema_name
+	,'dim_employee_history' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from common.dim_employee_history
+
+union all
+
+select
+	'dw' as database_name
+	,'common' as schema_name
+	,'dim_contact_history' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from common.dim_contact_history
+union all
+
 
 --content_delivery_usage
 
