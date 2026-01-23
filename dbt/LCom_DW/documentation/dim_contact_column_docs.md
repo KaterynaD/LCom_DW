@@ -67,3 +67,20 @@ State Code
 {% docs column_other_state %}
 State
 {% enddocs %}
+
+
+{% docs column_mql_date %}
+Manually populated MQL lead state date
+{% enddocs %}
+{% docs column_qualifying_date %}
+Manually populated Qualifying lead state date
+{% enddocs %}
+{% docs column_returned_date %}
+Manually populated Returned lead state date
+{% enddocs %}
+{% docs column_rejected_date %}
+Manually populated Rejected lead state date
+{% enddocs %}
+{% docs column_sql_date %}
+Manually populated SQL lead state date
+{% enddocs %}

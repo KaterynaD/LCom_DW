@@ -7,7 +7,7 @@ models:
       enforced: true
     tags:
     - dim
-    - common
+    - commons
   columns:
   - name: contact_id
     data_type: varchar(300)
@@ -138,6 +138,13 @@ models:
     description: "{{ doc('column_contact_title') }}"
     constraints:
     - type: not_null
+
+  - name: source_campaign
+    data_type: varchar(765)
+    description: "{{ doc('column_source_campaign') }}"
+    constraints:
+    - type: not_null
+
   - name: qualifying_date_hubspot
     data_type: date
     description: "{{ doc('column_qualifying_date_hubspot') }}"
@@ -153,16 +160,40 @@ models:
     description: "{{ doc('column_returned_date_hubspot') }}"
     constraints:
     - type: not_null
-  - name: source_campaign
-    data_type: varchar(765)
-    description: "{{ doc('column_source_campaign') }}"
-    constraints:
-    - type: not_null
   - name: sql_date_hubspot
     data_type: date
     description: "{{ doc('column_sql_date_hubspot') }}"
     constraints:
     - type: not_null
+  
+
+  - name: mql_date
+    data_type: date
+    description: "{{ doc('column_mql_date') }}"
+    constraints:
+    - type: not_null  
+  - name: qualifying_date
+    data_type: date
+    description: "{{ doc('column_qualifying_date') }}"
+    constraints:
+    - type: not_null  
+  - name: returned_date
+    data_type: date
+    description: "{{ doc('column_returned_date') }}"
+    constraints:
+    - type: not_null  
+  - name: rejected_date
+    data_type: date
+    description: "{{ doc('column_rejected_date') }}"
+    constraints:
+    - type: not_null  
+  - name: sql_date
+    data_type: date
+    description: "{{ doc('column_sql_date') }}"
+    constraints:
+    - type: not_null
+
+
   - name: loaddate
     data_type: timestamp
     description: "{{ doc('column_loaddate') }}"
