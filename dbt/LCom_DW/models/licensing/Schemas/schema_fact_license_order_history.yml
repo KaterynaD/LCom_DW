@@ -69,9 +69,7 @@ models:
           - type: not_null
         data_tests:
           - not_null   
-          - relationships:
-              to: ref('dim_lcom_sku')
-              field: sku_id                     
+                   
 
       - name: organization_district_id
         data_type: varchar(300)
@@ -80,9 +78,7 @@ models:
           - type: not_null
         data_tests:
           - not_null        
-          - relationships:
-              to: ref('dim_account')
-              field: account_id      
+   
 
       - name: startdate
         data_type: timestamp

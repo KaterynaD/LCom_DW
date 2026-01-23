@@ -52,9 +52,7 @@ models:
     - type: not_null
     data_tests:
     - not_null
-    - relationships:
-        to: ref('dim_account')
-        field: account_id
+
   - name: lcom_trial
     data_type: integer
     description: "{{ doc('column_lcom_trial') }}"

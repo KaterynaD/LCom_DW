@@ -76,6 +76,10 @@ models:
         description: Contact ID
         constraints:
           - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_contact')
+              field: contact_id          
     
 
       - name: created_date

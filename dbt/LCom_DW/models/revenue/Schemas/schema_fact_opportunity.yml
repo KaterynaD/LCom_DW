@@ -29,9 +29,9 @@ models:
     constraints:
     - type: not_null
     data_tests:
-    - relationships:
-        to: ref('dim_account')
-        field: account_id
+      - relationships:
+          to: ref('dim_account')
+          field: account_id
   - name: sfdc_account_id
     data_type: varchar(300)
     description: "{{ doc('column_sfdc_account_id') }}"
@@ -112,6 +112,10 @@ models:
     description: "{{ doc('column_contact_id') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - relationships:
+          to: ref('dim_contact')
+          field: contact_id
 
   - name: churn_date
     data_type: date

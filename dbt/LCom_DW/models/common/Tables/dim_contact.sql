@@ -2,7 +2,8 @@
     config(
         materialized='table',        
         sort='contact_id', 
-        dist='account_id'                                                 
+        dist='account_id'        ,
+        post_hook=['{{ update_DIM_CONTACT_HISTORY_changed_UK() }}' ]                                         
          )
 }}
 with rawdata as (select
@@ -72,8 +73,8 @@ select
 '{{ var("default_varchar") }}' as name,    
 '{{ var("default_varchar") }}' as first_name,
 '{{ var("default_varchar") }}' as last_name, 
-'{{ var("default_varchar") }}' as account_id,
-'{{ var("default_varchar") }}' as sfdc_account_id,
+'{{ var("default_ID") }}' as account_id,
+'{{ var("default_ID") }}' as sfdc_account_id,
 '{{ var("default_varchar") }}' as sfdc_account_name, 
 '{{ var("default_varchar") }}' as lcom_organization_id,
 '{{ var("default_varchar") }}' as lcom_organization_name,
@@ -88,7 +89,7 @@ select
 '{{ var("default_varchar") }}' as mailing_state_code, 
 '{{ var("default_varchar") }}' as mql_type, 
 '{{ var("default_varchar") }}' as other_state, 
-'{{ var("default_varchar") }}' as owner_id, 
+'{{ var("default_ID") }}' as owner_id, 
 '{{ var("default_varchar") }}' as owner_name,
 '{{ var("default_varchar") }}' as owner_user_role,
 '{{ var("default_varchar") }}' as phone, 

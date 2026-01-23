@@ -111,7 +111,7 @@ select
     isnull(rt.name, '{{ var("default_varchar") }}') as opp_record_type,
     isnull(o.number_c, '{{ var("default_varchar") }}') as opportunity_number,
     isnull(o.opportunity_score_id, '{{ var("default_varchar") }}') as opportunity_score_id,
-    isnull(o.owner_id, '{{ var("default_varchar") }}') as owner_id,
+    isnull(o.owner_id, '{{ var("default_ID") }}') as owner_id,
     isnull(o.paid_date_c, '{{ var("default_date") }}') as paid_date,
     isnull(o.payment_terms_c, '{{ var("default_varchar") }}') as payment_terms,
     isnull(o.po_amount_c, {{ var("default_numeric") }}) as po_amount,

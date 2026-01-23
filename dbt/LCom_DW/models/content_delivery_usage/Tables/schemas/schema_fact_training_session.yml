@@ -33,9 +33,9 @@ models:
         constraints:
         - type: not_null
         data_tests:
-        - relationships:
-            to: ref('dim_account')
-            field: account_id
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
 
       - name: sfdc_account_id
         data_type: VARCHAR(300)
@@ -51,9 +51,9 @@ models:
         constraints:
           - type: not_null
         data_tests:
-        - relationships:
-            to: ref('dim_employee')
-            field: employee_id
+          - relationships:
+              to: ref('dim_employee')
+              field: employee_id
 
       - name: pds_group
         data_type: VARCHAR(33)
