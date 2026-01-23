@@ -1,0 +1,27 @@
+name: Deploy to EC2 AWSPRDDWH001
+
+on:
+  workflow_dispatch:
+
+env:
+  DEPLOY_SCRIPT: /home/kdrogaieva/deploy/bin/deploy_release_from_actions.sh
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Show deployment context
+        shell: bash
+        run: |
+          echo "Deploy script : $DEPLOY_SCRIPT"
+          echo "Branch        : $GITHUB_REF_NAME"
+          echo "SHA           : $GITHUB_SHA"
+
+      - name: Deploy
+        shell: bash
+        run: |
+          "$DEPLOY_SCRIPT" \
+            "$GITHUB_SHA" \
+            "$GITHUB_REF_NAME"
+
