@@ -2,7 +2,8 @@ name: Deploy to EC2 AWSPRDDWH001
 
 on:
   workflow_dispatch:
-
+  schedule:
+    - cron: "30 0 * * *"   # 5:30pm PDT (UTC-7) daily
 env:
   DEPLOY_SCRIPT: /home/kdrogaieva/deploy/bin/deploy_release_from_actions.sh
 
@@ -19,7 +20,7 @@ jobs:
           echo "SHA           : $GITHUB_SHA"
 
       - name: Deploy
-        shell: bash
+        shell: bashs
         run: |
           "$DEPLOY_SCRIPT" \
             "$GITHUB_SHA" \
