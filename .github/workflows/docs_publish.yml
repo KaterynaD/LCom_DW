@@ -1,134 +1,19 @@
-name: Docs Publish (manual)
+name: Publish Docs
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy to EC2 AWSPRDDWH001"]
+    types: [completed]
 
-permissions:
-  contents: write
+env:
+  PUBLISH_SCRIPT: /home/kdrogaieva/deploy/bin/publish_dbt_docs.sh
 
 jobs:
-  build-and-publish:
+  publish_docs:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted
-
-    env:
-      # Project location in repo
-      DBT_PROJECT_DIR: dbt/LCom_DW
-      DBT_PROFILE_NAME: LCom_DW
-
-
     steps:
-      - name: Checkout master
-        uses: actions/checkout@v4
-        with:
-          ref: master
-          fetch-depth: 0
-
-      - name: Verify host Python 3.12 exists
+      - name: Publish docs
         shell: bash
         run: |
-          set -euo pipefail
-          python3.12 --version
-
-      - name: Create venv + install dbt + colibri + apache-airflow-providers-postgres
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3.12 -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install dbt-core==1.10.3 dbt-redshift dbt-colibri
-          .venv/bin/dbt --version
-          .venv/bin/colibri --help >/dev/null 2>&1 || true
-
-
-
-      - name: Set up dbt profile (Redshift)
-        shell: bash
-        env:
-          REDSHIFT_HOST: ${{ secrets.REDSHIFT_HOST }}
-          REDSHIFT_PORT: ${{ secrets.REDSHIFT_PORT }}
-          REDSHIFT_USER: ${{ secrets.REDSHIFT_USER }}
-          REDSHIFT_PASSWORD: ${{ secrets.REDSHIFT_PASSWORD }}
-          REDSHIFT_DBNAME: ${{ secrets.REDSHIFT_DBNAME }}
-          REDSHIFT_SCHEMA: ${{ secrets.REDSHIFT_SCHEMA }}
-          REDSHIFT_THREADS: ${{ secrets.REDSHIFT_THREADS }}
-        run: |
-          mkdir -p ~/.dbt
-          echo "
-          ${DBT_PROFILE_NAME}:          
-            outputs:
-              Prod:
-                type: redshift
-                host: $REDSHIFT_HOST
-                port: $REDSHIFT_PORT
-                user: $REDSHIFT_USER
-                password: $REDSHIFT_PASSWORD
-                dbname: $REDSHIFT_DBNAME
-                schema: $REDSHIFT_SCHEMA
-                threads: $REDSHIFT_THREADS
-                ra3_node: true
-            target: Prod
-          " > ~/.dbt/profiles.yml
-
-
-
-      - name: Build artifacts on master (dbt + docs + colibri)
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          PROJECT_DIR="$GITHUB_WORKSPACE/$DBT_PROJECT_DIR"
-          PROFILES_DIR="$HOME/.dbt"
-
-          ls -la "$PROJECT_DIR"
-          test -f "$PROJECT_DIR/dbt_project.yml"
-
-          "$GITHUB_WORKSPACE/.venv/bin/dbt" deps --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
-          "$GITHUB_WORKSPACE/.venv/bin/dbt" compile --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
-          "$GITHUB_WORKSPACE/.venv/bin/dbt" docs generate --static --target Prod --project-dir "$PROJECT_DIR" --profiles-dir "$PROFILES_DIR"
-
-          "$GITHUB_WORKSPACE/.venv/bin/colibri" generate --manifest "$PROJECT_DIR/target/manifest.json" --catalog "$PROJECT_DIR/target/catalog.json" --output-dir "$PROJECT_DIR/target"
-
-          test -f "$PROJECT_DIR/target/static_index.html"
-          test -f "$PROJECT_DIR/target/index.html"
-
-      - name: Stage artifacts for docs branch
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/dbt_docs_artifacts"
-          cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/static_index.html" "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html"
-          cp "$GITHUB_WORKSPACE/$DBT_PROJECT_DIR/target/index.html" "$RUNNER_TEMP/dbt_docs_artifacts/index.html"
-
-      - name: Clean working tree before switching branch
-        shell: bash
-        run: |
-          set -euo pipefail
-          git reset --hard
-          git clean -fd          
-
-      - name: Switch to docs branch
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch origin docs:docs
-          git checkout docs
-
-      - name: Copy artifacts into docs branch
-        shell: bash
-        run: |
-          set -euo pipefail
-          cp "$RUNNER_TEMP/dbt_docs_artifacts/static_index.html" ./index.html
-          cp "$RUNNER_TEMP/dbt_docs_artifacts/index.html" ./colibri_index.html
-          git status --porcelain
-
-      - name: Commit and push to docs
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [[ -z "$(git status --porcelain)" ]]; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git add index.html colibri_index.html
-          git commit -m "Publish dbt docs + colibri for $GITHUB_SHA"
-          git push origin docs
+          "$PUBLISH_SCRIPT"
