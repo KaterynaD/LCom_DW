@@ -7,7 +7,7 @@ models:
       enforced: true
     tags:
     - dim
-    - commons
+    - common
   columns:
   - name: contact_id
     data_type: varchar(300)
