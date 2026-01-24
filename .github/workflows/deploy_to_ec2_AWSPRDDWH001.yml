@@ -20,7 +20,7 @@ jobs:
           echo "SHA           : $GITHUB_SHA"
 
       - name: Deploy
-        shell: bashs
+        shell: bash
         run: |
           "$DEPLOY_SCRIPT" \
             "$GITHUB_SHA" \
