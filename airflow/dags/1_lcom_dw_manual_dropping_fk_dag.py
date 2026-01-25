@@ -12,8 +12,12 @@ from airflow.operators.bash import BashOperator
 from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
-    create_init_branch,
+    create_set_load_date_task,
     create_notify_summary_task,
+)
+
+from dbt_run_utils import (
+    make_run_drop_all_fk_task
 )
 
 default_args = {
@@ -33,19 +37,13 @@ with DAG(
     tags=["dbt", "lcom_dw", "fk", "maintenance"],
 ) as dag:
 
-    # Shared "init" branch:
-    # decide_init -> [refresh_git_repo, skip_dbt_init] -> init_done
-    init_done = create_init_branch(dag)
+    # --------------------------------------------------------------------
+    # Load date
+    # --------------------------------------------------------------------
+    set_load_date_task = create_set_load_date_task(dag)
 
     # DAG-specific core task 
-    core_task = BashOperator(
-        task_id="run_dbt_dropping_all_fk",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run-operation Dropping_all_FK"
-        ),
-        on_failure_callback=notify_task_failure,
-    )
+    core_task = make_run_drop_all_fk_task(dag)
 
     # Shared summary email at the end
     notify_summary = create_notify_summary_task(
@@ -54,8 +52,4 @@ with DAG(
     )
 
     # Final wiring
-    init_done >> core_task >> notify_summary
-
-
-
-
+    set_load_date_task >> core_task >> notify_summary
