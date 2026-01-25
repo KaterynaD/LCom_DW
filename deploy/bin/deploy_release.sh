@@ -199,6 +199,7 @@ log "Running dev_check_dags.py and validating output..."
 DAG_CHECK_OUTPUT="$(docker compose exec -T "$SERVICE_NAME" bash -c "
 set -euo pipefail
 cd \"\$AIRFLOW__CORE__DAGS_FOLDER\"
+cd \"../utils/\"
 python dev_check_dags.py
 " || true)"
 
@@ -207,6 +208,15 @@ echo "$DAG_CHECK_OUTPUT"
 if ! echo "$DAG_CHECK_OUTPUT" | grep -q "No import errors"; then
   die "dev_check_dags.py did not report 'No import errors' -> FAIL"
 fi
+
+
+docker compose exec -T "$SERVICE_NAME" bash -c "
+set -euo pipefail
+cd \"\$AIRFLOW__CORE__DAGS_FOLDER\"
+cd \"../utils/\"
+python set_airflow_variables.py
+"
+
 
 log "All checks passed."
 
