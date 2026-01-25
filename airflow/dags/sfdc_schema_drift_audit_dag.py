@@ -42,7 +42,6 @@ from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     ALERT_EMAIL,
     notify_task_failure,
-    create_init_branch,
     create_notify_summary_task,
     create_set_load_date_task,
     create_create_connection_task,
@@ -257,9 +256,7 @@ with DAG(
     tags=["dbt", "sfdc", "profiles", "schema_drift", "audit", "maintenance"],
 ) as dag:
 
-    # Shared "init" branch:
-    # decide_init -> [refresh_git_repo, skip_dbt_init] -> init_done
-    init_done = create_init_branch(dag)
+
 
     # 2. Set LoadDate (XCom)
     set_load_date_task = create_set_load_date_task(dag)
@@ -411,7 +408,7 @@ with DAG(
     )
 
     # Final wiring
-    init_done >> set_load_date_task >> create_connection >> manage_base_profile_task
+    set_load_date_task >> create_connection >> manage_base_profile_task
     
     # CHANGE Final wiring (replace the last line with this)
     manage_base_profile_task >> profiles_1 >> profiles_1_done >> profiles_2 >> profiles_2_done >> profiles_3 >> profiles_3_done >> require_one_success >> branch_column_lineage
