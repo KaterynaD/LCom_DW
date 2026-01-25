@@ -1,9 +1,11 @@
 name: Deploy to EC2 AWSPRDDWH001
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
-  schedule:
-    - cron: "*/5 * * * *"
+    
 env:
   DEPLOY_SCRIPT: /home/kdrogaieva/deploy/bin/deploy_release_from_actions.sh
 
