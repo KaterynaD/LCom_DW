@@ -3,7 +3,7 @@ name: Deploy to EC2 AWSPRDDWH001
 on:
   workflow_dispatch:
   schedule:
-    - cron: "1 1 * * *"  # 5:00 PM PST / 6:00 PM PDT
+    - cron: "0 1 * * *"
 env:
   DEPLOY_SCRIPT: /home/kdrogaieva/deploy/bin/deploy_release_from_actions.sh
 
