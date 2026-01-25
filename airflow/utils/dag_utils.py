@@ -11,6 +11,7 @@ from airflow.models import Connection
 from airflow import settings
 from datetime import datetime
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
+from pytz import timezone
 
 # ------------------------------------------------------------------------
 # Shared config
@@ -256,9 +257,9 @@ def create_notify_summary_task(dag, run_name: str, task_id: str = "notify_summar
 # Set Load Date via XCom
 # ------------------------------------------------------------------------
 def set_load_date(ti, **kwargs):
-    # No microseconds for nicer string; ISO is safe to pass into dbt vars
-    print(DBT_LCOM_DW_PROJECT_DIR)
-    load_date = datetime.today().replace(microsecond=0).isoformat()
+    # Get current time in PST timezone, no microseconds for nicer string
+    pst = timezone('America/Los_Angeles')
+    load_date = datetime.now(pst).replace(microsecond=0).isoformat()
     ti.xcom_push(key="LoadDate", value=load_date)
 
 def create_set_load_date_task(dag, trigger_rule=None):
