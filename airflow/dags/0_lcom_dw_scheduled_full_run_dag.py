@@ -59,8 +59,7 @@ def make_toggle_task_group(
     dag: DAG,
     *,
     group_id: str,
-    task_id: str,
-    var_name: str,          
+    var_name: str,
     make_task_fn,
     make_task_kwargs: dict | None = None,
 ) -> tuple[TaskGroup, EmptyOperator]:
@@ -75,19 +74,19 @@ def make_toggle_task_group(
     make_task_kwargs = make_task_kwargs or {}
 
     with TaskGroup(group_id=group_id, dag=dag) as tg:
+        # Create the real task FIRST so we know its actual task_id
+        real_task = make_task_fn(dag, **make_task_kwargs)
+
+        run_branch_task_id = f"{group_id}.{real_task.task_id}"
+        skip_branch_task_id = f"{group_id}.skipped"
 
         def _choose_branch(**_):
             enabled = _is_yes(Variable.get(var_name, default_var="Yes"))
-            return f"{group_id}.{task_id}" if enabled else f"{group_id}.skipped"
+            return run_branch_task_id if enabled else skip_branch_task_id
 
         check_enabled = BranchPythonOperator(
             task_id="check_enabled",
             python_callable=_choose_branch,
-        )
-
-        real_task = make_task_fn(
-            dag,
-            **make_task_kwargs,
         )
 
         skipped = EmptyOperator(task_id="skipped")
@@ -100,6 +99,7 @@ def make_toggle_task_group(
         [real_task, skipped] >> join
 
     return tg, join
+
 
 
 # ------------------------------------------------------------------------
@@ -127,15 +127,15 @@ with DAG(
     tg_drop_fk, drop_fk_join = make_toggle_task_group(
         dag,
         group_id="tg_drop_all_fk",
-        task_id="drop_all_fk",
         var_name="RUN__DROP_ALL_FK",
         make_task_fn=make_run_drop_all_fk_task
     )
 
+
+
     tg_common, common_join = make_toggle_task_group(
         dag,
         group_id="tg_common",
-        task_id="run_common",
         var_name="RUN__COMMON",
         make_task_fn=make_run_lcom_dw_common_task,
         make_task_kwargs={
@@ -146,7 +146,6 @@ with DAG(
     tg_licensing, licensing_join = make_toggle_task_group(
         dag,
         group_id="tg_licensing",
-        task_id="run_licensing",
         var_name="RUN__LICENSING",
         make_task_fn=make_run_lcom_dw_licensing_task,
         make_task_kwargs={
@@ -158,7 +157,6 @@ with DAG(
     tg_training, training_join = make_toggle_task_group(
         dag,
         group_id="tg_training_sessions",
-        task_id="run_training_sessions",
         var_name="RUN__TRAINING_SESSIONS",
         make_task_fn=make_run_lcom_dw_training_sessions_task,
         make_task_kwargs={
@@ -170,7 +168,6 @@ with DAG(
     tg_support, support_join = make_toggle_task_group(
         dag,
         group_id="tg_support",
-        task_id="run_support",
         var_name="RUN__SUPPORT",
         make_task_fn=make_run_lcom_dw_support_task,
         make_task_kwargs={
@@ -182,7 +179,6 @@ with DAG(
     tg_revenue, revenue_join = make_toggle_task_group(
         dag,
         group_id="tg_revenue",
-        task_id="run_revenue",
         var_name="RUN__REVENUE",
         make_task_fn=make_run_lcom_dw_revenue_task,
         make_task_kwargs={
@@ -194,7 +190,6 @@ with DAG(
     tg_cdu, cdu_join = make_toggle_task_group(
         dag,
         group_id="tg_cdu",
-        task_id="run_cdu",
         var_name="RUN__CDU",
         make_task_fn=make_run_lcom_dw_cdu_task,
         make_task_kwargs={
@@ -226,7 +221,6 @@ with DAG(
     tg_snapshots, snapshots_join = make_toggle_task_group(
     dag,
     group_id="tg_snapshots",
-    task_id="run_snapshots",
     var_name="RUN__SNAPSHOTS",
     make_task_fn=make_run_lcom_dw_snapshots_task,
     make_task_kwargs={
@@ -237,7 +231,6 @@ with DAG(
     tg_recreate_fk, recreate_fk_join = make_toggle_task_group(
         dag,
         group_id="tg_recreate_all_fk",
-        task_id="recreate_all_fk",
         var_name="RUN__RECREATE_ALL_FK",
         make_task_fn=make_run_recreating_all_fk_task
     )
@@ -245,7 +238,6 @@ with DAG(
     tg_tests, tests_join = make_toggle_task_group(
         dag,
         group_id="tg_tests",
-        task_id="run_tests",
         var_name="RUN__TESTS",
         make_task_fn=make_run_tests_task
     )
