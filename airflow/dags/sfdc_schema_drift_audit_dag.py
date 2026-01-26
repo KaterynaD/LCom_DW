@@ -67,19 +67,16 @@ SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT = Variable.get("SCHEDULE_SFDC_SCHEMA_DRIFT_AUDI
 
 RUN_COLUMN_LINEAGE_FLAG = Variable.get("RUN_COLUMN_LINEAGE_FLAG", default_var="YES").upper()
 
+USE_EXISTING_BASE_PROFILE = Variable.get("USE_EXISTING_BASE_PROFILE", default_var="YES").upper()
+
 # ------------------------------------------------------------------------
 # Manage base profile based on Airflow variable
 # ------------------------------------------------------------------------
 def manage_base_profile():
     """Check USE_EXISTING_BASE_PROFILE variable and manage base profile accordingly."""
-    try:
-        use_existing = Variable.get("USE_EXISTING_BASE_PROFILE")
-    except:
-        # Variable doesn't exist, create it with default value
-        Variable.set("USE_EXISTING_BASE_PROFILE", "NO")
-        use_existing = "NO"
 
-    if use_existing.upper() == "NO":
+
+    if USE_EXISTING_BASE_PROFILE == "NO":
         # Delete existing base profile and rename current to base
         hook = PostgresHook(postgres_conn_id='redshift_sfdc')
         hook.run(DELETE_BASE_PROFILE_SQL)
