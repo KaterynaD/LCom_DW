@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     
 env:
-  DEPLOY_SCRIPT: /home/kdrogaieva/deploy/bin/deploy_release_from_actions.sh
+  DEPLOY_SCRIPT: /home/kdrogaieva/Prod/deploy/bin/deploy_release_from_actions.sh
 
 jobs:
   deploy:

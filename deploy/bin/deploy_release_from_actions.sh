@@ -24,18 +24,18 @@ fi
 ### ----------------------------
 ### Config
 ### ----------------------------
-REPO_MIRROR_DIR="${REPO_MIRROR_DIR:-/home/kdrogaieva/repo-mirror}"
-RELEASES_DIR="${RELEASES_DIR:-/home/kdrogaieva/releases}"
+REPO_MIRROR_DIR="${REPO_MIRROR_DIR:-/home/kdrogaieva/Prod/repo-mirror}"
+RELEASES_DIR="${RELEASES_DIR:-/home/kdrogaieva/Prod/releases}"
 CURRENT_LINK="${RELEASES_DIR}/current"
 
 # Per your note:
-COMPOSE_DIR="${COMPOSE_DIR:-/home/kdrogaieva/airflow_runtime}"
+COMPOSE_DIR="${COMPOSE_DIR:-/home/kdrogaieva/Prod/airflow_runtime}"
 SERVICE_NAME="${SERVICE_NAME:-airflow-webserver}"
 
 DBT_TARGET_NAME="${DBT_TARGET_NAME:-Prod}"
 
-LOG_DIR="${LOG_DIR:-/home/kdrogaieva/deploy/logs}"
-LOCK_DIR="${LOCK_DIR:-/home/kdrogaieva/deploy/locks}"
+LOG_DIR="${LOG_DIR:-/home/kdrogaieva/Prod/deploy/logs}"
+LOCK_DIR="${LOCK_DIR:-/home/kdrogaieva/Prod/deploy/locks}"
 
 # Remote used by repo-mirror
 REMOTE_NAME="${REMOTE_NAME:-origin}"

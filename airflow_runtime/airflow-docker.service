@@ -5,7 +5,7 @@ After=docker.service
 
 [Service]
 Type=oneshot
-WorkingDirectory=/home/kdrogaieva/airflow_runtime
+WorkingDirectory=/home/kdrogaieva/Prod/airflow_runtime
 
 ExecStart=/usr/bin/docker compose start airflow-webserver airflow-scheduler
 ExecStop=/usr/bin/docker compose stop airflow-webserver airflow-scheduler postgres

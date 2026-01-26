@@ -12,7 +12,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ../airflow_pgdata/pgdata:/var/lib/postgresql/data
 
   airflow-webserver:
     build: .
@@ -23,7 +23,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - /home/kdrogaieva/airflow_env/.env
+      - /home/kdrogaieva/Prod/airflow_env/.env
     environment:
       HOME: /home/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -52,14 +52,13 @@ services:
 
     volumes:
       # Airflow runtime stuff
-      - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
-      - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
-      - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
-      - /home/kdrogaieva/releases:/opt/airflow/releases
-      - /home/kdrogaieva/.ssh:/root/.ssh:ro
-      - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
-      - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target
-      - /home/kdrogaieva/dbt_logs:/home/airflow/dbt_logs 
+      - /home/kdrogaieva/Prod/airflow_logs:/opt/airflow/logs
+      - /home/kdrogaieva/Prod/airflow_plugins:/opt/airflow/plugins
+      - /home/kdrogaieva/Prod/dbt_profile:/home/airflow/.dbt
+      - /home/kdrogaieva/Prod/releases:/opt/airflow/releases
+      - /home/kdrogaieva/Prod/airflow_env:/opt/airflow_secrets:ro
+      - /home/kdrogaieva/Prod/dbt_target:/home/airflow/dbt_target
+      - /home/kdrogaieva/Prod/dbt_logs:/home/airflow/dbt_logs 
 
     
     ports:
@@ -73,38 +72,7 @@ services:
       timeout: 10s
       retries: 5
 
-    command:
-    - bash
-    - -c
-    - |
-        echo ">>> Bootstrapping Airflow Variable ALERT_EMAIL..."
-
-        # Create Variable only if missing
-        # ----------------------------------------
-        # ALERT_EMAIL
-        # ----------------------------------------
-         if ! airflow variables get ALERT_EMAIL >/dev/null 2>&1; then
-          airflow variables set ALERT_EMAIL "kdrogaieva@learning.com"
-          echo "Variable ALERT_EMAIL created: kdrogaieva@learning.com"
-        else
-          echo "Variable ALERT_EMAIL already exists — skipping."
-        fi
-
-        # ----------------------------------------
-        # INIT_DBT_PROJECT (YES by default)
-        # This will be changed to NO by CI/CD pipeline later.
-        # ----------------------------------------
-        if ! airflow variables get INIT_DBT_PROJECT >/dev/null 2>&1; then
-          airflow variables set INIT_DBT_PROJECT "NO"
-          echo "Variable INIT_DBT_PROJECT created: NO"
-        else
-          echo "Variable INIT_DBT_PROJECT already exists — skipping."
-        fi
-
-
-
-        echo ">>> Starting Airflow Webserver..."
-        exec airflow webserver
+    command: webserver
 
   airflow-scheduler:
     image: airflow-dbt:2.10.2-py3.12
@@ -114,7 +82,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - /home/kdrogaieva/airflow_env/.env
+      - /home/kdrogaieva/Prod/airflow_env/.env
     environment:
       HOME: /home/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -139,14 +107,13 @@ services:
       DBT_LOG_PATH: /home/airflow/dbt_logs  
 
     volumes:
-      - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
-      - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
-      - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
-      - /home/kdrogaieva/releases:/opt/airflow/releases
-      - /home/kdrogaieva/.ssh:/root/.ssh:ro
-      - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
-      - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target
-      - /home/kdrogaieva/dbt_logs:/home/airflow/dbt_logs      
+      - /home/kdrogaieva/Prod/airflow_logs:/opt/airflow/logs
+      - /home/kdrogaieva/Prod/airflow_plugins:/opt/airflow/plugins
+      - /home/kdrogaieva/Prod/dbt_profile:/home/airflow/.dbt
+      - /home/kdrogaieva/Prod/releases:/opt/airflow/releases
+      - /home/kdrogaieva/Prod/airflow_env:/opt/airflow_secrets:ro
+      - /home/kdrogaieva/Prod/dbt_target:/home/airflow/dbt_target
+      - /home/kdrogaieva/Prod/dbt_logs:/home/airflow/dbt_logs      
 
     command: scheduler
 
@@ -163,7 +130,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - /home/kdrogaieva/airflow_env/.env
+      - /home/kdrogaieva/Prod/airflow_env/.env
     environment:
       HOME: /home/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -182,14 +149,13 @@ services:
 
 
     volumes:
-      - /home/kdrogaieva/airflow_logs:/opt/airflow/logs
-      - /home/kdrogaieva/airflow_plugins:/opt/airflow/plugins
-      - /home/kdrogaieva/dbt_profile:/home/airflow/.dbt
-      - /home/kdrogaieva/releases:/opt/airflow/releases
-      - /home/kdrogaieva/.ssh:/root/.ssh:ro
-      - /home/kdrogaieva/airflow_env:/opt/airflow_secrets:ro
-      - /home/kdrogaieva/dbt_target:/home/airflow/dbt_target
-      - /home/kdrogaieva/dbt_logs:/home/airflow/dbt_logs 
+      - /home/kdrogaieva/Prod/airflow_logs:/opt/airflow/logs
+      - /home/kdrogaieva/Prod/airflow_plugins:/opt/airflow/plugins
+      - /home/kdrogaieva/Prod/dbt_profile:/home/airflow/.dbt
+      - /home/kdrogaieva/Prod/releases:/opt/airflow/releases
+      - /home/kdrogaieva/Prod/airflow_env:/opt/airflow_secrets:ro
+      - /home/kdrogaieva/Prod/dbt_target:/home/airflow/dbt_target
+      - /home/kdrogaieva/Prod/dbt_logs:/home/airflow/dbt_logs 
     command:
       - bash
       - -c

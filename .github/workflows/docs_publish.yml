@@ -6,7 +6,7 @@ on:
     types: [completed]
 
 env:
-  PUBLISH_SCRIPT: /home/kdrogaieva/deploy/bin/publish_dbt_docs.sh
+  PUBLISH_SCRIPT: /home/kdrogaieva/Prod/deploy/bin/publish_dbt_docs.sh
 
 jobs:
   publish_docs:

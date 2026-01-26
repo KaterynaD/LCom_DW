@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /home/kdrogaieva/airflow_runtime
+cd /home/kdrogaieva/Prod/airflow_runtime
 
 echo ">>> Initializing Airflow DB and creating admin user (Kate Drogaieva)..."
 docker compose up airflow-init

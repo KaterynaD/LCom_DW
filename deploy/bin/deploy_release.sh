@@ -6,18 +6,18 @@ set -euo pipefail
 ### ----------------------------
 ### Config
 ### ----------------------------
-REPO_MIRROR_DIR="/home/kdrogaieva/repo-mirror"
-RELEASES_DIR="/home/kdrogaieva/releases"
+REPO_MIRROR_DIR="/home/kdrogaieva/Prod/repo-mirror"
+RELEASES_DIR="/home/kdrogaieva/Prod/releases"
 CURRENT_LINK="${RELEASES_DIR}/current"
 
 # Per your note:
-COMPOSE_DIR="${COMPOSE_DIR:-/home/kdrogaieva/airflow_runtime}"
+COMPOSE_DIR="${COMPOSE_DIR:-/home/kdrogaieva/Prod/airflow_runtime}"
 SERVICE_NAME="${SERVICE_NAME:-airflow-webserver}"
 
 DBT_TARGET_NAME="${DBT_TARGET_NAME:-Prod}"
 
-LOG_DIR="/home/kdrogaieva/deploy/logs"
-LOCK_DIR="/home/kdrogaieva/deploy/locks"
+LOG_DIR="/home/kdrogaieva/Prod/deploy/logs"
+LOCK_DIR="/home/kdrogaieva/Prod/deploy/locks"
 
 REMOTE_REF="${REMOTE_REF:-origin/master}"
 
@@ -225,7 +225,7 @@ log "All checks passed."
 ### Publish dbt docs (merged logs)
 ### ----------------------------
 log "Publishing dbt docs to docs branch..."
-/home/kdrogaieva/deploy/bin/publish_dbt_docs.sh
+/home/kdrogaieva/Prod/deploy/bin/publish_dbt_docs.sh
 log "Docs published."
 
 
