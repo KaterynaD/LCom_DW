@@ -1,4 +1,3 @@
-from datetime import datetime
 import os
 import sys
 from pathlib import Path
@@ -6,273 +5,273 @@ from pathlib import Path
 UTILS_DIR = (Path(__file__).resolve().parents[1] / "utils")
 sys.path.insert(0, str(UTILS_DIR))
 
+
+from datetime import datetime
+
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
+from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import BranchPythonOperator
+from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
-from airflow.utils.email import send_email
-from airflow.exceptions import AirflowException
-from airflow.models import Variable
+
+from airflow.exceptions import AirflowSkipException
+from airflow.utils.state import TaskInstanceState
+
 
 
 from dag_utils import (
-    DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
-    create_init_branch,
-    create_notify_summary_task,
-    init_flag,
     create_set_load_date_task,
+    create_notify_summary_task,
+)
+from dbt_run_utils import (
+    make_run_lcom_dw_common_task,
+    make_run_lcom_dw_licensing_task,
+    make_run_lcom_dw_training_sessions_task,
+    make_run_lcom_dw_support_task,
+    make_run_lcom_dw_revenue_task,
+    make_run_lcom_dw_cdu_task,
+    make_run_lcom_dw_snapshots_task,
+    make_run_drop_all_fk_task,
+    make_run_recreating_all_fk_task,
+    make_run_tests_task,
 )
 
-
-
-
-
-
-
-
 # ------------------------------------------------------------------------
-# Check that core tasks all succeeded
+# Helper
 # ------------------------------------------------------------------------
-def check_core_tasks(**context):
+def _any_success(task_ids: list[str], **context) -> bool:
+    """
+    Return True if at least one of task_ids finished with SUCCESS in this DagRun.
+    """
     dag_run = context["dag_run"]
-    
-
-    # Base core tasks that must always succeed
-    core_task_ids = [
-        "Start_Load.Set_Load_Date",
-        "run_dbt_dropping_all_fk",
-        "run_lcom_dw_common",
-    ]
-
-    # Only treat repo/deps as mandatory when we are initializing
-    if init_flag == "YES":
-        core_task_ids = ["refresh_git_repo", "run_dbt_deps"] + core_task_ids
-
-    bad_states = []
-    for tid in core_task_ids:
+    for tid in task_ids:
         ti = dag_run.get_task_instance(tid)
-        if ti is None or ti.state != "success":
-            bad_states.append(f"{tid}: {ti.state if ti else 'no TI'}")
+        if ti and ti.state == TaskInstanceState.SUCCESS:
+            return True
+    return False
 
-    if bad_states:
-        # This will mark check_core_success as failed,
-        # which prevents recreate_all_fk (with ONE_SUCCESS) from running.
-        raise AirflowException(
-            "Core tasks did not all succeed: " + ", ".join(bad_states)
+def _is_yes(value: str | None) -> bool:
+    return str(value or "").strip().lower() in {"yes", "y", "true", "1"}
+
+def make_toggle_task_group(
+    dag: DAG,
+    *,
+    group_id: str,
+    task_id: str,
+    var_name: str,          
+    make_task_fn,
+    make_task_kwargs: dict | None = None,
+) -> tuple[TaskGroup, EmptyOperator]:
+    """
+    TaskGroup layout:
+        check_enabled (Branch)
+           ├─ <real task>
+           └─ skipped
+              ↓
+             join  (TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS)
+    """
+    make_task_kwargs = make_task_kwargs or {}
+
+    with TaskGroup(group_id=group_id, dag=dag) as tg:
+
+        def _choose_branch(**_):
+            enabled = _is_yes(Variable.get(var_name, default_var="Yes"))
+            return f"{group_id}.{task_id}" if enabled else f"{group_id}.skipped"
+
+        check_enabled = BranchPythonOperator(
+            task_id="check_enabled",
+            python_callable=_choose_branch,
         )
 
+        real_task = make_task_fn(
+            dag,
+            **make_task_kwargs,
+        )
+
+        skipped = EmptyOperator(task_id="skipped")
+        join = EmptyOperator(
+            task_id="join",
+            trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+        )
+
+        check_enabled >> [real_task, skipped]
+        [real_task, skipped] >> join
+
+    return tg, join
+
 
 # ------------------------------------------------------------------------
-# DAG definition
+# DAG
 # ------------------------------------------------------------------------
-default_args = {
-    "owner": "airflow",
-    "depends_on_past": False,
-    "retries": 0,
-    "email_on_failure": False,  # we use custom callback instead
-    "email_on_retry": False,
-}
+default_args = {"owner": "airflow", "depends_on_past": False, "retries": 0}
 
 with DAG(
-    dag_id="0_lcom_dw_full_scheduled_run",
-    description="LCom DW: full run (git pull + dbt deps + main dbt runs)",
+    dag_id="0_lcom_dw_scheduled_full_run_dag",
     default_args=default_args,
-    start_date=datetime(2024, 1, 1), 
+    start_date=datetime(2024, 1, 1),
+    schedule=None,          
+    max_active_runs=1, 
     catchup=False,
-    tags=["dbt", "lcom_dw", "scheduled", "full_load" ],
+    tags=["lcom_dw", "dbt", "scheduled"],
 ) as dag:
 
-    # Shared "init" branch:
-    # decide_init -> [refresh_git_repo, skip_dbt_init] -> init_done
-    init_done = create_init_branch(dag)
 
-    # 3. Set LoadDate (XCom)
-    set_load_date_task = create_set_load_date_task(dag, trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS)
+    set_load_date_task = create_set_load_date_task(dag)
 
-    # 4. drop_all_fk
-    drop_all_fk = BashOperator(
-        task_id="run_dbt_dropping_all_fk",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run-operation Dropping_all_FK"
-        ),
-        on_failure_callback=notify_task_failure,
+    # -------------------------
+    # Toggle groups (explicit var_name per task)
+    # -------------------------
+
+    tg_drop_fk, drop_fk_join = make_toggle_task_group(
+        dag,
+        group_id="tg_drop_all_fk",
+        task_id="drop_all_fk",
+        var_name="RUN__DROP_ALL_FK",
+        make_task_fn=make_run_drop_all_fk_task
     )
 
-    # 5. run_common
-    run_common = BashOperator(
-        task_id="run_lcom_dw_common",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run "
-            "--select tag:common "
-            "--exclude \"config.materialized:view\" "
-            "--vars '{"
-            "\"run_type\": \"Scheduled Prod run - common\", "
-            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
-            "}' "
-        ),
-        on_failure_callback=notify_task_failure,
+    tg_common, common_join = make_toggle_task_group(
+        dag,
+        group_id="tg_common",
+        task_id="run_common",
+        var_name="RUN__COMMON",
+        make_task_fn=make_run_lcom_dw_common_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - common",
+            "threads": 1
+        },
     )
 
-    # 6.1 run_licensing (parallel)
-    run_licensing = BashOperator(
-        task_id="run_lcom_dw_licensing",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run "
-            "--select tag:licensing "
-            "--exclude \"config.materialized:view\" "
-            "--vars '{"
-            "\"run_type\": \"Scheduled Prod run - licensing\", "
-            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
-            "}' "
-            "--threads 1"
-        ),
-        on_failure_callback=notify_task_failure,
+    tg_licensing, licensing_join = make_toggle_task_group(
+        dag,
+        group_id="tg_licensing",
+        task_id="run_licensing",
+        var_name="RUN__LICENSING",
+        make_task_fn=make_run_lcom_dw_licensing_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - licensing",
+            "threads": 1
+        },
     )
 
-    # 6.2 run_training_sessions (parallel)
-    run_training_sessions = BashOperator(
-        task_id="run_lcom_dw_training_sessions",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run "
-            "--select tag:training "
-            "--exclude \"config.materialized:view\" "
-            "--vars '{"
-            "\"run_type\": \"Scheduled Prod run - training sessions\", "
-            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
-            "}' "
-            "--threads 1"
-        ),
-        on_failure_callback=notify_task_failure,
+    tg_training, training_join = make_toggle_task_group(
+        dag,
+        group_id="tg_training_sessions",
+        task_id="run_training_sessions",
+        var_name="RUN__TRAINING_SESSIONS",
+        make_task_fn=make_run_lcom_dw_training_sessions_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - training sessions",
+            "threads": 1
+        },
     )
 
-    # 6.3 run_support (parallel)
-    run_support = BashOperator(
-        task_id="run_lcom_dw_support",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run "
-            "--select tag:support "
-            "--exclude \"config.materialized:view\" "
-            "--vars '{"
-            "\"run_type\": \"Scheduled Prod run - support\", "
-            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
-            "}' "
-            "--threads 1"
-        ),
-        on_failure_callback=notify_task_failure,
+    tg_support, support_join = make_toggle_task_group(
+        dag,
+        group_id="tg_support",
+        task_id="run_support",
+        var_name="RUN__SUPPORT",
+        make_task_fn=make_run_lcom_dw_support_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - support",
+            "threads": 1
+        },
     )
 
-    # 6.4 run_revenue (parallel)
-    run_revenue = BashOperator(
-        task_id="run_lcom_dw_revenue",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run "
-            "--select tag:revenue "
-            "--exclude \"config.materialized:view\" "
-            "--vars '{"
-            "\"run_type\": \"Scheduled Prod run - tag:revenue\", "
-            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
-            "}' "
-            "--threads 1"
-        ),
-        on_failure_callback=notify_task_failure,
+    tg_revenue, revenue_join = make_toggle_task_group(
+        dag,
+        group_id="tg_revenue",
+        task_id="run_revenue",
+        var_name="RUN__REVENUE",
+        make_task_fn=make_run_lcom_dw_revenue_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - revenue",
+            "threads": 1
+        },
     )
 
-    # 6.5 run_cdu (parallel)
-    run_cdu = BashOperator(
-        task_id="run_lcom_dw_cdu",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run "
-            "--select tag:cdu "
-            "--exclude \"config.materialized:view\" "
-            "--vars '{"
-            "\"run_type\": \"Scheduled Prod run - tag:cdu\", "
-            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
-            "}' "
-            "--threads 1"
-        ),
-        on_failure_callback=notify_task_failure,
+    tg_cdu, cdu_join = make_toggle_task_group(
+        dag,
+        group_id="tg_cdu",
+        task_id="run_cdu",
+        var_name="RUN__CDU",
+        make_task_fn=make_run_lcom_dw_cdu_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - cdu",
+            "threads": 1
+        },
     )
 
-    # Check that core tasks all succeeded (controls whether FK recreation is allowed)
-    check_core_success = PythonOperator(
-        task_id="check_core_success",
-        python_callable=check_core_tasks,
-        provide_context=True,
-        trigger_rule=TriggerRule.ALL_DONE,  # run even if run_common fails
+
+    snapshots_gate = BranchPythonOperator(
+    task_id="snapshots_gate",
+    trigger_rule=TriggerRule.ALL_DONE,  # waits for all upstream terminal states
+    python_callable=lambda **context: (
+        "tg_snapshots.check_enabled"
+        if _any_success(
+            [
+                "tg_licensing.join",
+                "tg_training_sessions.join",
+                "tg_support.join",
+                "tg_revenue.join",
+                "tg_cdu.join",
+            ],
+            **context,
+        )
+        else "tg_snapshots.skipped"
+    ),
     )
 
-    # 7. Snapshots:
-    run_snapshots = BashOperator(
-        task_id="run_lcom_dw_snapshots",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run "
-            "--select tag:snapshot "
-            "--exclude \"config.materialized:view\" "
-            "--vars '{"
-            "\"run_type\": \"Scheduled Prod run - tag:snapshot\", "
-            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
-            "}' "
-        ),
-        trigger_rule=TriggerRule.ONE_SUCCESS,  # require at least one success (check_core_success)
-        on_failure_callback=notify_task_failure,
+    tg_snapshots, snapshots_join = make_toggle_task_group(
+    dag,
+    group_id="tg_snapshots",
+    task_id="run_snapshots",
+    var_name="RUN__SNAPSHOTS",
+    make_task_fn=make_run_lcom_dw_snapshots_task,
+    make_task_kwargs={
+        "run_type": "Scheduled Prod run - snapshots",
+        "threads": 1,
+    },
+   )
+
+    tg_recreate_fk, recreate_fk_join = make_toggle_task_group(
+        dag,
+        group_id="tg_recreate_all_fk",
+        task_id="recreate_all_fk",
+        var_name="RUN__RECREATE_ALL_FK",
+        make_task_fn=make_run_recreating_all_fk_task
     )
 
-    # 8. Recreate FK:
-    recreate_all_fk = BashOperator(
-        task_id="run_dbt_recreating_all_fk",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run-operation Recreating_all_FK"
-        ),
-        trigger_rule=TriggerRule.ONE_SUCCESS,  # require at least one success (check_core_success)
-        on_failure_callback=notify_task_failure,
+    tg_tests, tests_join = make_toggle_task_group(
+        dag,
+        group_id="tg_tests",
+        task_id="run_tests",
+        var_name="RUN__TESTS",
+        make_task_fn=make_run_tests_task
     )
 
-    # 9. Tests:
-    run_tests = BashOperator(
-        task_id="run_lcom_dw_tests",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt test "
-            "--exclude \"config.materialized:view\" \"tag:product_usage\" "
-            "--vars '{\"run_type\": \"Scheduled Prod test\"}'"
-        ),
-        trigger_rule=TriggerRule.ONE_SUCCESS,  # require at least one success (check_core_success)
-        on_failure_callback=notify_task_failure,
-    )
 
-    # 10. Always send summary email with success/failed tasks
     notify_summary = create_notify_summary_task(
         dag,
         run_name="LCom DW Full Load",
     )
 
-    # --------------------------------------------------------------------
+
+    # -------------------------
     # Dependencies
-    # --------------------------------------------------------------------
+    # -------------------------
+    set_load_date_task >> tg_drop_fk
+    drop_fk_join >> tg_common
 
+    # fan-out after common
+    common_join >> [tg_licensing, tg_training, tg_support, tg_revenue, tg_cdu] 
 
-    # If we init: refresh_git_repo -> run_dbt_deps -> set_load_date
-    init_done  >> set_load_date_task
+    # wait until all branches finished (ran or skipped), then snapshots
+    [licensing_join, training_join, support_join, revenue_join, cdu_join] >> snapshots_gate
+    snapshots_gate >> tg_snapshots
 
-    # Common path from here on
-    set_load_date_task >> drop_all_fk >> run_common
-
-    run_common >> [run_licensing, run_training_sessions, run_support, run_revenue, run_cdu]
-    run_common >> check_core_success
-
-    [run_licensing, run_training_sessions, run_support, run_revenue, run_cdu, check_core_success] >> run_snapshots >> recreate_all_fk >> run_tests >> notify_summary
-
-
-
+    snapshots_join >> tg_recreate_fk
+    recreate_fk_join >> tg_tests
+    tests_join >> notify_summary
