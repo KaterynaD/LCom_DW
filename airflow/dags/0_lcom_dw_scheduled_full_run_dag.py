@@ -139,8 +139,7 @@ with DAG(
         var_name="RUN__COMMON",
         make_task_fn=make_run_lcom_dw_common_task,
         make_task_kwargs={
-            "run_type": "Scheduled Prod run - common",
-            "threads": 1
+            "run_type": "Scheduled Prod run - common"
         },
     )
 
@@ -231,8 +230,7 @@ with DAG(
     var_name="RUN__SNAPSHOTS",
     make_task_fn=make_run_lcom_dw_snapshots_task,
     make_task_kwargs={
-        "run_type": "Scheduled Prod run - snapshots",
-        "threads": 1,
+        "run_type": "Scheduled Prod run - snapshots"
     },
    )
 
