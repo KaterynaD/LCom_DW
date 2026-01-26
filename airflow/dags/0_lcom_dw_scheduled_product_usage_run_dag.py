@@ -12,7 +12,7 @@ from airflow.operators.bash import BashOperator
 from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
-    create_init_branch,
+    create_set_load_date_task,
     create_notify_summary_task,
 )
 
@@ -29,13 +29,16 @@ with DAG(
     description="LCom DW: Product Usage run",
     default_args=default_args,
     start_date=datetime(2024, 1, 1), 
+    schedule=None,          
+    max_active_runs=1,      
     catchup=False,
     tags=["dbt", "lcom_dw", "product usage", "scheduled"],
 ) as dag:
 
-    # Shared "init" branch:
-    # decide_init -> [refresh_git_repo, skip_dbt_init] -> init_done
-    init_done = create_init_branch(dag)
+    # --------------------------------------------------------------------
+    # Load date
+    # --------------------------------------------------------------------
+    set_load_date_task = create_set_load_date_task(dag)
 
     # DAG-specific core task 
     run_product_usage = BashOperator(
@@ -47,6 +50,7 @@ with DAG(
             "--exclude \"config.materialized:view\" "
             "--vars '{"
             "\"run_type\": \"Scheduled Prod run - product_usage\", "
+            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
             "}' "
         ),
         on_failure_callback=notify_task_failure,
@@ -60,6 +64,7 @@ with DAG(
             "--select tag:product_usage "
             "--vars '{"
             "\"run_type\": \"Scheduled Prod test - product_usage\", "
+            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
             "}' "
         ),
         on_failure_callback=notify_task_failure,
@@ -73,8 +78,7 @@ with DAG(
     )
 
     # Final wiring
-    init_done >> run_product_usage >> test_product_usage >> notify_summary
-
+    set_load_date_task >> run_product_usage >> test_product_usage >> notify_summary
 
 
 

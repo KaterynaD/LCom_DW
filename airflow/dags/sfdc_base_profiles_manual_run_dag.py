@@ -41,6 +41,8 @@ with DAG(
     description="SFDC: Manual run - base profiles for schema audit (manual trigger only)",
     default_args=default_args,
     start_date=datetime(2024, 1, 1), 
+    schedule=None,          
+    max_active_runs=1,          
     catchup=False,
     tags=["dbt", "sfdc", "profiles", "schema_audit", "maintenance"],
 ) as dag:

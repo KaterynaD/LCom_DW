@@ -33,6 +33,8 @@ with DAG(
     description="LCom DW: dbt Manual run - common (manual trigger only)",
     default_args=default_args,
     start_date=datetime(2024, 1, 1),
+    schedule=None,          
+    max_active_runs=1,          
     catchup=False,
     tags=["dbt", "lcom_dw", "common", "maintenance" ],
 ) as dag:
