@@ -74,11 +74,18 @@ def make_toggle_task_group(
     make_task_kwargs = make_task_kwargs or {}
 
     with TaskGroup(group_id=group_id, dag=dag) as tg:
-        # Create the real task FIRST so we know its actual task_id
+        # Create tasks inside the group so Airflow can qualify task_ids correctly
         real_task = make_task_fn(dag, **make_task_kwargs)
 
-        run_branch_task_id = f"{group_id}.{real_task.task_id}"
-        skip_branch_task_id = f"{group_id}.skipped"
+        skipped = EmptyOperator(task_id="skipped")
+        join = EmptyOperator(
+            task_id="join",
+            trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+        )
+
+        # IMPORTANT: use Airflow's actual task_ids (they may already be qualified)
+        run_branch_task_id = real_task.task_id
+        skip_branch_task_id = skipped.task_id
 
         def _choose_branch(**_):
             enabled = _is_yes(Variable.get(var_name, default_var="Yes"))
@@ -87,12 +94,6 @@ def make_toggle_task_group(
         check_enabled = BranchPythonOperator(
             task_id="check_enabled",
             python_callable=_choose_branch,
-        )
-
-        skipped = EmptyOperator(task_id="skipped")
-        join = EmptyOperator(
-            task_id="join",
-            trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
         )
 
         check_enabled >> [real_task, skipped]
