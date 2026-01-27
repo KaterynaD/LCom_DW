@@ -1,0 +1,118 @@
+version: 2
+
+models:
+- name: dim_campaign
+  description: Dimension table of Salesforce Campaigns, enriched with owner attributes from dim_employee and parent campaign attributes from the Campaign source.
+  config:
+    contract:
+      enforced: true
+    tags:
+    - dim
+    - marketing
+
+  columns:
+  - name: campaign_id
+    data_type: varchar(300)
+    description: Unique campaign identifier (primary key)
+    data_tests:
+    - unique
+    constraints:
+    - type: not_null
+    - type: primary_key
+      warn_unenforced: false
+
+  - name: name
+    data_type: varchar(400)
+    description: "{{ doc('column_campaign_name') }}"
+    constraints:
+    - type: not_null
+
+  - name: description
+    data_type: varchar(4000)
+    description: "{{ doc('column_description') }}"
+    constraints:
+    - type: not_null
+
+  - name: created_date
+    data_type: timestamp without time zone
+    description: "{{ doc('column_created_date') }}"
+    constraints:
+    - type: not_null
+
+  - name: last_modified_date
+    data_type: timestamp without time zone
+    description: "{{ doc('column_last_modified_date') }}"
+    constraints:
+    - type: not_null
+
+  - name: owner_id
+    data_type: varchar(300)
+    description: "{{ doc('column_owner_id') }}"
+    constraints:
+    - type: not_null
+
+  - name: owner_name
+    data_type: varchar(400)
+    description: "{{ doc('column_employee_name') }}"
+    constraints:
+    - type: not_null
+
+  - name: parent_id
+    data_type: varchar(300)
+    description: "{{ doc('column_campaign_parent_id') }}"
+    constraints:
+    - type: not_null
+
+  - name: parent_campaign
+    data_type: varchar(400)
+    description: "{{ doc('column_parent_campaign') }}"
+    constraints:
+    - type: not_null
+
+  - name: start_date
+    data_type: date
+    description: "{{ doc('column_campaign_start_date') }}"
+    constraints:
+    - type: not_null
+
+  - name: end_date
+    data_type: date
+    description: "{{ doc('column_campaign_end_date') }}"
+    constraints:
+    - type: not_null
+
+  - name: campaign_status
+    data_type: varchar(20)
+    description: "{{ doc('column_campaign_status') }}"
+    constraints:
+    - type: not_null
+
+  - name: campaign_type
+    data_type: varchar(50)
+    description: "{{ doc('column_campaign_type') }}"
+    constraints:
+    - type: not_null
+
+  - name: pipe_bucket
+    data_type: varchar(50)
+    description: "{{ doc('column_pipe_bucket') }}"
+    constraints:
+    - type: not_null
+
+  - name: data_quality_description
+    data_type: varchar(100)
+    description: "{{ doc('column_data_quality_description') }}"
+    constraints:
+    - type: not_null
+
+  - name: data_quality_score
+    data_type: integer
+    description: "{{ doc('column_data_quality_score') }}"
+    constraints:
+    - type: not_null
+
+  - name: loaddate
+    data_type: timestamp without time zone
+    description: "{{ doc('column_loaddate') }}"
+    constraints:
+    - type: not_null
