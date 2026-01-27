@@ -18,6 +18,8 @@ services:
     build: .
     image: airflow-dbt:2.10.2-py3.12
     user: "1002:0"
+    group_add:
+      - "1004"
     restart: unless-stopped
     depends_on:
       postgres:
@@ -77,6 +79,8 @@ services:
   airflow-scheduler:
     image: airflow-dbt:2.10.2-py3.12
     user: "1002:0"
+    group_add:
+      - "1004"
     restart: unless-stopped
     depends_on:
       postgres:
@@ -126,6 +130,8 @@ services:
   airflow-init:
     image: airflow-dbt:2.10.2-py3.12
     user: "1002:0"
+    group_add:
+      - "1004"
     depends_on:
       postgres:
         condition: service_healthy

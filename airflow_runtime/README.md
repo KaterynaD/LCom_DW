@@ -34,15 +34,51 @@ smtp server password also lives outside the repo
 
 "Hide" the content of the files. Only sudo nano works after that
 
-```
-sudo chmod 600 .smtp_password
-sudo chown ec2-user:ec2-user .smtp_password 
-```
+1) Create a dedicated group on the host
+sudo groupadd -f airflow_secrets
 
-```
-sudo chmod 600 profiles.yml
-sudo chown ec2-user:ec2-user profiles.yml 
-```
+Get the group’s GID (you’ll need it):
+getent group airflow_secrets
+
+airflow_secrets:x:1004:
+
+Use only 1004 in the docker compose
+
+2) Add your user to the group (so you can read it on the host)
+sudo usermod -aG airflow_secrets kdrogaieva
+
+
+Apply membership (choose one):
+newgrp airflow_secrets
+
+Verify:
+groups kdrogaieva
+
+3) Lock down the secret file (root owner, group-readable only)
+
+sudo chown root:airflow_secrets /home/kdrogaieva/Prod/airflow_env/.smtp_password
+sudo chmod 640 /home/kdrogaieva/Prod/airflow_env/.smtp_password
+
+sudo chown root:airflow_secrets /home/kdrogaieva/Prod/airflow_env/.env
+sudo chmod 640 /home/kdrogaieva/Prod/airflow_env/.env
+
+sudo chown root:airflow_secrets /home/kdrogaieva/Prod/dbt_profile/profiles.yml
+sudo chmod 640 /home/kdrogaieva/Prod/dbt_profile/profiles.yml
+
+
+Verify:
+ls -l /home/kdrogaieva/Prod/airflow_env/.smtp_password
+
+-rw-r-----. 1 root airflow_secrets 45 Jan 26 16:21 /home/kdrogaieva/Prod/airflow_env/.smtp_password
+
+ls -l /home/kdrogaieva/Prod/airflow_env/.env
+-rw-r-----. 1 root airflow_secrets 147 Jan 26 16:21 /home/kdrogaieva/Prod/airflow_env/.env
+
+Host test (as your user):
+
+cat /home/kdrogaieva/Prod/airflow_env/.smtp_password
+cat /home/kdrogaieva/Prod/airflow_env/.env
+Should work.
 airflow and dbt logs, airflow plugins (if any) and dbt target folders also should be outside the repo:
 
 ```
