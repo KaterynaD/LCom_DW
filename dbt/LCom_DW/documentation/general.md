@@ -101,16 +101,20 @@ The datetime the record was active in PST
 {% enddocs %}
 
 {% docs column_account_id %}
-DIM_ACCOUNT PK/FK 
+DIM_ACCOUNT(PK/FK) 
 {% enddocs %}
 
 {% docs column_opportunity_line_id %}
-DIM_OPPORTUNITY_LINE PK/FK 
+DIM_OPPORTUNITY_LINE (PK/FK)
 {% enddocs %}
 
 
 {% docs column_owner_id %}
-DIM_EMPLOYEE FK
+DIM_EMPLOYEE (PK/FK)
+{% enddocs %}
+
+{% docs column_campaign_id %}
+DIM_CAMPAIGN (PK/FK)
 {% enddocs %}
 
 {% docs column_fromdate %}
@@ -163,6 +167,15 @@ PO Number
 DIM_CONTACT (PK/FK)
 {% enddocs %}
 
-{% docs column_campaign_id %}
-DIM_CAMPAIGN (PK/FK)
+
+{% docs column_pipe_bucket %}
+Pipe Bucket. Pipe Bucket used for reporting.
+{% enddocs %}
+
+{% docs column_data_quality_description %}
+Data Quality Description. 
+{% enddocs %}
+
+{% docs column_data_quality_score %}
+Data Quality Score. 
 {% enddocs %}

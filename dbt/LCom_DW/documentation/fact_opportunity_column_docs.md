@@ -67,16 +67,9 @@ Combined ARR
 {% enddocs %}
 
 {% docs column_contract_id %}
-Contract
+Contracts
 {% enddocs %}
 
-{% docs column_data_quality_description %}
-Data Quality Description
-{% enddocs %}
-
-{% docs column_data_quality_score %}
-Data Quality Score
-{% enddocs %}
 
 {% docs column_loss_reason %}
 Loss Reason
