@@ -430,10 +430,15 @@ models:
     constraints:
     - type: not_null
   - name: x_1_st_contact
-    data_type: varchar(30)
+    data_type: varchar(300)
     description: "{{ doc('column_x_1_st_contact') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - relationships:
+          to: ref('dim_contact')
+          field: contact_id
+
   - name: x_1_st_contact_email
     data_type: varchar(250)
     description: "{{ doc('column_x_1_st_contact_email') }}"
@@ -451,10 +456,14 @@ models:
     - type: not_null
 
   - name: x_2_nd_contact
-    data_type: varchar(30)
+    data_type: varchar(300)
     description: "{{ doc('column_x_2_nd_contact') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - relationships:
+          to: ref('dim_contact')
+          field: contact_id
 
   - name: x_2_nd_contact_email
     data_type: varchar(250)
@@ -468,16 +477,21 @@ models:
     - type: not_null
 
   - name: x_3_rd_contact
-    data_type: varchar(30)
+    data_type: varchar(300)
     description: "{{ doc('column_x_3_rd_contact') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - relationships:
+          to: ref('dim_contact')
+          field: contact_id    
 
   - name: x_3_rd_contact_email
     data_type: varchar(250)
     description: "{{ doc('column_x_3_rd_contact_email') }}"
     constraints:
     - type: not_null
+
   - name: x_3_rd_contact_name
     data_type: varchar(780)
     description: "{{ doc('column_x_3_rd_contact_name') }}"

@@ -47,6 +47,11 @@ ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY
 -- TO common.dim_contact
 ALTER TABLE support.fact_case ADD FOREIGN KEY (contact_id) REFERENCES common.dim_contact(contact_id);
 ALTER TABLE revenue.fact_opportunity ADD FOREIGN KEY (contact_id) REFERENCES common.dim_contact(contact_id);
+
+ALTER TABLE revenue.fact_opportunity ADD FOREIGN KEY (x_1_st_contact) REFERENCES common.dim_contact(contact_id);
+ALTER TABLE revenue.fact_opportunity ADD FOREIGN KEY (x_2_nd_contact) REFERENCES common.dim_contact(contact_id);
+ALTER TABLE revenue.fact_opportunity ADD FOREIGN KEY (x_3_rd_contact) REFERENCES common.dim_contact(contact_id);
+
 ALTER TABLE common.dim_contact_history ADD FOREIGN KEY (contact_id) REFERENCES common.dim_contact(contact_id);
 
 -- TO common.dim_lcom_sku

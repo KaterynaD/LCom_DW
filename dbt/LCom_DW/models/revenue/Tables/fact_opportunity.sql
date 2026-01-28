@@ -61,7 +61,7 @@ from {{ source('fivetran_salesforce_quickstart', 'opportunity') }} sfdc_opportun
 )
 ,data as (
 select 
-   isnull(o.id,   '{{ var("default_varchar") }}') as opportunity_id,
+   isnull(o.id,   '{{ var("default_ID") }}') as opportunity_id,
     isnull(o.name, '{{ var("default_varchar") }}') as name,
     isnull(a.account_id, '{{ var("default_ID") }}') as account_id,
     isnull(o.account_id, '{{ var("default_ID") }}') as sfdc_account_id,
@@ -142,14 +142,14 @@ select
     isnull(o.true_arr_c, {{ var("default_numeric") }}) as true_arr,
     isnull(o.true_arr_formula_c, {{ var("default_numeric") }}) as true_arr_formula,
     isnull(o.true_renewal_arr_c, {{ var("default_numeric") }}) as true_renewal_arr,
-    isnull(o.x_1_st_contact_c, '{{ var("default_varchar") }}') as x_1_st_contact,
+    isnull(o.x_1_st_contact_c, '{{ var("default_ID") }}') as x_1_st_contact,
     isnull(o.x_1_st_contact_email_c, '{{ var("default_varchar") }}') as x_1_st_contact_email,
     isnull(o.x_1_st_contact_name_c, '{{ var("default_varchar") }}') as x_1_st_contact_name,
     isnull(o.x_1_st_contact_role_c, '{{ var("default_varchar") }}') as x_1_st_contact_role,
-    isnull(o.x_2_nd_contact_c, '{{ var("default_varchar") }}') as x_2_nd_contact,
+    isnull(o.x_2_nd_contact_c, '{{ var("default_ID") }}') as x_2_nd_contact,
     isnull(o.x_2_nd_contact_email_c, '{{ var("default_varchar") }}') as x_2_nd_contact_email,
     isnull(o.x_2_nd_contact_name_c, '{{ var("default_varchar") }}') as x_2_nd_contact_name,
-    isnull(o.x_3_rd_contact_c, '{{ var("default_varchar") }}') as x_3_rd_contact,   
+    isnull(o.x_3_rd_contact_c, '{{ var("default_ID") }}') as x_3_rd_contact,   
     isnull(o.x_3_rd_contact_email_c, '{{ var("default_varchar") }}') as x_3_rd_contact_email,
     isnull(o.x_3_rd_contact_name_c, '{{ var("default_varchar") }}') as x_3_rd_contact_name
 from
@@ -242,14 +242,14 @@ select
     true_arr::numeric(35,10),
     true_arr_formula::double precision,
     true_renewal_arr::double precision,
-    x_1_st_contact::varchar(30),
+    x_1_st_contact::varchar(300),
     x_1_st_contact_email::varchar(250),
     x_1_st_contact_name::varchar(780),
     x_1_st_contact_role::varchar(780),
-    x_2_nd_contact::varchar(30),
+    x_2_nd_contact::varchar(300),
     x_2_nd_contact_email::varchar(250),
     x_2_nd_contact_name::varchar(780),
-    x_3_rd_contact::varchar(30),
+    x_3_rd_contact::varchar(300),
     x_3_rd_contact_email::varchar(250),
     x_3_rd_contact_name::varchar(780),
     '{{ var("loaddate") }}'::timestamp as loaddate
