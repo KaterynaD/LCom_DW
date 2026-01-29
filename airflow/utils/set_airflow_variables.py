@@ -46,6 +46,7 @@ if __name__ == "__main__":
         "RUN__TRAINING_SESSIONS": "YES",
         "RUN__SUPPORT": "YES",
         "RUN__REVENUE": "YES",
+        "RUN__MARKETING": "YES",        
         "RUN__CDU": "YES",
         "RUN__SNAPSHOTS": "YES",
         "RUN__RECREATE_ALL_FK": "YES",

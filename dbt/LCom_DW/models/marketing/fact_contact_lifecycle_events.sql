@@ -20,7 +20,7 @@ WITH historic_status_dates AS (
         PARTITION BY h.contact_id, h.lead_status
         ORDER BY h.fromdate DESC
       ) AS rn
-  FROM  dw.staging.stg_contact_history h --update to dw.common.vw_contact_history once it is ready to use
+  FROM  {{ ref("dim_contact_history")}} h --update to dw.common.vw_contact_history once it is ready to use
   join dw.common.dim_contact c
   on h.contact_id = c.contact_id
   LEFT JOIN dw.common.dim_employee e

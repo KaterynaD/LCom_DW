@@ -32,6 +32,7 @@ from dbt_run_utils import (
     make_run_lcom_dw_support_task,
     make_run_lcom_dw_revenue_task,
     make_run_lcom_dw_cdu_task,
+    make_run_lcom_dw_marketing_task,
     make_run_lcom_dw_snapshots_task,
     make_run_drop_all_fk_task,
     make_run_recreating_all_fk_task,
@@ -188,6 +189,17 @@ with DAG(
         },
     )
 
+    tg_marketing, marketing_join = make_toggle_task_group(
+        dag,
+        group_id="tg_marketing",
+        var_name="RUN__MARKETING",
+        make_task_fn=make_run_lcom_dw_marketing_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - marketing",
+            "threads": 1
+        },
+    )    
+
     tg_cdu, cdu_join = make_toggle_task_group(
         dag,
         group_id="tg_cdu",
@@ -257,7 +269,7 @@ with DAG(
     drop_fk_join >> tg_common
 
     # fan-out after common
-    common_join >> [tg_licensing, tg_training, tg_support, tg_revenue, tg_cdu] 
+    common_join >> [tg_licensing, tg_training, tg_support, tg_revenue >> tg_marketing, tg_cdu] 
 
     # wait until all branches finished (ran or skipped), then snapshots
     [licensing_join, training_join, support_join, revenue_join, cdu_join] >> snapshots_gate
