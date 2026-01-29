@@ -60,7 +60,10 @@ isnull(r.mql_date_c,'{{ var("default_date") }}') as mql_date,
 isnull(r.qualifying_date_c,'{{ var("default_date") }}') as qualifying_date,
 isnull(r.returned_date_c,'{{ var("default_date") }}') as returned_date,
 isnull(r.rejected_date_c,'{{ var("default_date") }}') as rejected_date,
-isnull(r.sql_date_c,'{{ var("default_date") }}') as sql_date
+isnull(r.sql_date_c,'{{ var("default_date") }}') as sql_date,
+0 as opportunity_count,
+0 as won_count,
+0 as lost_count
 from rawdata as r
     left outer join {{ref('dim_account') }} as a
         on r.account_id = a.sfdc_account_id
@@ -103,7 +106,10 @@ select
 '{{ var("default_date") }}' as qualifying_date,
 '{{ var("default_date") }}' as returned_date,
 '{{ var("default_date") }}' as rejected_date,
-'{{ var("default_date") }}' as sql_date
+'{{ var("default_date") }}' as sql_date,
+0 as opportunity_count,
+0 as won_count,
+0 as lost_count
 )
 select
      contact_id::VARCHAR(300)
@@ -141,5 +147,8 @@ select
 	,returned_date::DATE
 	,rejected_date::DATE
     ,sql_date::DATE
+	,opportunity_count::INTEGER
+    ,won_count::INTEGER
+    ,lost_count::INTEGER
     ,'{{ var("loaddate") }}'::TIMESTAMP WITHOUT TIME ZONE as loaddate
 from data  

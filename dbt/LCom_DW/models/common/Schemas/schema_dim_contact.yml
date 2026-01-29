@@ -11,7 +11,7 @@ models:
   columns:
   - name: contact_id
     data_type: varchar(300)
-    description: "{{ doc('column_contact_id') }}"
+    description: Unique contact identifier (primary key)
     data_tests:
     - unique
     constraints:
@@ -193,7 +193,24 @@ models:
     constraints:
     - type: not_null
 
+  - name: opportunity_count
+    data_type: INTEGER
+    description: Number of all opportunities associated with a contact in one way or an other. It's a placeholder column with 0 in the initial load and updated later from fact_opportunity
+    constraints:
+    - type: not_null
 
+  - name: won_count
+    data_type: INTEGER
+    description: Number of won and invoiced opportunities associated with a contact in one way or an other.  It's a placeholder column with 0 in the initial load and updated later from fact_opportunity
+    constraints:
+    - type: not_null
+
+  - name: lost_count
+    data_type: INTEGER
+    description: Number of lost opportunities associated with a contact in one way or an other. It's a placeholder column with 0 in the initial load and updated later from fact_opportunity
+    constraints:
+    - type: not_null        
+    
   - name: loaddate
     data_type: timestamp
     description: "{{ doc('column_loaddate') }}"

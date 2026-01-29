@@ -1,0 +1,160 @@
+version: 2
+
+models:
+  - name: fact_contact_lifecycle_events
+    description: >
+      Marketing funnel fact table at the (contact_id) grain.
+      Combines (1) lead stage dates from Contact History (most recent change per stage),
+      (2) HubSpot/manual stage dates from dim_contact, and (3) the first Closed Won opportunity
+      per opportunity type after the contact’s MQL/SQL reference date. Used for marketing reporting,
+      funnel conversion, and stage timeline analysis.
+    config:
+      contract:
+        enforced: TRUE
+      tags:
+        - fact
+        - marketing
+
+    columns:
+      - name: contact_id
+        data_type: varchar(300)
+        description: "{{ doc('column_contact_id') }}"
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_contact')
+              field: contact_id
+
+      - name: lead_stage_historic
+        data_type: varchar(31)
+        description: >
+          Lead stage label. For lead stage rows, it is the stage name (e.g., MQL, SQL, Qualifying, Returned, Rejected) sourced from Contact History or dim_contact.
+          For opportunity rows, it is prefixed as "Closed Won <opp_type>" to represent the first Closed Won milestone by opportunity type.
+        constraints:
+          - type: not_null
+
+      - name: lead_stage_date_unified
+        data_type: date
+        description: >
+          Unified stage date used for funnel timeline reporting.
+          For lead stage rows: COALESCE(historic stage date, hubspot stage date, manual stage date), where historic takes precedence.
+          For opportunity rows: opportunity close date (as the stage date).
+        constraints:
+          - type: not_null
+
+      - name: lead_stage_date_historic
+        data_type: date
+        description: >
+          Lead stage change date from Contact History (latest per contact and stage).
+          If Contact History fromdate is '1900-01-01', the contact created_date is used instead.
+          Default date for opportunity milestone rows.
+        constraints:
+          - type: not_null
+
+      - name: lead_stage_date_hubspot
+        data_type: date
+        description: >
+          Lead stage date sourced from HubSpot-aligned fields on dim_contact (only if > '1900-01-01').
+          Used as a fallback when historic date is not available. Default date for opportunity milestone rows.
+        constraints:
+          - type: not_null          
+
+
+
+      - name: lead_stage_date_manual
+        data_type: date
+        description: >
+          Manually populated lead stage date from dim_contact (only if > '1900-01-01').
+          Used as a fallback when historic and HubSpot dates are not available. Default date for opportunity milestone rows.
+        constraints:
+          - type: not_null
+
+
+      - name: lead_stage_changed_by_id
+        data_type: varchar(300)
+        description: >
+          Employee/user identifier associated with the lead stage change in Contact History (owner_id).
+          Default Unique ID value when stage is sourced from dim_contact dates or for opportunity milestone rows.
+        constraints:
+          - type: not_null
+
+      - name: lead_stage_changed_by_name
+        data_type: varchar(400)
+        description: >
+          Employee/user name associated with the lead stage change (joined from dim_employee by owner_id).
+          Default varchar value when stage is sourced from dim_contact dates or for opportunity milestone rows.
+        constraints:
+          - type: not_null
+
+      - name: lead_stage_changed_by_role
+        data_type: varchar(240)
+        description: >
+          Employee/user role associated with the lead stage change (from dim_employee).
+          Default varchar value when stage is sourced from dim_contact dates or for opportunity milestone rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_id
+        data_type: varchar(300)
+        description: Won opportunity identifier for "Closed Won <opp_type>" milestone rows. Default unique ID for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_date
+        data_type: date
+        description: Closed Won opportunity close date for milestone rows. Default date for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_amount
+        data_type: numeric(35,10)
+        description: Closed Won opportunity amount for milestone rows. Default numeric value for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_type
+        data_type: varchar(20)
+        description: Opportunity type for Closed Won milestone rows (used to build lead_stage_historic = "Closed Won <type>"). Default varchar value for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_campaign_id
+        data_type: varchar(300)
+        description: Campaign identifier associated with the Closed Won opportunity milestone row. Default varchar value for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_mql_date
+        data_type: date
+        description: >
+          Contact’s MQL unified date used for filtering/flagging won opportunities.
+          Computed as MAX(lead_stage_date_unified) where lead_stage_historic = 'MQL'. Default date for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_sql_date
+        data_type: date
+        description: >
+          Contact’s SQL unified date used for filtering/flagging won opportunities.
+          Computed as MAX(lead_stage_date_unified) where lead_stage_historic = 'SQL'. Default date for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_is_after_mql
+        data_type: boolean
+        description: TRUE if won_opp_date/close_date is on/after the contact’s MQL unified date. Default date for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: won_opp_is_after_sql
+        data_type: boolean
+        description: TRUE if won_opp_date/close_date is on/after the contact’s SQL unified date. Default date for lead stage rows.
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: timestamp without time zone
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
