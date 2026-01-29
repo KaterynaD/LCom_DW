@@ -30,9 +30,8 @@ from dbt_run_utils import (
     make_run_lcom_dw_licensing_task,
     make_run_lcom_dw_training_sessions_task,
     make_run_lcom_dw_support_task,
-    make_run_lcom_dw_revenue_task,
+    make_run_lcom_dw_revenue_and_marketing_task,
     make_run_lcom_dw_cdu_task,
-    make_run_lcom_dw_marketing_task,
     make_run_lcom_dw_snapshots_task,
     make_run_drop_all_fk_task,
     make_run_recreating_all_fk_task,
@@ -178,27 +177,17 @@ with DAG(
         },
     )
 
-    tg_revenue, revenue_join = make_toggle_task_group(
+    tg_revenue_marketing, revenue_marketing_join = make_toggle_task_group(
         dag,
-        group_id="tg_revenue",
-        var_name="RUN__REVENUE",
-        make_task_fn=make_run_lcom_dw_revenue_task,
+        group_id="tg_revenue_marketing",
+        var_name="RUN__REVENUE_MARKETING",
+        make_task_fn=make_run_lcom_dw_revenue_and_marketing_task,
         make_task_kwargs={
-            "run_type": "Scheduled Prod run - revenue",
+            "run_type": "Scheduled Prod run - revenue and marketing",
             "threads": 1
         },
     )
 
-    tg_marketing, marketing_join = make_toggle_task_group(
-        dag,
-        group_id="tg_marketing",
-        var_name="RUN__MARKETING",
-        make_task_fn=make_run_lcom_dw_marketing_task,
-        make_task_kwargs={
-            "run_type": "Scheduled Prod run - marketing",
-            "threads": 1
-        },
-    )    
 
     tg_cdu, cdu_join = make_toggle_task_group(
         dag,
@@ -222,7 +211,7 @@ with DAG(
                 "tg_licensing.join",
                 "tg_training_sessions.join",
                 "tg_support.join",
-                "tg_revenue.join",
+                "tg_revenue_marketing.join",
                 "tg_cdu.join",
             ],
             **context,
@@ -269,10 +258,10 @@ with DAG(
     drop_fk_join >> tg_common
 
     # fan-out after common
-    common_join >> [tg_licensing, tg_training, tg_support, tg_revenue >> tg_marketing, tg_cdu] 
+    common_join >> [tg_licensing, tg_training, tg_support, tg_revenue_marketing, tg_cdu] 
 
     # wait until all branches finished (ran or skipped), then snapshots
-    [licensing_join, training_join, support_join, revenue_join, cdu_join] >> snapshots_gate
+    [licensing_join, training_join, support_join, revenue_marketing_join, cdu_join] >> snapshots_gate
     snapshots_gate >> tg_snapshots
 
     snapshots_join >> tg_recreate_fk

@@ -154,6 +154,26 @@ def make_run_lcom_dw_marketing_task(dag,  run_type: str, threads: Optional[int] 
         **operator_kwargs, 
     )
 
+def make_run_lcom_dw_revenue_and_marketing_task(dag,  run_type: str, threads: Optional[int] = None, **operator_kwargs,) -> BashOperator:
+    threads_part = f"--threads {threads}" if threads is not None else ""
+
+    return BashOperator(
+        task_id="run_revenue_and_marketing",
+        bash_command=(  
+            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+            "dbt run "
+            "--select tag:revenue tag:marketing "
+            "--exclude \"config.materialized:view\" "
+            "--vars '{"
+            f"\"run_type\": \"{run_type}\", "
+            "\"loaddate\": \"{{ ti.xcom_pull(task_ids='Start_Load.Set_Load_Date', key='LoadDate') }}\""
+            "}' "
+            f"{threads_part}"
+        ),
+        on_failure_callback=notify_task_failure,
+        **operator_kwargs, 
+    )
+
 def make_run_lcom_dw_snapshots_task(dag,  run_type: str, threads: Optional[int] = None, **operator_kwargs,) -> BashOperator:
     threads_part = f"--threads {threads}" if threads is not None else ""
 
