@@ -111,7 +111,7 @@ left outer join {{ source('fivetran_salesforce_quickstart', 'account') }} dist
 on sfdc_account.parent_id=dist.id
 left outer join {{ ref("sfdc_ultimate_parent_accounts_data")}} sfdc_ultimate_parent
 on sfdc_ultimate_parent.sfdc_ultimate_parent_id = sfdc_account.id
-where sfdc_account.test_account_c = false
+
 
 )
 , LCOM_data as (
