@@ -21,80 +21,17 @@ models:
         description: Salesforce District ID (DIM_ACCOUNT.SFDC_Account_Id)
       - name: sfdc_district_name
         description: Salesforce District Name (DIM_ACCOUNT.SFDC_Name)
-      - name: sfdc_account_last_activity_date
-        description: Account Last Activity Date
-      - name: sfdc_activity_metric_rollup_id
-        description: Activity Metric Rollup
-      - name: sfdc_agile_lms
-        description: Agile LMS
-      - name: sfdc_alt_phone
-        description: Agile Phone
-      - name: sfdc_cares_act_allocation
-        description: CARES Act Allocation
-      - name: sfdc_district
-        description: District Segment Size
-      - name: sfdc_district_easy_code_tam
-        description: District EasyCode TAM
-      - name: sfdc_district_easy_tech_tam
-        description: District EasyTech TAM
-      - name: sfdc_district_elementary_teachers
-        description: District Elementary Teachers
-      - name: sfdc_district_faculty_library_media_fte
-        description: District Faculty - Library/Media FTE
-      - name: sfdc_district_kindergarten_teachers
-        description: District Kindergarten Teachers
-      - name: sfdc_easy_tech_tam
-        description: EasyTech TAM
-      - name: sfdc_easy_tech_tam_captured
-        description: EasyTech TAM Captured
-      - name: sfdc_fiscal_career_and_tech_federal
-        description: Fiscal - Career and Tech - Federal
-      - name: sfdc_fiscal_career_and_tech_state
-        description: Fiscal - Career and Tech - State
-      - name: sfdc_fiscal_career_and_tech_teacher_salar
-        description: Fiscal - Career and Tech - Teacher Salar
-      - name: sfdc_i_pad_schools_percent
-        description: iPad Schools (Percent)
-      - name: sfdc_last_activity_date
-        description: Last Activity
-      - name: sfdc_last_activity_logged_on
-        description: Last Activity Logged On
-      - name: sfdc_number_of_schools
-        description: Number of Schools
-      - name: sfdc_number_of_elementary_schools
-        description: "Number of Elementary Schools (Integrations: Gainsight.)"
-      - name: sfdc_number_of_high_schools
-        description: "Number of High Schools (Integrations: Gainsight.)"
-      - name: sfdc_number_of_k_8_buildings
-        description: Number of K-8 Buildings
-      - name: sfdc_number_of_middle_schools
-        description: "Number of Middle Schools (Integrations: Gainsight.)"
-      - name: sfdc_number_of_title_i_schools
-        description: Number of Title I Schools
-      - name: sfdc_parent_gsid
-        description: Parent GSID
-      - name: sfdc_technology_equipment
-        description: Technology - Equipment
-      - name: sfdc_technology_supplies_and_purchases
-        description: Technology - Supplies and Purchases
-      - name: sfdc_type
-        description: Type
       - name: sfdc_state_initiative
         description: State Initiative
       - name: sfdc_district_state_initiative
         description: District State Initiative
       - name: sfdc_urban_rural
         description: "Urban Rural (Integrations: Gainsight.)"
-      - name: sfdc_state_eligible_or_initiative_school
-        description: State Eligible or Initiative
       - name: sfdc_state_initiative_school
         description: State Initiative from the child(school) level. True if any school
           has True attribute
       - name: sfdc_district_state_initiative_school
         description: District State Initiative from the child(school) level. True if any
           school has True attribute
-      - name: sfdc_state_eligible_or_initiative_school
-        description: State Eligible or Initiative from the child(school) level. True if
-          any school has True attribute
       - name: loaddate
         description: The datetime the record was loaded

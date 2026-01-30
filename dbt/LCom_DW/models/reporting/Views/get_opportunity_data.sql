@@ -47,7 +47,7 @@
     SELECT
         opp.account_id,
         acc.sfdc_billing_state AS state,
-        acc.sfdc_parent_name_proper_case AS account_name,
+        acc.sfdc_parent_name AS account_name,
         CASE
         WHEN acc.sfdc_state_initiative
         OR acc.sfdc_state_initiative_school THEN TRUE
