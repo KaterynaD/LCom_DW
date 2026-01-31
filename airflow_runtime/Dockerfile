@@ -20,5 +20,13 @@ RUN pip install \
       "dbt-redshift==1.9.5" \
       "dbt-colibri"      
 
+# ---- Patch dbt docs template with custom index.html ----
+USER root
+COPY build_assets/index.html \
+  /home/airflow/.local/lib/python3.12/site-packages/dbt/task/docs/index.html
+RUN chown airflow:0 /home/airflow/.local/lib/python3.12/site-packages/dbt/task/docs/index.html \
+ && chmod 644 /home/airflow/.local/lib/python3.12/site-packages/dbt/task/docs/index.html
+
+
 # Return to root (default for this image)
 USER root
