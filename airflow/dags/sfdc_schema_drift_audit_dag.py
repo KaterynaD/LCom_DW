@@ -249,7 +249,7 @@ with DAG(
     schedule=SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT,
     catchup=False,
     max_active_runs=1,
-    default_args={"retries": 0},
+    default_args=default_args,
     tags=["dbt", "sfdc", "profiles", "schema_drift", "audit", "maintenance"],
 ) as dag:
 
