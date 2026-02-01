@@ -18,6 +18,8 @@ from airflow.utils.trigger_rule import TriggerRule
 from airflow.exceptions import AirflowSkipException
 from airflow.utils.state import TaskInstanceState
 
+from airflow.models import Variable
+
 
 import pendulum
 

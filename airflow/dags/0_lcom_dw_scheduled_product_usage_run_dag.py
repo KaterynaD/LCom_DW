@@ -9,7 +9,7 @@ sys.path.insert(0, str(UTILS_DIR))
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
-
+from airflow.models import Variable
 
 import pendulum
 
