@@ -9,6 +9,15 @@ sys.path.insert(0, str(UTILS_DIR))
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
+
+
+import pendulum
+
+local_tz = pendulum.timezone("America/Los_Angeles")
+
+# 8 PM Pacific by default
+SCHEDULE_LCOM_DW_PRODUCT_USAGE_RUN = Variable.get("SCHEDULE_LCOM_DW_PRODUCT_USAGE_RUN", default_var="30 2 * * *")
+
 from dag_utils import (
     DBT_LCOM_DW_PROJECT_DIR,
     notify_task_failure,
@@ -28,8 +37,8 @@ with DAG(
     dag_id="0_lcom_dw_scheduled_product_usage_scheduled_run",
     description="LCom DW: Product Usage run",
     default_args=default_args,
-    start_date=datetime(2024, 1, 1), 
-    schedule=None,          
+    start_date=datetime(2025, 1, 1, tzinfo=local_tz),
+    schedule=SCHEDULE_LCOM_DW_PRODUCT_USAGE_RUN, 
     max_active_runs=1,      
     catchup=False,
     tags=["dbt", "lcom_dw", "product usage", "scheduled"],

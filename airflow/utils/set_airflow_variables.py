@@ -32,6 +32,8 @@ if __name__ == "__main__":
     variables_to_set = {
         # Existing variables
         "SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT": "0 20 * * *",
+        "SCHEDULE_LCOM_DW_FULL_RUN": "30 1 * * *",
+        "SCHEDULE_LCOM_DW_PRODUCT_USAGE_RUN": "30 2 * * *",
         "RUN_COLUMN_LINEAGE_FLAG": "YES",
         "USE_EXISTING_BASE_PROFILE": "NO",
         "ALERT_EMAIL": "reportinganalytics@learning.com",

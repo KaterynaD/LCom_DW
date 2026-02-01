@@ -19,6 +19,13 @@ from airflow.exceptions import AirflowSkipException
 from airflow.utils.state import TaskInstanceState
 
 
+import pendulum
+
+local_tz = pendulum.timezone("America/Los_Angeles")
+
+# 8 PM Pacific by default
+SCHEDULE_LCOM_DW_FULL_RUN = Variable.get("SCHEDULE_LCOM_DW_FULL_RUN", default_var="30 1 * * *")
+
 
 from dag_utils import (
     notify_task_failure,
@@ -106,13 +113,19 @@ def make_toggle_task_group(
 # ------------------------------------------------------------------------
 # DAG
 # ------------------------------------------------------------------------
-default_args = {"owner": "airflow", "depends_on_past": False, "retries": 0}
+default_args = {
+    "owner": "airflow",
+    "depends_on_past": False,
+    "retries": 0,
+    "email_on_failure": False,  # we use custom callback instead
+    "email_on_retry": False,
+}
 
 with DAG(
     dag_id="0_lcom_dw_scheduled_full_run_dag",
     default_args=default_args,
-    start_date=datetime(2024, 1, 1),
-    schedule=None,          
+    start_date=datetime(2025, 1, 1, tzinfo=local_tz),
+    schedule=SCHEDULE_LCOM_DW_FULL_RUN,     
     max_active_runs=1, 
     catchup=False,
     tags=["lcom_dw", "dbt", "scheduled"],
