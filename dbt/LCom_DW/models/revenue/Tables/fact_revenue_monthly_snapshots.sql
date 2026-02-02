@@ -397,11 +397,24 @@ on ocr.parent_opportunities like '%'+ ad.opportunity_id+'%'
 and fb.fiscalyear=ad.fiscalyear
 and fb.fiscalyear_mon>=ad.fiscalyear_mon --renewal opportunity can be cancelled/closed even in the same month as new added
 and ad.include_flg=True
+{% if is_incremental() %}
+-- check if there was a previous cancellation of the same opportunity to avoid double counting of cancellations. It may happen if Close Date is changed back and forth
+left outer join {{ this }} t
+on fb.opportunity_id=t.opportunity_id
+and fb.mon_year>t.mon_year
+and t.bucket in (
+'Sales : Cancellation : ARR',
+'Sales : Cancellation : Biz Dev'
+)
+{% endif %}
 where
 fb.bucket in (
 'Sales : Cancellation : ARR',
 'Sales : Cancellation : Biz Dev'
 )
+{% if is_incremental() %}
+and t.opportunity_id is null
+{% endif %}
 )
 --reduction as like price increase
 ,expected_reduced_monthly_reduction as (
