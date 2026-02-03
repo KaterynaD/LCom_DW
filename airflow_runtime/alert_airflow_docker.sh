@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MAIL_FROM="kdrogaieva@learning.com"
-MAIL_TO="kdrogaieva@learning.com"
+MAIL_FROM="reportinganalytics@learning.com"
+MAIL_TO="reportinganalytics@learning.com"
 
 COMPOSE_DIR="/home/kdrogaieva/Prod/airflow_runtime"
 SERVICES=("airflow-webserver" "airflow-scheduler")
