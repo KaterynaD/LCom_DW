@@ -88,6 +88,25 @@ models:
     description: "{{ doc('column_last_modified_date') }}"
     constraints:
     - type: not_null
+
+  - name: last_modified_by_id
+    data_type: varchar(300)
+    description: "Last modified by ID. There are records modified by integration and attempts to filter them out instead of adjusting integration"
+    constraints:
+    - type: not_null
+
+  - name: last_modified_by_name
+    data_type: varchar(400)
+    description: "Last modified by name. There are records modified by integration and attempts to filter them out instead of adjusting integration"
+    constraints:
+    - type: not_null
+
+  - name: last_modified_by_user_role
+    data_type: varchar(400)
+    description: "Last modified by user role. There are records modified by integration and attempts to filter them out instead of adjusting integration"
+    constraints:
+    - type: not_null    
+
   - name: lead_status
     data_type: varchar(10)
     description: "{{ doc('column_lead_status') }}"
@@ -114,7 +133,7 @@ models:
     constraints:
     - type: not_null
   - name: owner_id
-    data_type: varchar(18)
+    data_type: varchar(300)
     description: "{{ doc('column_owner_id') }}"
     constraints:
     - type: not_null

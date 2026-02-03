@@ -5,7 +5,7 @@
    
    unique_key='contact_id',
 
-   check_cols=['lead_status',  'key_contact', 'owner_id', 'mailing_state_code', 'sfdc_account_id'],
+   check_cols=['lead_status',  'owner_id', 'mailing_state_code', 'sfdc_account_id', 'last_modified_by_id'],
 
    punch_thru_cols=['account_id'],
 
@@ -32,10 +32,10 @@ select
 contact_id, 
 account_id,
 lead_status,  
-case when key_contact then 1 else 0 end as key_contact,
 owner_id, 
 mailing_state_code,
 sfdc_account_id,
+last_modified_by_id,
 last_modified_date
 from {{ ref("dim_contact") }}
 {% if is_incremental() %}

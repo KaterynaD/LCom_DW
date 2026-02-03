@@ -65,14 +65,6 @@ models:
       data_tests:
         - not_null
 
-    - name: key_contact
-      data_type: integer
-      description: "{{ doc('column_key_contact') }}"
-      constraints:
-        - type: not_null
-      data_tests:
-        - not_null
-
     - name: owner_id
       data_type: varchar(300)
       description: "{{ doc('column_owner_id') }}"
@@ -104,6 +96,14 @@ models:
         - type: not_null
       data_tests:
         - not_null        
+        
+    - name: last_modified_by_id
+      data_type: varchar(300)
+      description: "It's created by id from Contact History table in pre-loaded records and last modified by id from Contact going forward. it's needed for the attempt to exclude some info added by the integration instead of adjusting the integration itself"
+      constraints:
+        - type: not_null
+      data_tests:
+        - not_null      
 
     - name: loaddate
       data_type: timestamp

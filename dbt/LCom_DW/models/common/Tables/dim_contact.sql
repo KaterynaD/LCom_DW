@@ -12,7 +12,7 @@ with rawdata as (select
         alias='sfdc_contact',
         used_columns=[ 
 			'id','name','first_name','last_name','email','phone','title','lead_status_c',
-'source_campaign_c','created_date','last_activity_date','last_modified_date',
+'source_campaign_c','created_date','last_activity_date','last_modified_date','last_modified_by_id',
 'account_id','contact_state_c','mailing_state','mailing_state_code',
 'other_state','owner_id','is_deleted','key_contact_c','mql_type_c',
 'qualifying_date_hubspot_c','returned_date_hubspot_c','rejected_date_hubspot_c',
@@ -41,6 +41,9 @@ isnull(r.email,'{{ var("default_varchar") }}') as email,
 isnull(r.key_contact_c,{{ var("default_boolean") }}) as key_contact, 
 isnull(r.last_activity_date,'{{ var("default_date") }}') as last_activity_date, 
 isnull(r.last_modified_date AT TIME ZONE 'PST','{{ var("default_date") }}') as last_modified_date, 
+isnull(r.last_modified_by_id,'{{ var("default_ID") }}') as last_modified_by_id,
+isnull(e_lmb.name,'{{ var("default_varchar") }}') as last_modified_by_name,
+isnull(e_lmb.user_role,'{{ var("default_varchar") }}') as last_modified_by_user_role,
 isnull(r.lead_status_c,'{{ var("default_varchar") }}') as lead_status, 
 isnull(r.mailing_state,'{{ var("default_varchar") }}') as mailing_state, 
 isnull(r.mailing_state_code,'{{ var("default_varchar") }}') as mailing_state_code, 
@@ -68,7 +71,9 @@ from rawdata as r
     left outer join {{ref('dim_account') }} as a
         on r.account_id = a.sfdc_account_id
     left outer join {{ref('dim_employee') }} as e
-        on r.owner_id = e.employee_id       
+        on r.owner_id = e.employee_id     
+    left outer join {{ref('dim_employee') }} as e_lmb
+        on r.last_modified_by_id = e_lmb.employee_id    		  
     where r.is_deleted=False
 union all
 select
@@ -87,6 +92,9 @@ select
  {{ var("default_boolean") }} as key_contact, 
 '{{ var("default_date") }}' as last_activity_date, 
 '{{ var("default_date") }}' as last_modified_date, 
+'{{ var("default_ID") }}' as last_modified_by_id,
+'{{ var("default_varchar") }}' as last_modified_by_name,
+'{{ var("default_varchar") }}' as last_modified_by_user_role,
 '{{ var("default_varchar") }}' as lead_status, 
 '{{ var("default_varchar") }}' as mailing_state, 
 '{{ var("default_varchar") }}' as mailing_state_code, 
@@ -127,12 +135,15 @@ select
 	,key_contact::BOOLEAN
 	,last_activity_date::DATE
 	,last_modified_date::TIMESTAMP WITHOUT TIME ZONE
+	,last_modified_by_id::VARCHAR(300)
+	,last_modified_by_name::VARCHAR(400)
+	,last_modified_by_user_role::VARCHAR(400)
 	,lead_status::VARCHAR(10)
 	,mailing_state::VARCHAR(240)
 	,mailing_state_code::VARCHAR(30)
 	,mql_type::VARCHAR(765)
 	,other_state::VARCHAR(240)
-	,owner_id::VARCHAR(18)
+	,owner_id::VARCHAR(300)
 	,owner_name::VARCHAR(400)
 	,owner_user_role::VARCHAR(400)
 	,phone::VARCHAR(120)
