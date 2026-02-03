@@ -377,3 +377,4 @@ sources:
         - name: data_quality_description_c
         - name: data_quality_score_c
         - name: is_deleted
+      - name: contact_history  

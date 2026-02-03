@@ -8,14 +8,12 @@
         )
 }}
 
-WITH historic_status_dates AS (
+/*WITH historic_status_dates AS (
     select 
       h.contact_id,
       h.lead_status AS lead_stage_historic,
       case when h.fromdate='1900-01-01' then c.created_date else  h.fromdate end   AS lead_stage_date_historic,
       h.owner_id    AS lead_stage_changed_by_id,
-      e.name        AS lead_stage_changed_by_name,
-      e.user_role   AS lead_stage_changed_by_role,
       ROW_NUMBER() OVER (
         PARTITION BY h.contact_id, h.lead_status
         ORDER BY h.fromdate DESC
@@ -23,21 +21,33 @@ WITH historic_status_dates AS (
   FROM  {{ ref("dim_contact_history") }} h --update to dw.common.vw_contact_history once it is ready to use
   join {{ ref("dim_contact") }} c
   on h.contact_id = c.contact_id
-  LEFT JOIN {{ ref("dim_employee") }} e
-    ON h.owner_id = e.employee_id
   WHERE case when h.fromdate='1900-01-01' then c.created_date else  h.fromdate end > DATE '2023-12-31'
     AND h.lead_status <> 'Unknown'
     and h.lead_status <> 'Unkownn'
-),
+),*/
+WITH historic_status_dates AS (
+  SELECT
+    h.contact_id,
+   	h.new_value as lead_stage_historic,
+   	h.created_date::date as lead_stage_date_historic,
+   	h.created_by_id as lead_stage_changed_by_id,
+   	ROW_NUMBER() OVER (
+        PARTITION BY h.contact_id, h.new_value
+        ORDER BY h.created_date::date DESC
+      ) AS rn
+  FROM {{ source('fivetran_salesforce_quickstart', 'contact_history') }} h  	
+  WHERE h.field = 'lead_Status__c'
+    AND h.created_date > '2023-12-31'
+    and h.new_value is not null
+    and isnull(h.new_value,'~')!='Unknown'
+    )
 --max change date per status and contact
-historic_latest AS (
+,historic_latest AS (
   SELECT
       contact_id,
       lead_stage_historic,
       lead_stage_date_historic,
-      lead_stage_changed_by_id,
-      lead_stage_changed_by_name,
-      lead_stage_changed_by_role
+      lead_stage_changed_by_id
   FROM historic_status_dates
   WHERE rn = 1
 ),
@@ -96,9 +106,7 @@ SELECT
     h.lead_stage_date_historic,
     c.lead_stage_date_hubspot,
     c.lead_stage_date_manual,
-    h.lead_stage_changed_by_id,
-    h.lead_stage_changed_by_name,
-    h.lead_stage_changed_by_role
+    h.lead_stage_changed_by_id
 FROM contact_status_dates c
 FULL OUTER JOIN historic_latest h
   ON c.contact_id = h.contact_id
@@ -161,8 +169,6 @@ FULL OUTER JOIN historic_latest h
     '{{ var("default_date") }}'::DATE as lead_stage_date_hubspot,
     '{{ var("default_date") }}'::DATE as lead_stage_date_manual,
     '{{ var("default_ID") }}'::VARCHAR as lead_stage_changed_by_id,
-    '{{ var("default_varchar") }}'::VARCHAR as lead_stage_changed_by_name,
-    '{{ var("default_varchar") }}'::VARCHAR as lead_stage_changed_by_role,
     isnull(fw.opportunity_id, '{{ var("default_ID") }}'::VARCHAR) as won_opp_id,
     isnull(fw.opp_close_date, '{{ var("default_date") }}'::DATE) as won_opp_date,
     isnull(fw.opp_amount, {{ var("default_numeric") }}::DECIMAL) as won_opp_amount,
@@ -183,8 +189,6 @@ FULL OUTER JOIN historic_latest h
     isnull(u.lead_stage_date_hubspot, '{{ var("default_date") }}'::DATE),
     isnull(u.lead_stage_date_manual, '{{ var("default_date") }}'::DATE),
     isnull(u.lead_stage_changed_by_id, '{{ var("default_ID") }}'::VARCHAR),
-    isnull(u.lead_stage_changed_by_name, '{{ var("default_varchar") }}'::VARCHAR),
-    isnull(u.lead_stage_changed_by_role, '{{ var("default_varchar") }}'::VARCHAR),
     '{{ var("default_varchar") }}'::VARCHAR as won_opp_id,
     '{{ var("default_date") }}'::DATE as won_opp_date,
     {{ var("default_numeric") }}::DECIMAL as won_opp_amount,
@@ -204,8 +208,6 @@ select
 	,lead_stage_date_hubspot::DATE
 	,lead_stage_date_manual::DATE
 	,lead_stage_changed_by_id::VARCHAR(300)
-	,lead_stage_changed_by_name::VARCHAR(400)
-	,lead_stage_changed_by_role::VARCHAR(240)
 	,won_opp_id::VARCHAR(300)
 	,won_opp_date::DATE
 	,won_opp_amount::NUMERIC(35,10)

@@ -26,9 +26,9 @@
   	s.lead_stage_date_historic,
   	s.lead_stage_date_hubspot,
   	s.lead_stage_date_manual,
- 	  s.lead_stage_changed_by_id, --ADD WHEN AVAIALBE
-  	s.lead_stage_changed_by_name,--ADD WHEN AVAIALBE
-  	s.lead_stage_changed_by_role,--ADD WHEN AVAIALBE
+ 	s.lead_stage_changed_by_id, 
+  	e.name lead_stage_changed_by_name,
+  	e.user_role lead_stage_changed_by_role,
   	--school year
   	dc.schoolyear as lead_stage_schoolyear,
   	--opportunity and campaign details
@@ -70,4 +70,6 @@ from {{ ref("fact_contact_lifecycle_events") }}  s
 		on s.lead_stage_date_unified::date = dc.cal_date 
 	left join {{ ref("dim_account") }} a
 		on c.account_id = a.account_id
+	left join {{ ref("dim_employee") }} e
+		on s.lead_stage_changed_by_id = e.employee_id		
 where s.lead_stage_date_unified::date > DATE '2023-06-30' --lead stage since beginning of 23/24 SY

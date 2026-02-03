@@ -78,22 +78,10 @@ models:
           Default Unique ID value when stage is sourced from dim_contact dates or for opportunity milestone rows.
         constraints:
           - type: not_null
-
-      - name: lead_stage_changed_by_name
-        data_type: varchar(400)
-        description: >
-          Employee/user name associated with the lead stage change (joined from dim_employee by owner_id).
-          Default varchar value when stage is sourced from dim_contact dates or for opportunity milestone rows.
-        constraints:
-          - type: not_null
-
-      - name: lead_stage_changed_by_role
-        data_type: varchar(240)
-        description: >
-          Employee/user role associated with the lead stage change (from dim_employee).
-          Default varchar value when stage is sourced from dim_contact dates or for opportunity milestone rows.
-        constraints:
-          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_employee')
+              field: employee_id          
 
       - name: won_opp_id
         data_type: varchar(300)
