@@ -1,12 +1,8 @@
 {{ config(
         
-        materialized='incremental',
-        unique_key='order_id',
-        incremental_strategy='merge',
-        on_schema_change='append_new_columns',
+        materialized='table',
         dist='organization_district_id',
-        sort='startdate',
-        post_hook='DELETE FROM {{ this }} WHERE order_id in ( select orderid from {{ source("staging","license_order") }} stg where stg.valid_boolean=false)'
+        sort='startdate'
 )
  }}
 
@@ -28,6 +24,3 @@ left outer join {{ ref("dim_account") }} a
 on lower(stg.ownerid) = a.lcom_organization_id
 left outer join {{ ref("dim_lcom_sku") }} s
 on lower(stg.skuid) = s.sku_id
-{% if is_incremental() %}
- where coalesce(stg.auditupdatedate,'1900-01-01') >= (select coalesce(max(t.auditupdatedate),'1900-01-01') from {{ this }} t)
-{% endif %}

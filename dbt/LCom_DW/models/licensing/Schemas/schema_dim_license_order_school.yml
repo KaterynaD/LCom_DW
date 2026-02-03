@@ -6,7 +6,7 @@ models:
       Orders based on
       content_delivery_usage.staging.license_orderschool  (limited data from
       LearningPlatform.dbo.OrderSchool) table See also comment for more details
-      in FACT_LICENSE_ORDER"
+      in FACT_LICENSE_ORDER. Table materialization because incremental was causing too many maintenance and do not add a lot of sped to the refresh."
     config:
       contract:
         enforced: true    

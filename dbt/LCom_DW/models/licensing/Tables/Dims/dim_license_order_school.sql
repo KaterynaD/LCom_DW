@@ -1,12 +1,8 @@
 {{ config(
         
-        materialized='incremental',
-        unique_key=['order_id','organization_school_id'],
-        incremental_strategy='merge',
-        on_schema_change='append_new_columns',
+        materialized='table',
         dist='organization_district_id',
-        sort='order_id',
-        post_hook='DELETE FROM {{ this }} WHERE order_id in ( select orderid from {{ source("staging","license_order") }} stg where stg.valid_boolean=false)'
+        sort='order_id'
 )
  }}
 
@@ -28,6 +24,3 @@ left outer join {{ ref("dim_account") }} sch
 on lower(ord_sch.schoolid) = sch.account_id
 --
 where ord_sch.Valid_boolean=true
-{% if is_incremental() %}
- and coalesce(stg.auditupdatedate,'1900-01-01') >= (select coalesce(max(t.auditupdatedate),'1900-01-01') from {{ this }} t )
-{% endif %}

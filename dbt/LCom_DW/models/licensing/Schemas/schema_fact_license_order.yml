@@ -8,7 +8,7 @@ models:
       orders,  Google Integration, Generic LTI Tool Consumer, Tech Apps TCEA
       Assessment MS 19/20+ SKUs and NOT valid orders. As on 20250325 only these
       orders are loaded in Redshift staging table: EnforceDateRestrictions=n or
-      ExpirationDate>=cast(2024-01-01 as date)"
+      ExpirationDate>=cast(2024-01-01 as date) Table materialization because incremental was causing too many maintenance and do not add a lot of sped to the refresh."
     config:
       contract:
         enforced: true
