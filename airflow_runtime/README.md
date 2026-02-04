@@ -733,7 +733,7 @@ sudo systemctl status airflow-docker.service
 
 ---
 
-## 12) Monitor missing/unhealthy containers (cron + alert script)
+## 12) Monitor missing/unhealthy containers and clean up logs (cron + alert + cleanup_logs)
 
 ### 12.1 Schedule alert script
 
@@ -744,7 +744,11 @@ crontab -e
 Add:
 
 ```cron
+# i
+
+CRON_TZ=America/Los_Angeles
 0 */4 * * * /home/kdrogaieva/Prod/airflow_runtime/alert_airflow_docker.sh >/dev/null 2>&1
+0 10 * * 0 /bin/bash /home/kdrogaieva/Prod/airflow_runtime/cleanup_logs.sh >> /home/kdrogaieva/Prod/airflow_runtime/cleanup_logs.log 2>&1
 
 #ESC :wq
 ```
@@ -755,31 +759,30 @@ Verify:
 crontab -l
 ```
 
-UTC → PST (UTC−8 winter) → PDT (UTC−7 summer)
+Alert runs every 4 hours in America/Los_Angeles time:
 
-00:00 → 16:00 (prev day) → 17:00 (prev day)
+PST/PDT -> 00:00, 04:00, 08:00, 12:00, 16:00, 20:00
 
-04:00 → 20:00 (prev day) → 21:00 (prev day)
+Cleanup runs every Sunday at 10:00 am
 
-08:00 → 00:00 → 01:00
+### 12.2 What scripts do
 
-12:00 → 04:00 → 05:00
-
-16:00 → 08:00 → 09:00
-
-20:00 → 12:00 → 13:00
-
-### 8.2 What `alert_airflow_docker.sh` does
-
-High-level behavior:
+alert_airflow_docker.sh:
 - Checks that key compose services exist and have running and healthy  containers.
 - If a container is missing, not running, or unhealthy, it emails an alert with:
   - timestamp and hostname
   - `docker compose ps` output
   - recent container logs (`docker logs --tail ...`)
 
+cleanup_logs.sh:
+
+- Periodically cleans up local Airflow and dbt log files by deleting old log files beyond a configurable retention period. It safely removes only regular files (keeping active logs intact)
+- Reports reclaimed disk space
+- Emails a cleanup summary
+
 ---
 
+---
 ## 13) Daily operations (if needed for maintenance or whatever)
 
 ### 13.1 Start/stop
