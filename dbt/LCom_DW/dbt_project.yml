@@ -52,7 +52,9 @@ models:
     licensing:
       +schema: licensing
     marketing:
-      +schema: marketing         
+      +schema: marketing  
+    profiles:
+      +schema: profiles             
     reporting:
       +schema: reporting
     revenue:
