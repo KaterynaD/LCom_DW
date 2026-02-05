@@ -32,6 +32,17 @@ select
 	,fal.country_students_launches
 	,fal.company_cnt_students
 	,fal.company_students_launches
+	--
+	,fal.school_cnt_students_month
+	,fal.school_students_launches_month
+	,fal.district_cnt_students_month
+	,fal.district_students_launches_month
+	,fal.state_cnt_students_month
+	,fal.state_students_launches_month
+	,fal.country_cnt_students_month
+	,fal.country_students_launches_month
+	,fal.company_cnt_students_month
+	,fal.company_students_launches_month	
 from {{ ref("fact_students_usage_monthly_snapshots") }} fal
 join {{ ref("dim_account_history") }} dist
 on fal.organization_district_id=dist.account_id 
