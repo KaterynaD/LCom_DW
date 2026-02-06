@@ -10,12 +10,13 @@ DRY_RUN=0
 # Airflow task logs folder (recursive; delete old files)
 AIRFLOW_LOG_DIR="/home/kdrogaieva/Prod/airflow_logs"
 
-# dbt logs folder (delete rotated logs only; keep dbt.log)
-DBT_LOG_DIR="/home/kdrogaieva/Prod/dbt_logs"
+# Deploy logs folder (recursive; delete old files)
+DEPLOY_LOG_DIR="/home/kdrogaieva/Prod/deploy/logs"
 
-# Mail (optional). Set SEND_MAIL=0 to disable.
-MAIL_FROM="kdrogaieva@learning.com"
-MAIL_TO="kdrogaieva@learning.com"
+
+
+MAIL_FROM="reportinganalytics@learning.com"
+MAIL_TO="reportinganalytics@learning.com"
 MAIL_SUBJECT="Log cleanup report ($(hostname))"
 
 # -------------------------
@@ -37,23 +38,20 @@ validate_int() {
 }
 
 # mtime cutoff for "N days and older"
-# find -mtime +9 matches >=10 days old (in the usual sense)
+# find -mtime +9 matches >=10 days old
 build_mtime_args() {
   local days="$1"
   if (( days == 0 )); then
-    echo ""  # no mtime filter => everything
+    echo ""
   else
-    local cutoff=$(( days - 1 ))
-    echo "-mtime +${cutoff}"
+    echo "-mtime +$((days - 1))"
   fi
 }
 
 run_find_delete() {
   local label="$1"
   local base_dir="$2"
-  local extra_find_args="$3"   # string of extra find predicates
-  local mtime_args="$4"
-
+  local mtime_args="$3"
   local deleted_count=0
 
   echo ""
@@ -64,13 +62,13 @@ run_find_delete() {
 
   if [[ "${DRY_RUN}" == "1" ]]; then
     # shellcheck disable=SC2086
-    deleted_count=$(find -P "${base_dir}" -type f ! -type l ${mtime_args} ${extra_find_args} -print | wc -l)
+    deleted_count=$(find -P "${base_dir}" -type f ! -type l ${mtime_args} -print | wc -l)
     echo "DRY RUN: ${deleted_count} files would be deleted."
     # shellcheck disable=SC2086
-    find -P "${base_dir}" -type f ! -type l ${mtime_args} ${extra_find_args} -print
+    find -P "${base_dir}" -type f ! -type l ${mtime_args} -print
   else
     # shellcheck disable=SC2086
-    deleted_count=$(find -P "${base_dir}" -type f ! -type l ${mtime_args} ${extra_find_args} -print -delete | wc -l)
+    deleted_count=$(find -P "${base_dir}" -type f ! -type l ${mtime_args} -print -delete | wc -l)
     echo "Deleted: ${deleted_count} files."
   fi
 
@@ -85,25 +83,22 @@ validate_int "${RETENTION_DAYS}"
 START_TS="$(date -Is)"
 HOST="$(hostname)"
 
-# Validate directories if present (you can disable by setting var to empty)
 AIRFLOW_DELETED=0
-DBT_DELETED=0
+DEPLOY_DELETED=0
 
 MTIME_ARGS="$(build_mtime_args "${RETENTION_DAYS}")"
 
 if [[ -n "${AIRFLOW_LOG_DIR}" ]]; then
   validate_dir "${AIRFLOW_LOG_DIR}"
-  AIRFLOW_DELETED="$(run_find_delete "Airflow logs cleanup" "${AIRFLOW_LOG_DIR}" "" "${MTIME_ARGS}")"
+  AIRFLOW_DELETED="$(run_find_delete "Airflow logs cleanup" "${AIRFLOW_LOG_DIR}" "${MTIME_ARGS}")"
 fi
 
-if [[ -n "${DBT_LOG_DIR}" ]]; then
-  validate_dir "${DBT_LOG_DIR}"
-  # Only delete rotated dbt logs (dbt.log.1, dbt.log.2, etc). Keep active dbt.log.
-  # This matches files like dbt.log.1, dbt.log.2, dbt.log.2026-..., etc IF they start with dbt.log.
-  DBT_DELETED="$(run_find_delete "dbt logs cleanup (rotated only)" "${DBT_LOG_DIR}" "-name 'dbt.log.*'" "${MTIME_ARGS}")"
+if [[ -n "${DEPLOY_LOG_DIR}" ]]; then
+  validate_dir "${DEPLOY_LOG_DIR}"
+  DEPLOY_DELETED="$(run_find_delete "Deploy logs cleanup" "${DEPLOY_LOG_DIR}" "${MTIME_ARGS}")"
 fi
 
-# Disk free after cleanup (for current filesystem of airflow logs if set, else use ".")
+# Disk free after cleanup (use airflow logs filesystem if available)
 DF_TARGET="${AIRFLOW_LOG_DIR:-.}"
 DISK_LINE="$(df -h "${DF_TARGET}" | awk 'NR==2')"
 DISK_FS="$(echo "${DISK_LINE}" | awk '{print $1}')"
@@ -115,15 +110,15 @@ END_TS="$(date -Is)"
 REPORT=$(cat <<EOF
 Log cleanup completed.
 
-Host            : ${HOST}
+
 Retention (days): ${RETENTION_DAYS}
 Dry run         : ${DRY_RUN}
 
 Airflow log dir : ${AIRFLOW_LOG_DIR}
 Airflow deleted : ${AIRFLOW_DELETED}
 
-dbt log dir     : ${DBT_LOG_DIR}
-dbt deleted     : ${DBT_DELETED}
+Deploy log dir  : ${DEPLOY_LOG_DIR}
+Deploy deleted  : ${DEPLOY_DELETED}
 
 Disk filesystem : ${DISK_FS}
 Disk used       : ${DISK_USED}

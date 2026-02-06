@@ -776,7 +776,7 @@ alert_airflow_docker.sh:
 
 cleanup_logs.sh:
 
-- Periodically cleans up local Airflow and dbt log files by deleting old log files beyond a configurable retention period. It safely removes only regular files (keeping active logs intact)
+- Periodically cleans up local Airflow and Deployment log files by deleting old log files beyond a configurable retention period (10 days). 
 - Reports reclaimed disk space
 - Emails a cleanup summary
 
