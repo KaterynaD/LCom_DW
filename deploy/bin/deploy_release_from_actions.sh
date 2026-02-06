@@ -220,7 +220,7 @@ cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
 
 # Ensure state dir exists
-: "\${DBT_TARGET_PATH:=$DBT_LCOM_DW_PROJECT_DIR/target}"
+
 STATE_DIR="\$DBT_TARGET_PATH/latest_prod_artifact"
 mkdir -p "\$STATE_DIR"
 
