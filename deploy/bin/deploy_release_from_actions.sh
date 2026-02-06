@@ -220,30 +220,35 @@ cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
 
 # Ensure state dir exists
-STATE_DIR="$DBT_TARGET_PATH/latest_prod_artifact"
-mkdir -p "$STATE_DIR"
+: "\${DBT_TARGET_PATH:=$DBT_LCOM_DW_PROJECT_DIR/target}"
+STATE_DIR="\$DBT_TARGET_PATH/latest_prod_artifact"
+mkdir -p "\$STATE_DIR"
 
 # Preserve the existing (most recent) manifest BEFORE we compile (compile may overwrite it)
-if [[ -f "$DBT_TARGET_PATH/manifest.json" ]]; then
-  cp -f "$DBT_TARGET_PATH/manifest.json" "$STATE_DIR/manifest.json"
-  echo "[container] Saved prior manifest to: $STATE_DIR/manifest.json"
+if [[ -f "\$DBT_TARGET_PATH/manifest.json" ]]; then
+  cp -f "\$DBT_TARGET_PATH/manifest.json" "\$STATE_DIR/manifest.json"
+  echo '[container] Saved prior manifest to: '"\$STATE_DIR"'/manifest.json'
 else
-  echo "[container] No prior manifest found at $DBT_TARGET_PATH/manifest.json; state comparison will be skipped."
+  echo '[container] No prior manifest found at '"\$DBT_TARGET_PATH"'/manifest.json; state comparison will be skipped.'
 fi
+
 
 \"\$DBT_BIN\" deps
 \"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME}
 
 # List modified models ONLY if we have a state manifest to compare against
-if [[ -f "$STATE_DIR/manifest.json" ]]; then
-  "$DBT_BIN" list \
-    --select "state:modified" \
-    --state "$STATE_DIR" \
-    --resource-type model \
-    --target "${DBT_TARGET_NAME}"
+if [[ -f "\$STATE_DIR/manifest.json" ]]; then
+  
+\"\$DBT_BIN\" list \
+  --select state:modified \
+  --state \"\$STATE_DIR\" \
+  --resource-type model \
+  --target ${DBT_TARGET_NAME}
+
 else
-  echo '[container] Skipping: dbt list --select state:modified (missing '"$STATE_DIR"'/manifest.json)'
+  echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
 fi
+
 
 
 \"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME}
