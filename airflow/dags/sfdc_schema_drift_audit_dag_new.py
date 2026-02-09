@@ -11,16 +11,14 @@ import json
 import logging
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
-from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator, BranchPythonOperator
+from airflow.operators.empty import EmptyOperator
 
 from airflow.utils.trigger_rule import TriggerRule
-from airflow.exceptions import AirflowSkipException
-
 from airflow.models import Variable
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.utils.email import send_email
+from airflow.utils.task_group import TaskGroup
 
 from html import escape as html_escape
 from typing import Any, Dict, List
@@ -46,22 +44,30 @@ from dag_utils import (
 MANIFEST_PATH = os.path.join(DBT_TARGET_DIR, "colibri-manifest.json")
 
 # 8 PM Pacific by default
-SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT = Variable.get("SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT", default_var="0 20 * * *")
+SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT = Variable.get(
+    "SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT", default_var="0 20 * * *"
+)
 
 RUN_COLUMN_LINEAGE_FLAG = Variable.get("RUN_COLUMN_LINEAGE_FLAG", default_var="YES").upper()
-
 USE_EXISTING_BASE_PROFILE = Variable.get("USE_EXISTING_BASE_PROFILE", default_var="YES").upper()
 
 
 # ------------------------------------------------------------------------
-# Branch: Manage base profile based on Airflow variable
+# Branch helpers (must return FULL task_id when used inside TaskGroup)
 # ------------------------------------------------------------------------
 def branch_on_use_existing_base_profile():
     """
     If USE_EXISTING_BASE_PROFILE == "NO" run dbt macros to replace base profile.
     If "YES" skip and continue.
     """
-    return "dbt_delete_base_profile" if USE_EXISTING_BASE_PROFILE == "NO" else "skip_manage_base_profile"
+    tg = "tg_manage_base_profile"
+    return f"{tg}.dbt_delete_base_profile" if USE_EXISTING_BASE_PROFILE == "NO" else f"{tg}.skip_manage_base_profile"
+
+
+def branch_on_column_lineage_flag():
+    """Run lineage tasks only when RUN_COLUMN_LINEAGE_FLAG == 'YES'."""
+    tg = "tg_column_lineage"
+    return f"{tg}.compile_analyses" if RUN_COLUMN_LINEAGE_FLAG == "YES" else f"{tg}.skip_column_lineage"
 
 
 # ------------------------------------------------------------------------
@@ -78,27 +84,24 @@ def get_compiled_sql_path(filename):
 def run_schema_drift_analysis():
     """Run compiled SQL queries and generate schema drift report."""
     logging.info("Starting schema drift analysis")
-    hook = PostgresHook(postgres_conn_id='redshift_default')
+    hook = PostgresHook(postgres_conn_id="redshift_default")
 
     # Run profiles_stats.sql
     profiles_stats_path = get_compiled_sql_path("profiles_stats.sql")
-    with open(profiles_stats_path, 'r') as f:
+    with open(profiles_stats_path, "r") as f:
         profiles_stats_sql = f.read()
-
     profiles_results = hook.get_records(profiles_stats_sql)
     logging.info(f"Profiles stats query returned {len(profiles_results)} rows")
 
     # Run missing_columns_lineage.sql
     missing_columns_lineage_path = get_compiled_sql_path("missing_columns_lineage.sql")
-    with open(missing_columns_lineage_path, 'r') as f:
+    with open(missing_columns_lineage_path, "r") as f:
         missing_columns_lineage_sql = f.read()
-
     missing_columns_lineage_results = hook.get_records(missing_columns_lineage_sql)
     logging.info(f"Missing columns lineage query returned {len(missing_columns_lineage_results)} rows")
 
-    # Generate HTML report
+    # Generate HTML report and send
     html_report = generate_html_report(profiles_results, missing_columns_lineage_results)
-    # Send email with report
     send_email_report(html_report)
 
 
@@ -111,7 +114,6 @@ def to_html_table(rows: List[Dict[str, Any]]) -> str:
         return "" if v is None else str(v)
 
     parts: List[str] = []
-
     parts.append(
         "<style>"
         "body{font-family:Arial, sans-serif; padding:16px}"
@@ -139,13 +141,14 @@ def to_html_table(rows: List[Dict[str, Any]]) -> str:
         parts.append("<tr>" + "".join(tds) + "</tr>")
 
     parts.append("</tbody></table>")
-
     return "\n".join(parts)
 
 
 def generate_html_report(profiles_results, missing_columns_results):
     """Generate HTML report from query results."""
-    logging.info(f"Generating HTML report: {len(profiles_results)} profile rows, {len(missing_columns_results)} missing column rows")
+    logging.info(
+        f"Generating HTML report: {len(profiles_results)} profile rows, {len(missing_columns_results)} missing column rows"
+    )
     html = "<h2>SFDC Schema Drift Audit Report</h2>"
 
     # Profiles stats table
@@ -166,15 +169,11 @@ def generate_html_report(profiles_results, missing_columns_results):
         logging.info("Found missing columns, generating lineage table")
 
         outputs: List[Dict[str, Any]] = []
-
         for row in missing_columns_results:
             source_name, table_name, column_name = row
             outputs.append(get_column_lineage(MANIFEST_PATH, source_name, column_name))
 
-        html_table = to_html_table(outputs)
-
-        html += html_table
-
+        html += to_html_table(outputs)
     else:
         logging.info("No missing columns detected")
         html += "<p>No schema drift detected today.</p>"
@@ -197,20 +196,11 @@ def send_email_report(html_content):
 
     try:
         logging.info(f"Sending email to {to} with subject '{subject}'")
-        send_email(
-            to=to,
-            subject=subject,
-            html_content=body
-        )
+        send_email(to=to, subject=subject, html_content=body)
         logging.info("Email sent successfully")
     except Exception as e:
         logging.error(f"Failed to send email: {e}")
         raise
-
-
-def branch_on_column_lineage_flag():
-    """Run lineage tasks only when RUN_COLUMN_LINEAGE_FLAG == 'YES'."""
-    return "compile_analyses" if RUN_COLUMN_LINEAGE_FLAG == "YES" else "skip_column_lineage"
 
 
 # ------------------------------------------------------------------------
@@ -226,7 +216,7 @@ default_args = {
 
 
 with DAG(
-    dag_id="sfdc_schema_drift_audit_new",
+    dag_id="sfdc_schema_drift_audit",
     description="SFDC: Schema drift audit - compare profiles and report missing columns (manual trigger only)",
     start_date=datetime(2025, 1, 1, tzinfo=local_tz),
     schedule=SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT,
@@ -242,42 +232,48 @@ with DAG(
     # 3. Create/update Redshift connection
     create_connection = create_create_connection_task(dag)
 
-    # 4. Branch: Manage base profile based on Airflow variable
-    branch_manage_base_profile = BranchPythonOperator(
-        task_id="branch_manage_base_profile",
-        python_callable=branch_on_use_existing_base_profile,
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-        on_failure_callback=notify_task_failure,
-    )
+    # -----------------------------
+    # TaskGroup: Manage base profile
+    # -----------------------------
+    with TaskGroup(group_id="tg_manage_base_profile") as tg_manage_base_profile:
+        branch_manage_base_profile = BranchPythonOperator(
+            task_id="branch_manage_base_profile",
+            python_callable=branch_on_use_existing_base_profile,
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            on_failure_callback=notify_task_failure,
+        )
 
-    skip_manage_base_profile = EmptyOperator(
-        task_id="skip_manage_base_profile",
-    )
+        skip_manage_base_profile = EmptyOperator(
+            task_id="skip_manage_base_profile",
+        )
 
-    dbt_delete_base_profile = BashOperator(
-        task_id="dbt_delete_base_profile",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run-operation delete_base_profile --target sfdc"
-        ),
-        on_failure_callback=notify_task_failure,
-    )
+        dbt_delete_base_profile = BashOperator(
+            task_id="dbt_delete_base_profile",
+            bash_command=(
+                f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+                "dbt run-operation delete_base_profile --target sfdc"
+            ),
+            on_failure_callback=notify_task_failure,
+        )
 
-    dbt_reset_profiles_current_to_base = BashOperator(
-        task_id="dbt_reset_profiles_current_to_base",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt run-operation reset_profiles_current_to_base --target sfdc"
-        ),
-        on_failure_callback=notify_task_failure,
-    )
+        dbt_reset_profiles_current_to_base = BashOperator(
+            task_id="dbt_reset_profiles_current_to_base",
+            bash_command=(
+                f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+                "dbt run-operation reset_profiles_current_to_base --target sfdc"
+            ),
+            on_failure_callback=notify_task_failure,
+        )
 
-    # Join back together after either path (run or skip)
-    manage_base_profile_join = EmptyOperator(
-        task_id="manage_base_profile_join",
-        trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
-    )
+        manage_base_profile_join = EmptyOperator(
+            task_id="manage_base_profile_join",
+            trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+        )
 
+        branch_manage_base_profile >> dbt_delete_base_profile >> dbt_reset_profiles_current_to_base >> manage_base_profile_join
+        branch_manage_base_profile >> skip_manage_base_profile >> manage_base_profile_join
+
+    # Continue after base-profile management
     run_sfdc_current_profiles = BashOperator(
         task_id="run_sfdc_current_profiles",
         bash_command=(
@@ -293,58 +289,62 @@ with DAG(
         on_failure_callback=notify_task_failure,
     )
 
-    # Creates columns lineage if variable set RUN_COLUMN_LINEAGE_FLAG to YES
-    branch_column_lineage = BranchPythonOperator(
-        task_id="branch_column_lineage",
-        python_callable=branch_on_column_lineage_flag,
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-        on_failure_callback=notify_task_failure,
-    )
+    # --------------------------------
+    # TaskGroup: Column lineage branch
+    # --------------------------------
+    with TaskGroup(group_id="tg_column_lineage") as tg_column_lineage:
+        branch_column_lineage = BranchPythonOperator(
+            task_id="branch_column_lineage",
+            python_callable=branch_on_column_lineage_flag,
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            on_failure_callback=notify_task_failure,
+        )
 
-    skip_column_lineage = EmptyOperator(
-        task_id="skip_column_lineage",
-    )
+        skip_column_lineage = EmptyOperator(
+            task_id="skip_column_lineage",
+        )
 
-    dbt_compile = BashOperator(
-        task_id="dbt_compile",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt compile"
-        ),
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-        on_failure_callback=notify_task_failure,
-    )
+        compile_query = BashOperator(
+            task_id="compile_analyses",
+            bash_command=(
+                f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+                "dbt compile --select missing_columns_lineage profiles_stats"
+            ),
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            on_failure_callback=notify_task_failure,
+        )
 
-    dbt_docs_generate = BashOperator(
-        task_id="dbt_docs_generate",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt docs generate"
-        ),
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-        on_failure_callback=notify_task_failure,
-    )
+        dbt_compile = BashOperator(
+            task_id="dbt_compile",
+            bash_command=(f"cd {DBT_LCOM_DW_PROJECT_DIR} && dbt compile"),
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            on_failure_callback=notify_task_failure,
+        )
 
-    colibri_generate = BashOperator(
-        task_id="colibri_generate",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "colibri generate --manifest $DBT_TARGET_PATH/manifest.json --catalog $DBT_TARGET_PATH/catalog.json --output-dir $DBT_TARGET_PATH"
-        ),
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-        on_failure_callback=notify_task_failure,
-    )
+        dbt_docs_generate = BashOperator(
+            task_id="dbt_docs_generate",
+            bash_command=(f"cd {DBT_LCOM_DW_PROJECT_DIR} && dbt docs generate"),
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            on_failure_callback=notify_task_failure,
+        )
 
-    # Compile dbt analyses queries (runs only if the gate task succeeds)
-    compile_query = BashOperator(
-        task_id="compile_analyses",
-        bash_command=(
-            f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-            "dbt compile --select missing_columns_lineage profiles_stats"
-        ),
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-        on_failure_callback=notify_task_failure,
-    )
+        colibri_generate = BashOperator(
+            task_id="colibri_generate",
+            bash_command=(
+                f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+                "colibri generate --manifest $DBT_TARGET_PATH/manifest.json --catalog $DBT_TARGET_PATH/catalog.json --output-dir $DBT_TARGET_PATH"
+            ),
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            on_failure_callback=notify_task_failure,
+        )
+
+        column_lineage_join = EmptyOperator(
+            task_id="column_lineage_join",
+            trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+        )
+
+        branch_column_lineage >> compile_query >> dbt_compile >> dbt_docs_generate >> colibri_generate >> column_lineage_join
+        branch_column_lineage >> skip_column_lineage >> column_lineage_join
 
     # 7. Run schema drift analysis and send report
     run_analysis = PythonOperator(
@@ -360,15 +360,8 @@ with DAG(
         run_name="SFDC Schema Drift Audit Daily Run",
     )
 
-    # --- Wiring for base-profile branch ---
-    set_load_date_task >> create_connection >> branch_manage_base_profile
-
-    branch_manage_base_profile >> dbt_delete_base_profile >> dbt_reset_profiles_current_to_base >> manage_base_profile_join
-    branch_manage_base_profile >> skip_manage_base_profile >> manage_base_profile_join
-
-    # Continue pipeline
-    manage_base_profile_join >> run_sfdc_current_profiles >> branch_column_lineage
-
-    # Existing lineage branch wiring
-    branch_column_lineage >> compile_query >> dbt_compile >> dbt_docs_generate >> colibri_generate >> run_analysis >> notify_summary
-    branch_column_lineage >> skip_column_lineage >> run_analysis >> notify_summary
+    # -----------------------------
+    # Final wiring
+    # -----------------------------
+    set_load_date_task >> create_connection >> tg_manage_base_profile >> run_sfdc_current_profiles >> tg_column_lineage
+    tg_column_lineage >> run_analysis >> notify_summary
