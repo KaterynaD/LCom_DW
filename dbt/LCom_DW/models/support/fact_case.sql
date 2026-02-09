@@ -23,7 +23,7 @@ with rawdata as (select
 'survey_send_date_time_c','thread_id_c','type',
 'xcase_number_c','record_type_id','solution_c','is_deleted'
         ],
-        profile_src=('profiles','sfdc_schema_audit'),
+        profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',  
         current_profile='current'
     ) }}  

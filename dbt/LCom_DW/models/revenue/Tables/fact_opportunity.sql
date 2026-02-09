@@ -53,7 +53,7 @@ select
 'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c',
 'quote_total_discount_c','remaining_quota_c'
             ],
-        profile_src=('profiles','sfdc_schema_audit'),
+        profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
         current_profile='current'
     ) }}

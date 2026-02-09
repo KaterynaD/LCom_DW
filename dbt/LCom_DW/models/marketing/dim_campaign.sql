@@ -14,7 +14,7 @@ with rawdata as (select
 'parent_id','start_date','end_date','Status','type','pipe_bucket_c',
 'data_quality_description_c','data_quality_score_c','is_deleted'
 			],
-        profile_src=('profiles','sfdc_schema_audit'),
+        profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
         current_profile='current'
     ) }}

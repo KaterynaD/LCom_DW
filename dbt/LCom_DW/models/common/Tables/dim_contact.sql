@@ -18,7 +18,7 @@ with rawdata as (select
 'qualifying_date_hubspot_c','returned_date_hubspot_c','rejected_date_hubspot_c',
 'sql_date_hubspot_c','mql_date_c','qualifying_date_c','returned_date_c','rejected_date_c','sql_date_c'
 			],
-        profile_src=('profiles','sfdc_schema_audit'),
+        profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
         current_profile='current'
     ) }}

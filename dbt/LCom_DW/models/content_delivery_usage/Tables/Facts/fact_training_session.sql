@@ -34,7 +34,7 @@ rawdata as (select
 'survey_teacher_engagement_c','survey_teacher_sentiment_c',
 'primary_contact_c','secondary_contact_c'
 		],
-		profile_src=('profiles','sfdc_schema_audit'),
+		profile_src=('profiles','vw_sfdc_schema_audit'),
 		base_profile='base',
 		current_profile='current'
 	) }}

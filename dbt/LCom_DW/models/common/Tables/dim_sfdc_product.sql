@@ -24,7 +24,7 @@ rawdata as (select
 'product_sub_family_c','sbqq_quantity_editable_c','sbqq_subscription_term_c',
 'sbqq_subscription_type_c','lcom_suite_c'
 		],
-		profile_src=('profiles','sfdc_schema_audit'),
+		profile_src=('profiles','vw_sfdc_schema_audit'),
 		base_profile='base',
 		current_profile='current'
 	) }}

@@ -9,6 +9,16 @@ sources:
     tables:
       - name: dim_calendar     
 
+  - name: staging
+    description: "Some static source data" 
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: dual
+        description: "Single row table to use in queries without from for empty dbt runs"       
+
   - name: audit
     description: "Audit and logs tables for tracking dbt runs and changes"
     quoting:
@@ -26,4 +36,4 @@ sources:
       schema: false
       identifier: false
     tables:
-      - name: sfdc_schema_audit
+      - name: vw_sfdc_schema_audit

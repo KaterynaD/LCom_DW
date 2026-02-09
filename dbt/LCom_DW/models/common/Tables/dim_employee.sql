@@ -14,7 +14,7 @@ select
         table_name='user',
         alias='sfdc_user',
         used_columns=['id','name','alias','community_nickname','username','department','title','email','is_active','last_login_date','created_date','last_modified_date','role_c'],
-        profile_src=('profiles','sfdc_schema_audit'),
+        profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
         current_profile='current'
     ) }}
@@ -50,7 +50,7 @@ select
 {{ var("default_boolean") }} as is_active,
 '{{ var("default_date") }}' as last_login_date,
 '{{ var("default_date") }}' as created_date,
-'{{ var("default_date") }}' as last_modified_date
+'{{ var("default_date") }}' as last_modified_date 
 )
 select
 employee_id::VARCHAR(300),

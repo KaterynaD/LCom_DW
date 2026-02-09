@@ -84,7 +84,7 @@ group by parent_id
 'ultimate_parent_id_c',
 'urban_rural_c'
         ],
-        profile_src=('profiles','sfdc_schema_audit'),
+        profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
         current_profile='current'
     ) }}

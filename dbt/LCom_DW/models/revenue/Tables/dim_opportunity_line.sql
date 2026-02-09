@@ -26,7 +26,7 @@ with rawdata as (select
 'start_date_c','subscription_term_c','total_price','unit_price',
 'weighted_total_price_c','business_type_opty_product_c','class_c','is_deleted'
 			],
-        profile_src=('profiles','sfdc_schema_audit'),
+        profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
         current_profile='current'
     ) }}

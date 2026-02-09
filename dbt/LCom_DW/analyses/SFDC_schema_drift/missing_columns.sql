@@ -1,9 +1,9 @@
 with missing as (select table_name, column_name
-from {{ ref("vw_sfdc_schema_drift") }}
+from {{ source("profiles","vw_sfdc_schema_audit") }}
 where profile_name='base'
 except 
 select table_name, column_name
-from {{ ref("vw_sfdc_schema_drift") }}
+from {{ source("profiles","vw_sfdc_schema_audit") }}
 where profile_name='current')
 select
 case
@@ -17,7 +17,7 @@ case
 end model_name,
 a.table_name, 
 a.column_name
-from {{ ref("vw_sfdc_schema_drift") }} a
+from {{ source("profiles","vw_sfdc_schema_audit") }} a
 join missing m
 on a.table_name=m.table_name
 and a.column_name=m.column_name
