@@ -216,7 +216,7 @@ default_args = {
 
 
 with DAG(
-    dag_id="sfdc_schema_drift_audit",
+    dag_id="sfdc_schema_drift_audit_new",
     description="SFDC: Schema drift audit - compare profiles and report missing columns (manual trigger only)",
     start_date=datetime(2025, 1, 1, tzinfo=local_tz),
     schedule=SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT,
