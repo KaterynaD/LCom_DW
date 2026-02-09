@@ -13,5 +13,6 @@
         exclude_stats_datetime=['placeholder','min','max'],
         num_outliers_columns=[],
         num_distribution_columns=[],
-        vc_top3_columns=[]
+        vc_top3_columns=[],
+        loaddate=var('loaddate', '1900-01-01'),
 ) }}s
