@@ -1,9 +1,9 @@
 with b as (select table_name, max(loaddate) loaddate, count(column_name) columns_cnt
-from {{ source("profiles","sfdc_schema_audit") }} a
+from {{ ref("vw_sfdc_schema_drift") }} a
 where profile_name='base'
 group by table_name)
 ,c as (select table_name, max(loaddate) loaddate, count(column_name) columns_cnt
-from {{ source("profiles","sfdc_schema_audit") }} a
+from {{ ref("vw_sfdc_schema_drift") }} a
 where profile_name='current'
 group by table_name)
 select
