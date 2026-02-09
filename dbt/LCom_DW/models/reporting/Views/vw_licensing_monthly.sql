@@ -23,17 +23,33 @@ case when (a.sfdc_state_initiative or a.sfdc_state_initiative_school) then true 
 a.sfdc_urban_rural as urban_rural,
 sku.sku_id,
 sku.sku_name,
-schoolcount,
-studentcount
-from {{ ref("fact_license_order_history") }}  floh
+floh.schoolcount,
+floh.studentcount
+from (
+    select 
+     floh.order_id,
+     floh.organization_district_id,
+     case when trunc(floh.fromdate) = '{{ var("default_date") }}' then flo.auditcreatedate else floh.fromdate end as fromdate,
+     floh.todate,
+     floh.sku_id,
+     floh.startdate,
+     floh.expirationdate,
+     floh.enforcedaterestrictions,
+     floh.schoolcount,
+     floh.studentcount
+     from
+    {{ ref("fact_license_order_history") }} floh
+    join {{ ref("fact_license_order") }} flo
+    on floh.order_id = flo.order_id
+    )  floh
 join {{ ref("dim_lcom_sku") }} sku
 on floh.sku_id = sku.sku_id
 join dim_month m
 on 
-case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between fromdate and todate
+case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between floh.fromdate and floh.todate
 AND
-(case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between startdate and expirationdate
-or (enforcedaterestrictions = 'n' and startdate<=case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end))
+(case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between floh.startdate and floh.expirationdate
+or (floh.enforcedaterestrictions = 'n' and floh.startdate<=case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end))
 join {{ ref("dim_account_history") }} a
 on floh.organization_district_id = a.account_id
 and m.mon_lastday between a.fromdate and a.todate
