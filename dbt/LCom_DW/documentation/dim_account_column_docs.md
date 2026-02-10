@@ -857,6 +857,10 @@ Enrollment - Native American (Percent)
 Enrollment - White (Percent)
 {% enddocs %}
 
+{% docs column_sfdc_pct_pacific %}
+Enrollment - Pacific (Percent)
+{% enddocs %}
+
 {% docs column_sfdc_per_student_expenditures %}
 Per Student Expenditures
 {% enddocs %}
@@ -1018,6 +1022,10 @@ Territory
 Territory
 {% enddocs %}
 
+{% docs column_sfdc_account_grade %}
+Account Grade
+{% enddocs %}
+
 {% docs column_sfdc_test_account %}
 Test Account (Denotes if the account should be excluded from business reporting and the account is only used for internal testing)
 {% enddocs %}
@@ -1028,6 +1036,10 @@ Tiered Service Level (3/20/20 - Need to delete or fix the associated flow. Hidin
 
 {% docs column_sfdc_title_iv_funding_21_st_century_grants %}
 Title IV Funding (21st Century Grants)
+{% enddocs %}
+
+{% docs column_sfdc_title_iv_funding_student_support %}
+Title IV Funding Student Support
 {% enddocs %}
 
 {% docs column_sfdc_top_75_account %}
@@ -1171,7 +1183,7 @@ Website (Integrations: Gainsight.)
 {% enddocs %}s
 
 
-{% docs column_SFDC_lcom_organization_id %}
+{% docs column_sfdc_lcom_organization_id %}
 LCom Organization linked to Salesforce account in Salesforce (Licensing project).
 {% enddocs %}
 

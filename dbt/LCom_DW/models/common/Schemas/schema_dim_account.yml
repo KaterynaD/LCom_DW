@@ -410,11 +410,75 @@ models:
     description: "{{ doc('column_sfdc_urban_rural') }}"
     constraints:
     - type: not_null
-  - name: SFDC_lcom_organization_id
+  - name: sfdc_lcom_organization_id
     data_type: varchar(300)
-    description: "{{ doc('column_SFDC_lcom_organization_id') }}"
+    description: "{{ doc('column_sfdc_lcom_organization_id') }}"
     constraints:
     - type: not_null
+
+
+  - name: sfdc_technology_measure
+    data_type: varchar(60)
+    description: "{{ doc('column_sfdc_technology_measure') }}"
+    constraints:
+    - type: not_null
+
+  - name: sfdc_account_grade
+    data_type: varchar(15)
+    description: "{{ doc('column_sfdc_account_grade') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_fiscal_title_i_school_yes_no
+    data_type: varchar(765)
+    description: "{{ doc('column_sfdc_fiscal_title_i_school_yes_no') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_title_iv_funding_21_st_century_grants
+    data_type: varchar(192)
+    description: "{{ doc('column_sfdc_title_iv_funding_21_st_century_grants') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_title_iv_funding_student_support
+    data_type: varchar(256)
+    description: "{{ doc('column_sfdc_title_iv_funding_student_support') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_asian
+    data_type: double precision
+    description: "{{ doc('column_sfdc_pct_asian') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_afro_amer
+    data_type: double precision
+    description: "{{ doc('column_sfdc_pct_afro_amer') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_white
+    data_type: double precision
+    description: "{{ doc('column_sfdc_pct_white') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_hisp
+    data_type: double precision
+    description: "{{ doc('column_sfdc_pct_hisp') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_multi_racial
+    data_type: double precision
+    description: "{{ doc('column_sfdc_pct_multi_racial') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_native
+    data_type: double precision
+    description: "{{ doc('column_sfdc_pct_native') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_pct_pacific
+    data_type: double precision
+    description: "{{ doc('column_sfdc_pct_pacific') }}"
+    constraints:
+    - type: not_null
+
   - name: sfdc_state_initiative_school
     data_type: boolean
     description: "{{ doc('column_sfdc_state_initiative_school') }}"
