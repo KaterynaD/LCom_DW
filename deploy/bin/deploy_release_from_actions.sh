@@ -281,7 +281,7 @@ fi
 
 
 \"\$DBT_BIN\" deps
-\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME}
+
 
 # List modified models ONLY if we have a state manifest to compare against
 if [[ -f "\$STATE_DIR/manifest.json" ]]; then
@@ -297,7 +297,7 @@ else
   echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
 fi
 
-
+\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME}
 
 \"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME}
 
