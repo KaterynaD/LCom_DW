@@ -10,7 +10,7 @@
       database_name,
       schema_name,
       table_name
-    from {{ ref('vw_sfdc_schema_drift') }}
+    from {{ ref('vw_sfdc_schema_audit') }}
     where table_name is not null
       and schema_name is not null
   {% endset %}

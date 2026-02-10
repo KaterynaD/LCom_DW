@@ -2,7 +2,7 @@ version: 2
 
 macros:
   - name: get_sfdc_schema_drift_tables
-    description: Returns a list of distinct tables from vw_sfdc_schema_drift view. Used to identify which SFDC profile tables need schema drift monitoring and profile management. Returns a list of dicts with database_name, schema_name, and table_name.
+    description: Returns a list of distinct tables from vw_sfdc_schema_audit view. Used to identify which SFDC profile tables need schema drift monitoring and profile management. Returns a list of dicts with database_name, schema_name, and table_name.
 
   - name: delete_base_profile
     description: Deletes all records with profile_name='base' from all SFDC profile tables. Used before resetting current profiles to base to ensure clean state. Iterates through tables returned by get_sfdc_schema_drift_tables macro and deletes from corresponding sfdc_<table_name>_profile models.
