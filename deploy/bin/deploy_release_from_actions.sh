@@ -154,7 +154,7 @@ echo '[container] DBT project dir:' \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
 cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
-
+\"\$DBT_BIN\" deps
 \"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'"
 
 
@@ -281,15 +281,10 @@ fi
 
 
 \"\$DBT_BIN\" deps
-
+\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'"
 
 # List modified models ONLY if we have a state manifest to compare against
 if [[ -f "\$STATE_DIR/manifest.json" ]]; then
-
-echo \"STATE manifest:\"
-sha256sum \"\$STATE_DIR/manifest.json\"
-echo \"CURRENT manifest before list:\"
-sha256sum \"\$DBT_TARGET_PATH/manifest.json\" || true
   
 \"\$DBT_BIN\" list \
   --select state:modified \
@@ -298,16 +293,20 @@ sha256sum \"\$DBT_TARGET_PATH/manifest.json\" || true
   --target ${DBT_TARGET_NAME} \
   --vars '{"loaddate": "1900-01-01"}'
 
-echo \"STATE manifest:\"
-sha256sum \"\$STATE_DIR/manifest.json\"
-echo \"CURRENT manifest before list:\"
-sha256sum \"\$DBT_TARGET_PATH/manifest.json\" || true 
-
 else
   echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
 fi
 
 
+
+\"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME}
+
+echo '[container] Running colibri...'
+colibri generate \
+  --manifest \"\$DBT_TARGET_PATH/manifest.json\" \
+  --catalog  \"\$DBT_TARGET_PATH/catalog.json\" \
+  --output-dir \"\$DBT_TARGET_PATH\"
+"
 
 log "Running dev_check_dags.py and validating output..."
 DAG_CHECK_OUTPUT="$(docker compose exec -T "$SERVICE_NAME" bash -c "
