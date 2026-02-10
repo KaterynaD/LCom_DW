@@ -108,9 +108,6 @@ cleanup_failed_release() {
 ### ----------------------------
 ### Logging
 ### ----------------------------
-log "Starting deploy."
-log "Requested: SHA=${NEW_SHA}  BRANCH=${BRANCH}  RemoteRef=${REMOTE_BRANCH_REF}"
-log "Current SHA: ${OLD_SHA:-<none>}"
 
 LOG_FILE="${LOG_DIR}/deploy_$(date +%Y%m%d_%H%M%S)_pending.log"
 touch "$LOG_FILE"
@@ -118,6 +115,56 @@ chmod 600 "$LOG_FILE" || true
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 trap 'rollback; cleanup_failed_release; log "DEPLOY FAILED — see log: $LOG_FILE"; exit 1' ERR INT TERM
+
+### ----------------------------
+### Run in-container steps BEFORE new release
+### dbt compile with predefined loaddate to compare later with new compile, the same predefined date to detect modified models
+### ----------------------------
+log "Pre-release running in-container steps via docker compose..."
+cd "$COMPOSE_DIR"
+
+docker compose exec -T "$SERVICE_NAME" bash -c "
+set -euo pipefail
+
+export PATH=\"/home/airflow/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:\$PATH\"
+
+echo '[container] whoami:' \$(whoami)
+echo '[container] PATH:' \"\$PATH\"
+command -v python || true
+command -v dbt || true
+
+if ! command -v dbt >/dev/null 2>&1; then
+  for p in /home/airflow/.local/bin/dbt /usr/local/bin/dbt /usr/bin/dbt; do
+    if [[ -x \"\$p\" ]]; then
+      export DBT_BIN=\"\$p\"
+      break
+    fi
+  done
+else
+  export DBT_BIN=\"\$(command -v dbt)\"
+fi
+
+if [[ -z \"\${DBT_BIN:-}\" ]]; then
+  echo 'FATAL: dbt not found even after PATH fix.'
+  exit 1
+fi
+
+echo '[container] Using dbt at:' \"\$DBT_BIN\"
+echo '[container] DBT project dir:' \"\$DBT_LCOM_DW_PROJECT_DIR\"
+
+cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
+
+
+\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'"
+
+
+
+
+log "Starting deploy."
+log "Requested: SHA=${NEW_SHA}  BRANCH=${BRANCH}  RemoteRef=${REMOTE_BRANCH_REF}"
+log "Current SHA: ${OLD_SHA:-<none>}"
+
+
 
 ### ----------------------------
 ### Fetch + verify SHA exists
@@ -243,7 +290,8 @@ if [[ -f "\$STATE_DIR/manifest.json" ]]; then
   --select state:modified \
   --state \"\$STATE_DIR\" \
   --resource-type model \
-  --target ${DBT_TARGET_NAME}
+  --target ${DBT_TARGET_NAME} \
+  --vars '{"loaddate": "1900-01-01"}'
 
 else
   echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
