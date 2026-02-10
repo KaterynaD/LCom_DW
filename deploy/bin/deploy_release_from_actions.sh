@@ -286,8 +286,10 @@ fi
 # List modified models ONLY if we have a state manifest to compare against
 if [[ -f "\$STATE_DIR/manifest.json" ]]; then
 
-echo "STATE manifest:"; sha256sum "$STATE_DIR/manifest.json"
-echo "CURRENT manifest before list:"; sha256sum "$DBT_TARGET_PATH/manifest.json" || true
+echo \"STATE manifest:\"
+sha256sum \"\$STATE_DIR/manifest.json\"
+echo \"CURRENT manifest before list:\"
+sha256sum \"\$DBT_TARGET_PATH/manifest.json\" || true
   
 \"\$DBT_BIN\" list \
   --select state:modified \
@@ -296,8 +298,10 @@ echo "CURRENT manifest before list:"; sha256sum "$DBT_TARGET_PATH/manifest.json"
   --target ${DBT_TARGET_NAME} \
   --vars '{"loaddate": "1900-01-01"}'
 
-echo "STATE manifest:"; sha256sum "$STATE_DIR/manifest.json"
-echo "CURRENT manifest before list:"; sha256sum "$DBT_TARGET_PATH/manifest.json" || true  
+echo \"STATE manifest:\"
+sha256sum \"\$STATE_DIR/manifest.json\"
+echo \"CURRENT manifest before list:\"
+sha256sum \"\$DBT_TARGET_PATH/manifest.json\" || true 
 
 else
   echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
