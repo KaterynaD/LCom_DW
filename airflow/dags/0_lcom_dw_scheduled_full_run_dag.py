@@ -170,27 +170,6 @@ with DAG(
         },
     )
 
-    tg_training, training_join = make_toggle_task_group(
-        dag,
-        group_id="tg_training_sessions",
-        var_name="RUN__TRAINING_SESSIONS",
-        make_task_fn=make_run_lcom_dw_training_sessions_task,
-        make_task_kwargs={
-            "run_type": "Scheduled Prod run - training sessions",
-            "threads": 1
-        },
-    )
-
-    tg_support, support_join = make_toggle_task_group(
-        dag,
-        group_id="tg_support",
-        var_name="RUN__SUPPORT",
-        make_task_fn=make_run_lcom_dw_support_task,
-        make_task_kwargs={
-            "run_type": "Scheduled Prod run - support",
-            "threads": 1
-        },
-    )
 
     tg_revenue_marketing, revenue_marketing_join = make_toggle_task_group(
         dag,
@@ -215,6 +194,36 @@ with DAG(
         },
     )
 
+    # Barrier: wait for ALL above tasks  (Licensing, CDU, Revenue Marketing) to finish (success/failed/skipped)
+    Licensing_CDU_Revenue_Marketing_gate = EmptyOperator(
+        task_id="Licensing_CDU_Revenue_Marketing_gate",
+        trigger_rule=TriggerRule.ALL_DONE,
+    )
+
+
+    tg_support, support_join = make_toggle_task_group(
+        dag,
+        group_id="tg_support",
+        var_name="RUN__SUPPORT",
+        make_task_fn=make_run_lcom_dw_support_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - support",
+            "threads": 1
+        },
+    )
+
+
+    tg_training, training_join = make_toggle_task_group(
+        dag,
+        group_id="tg_training_sessions",
+        var_name="RUN__TRAINING_SESSIONS",
+        make_task_fn=make_run_lcom_dw_training_sessions_task,
+        make_task_kwargs={
+            "run_type": "Scheduled Prod run - training sessions",
+            "threads": 1
+        },
+    )
+
 
     snapshots_gate = BranchPythonOperator(
     task_id="snapshots_gate",
@@ -224,7 +233,6 @@ with DAG(
         if _any_success(
             [
                 "tg_licensing.join",
-                "tg_training_sessions.join",
                 "tg_support.join",
                 "tg_revenue_marketing.join",
                 "tg_cdu.join",
@@ -234,6 +242,7 @@ with DAG(
         else "tg_snapshots.skipped"
     ),
     )
+
 
     tg_snapshots, snapshots_join = make_toggle_task_group(
     dag,
@@ -273,12 +282,20 @@ with DAG(
     drop_fk_join >> tg_common
 
     # fan-out after common
-    common_join >> [tg_licensing, tg_training, tg_support, tg_revenue_marketing, tg_cdu] 
+    common_join >> [tg_licensing, tg_revenue_marketing, tg_cdu] 
 
     # wait until all branches finished (ran or skipped), then snapshots
-    [licensing_join, training_join, support_join, revenue_marketing_join, cdu_join] >> snapshots_gate
-    snapshots_gate >> tg_snapshots
+    [licensing_join, revenue_marketing_join, cdu_join] >> Licensing_CDU_Revenue_Marketing_gate 
+    
+    Licensing_CDU_Revenue_Marketing_gate >> [tg_training, tg_support]
+
+    [training_join, support_join] >> snapshots_gate
+
+
+    snapshots_gate >> tg_snapshots 
 
     snapshots_join >> tg_recreate_fk
+
     recreate_fk_join >> tg_tests
+    
     tests_join >> notify_summary
