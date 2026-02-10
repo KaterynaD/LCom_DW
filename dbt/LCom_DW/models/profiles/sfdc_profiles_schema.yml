@@ -1,5 +1,32 @@
 version: 2
 models:
+- name: vw_sfdc_schema_audit
+  description: "This view aggregates the latest profile information for each column in the Salesforce source tables. It is designed to provide a comprehensive snapshot of the current and base schema state. The view is built on top of the individual profile tables (e.g., sfdc_account_profile, sfdc_campaign_profile). This allows easily monitor schema changes in a single location. The view must be created with target sfdc. There is a correspondent source based on teh view to be used in analytical queries to analyze schema drift and in staging CTE models based on SFDC tables to produce list of requested columns or defaults. The source is intended to use with target Prod (dev) "
+  columns:  
+  - name: profile_name
+    description: Name of the profile run (e.g., Current, Base).
+    data_type: VARCHAR(5000)
+  - name: database_name
+    description: Source database name of the column.
+    data_type: VARCHAR(128)
+  - name: schema_name
+    description: Source schema name of the column.
+    data_type: VARCHAR(128)
+  - name: table_name
+    description: Source table name of the column.
+    data_type: VARCHAR(128)
+  - name: column_name
+    description: Column name being profiled.
+    data_type: VARCHAR(128)
+  - name: data_type
+    description: Original Redshift data type.
+    data_type: VARCHAR(128)
+  - name: data_type_category
+    description: Normalized category (numeric, varchar, date).
+    data_type: VARCHAR(10)  
+  - name: loaddate
+    description: Timestamp when the profile row was inserted.
+    data_type: TIMESTAMP WITHOUT TIME ZONE
 - name: sfdc_account_profile
   description: Generates a lightweight profile for the Salesforce Account table. This model is part of the SFDC drift audit
     system and is used to monitor changes in the table structure . The dbt model MUST be run with sfdc
@@ -9,7 +36,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -77,7 +104,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -145,7 +172,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -213,7 +240,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -281,7 +308,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -349,7 +376,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -417,7 +444,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -485,7 +512,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
@@ -553,7 +580,7 @@ models:
     description: Unique ID of the profiled column within the profiling framework.
     data_type: VARCHAR(32)
   - name: profile_name
-    description: Name of the profile run (e.g., CurrentFY, Full).
+    description: Name of the profile run (e.g., Current, Base).
     data_type: VARCHAR(5000)
   - name: profile_limited_to_where_clause
     description: Optional WHERE clause applied during profiling to limit rows.
