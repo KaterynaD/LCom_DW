@@ -154,7 +154,7 @@ echo '[container] DBT project dir:' \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
 cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
-\"\$DBT_BIN\" deps
+
 \"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'"
 
 
@@ -280,7 +280,7 @@ else
 fi
 
 
-\"\$DBT_BIN\" deps
+
 \"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'
 
 # List modified models ONLY if we have a state manifest to compare against
