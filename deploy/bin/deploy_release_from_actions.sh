@@ -286,12 +286,7 @@ fi
 # List modified models ONLY if we have a state manifest to compare against
 if [[ -f "\$STATE_DIR/manifest.json" ]]; then
   
-\"\$DBT_BIN\" list \
-  --select state:modified \
-  --state \"\$STATE_DIR\" \
-  --vars '{"loaddate": "1900-01-01"}' \
-  --resource-type model \
-  --target ${DBT_TARGET_NAME}
+\"\$DBT_BIN\" list --select state:modified --state /home/airflow/dbt_target/latest_prod_artifact --resource-type model --target Prod --vars '{loaddate: "1900-01-01"}'
 
 
 else
