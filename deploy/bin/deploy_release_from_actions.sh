@@ -29,10 +29,10 @@ RELEASES_DIR="${RELEASES_DIR:-/home/kdrogaieva/Prod/releases}"
 CURRENT_LINK="${RELEASES_DIR}/current"
 
 # Per your note:
-COMPOSE_DIR="${COMPOSE_DIR:-/home/kdrogaieva/Prod/airflow_runtime}"
-SERVICE_NAME="${SERVICE_NAME:-airflow-webserver}"
+COMPOSE_DIR="/home/kdrogaieva/Prod/airflow_runtime"
+SERVICE_NAME="airflow-webserver"
 
-DBT_TARGET_NAME="${DBT_TARGET_NAME:-Prod}"
+DBT_TARGET_NAME="Prod"
 
 LOG_DIR="${LOG_DIR:-/home/kdrogaieva/Prod/deploy/logs}"
 LOCK_DIR="${LOCK_DIR:-/home/kdrogaieva/Prod/deploy/locks}"
@@ -164,7 +164,7 @@ cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
   --state \"\$STATE_DIR\" \
   --resource-type model \
   --target ${DBT_TARGET_NAME} \
-  --vars '{"loaddate": "1900-01-01"}'
+  --vars '{\"loaddate\": \"1900-01-01\"}'
 
 "
 
@@ -290,9 +290,9 @@ fi
 
 
 \"\$DBT_BIN\" deps
-\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'
+\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
 
-\"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'
+\"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
 
 echo '[container] Running colibri...'
 colibri generate \
@@ -308,7 +308,7 @@ if [[ -f "\$STATE_DIR/manifest.json" ]]; then
   --state \"\$STATE_DIR\" \
   --resource-type model \
   --target ${DBT_TARGET_NAME} \
-  --vars '{"loaddate": "1900-01-01"}'
+  --vars '{\"loaddate\": \"1900-01-01\"}'
 
 else
   echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
