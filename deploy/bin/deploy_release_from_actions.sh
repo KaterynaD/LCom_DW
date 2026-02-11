@@ -289,9 +289,10 @@ if [[ -f "\$STATE_DIR/manifest.json" ]]; then
 \"\$DBT_BIN\" list \
   --select state:modified \
   --state \"\$STATE_DIR\" \
+  --vars '{"loaddate": "1900-01-01"}' \
   --resource-type model \
-  --target ${DBT_TARGET_NAME} \
-  --vars '{"loaddate": "1900-01-01"}'
+  --target ${DBT_TARGET_NAME}
+
 
 else
   echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
