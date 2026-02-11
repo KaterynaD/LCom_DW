@@ -295,13 +295,7 @@ fi
 
 
 
-\"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME}
 
-echo '[container] Running colibri...'
-colibri generate \
-  --manifest \"\$DBT_TARGET_PATH/manifest.json\" \
-  --catalog  \"\$DBT_TARGET_PATH/catalog.json\" \
-  --output-dir \"\$DBT_TARGET_PATH\"
 "
 
 log "Running dev_check_dags.py and validating output..."
