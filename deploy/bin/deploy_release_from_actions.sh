@@ -28,7 +28,7 @@ REPO_MIRROR_DIR="${REPO_MIRROR_DIR:-/home/kdrogaieva/Prod/repo-mirror}"
 RELEASES_DIR="${RELEASES_DIR:-/home/kdrogaieva/Prod/releases}"
 CURRENT_LINK="${RELEASES_DIR}/current"
 
-# Per your note:
+
 COMPOSE_DIR="/home/kdrogaieva/Prod/airflow_runtime"
 SERVICE_NAME="airflow-webserver"
 
@@ -118,8 +118,11 @@ trap 'rollback; cleanup_failed_release; log "DEPLOY FAILED — see log: $LOG_FIL
 
 ### ----------------------------
 ### Run in-container steps BEFORE new release
-### dbt compile with predefined loaddate to compare later with new compile, the same predefined date to detect modified models
+### dbt compile with predefined loaddate 
+### to compare later with new compile, 
+### the same predefined date to detect modified models
 ### ----------------------------
+
 log "Pre-release running in-container steps via docker compose..."
 cd "$COMPOSE_DIR"
 
@@ -159,12 +162,7 @@ echo '[container] previous state dir:' \"\$STATE_DIR\"
 
 cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
-\"\$DBT_BIN\" list \
-  --select state:modified \
-  --state \"\$STATE_DIR\" \
-  --resource-type model \
-  --target ${DBT_TARGET_NAME} \
-  --vars '{\"loaddate\": \"1900-01-01\"}'
+\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
 
 "
 
