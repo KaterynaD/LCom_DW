@@ -154,8 +154,12 @@ echo '[container] DBT project dir:' \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
 cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
-
-\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'"
+\"\$DBT_BIN\" list \
+  --select state:modified \
+  --state \"\$STATE_DIR\" \
+  --resource-type model \
+  --target ${DBT_TARGET_NAME} \
+  --vars '{"loaddate": "1900-01-01"}'
 
 
 
@@ -280,14 +284,26 @@ else
 fi
 
 
-
+\"\$DBT_BIN\" deps
 \"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'
+
+\"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME} --vars '{"loaddate": "1900-01-01"}'
+
+echo '[container] Running colibri...'
+colibri generate \
+  --manifest \"\$DBT_TARGET_PATH/manifest.json\" \
+  --catalog  \"\$DBT_TARGET_PATH/catalog.json\" \
+  --output-dir \"\$DBT_TARGET_PATH\"
 
 # List modified models ONLY if we have a state manifest to compare against
 if [[ -f "\$STATE_DIR/manifest.json" ]]; then
   
-\"\$DBT_BIN\" list --select state:modified --state /home/airflow/dbt_target/latest_prod_artifact --resource-type model --target Prod --vars '{loaddate: "1900-01-01"}'
-
+\"\$DBT_BIN\" list \
+  --select state:modified \
+  --state \"\$STATE_DIR\" \
+  --resource-type model \
+  --target ${DBT_TARGET_NAME} \
+  --vars '{"loaddate": "1900-01-01"}'
 
 else
   echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
