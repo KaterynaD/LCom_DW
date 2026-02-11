@@ -149,8 +149,13 @@ if [[ -z \"\${DBT_BIN:-}\" ]]; then
   exit 1
 fi
 
+
+STATE_DIR="\$DBT_TARGET_PATH/latest_prod_artifact"
+
 echo '[container] Using dbt at:' \"\$DBT_BIN\"
 echo '[container] DBT project dir:' \"\$DBT_LCOM_DW_PROJECT_DIR\"
+echo '[container] previous state dir:' \"\$STATE_DIR\"
+
 
 cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
