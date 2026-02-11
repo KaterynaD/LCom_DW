@@ -14,7 +14,7 @@
 {{ run_hooks(pre_hooks, inside_transaction=True) }}
 
 {# Run model SQL (as a stored procedure call)#}
-
+{% if not flags.EMPTY %}
 {% set run_sp_operation %}
 
  
@@ -25,7 +25,7 @@
  {% endset %}
 
 {% do run_query(run_sp_operation) %}
-
+{% endif %}
 
 {# Placeholder for dbt materialization requirement (a SP can be called from here but does not run) #}
 

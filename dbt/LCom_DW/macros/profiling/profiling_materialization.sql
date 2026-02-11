@@ -69,6 +69,8 @@
 
 {# Profiling happens here  #}
 
+{% if not flags.EMPTY %}
+
 {% if table_name %}
 
 {{ log('Profiling ' ~ schema_name ~ '.' ~ table_name, info=True) }}
@@ -194,6 +196,8 @@
 {% else %}
   
   {{ exceptions.raise_compiler_error('Either table_name or profile_tables must be provided in the model config.') }}
+
+{% endif %}
 
 {% endif %}
 
