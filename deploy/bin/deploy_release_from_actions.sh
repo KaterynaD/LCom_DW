@@ -166,7 +166,7 @@ cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
   --target ${DBT_TARGET_NAME} \
   --vars '{"loaddate": "1900-01-01"}'
 
-
+"
 
 
 log "Starting deploy."
