@@ -60,7 +60,11 @@
   COALESCE(a.sfdc_billing_state, a.lcom_state_province_name) as account_state_name,
   COALESCE(a.sfdc_billing_state_code, a.lcom_state_province_code) as account_state_code,
   c.lcom_organization_id,
-  c.lcom_organization_name
+  c.lcom_organization_name,
+  c.reject_reason,
+  c.how_did_you_hear_about_us,
+  c.first_platform_login_date,
+  c.lead_source
 from {{ ref("fact_contact_lifecycle_events") }}  s
 	left join {{ ref("dim_contact") }} c
 		on s.contact_id = c.contact_id 
