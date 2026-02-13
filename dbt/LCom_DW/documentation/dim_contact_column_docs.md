@@ -84,3 +84,20 @@ Manually populated Rejected lead state date
 {% docs column_sql_date %}
 Manually populated SQL lead state date
 {% enddocs %}
+
+
+{% docs column_reject_reason %}
+Rejected Reason
+{% enddocs %}
+
+{% docs column_how_did_you_hear_about_us %}
+How did you hear about us? Mapped to Hubspot as part of webform fields.
+{% enddocs %}
+
+{% docs column_first_platform_login_date %}
+First Platform Login Date. Indicates the date of a contact's first login on the Learning.com platform as measured by Gainsight PX
+{% enddocs %}
+
+{% docs column_lead_source %}
+Lead Source
+{% enddocs %}

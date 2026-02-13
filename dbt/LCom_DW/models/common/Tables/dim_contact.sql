@@ -16,7 +16,8 @@ with rawdata as (select
 'account_id','contact_state_c','mailing_state','mailing_state_code',
 'other_state','owner_id','is_deleted','key_contact_c','mql_type_c',
 'qualifying_date_hubspot_c','returned_date_hubspot_c','rejected_date_hubspot_c',
-'sql_date_hubspot_c','mql_date_c','qualifying_date_c','returned_date_c','rejected_date_c','sql_date_c'
+'sql_date_hubspot_c','mql_date_c','qualifying_date_c','returned_date_c','rejected_date_c','sql_date_c',
+'reject_reason_c','how_did_you_hear_about_us_c','first_platform_login_date_c','lead_source'
 			],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
@@ -64,6 +65,10 @@ isnull(r.qualifying_date_c,'{{ var("default_date") }}') as qualifying_date,
 isnull(r.returned_date_c,'{{ var("default_date") }}') as returned_date,
 isnull(r.rejected_date_c,'{{ var("default_date") }}') as rejected_date,
 isnull(r.sql_date_c,'{{ var("default_date") }}') as sql_date,
+isnull(r.reject_reason_c,'{{ var("default_varchar") }}') as reject_reason,
+isnull(r.how_did_you_hear_about_us_c,'{{ var("default_varchar") }}') as how_did_you_hear_about_us,
+isnull(r.first_platform_login_date_c,'{{ var("default_date") }}') as first_platform_login_date,
+isnull(r.lead_source,'{{ var("default_varchar") }}') as lead_source,
 0 as opportunity_count,
 0 as won_count,
 0 as lost_count
@@ -115,6 +120,10 @@ select
 '{{ var("default_date") }}' as returned_date,
 '{{ var("default_date") }}' as rejected_date,
 '{{ var("default_date") }}' as sql_date,
+'{{ var("default_varchar") }}' as reject_reason,
+'{{ var("default_varchar") }}' as how_did_you_hear_about_us,
+'{{ var("default_date") }}' as first_platform_login_date,
+'{{ var("default_varchar") }}' as lead_source,
 0 as opportunity_count,
 0 as won_count,
 0 as lost_count
@@ -158,6 +167,10 @@ select
 	,returned_date::DATE
 	,rejected_date::DATE
     ,sql_date::DATE
+    ,reject_reason::VARCHAR(765)
+    ,how_did_you_hear_about_us::VARCHAR(765)
+    ,first_platform_login_date::DATE
+    ,lead_source::VARCHAR(765)
 	,opportunity_count::INTEGER
     ,won_count::INTEGER
     ,lost_count::INTEGER

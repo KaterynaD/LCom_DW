@@ -330,6 +330,10 @@ sources:
         - name: returned_date_hubspot_c
         - name: rejected_date_hubspot_c
         - name: sql_date_hubspot_c        
+        - name: reject_reason_c
+        - name: how_did_you_hear_about_us_c
+        - name: first_platform_login_date_c
+        - name: lead_source
       - name: training_session_c    
         columns:  
         - name: id

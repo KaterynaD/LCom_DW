@@ -212,6 +212,32 @@ models:
     constraints:
     - type: not_null
 
+
+  - name: reject_reason
+    data_type: varchar(765)
+    description: "{{ doc('column_reject_reason') }}"
+    constraints:
+    - type: not_null
+
+  - name: how_did_you_hear_about_us
+    data_type: varchar(765)
+    description: "{{ doc('column_how_did_you_hear_about_us') }}"
+    constraints:
+    - type: not_null 
+
+  - name: first_platform_login_date
+    data_type: date
+    description: "{{ doc('column_first_platform_login_date') }}"
+    constraints:
+    - type: not_null
+
+  - name: lead_source
+    data_type: varchar(765)
+    description: "{{ doc('column_lead_source') }}"
+    constraints:
+    - type: not_null 
+
+
   - name: opportunity_count
     data_type: INTEGER
     description: Number of all opportunities associated with a contact in one way or an other. It's a placeholder column with 0 in the initial load and updated later from fact_opportunity
