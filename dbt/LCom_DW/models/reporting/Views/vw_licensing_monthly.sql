@@ -48,8 +48,7 @@ join dim_month m
 on 
 case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between floh.fromdate and floh.todate
 AND
-(case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between floh.startdate and floh.expirationdate
-or (floh.enforcedaterestrictions = 'n' and floh.startdate<=case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end))
+case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between floh.startdate and floh.expirationdate
 join {{ ref("dim_account_history") }} a
 on floh.organization_district_id = a.account_id
 and m.mon_lastday between a.fromdate and a.todate
