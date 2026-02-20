@@ -82,3 +82,11 @@ models:
     config:
       tags:
         - rep          
+
+  - name: vw_opp_number_of_students
+    description: Licenses/Students from Number of students in Closed Won Invoiced Opportunities
+    config:
+      tags:
+        - rep
+
+        
