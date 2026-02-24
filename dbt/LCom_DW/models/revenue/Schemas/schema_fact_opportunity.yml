@@ -137,11 +137,6 @@ models:
     description: "{{ doc('column_combined_arr') }}"
     constraints:
     - type: not_null
-  - name: contract_id
-    data_type: varchar(30)
-    description: "{{ doc('column_contract_id') }}"
-    constraints:
-    - type: not_null
   - name: created_by_id
     data_type: varchar(30)
     description: "{{ doc('column_created_by_id') }}"
@@ -150,16 +145,6 @@ models:
   - name: created_date
     data_type: timestamp
     description: "{{ doc('column_created_date') }}"
-    constraints:
-    - type: not_null
-  - name: data_quality_description
-    data_type: varchar(70)
-    description: "{{ doc('column_data_quality_description') }}"
-    constraints:
-    - type: not_null
-  - name: data_quality_score
-    data_type: integer
-    description: "{{ doc('column_data_quality_score') }}"
     constraints:
     - type: not_null
   - name: description
@@ -303,11 +288,6 @@ models:
     description: "{{ doc('column_price_increase_arr') }}"
     constraints:
     - type: not_null
-  - name: pricebook_2_id
-    data_type: varchar(30)
-    description: "{{ doc('column_pricebook_2_id') }}"
-    constraints:
-    - type: not_null
   - name: probability
     data_type: double precision
     description: "{{ doc('column_probability') }}"
@@ -372,11 +352,6 @@ models:
   - name: renewal_opportunity_id
     data_type: varchar(300)
     description: "{{ doc('column_renewal_opportunity_id') }}"
-    constraints:
-    - type: not_null
-  - name: sbqq_primary_quote
-    data_type: varchar(30)
-    description: "{{ doc('column_sbqq_primary_quote') }}"
     constraints:
     - type: not_null
   - name: school_list

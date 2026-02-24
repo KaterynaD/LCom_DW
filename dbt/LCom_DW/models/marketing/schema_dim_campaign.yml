@@ -99,18 +99,6 @@ models:
     constraints:
     - type: not_null
 
-  - name: data_quality_description
-    data_type: varchar(100)
-    description: "{{ doc('column_data_quality_description') }}"
-    constraints:
-    - type: not_null
-
-  - name: data_quality_score
-    data_type: integer
-    description: "{{ doc('column_data_quality_score') }}"
-    constraints:
-    - type: not_null
-
   - name: loaddate
     data_type: timestamp without time zone
     description: "{{ doc('column_loaddate') }}"

@@ -19,9 +19,9 @@ with rawdata as (select
 'data_quality_score_c','description',
 'is_closed','is_escalated','last_modified_date',
 'origin','owner_id','platform_name_c','priority',
-'round_robin_id_c','status','subject',
+'status','subject',
 'survey_send_date_time_c','thread_id_c','type',
-'xcase_number_c','record_type_id','solution_c','is_deleted'
+'record_type_id','solution_c','is_deleted'
         ],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',  
@@ -53,14 +53,12 @@ isnull(stg.owner_id, '{{ var("default_ID") }}') as owner_id	,
 isnull(stg.platform_name_c , '{{ var("default_varchar") }}') as platform_name	,
 isnull(stg.priority, '{{ var("default_varchar") }}') as case_priority	,
 isnull(rt.name , '{{ var("default_varchar") }}') as support_type	,
-isnull(stg.round_robin_id_c, {{ var("default_numeric") }}) as round_robin_id	,
 isnull(stg.solution_c, '{{ var("default_varchar") }}') as solution	,
 isnull(stg.status , '{{ var("default_varchar") }}') as status	,
 isnull(stg.subject , '{{ var("default_varchar") }}') as subject	,
 isnull(stg.survey_send_date_time_c ,'{{ var("default_date") }}') as survey_send_date_time	,
 isnull(stg.thread_id_c , '{{ var("default_varchar") }}') as thread_id	,
-isnull(stg.type, '{{ var("default_varchar") }}') as case_type	,
-isnull(stg.xcase_number_c , '{{ var("default_varchar") }}') as xcase_number	
+isnull(stg.type, '{{ var("default_varchar") }}') as case_type
 from rawdata as stg
 left outer join  {{ ref("dim_account") }} as a
 on stg.account_id = a.SFDC_account_id
@@ -93,14 +91,12 @@ select
  ,platform_name::VARCHAR(300)
  ,case_priority::VARCHAR(1000)
  ,support_type::VARCHAR(240)
- ,round_robin_id::NUMERIC(20,17)
  ,solution::VARCHAR(5000)
  ,status::VARCHAR(100)
  ,subject::VARCHAR(1000)
  ,survey_send_date_time::TIMESTAMP
  ,thread_id::VARCHAR(300)
  ,case_type::VARCHAR(100)
- ,xcase_number::VARCHAR(100)
  ,'{{ var("loaddate") }}'::timestamp as loaddate
 from data
 

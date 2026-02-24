@@ -168,13 +168,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: round_robin_id
-        data_type: numeric(20,17)
-        description: Round Robin ID
-        constraints:
-          - type: not_null
-
-
       - name: solution
         data_type: varchar(5000)
         description: Solution
@@ -208,12 +201,6 @@ models:
       - name: case_type
         data_type: varchar(100)
         description: Case Type
-        constraints:
-          - type: not_null
-
-      - name: xcase_number
-        data_type: varchar(100)
-        description: XCase Number
         constraints:
           - type: not_null
 

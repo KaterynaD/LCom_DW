@@ -68,7 +68,6 @@ on sfdc_parent_account.owner_id= sfdc_user.id
 'de_identified_district_c',
 'description',
 'district_enrollment_c',
-'district_k_8_enrollment_c',
 'district_state_initiative_c',
 'grade_levels_c',
 'k_12_enrollment_c',

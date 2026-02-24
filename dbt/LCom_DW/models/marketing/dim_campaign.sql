@@ -12,7 +12,7 @@ with rawdata as (select
         used_columns=[ 
 			'id','name','description','created_date','last_modified_date','owner_id',
 'parent_id','start_date','end_date','Status','type','pipe_bucket_c',
-'data_quality_description_c','data_quality_score_c','is_deleted'
+'is_deleted'
 			],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
@@ -35,9 +35,7 @@ isnull(r.start_date,'{{ var("default_date") }}') as start_date,
 isnull(r.end_date,'{{ var("default_date") }}') as end_date,
 isnull(r.Status,'{{ var("default_varchar") }}') as campaign_status,
 isnull(r.type,'{{ var("default_varchar") }}') as campaign_type,
-isnull(r.pipe_bucket_c,'{{ var("default_varchar") }}') as pipe_bucket,
-isnull(r.data_quality_description_c,'{{ var("default_varchar") }}') as data_quality_description,
-isnull(r.data_quality_score_c,'{{ var("default_numeric") }}') as data_quality_score
+isnull(r.pipe_bucket_c,'{{ var("default_varchar") }}') as pipe_bucket
 from rawdata r
 left outer join rawdata pr
 on r.parent_id = pr.id
@@ -59,9 +57,7 @@ select
 '{{ var("default_date") }}' as end_date,
 '{{ var("default_varchar") }}' as campaign_status,
 '{{ var("default_varchar") }}' as campaign_type,
-'{{ var("default_varchar") }}' as pipe_bucket,
-'{{ var("default_varchar") }}' as data_quality_description,
-'{{ var("default_numeric") }}' as data_quality_score
+'{{ var("default_varchar") }}' as pipe_bucket
 )
 select
 campaign_id::VARCHAR(300)
@@ -78,7 +74,5 @@ campaign_id::VARCHAR(300)
 ,campaign_status::VARCHAR(20)
 ,campaign_type::VARCHAR(50)
 ,pipe_bucket::VARCHAR(50)
-,data_quality_description::VARCHAR(100)
-,data_quality_score::INTEGER
 ,'{{ var("loaddate") }}'::TIMESTAMP WITHOUT TIME ZONE as loaddate
 from data  
