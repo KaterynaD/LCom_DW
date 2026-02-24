@@ -19,6 +19,26 @@ FROM {{ source('fivetran_salesforce_quickstart', 'account') }}
 where isnull(record_type_c,'{{ var("default_varchar") }}') != 'L'
 group by parent_id
 )
+, sfdc_parent_account as (
+  select 
+    --SFDC Account columns
+    {{ safe_select_list_from_profiles(
+        table_name='account',
+        alias='sfdc_parent_account',
+        used_columns=[          
+     'Id',
+     'name',
+     'billing_state'
+        ],
+        profile_src=('profiles','vw_sfdc_schema_audit'),
+        base_profile='base',
+        current_profile='current'
+    ) }}    
+     ,sfdc_user.name as owner_name
+FROM {{ source('fivetran_salesforce_quickstart', 'account') }} sfdc_parent_account
+left outer join {{ source('fivetran_salesforce_quickstart', 'user') }} sfdc_user
+on sfdc_parent_account.owner_id= sfdc_user.id
+)
 , sfdc_data as (
   select 
     --SFDC Account columns
@@ -69,7 +89,6 @@ group by parent_id
 'parent_account_owner_c',
 'parent_churned_c',
 'parent_id',
-'parent_name_proper_case_c',
 'parent_owner_id_c',
 'phone',
 'pre_k_enrollment_c',
@@ -78,9 +97,6 @@ group by parent_id
 'state_initiative_c',
 'state_program_eligible_c',
 'test_account_c',
-'ultimate_account_owner_c',
-'ultimate_parent_account_c',
-'ultimate_parent_billing_state_c',
 'ultimate_parent_id_c',
 'urban_rural_c',
 'technology_measure_c','account_grade_c','fiscal_title_i_school_yes_no_c',
@@ -92,7 +108,7 @@ group by parent_id
         base_profile='base',
         current_profile='current'
     ) }}
-    ,sfdc_user."name" as owner_name_text_c,
+    ,sfdc_user.name as owner_name_text_c,
     --School (some child accounts info)
     sch.school_state_initiative_c as state_initiative_school,
     sch.school_district_state_initiative_c as district_state_initiative_school,
@@ -102,7 +118,11 @@ group by parent_id
     --
     lower(loc.lcom_platform_organization_id_c) lcom_organization_id,
     --
-    sfdc_ultimate_parent.sfdc_current_renewal_arr as sfdc_ultimate_parent_current_renewal_arr
+    sfdc_ultimate_parent.sfdc_current_renewal_arr as sfdc_ultimate_parent_current_renewal_arr,
+    sfdc_parent_account.name as parent_name_proper_case_c,
+    sfdc_ultimate_parent_account.name as ultimate_parent_account_c,
+    sfdc_ultimate_parent_account.billing_state as ultimate_parent_billing_state_c,
+    sfdc_ultimate_parent_account.owner_name ultimate_account_owner_c
     --
 FROM {{ source('fivetran_salesforce_quickstart', 'account') }} sfdc_account
 left outer join {{ source('fivetran_salesforce_quickstart', 'user') }} sfdc_user
@@ -115,7 +135,10 @@ left outer join {{ source('fivetran_salesforce_quickstart', 'account') }} dist
 on sfdc_account.parent_id=dist.id
 left outer join {{ ref("sfdc_ultimate_parent_accounts_data")}} sfdc_ultimate_parent
 on sfdc_ultimate_parent.sfdc_ultimate_parent_id = sfdc_account.id
-
+left outer join sfdc_parent_account
+on sfdc_account.parent_id = sfdc_parent_account.id
+left outer join sfdc_parent_account as sfdc_ultimate_parent_account
+on sfdc_account.ultimate_parent_id_c = sfdc_ultimate_parent_account.id
 
 )
 , LCOM_data as (
