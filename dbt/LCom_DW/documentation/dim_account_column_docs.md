@@ -785,9 +785,7 @@ Account Owner (Integrations: Gainsight.)
 populated from SFDC User object Name attribute
 {% enddocs %}
 
-{% docs column_sfdc_parent_account_owner %}
-Parent Account Owner
-{% enddocs %}
+
 
 {% docs column_sfdc_parent_and_child_match %}
 Parent and Child match
@@ -825,9 +823,7 @@ Parent Name
 Parent Name Proper Case
 {% enddocs %}
 
-{% docs column_sfdc_parent_owner_id %}
-Parent Owner ID (18-digit Salesforce ID of the record owner)
-{% enddocs %}
+
 
 {% docs column_sfdc_parent_uid %}
 Parent Agile ID

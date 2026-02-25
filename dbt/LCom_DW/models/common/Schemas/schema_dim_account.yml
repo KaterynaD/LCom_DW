@@ -333,11 +333,6 @@ models:
     description: "{{ doc('column_sfdc_owner_name_text') }}"
     constraints:
     - type: not_null
-  - name: sfdc_parent_account_owner
-    data_type: varchar(380)
-    description: "{{ doc('column_sfdc_parent_account_owner') }}"
-    constraints:
-    - type: not_null
   - name: sfdc_parent_churned
     data_type: boolean
     description: "{{ doc('column_sfdc_parent_churned') }}"
@@ -353,11 +348,7 @@ models:
     description: "{{ doc('column_sfdc_parent_name') }}"
     constraints:
     - type: not_null
-  - name: sfdc_parent_owner_id
-    data_type: varchar(30)
-    description: "{{ doc('column_sfdc_parent_owner_id') }}"
-    constraints:
-    - type: not_null
+
   - name: sfdc_phone
     data_type: varchar(130)
     description: "{{ doc('column_sfdc_phone') }}"
