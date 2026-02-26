@@ -8,16 +8,8 @@ sources:
       identifier: false
     tables:
       - name: dim_calendar     
-
-  - name: staging
-    description: "Some static source data" 
-    quoting:
-      database: false
-      schema: false
-      identifier: false
-    tables:
-      - name: dual
-        description: "Single row table to use in queries without from for empty dbt runs"       
+      - name: dim_contact_history    
+       
 
   - name: audit
     description: "Audit and logs tables for tracking dbt runs and changes"

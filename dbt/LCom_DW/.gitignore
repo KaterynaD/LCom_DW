@@ -1,4 +1,6 @@
 
 target/
+target_copy/
+Utils/
 dbt_packages/
 logs/

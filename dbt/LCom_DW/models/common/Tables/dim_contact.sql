@@ -127,6 +127,7 @@ select
 0 as opportunity_count,
 0 as won_count,
 0 as lost_count
+from {{ ref('dual') }}
 )
 select
      contact_id::VARCHAR(300)

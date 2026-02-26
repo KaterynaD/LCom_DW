@@ -15,13 +15,13 @@ from typing import Any, Dict, List
 
 MANIFEST_PATH = "../target/colibri-manifest.json"
 
-# INPUTS: List[Dict[str, Any]] = [
-# {"source": "source.LCom_DW.fivetran_salesforce_quickstart.account", "source_column": "district_k_8_enrollment_c"}
-# ]
-
 INPUTS: List[Dict[str, Any]] = [
- {"source": "model.LCom_DW.dim_account", "source_column": "sfdc_name"}
- ]
+{"source": "source.LCom_DW.fivetran_salesforce_quickstart.opportunity", "source_column": "account_id"}
+]
+
+# INPUTS: List[Dict[str, Any]] = [
+#  {"source": "model.LCom_DW.dim_account", "source_column": "sfdc_name"}
+#  ]
 
 # output_format: "json" or "html"
 OUTPUT_FORMAT = "html"

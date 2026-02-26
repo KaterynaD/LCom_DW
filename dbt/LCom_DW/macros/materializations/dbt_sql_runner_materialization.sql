@@ -1,5 +1,7 @@
 {% materialization sql_runner, default %}
 
+
+
 {% set target_table = model.get('alias', model.get('name')) %}
 
 {% set target_relation_exists, target_relation = get_or_create_relation(
@@ -14,7 +16,9 @@
 {{ run_hooks(pre_hooks, inside_transaction=True) }}
 
 {# Run model SQL (as a stored procedure call)#}
+{# If it's "empty" excution for QA - we do not use non dbt functionality #}
 {% if not flags.EMPTY %}
+
 {% set run_sp_operation %}
 
  
@@ -25,7 +29,8 @@
  {% endset %}
 
 {% do run_query(run_sp_operation) %}
-{% endif %}
+
+
 
 {# Placeholder for dbt materialization requirement (a SP can be called from here but does not run) #}
 
@@ -49,6 +54,16 @@ select 1
 
   {{ run_hooks(post_hooks, inside_transaction=False) }}
 
+{# ===== If it's "empty" excution we just need to run main  ===== #}
+{% else %}
+
+{% call statement('main') %}
+
+select 1
+
+ {% endcall %}
+
+{% endif %}
 
  {{ return({'relations': [target_relation]}) }}
 
