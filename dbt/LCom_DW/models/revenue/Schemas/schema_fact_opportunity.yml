@@ -109,7 +109,7 @@ models:
     - type: not_null
   - name: contact_id
     data_type: varchar(300)
-    description: "{{ doc('column_contact_id') }}"
+    description: Contact ID
     constraints:
     - type: not_null
     data_tests:

@@ -14,7 +14,7 @@ select
         table_name='opportunity',
         alias='sfdc_opportunity',
         used_columns=[ 
-            'id','name','account_id',
+            'id','name','account_id','contact_id',
 'amount','amount_won_c','arr_bands_c',
 'arr_c','arr_new_business_c','arr_renewal_c','arr_upsell_c','arr_won_c',
 'billing_addressee_c','billing_city_c','billing_state_c','billing_street_c',
