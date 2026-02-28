@@ -205,7 +205,7 @@ models:
     - not_null
   - name: remaining_quota
     data_type: double precision
-    description: "{{ doc('column_remaining_quota') }}"
+    description: Do not use. Depricated.
     constraints:
     - type: not_null
     data_tests:

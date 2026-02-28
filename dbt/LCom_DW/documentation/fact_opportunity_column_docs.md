@@ -66,6 +66,9 @@ Churn (Formula) (If the opportunity is lost will calculate a negative value for 
 Combined ARR
 {% enddocs %}
 
+{% docs column_contract_id %}
+Contracts
+{% enddocs %}
 
 
 {% docs column_loss_reason %}
@@ -132,6 +135,9 @@ PO Amount (PO Amount)
 Price Increase ARR
 {% enddocs %}
 
+{% docs column_pricebook_2_id %}
+Price Book
+{% enddocs %}
 
 {% docs column_primary_quote_approved %}
 Primary Quote approved (Primary Quote approved checked if status is approved)
@@ -175,10 +181,6 @@ Quote Start Date
 
 {% docs column_quote_total_discount %}
 Quote Total Discount
-{% enddocs %}
-
-{% docs column_remaining_quota %}
-Remaining Quota
 {% enddocs %}
 
 {% docs column_renewable_revenue %}
@@ -259,6 +261,9 @@ Downsell (Automatically derives downsell)
 License Provisioned Date
 {% enddocs %}
 
+{% docs column_sbqq_primary_quote %}
+Primary Quote (Points to primary quote on this opportunity.)
+{% enddocs %}
 
 {% docs column_subscription_end_date %}
 Subscription End Date (Subscription End Date)

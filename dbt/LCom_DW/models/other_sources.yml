@@ -1,15 +1,43 @@
 ---
 sources:
   - name: common
-    description: "Common source tables used across multiple models built once per project and static" 
+    description: "Common source tables used across multiple models built once per project and static or history tables used as a model and as a source" 
     quoting:
       database: false
       schema: false
       identifier: false
     tables:
       - name: dim_calendar     
-      - name: dim_contact_history    
+      - name: dim_contact_history   
+      - name: dim_account_history       
+      - name: dim_account_history_deleted
        
+  - name: content_delivery_usage
+    description: "History tables used as a model and as a source" 
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: fact_training_session_history
+
+  - name: support
+    description: "History tables used as a model and as a source" 
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: fact_case_history   
+
+  - name: revenue
+    description: "History tables used as a model and as a source" 
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+      - name: fact_opportunity_history      
 
   - name: audit
     description: "Audit and logs tables for tracking dbt runs and changes"

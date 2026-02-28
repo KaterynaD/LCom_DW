@@ -21,7 +21,8 @@ select
 from {{ source("fivetran_salesforce_quickstart","user") }} sfdc_user
 )
 ,data as 
-(select
+(
+select
 stg.id as employee_id,
 isnull(stg.name, '{{ var("default_varchar") }}') as name,
 isnull(stg.alias, '{{ var("default_varchar") }}') as alias,
@@ -51,6 +52,7 @@ select
 '{{ var("default_date") }}' as last_login_date,
 '{{ var("default_date") }}' as created_date,
 '{{ var("default_date") }}' as last_modified_date 
+from {{ ref('dual') }}
 )
 select
 employee_id::VARCHAR(300),

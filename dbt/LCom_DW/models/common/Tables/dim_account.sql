@@ -395,7 +395,7 @@ select
 --Calculated
 {{ var("default_boolean") }} as isHighSchool,
 {{ var("default_numeric") }} as SFDC_ultimate_parent_current_renewal_arr
-
+from {{ ref('dual') }}
 )
 select
     account_id::varchar(300),

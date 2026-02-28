@@ -109,7 +109,7 @@ models:
     - type: not_null
   - name: contact_id
     data_type: varchar(300)
-    description: Contact ID
+    description: "{{ doc('column_contact_id') }}"
     constraints:
     - type: not_null
     data_tests:
@@ -135,6 +135,11 @@ models:
   - name: combined_arr
     data_type: numeric(38,10)
     description: "{{ doc('column_combined_arr') }}"
+    constraints:
+    - type: not_null
+  - name: contract_id
+    data_type: varchar(30)
+    description: "{{ doc('column_contract_id') }}"
     constraints:
     - type: not_null
   - name: created_by_id
@@ -288,6 +293,11 @@ models:
     description: "{{ doc('column_price_increase_arr') }}"
     constraints:
     - type: not_null
+  - name: pricebook_2_id
+    data_type: varchar(30)
+    description: "{{ doc('column_pricebook_2_id') }}"
+    constraints:
+    - type: not_null
   - name: probability
     data_type: double precision
     description: "{{ doc('column_probability') }}"
@@ -338,12 +348,7 @@ models:
     data_type: double precision
     description: "{{ doc('column_quote_total_discount') }}"
     constraints:
-    - type: not_null    
-  - name: remaining_quota
-    data_type: double precision
-    description: "{{ doc('column_remaining_quota') }}"
-    constraints:
-    - type: not_null    
+    - type: not_null      
   - name: renewable_revenue
     data_type: numeric(38,10)
     description: "{{ doc('column_renewable_revenue') }}"
@@ -352,6 +357,11 @@ models:
   - name: renewal_opportunity_id
     data_type: varchar(300)
     description: "{{ doc('column_renewal_opportunity_id') }}"
+    constraints:
+    - type: not_null
+  - name: sbqq_primary_quote
+    data_type: varchar(30)
+    description: "{{ doc('column_sbqq_primary_quote') }}"
     constraints:
     - type: not_null
   - name: school_list
