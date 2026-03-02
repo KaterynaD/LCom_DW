@@ -89,4 +89,14 @@ models:
       tags:
         - rep
 
-        
+  - name: vw_contact_opportunity
+    description: Opportunities for marketing contacts reporting
+    config:
+      tags:
+        - rep        
+
+  - name: vw_marketing_contacts
+    description: Contacts for marketing reporting
+    config:
+      tags:
+        - rep        
