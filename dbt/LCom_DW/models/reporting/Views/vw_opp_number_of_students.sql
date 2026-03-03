@@ -25,8 +25,8 @@ from dim_month m
 join {{ ref("fact_opportunity") }} o
 on m.mon_lastday between o.start_date and o.end_date
 where o.stage_name='Closed Won'
-and o.invoiced_date!='1900-01-01'
-and o.sfdc_account_id!='00000000-0000-0000-0000-000000000000'
+and o.invoiced_date!='{{ var("default_date") }}'
+and o.sfdc_account_id!='{{ var("default_ID") }}'
 )
 select
 mon,
