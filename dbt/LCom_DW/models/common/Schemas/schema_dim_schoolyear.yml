@@ -7,7 +7,6 @@ models:
       enforced: true
     tags:
       - dim
-      - common
   columns:
     - name: schoolyear
       data_type: varchar(10)
