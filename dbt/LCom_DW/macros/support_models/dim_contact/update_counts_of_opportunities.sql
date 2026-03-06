@@ -1,5 +1,6 @@
 {% macro update_counts_of_opportunities() %}
 
+{% if target.name != 'QA' %}
 
  {% set run_operation %}
 
@@ -24,5 +25,6 @@ where data.contact_id = common.dim_contact.contact_id;
 
 {% do run_query(run_operation) %}
 
+{% endif %}
 
 {% endmacro %}

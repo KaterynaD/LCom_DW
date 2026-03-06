@@ -92,6 +92,7 @@ select
  {{ var("default_boolean") }} as sbqq_quantity_editable,
  {{ var("default_numeric") }} as sbqq_subscription_term,
  '{{ var("default_varchar") }}' as sbqq_subscription_type
+ from {{ ref('dual') }}
 )
 select
      sfdc_product_id::VARCHAR(50)

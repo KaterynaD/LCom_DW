@@ -80,6 +80,7 @@ select
 {{ var("default_boolean") }} as is_custom,
 '{{ var("default_date") }}' as auditcreatedate,
  '{{ var("default_date") }}' as auditupdatedate
+ from {{ ref('dual') }}
 )
 select
  Sequence_Id::VARCHAR(50) as Sequence_Id

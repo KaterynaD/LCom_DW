@@ -31,6 +31,7 @@ select
 '{{ var("default_varchar") }}' as suite_name,
 '{{ var("default_date") }}'  as created_date,
 '{{ var("default_date") }}' as last_modified_date
+from {{ ref('dual') }}
 )
 select
 suite_id::varchar(50) as suite_id,

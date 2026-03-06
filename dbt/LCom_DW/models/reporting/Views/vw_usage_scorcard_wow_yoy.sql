@@ -20,7 +20,7 @@ WITH date_periods AS (
     END AS school_year,
     'Current Year' AS year_type,
     'Current Week' AS week_type
-  FROM {{ source("common","dim_calendar") }}
+  FROM {{ ref("dim_calendar") }}
   WHERE
     cal_date = TRUNC(GETDATE())
   UNION ALL
@@ -40,7 +40,7 @@ WITH date_periods AS (
     END AS school_year,
     'Current Year' AS year_type,
     'Previous Week' AS week_type
-  FROM {{ source("common","dim_calendar") }}
+  FROM {{ ref("dim_calendar") }}
   WHERE
     cal_date = TRUNC(GETDATE())
   UNION ALL
@@ -60,7 +60,7 @@ WITH date_periods AS (
     END AS school_year,
     'Previous Year' AS year_type,
     'Current Week' AS week_type
-  FROM {{ source("common","dim_calendar") }}
+  FROM {{ ref("dim_calendar") }}
   WHERE
     cal_date = DATEADD('year', -1, TRUNC(GETDATE()))
   UNION ALL
@@ -80,7 +80,7 @@ WITH date_periods AS (
     END AS school_year,
     'Previous Year' AS year_type,
     'Previous Week' AS week_type
-  FROM {{ source('common', 'dim_calendar') }} AS dim_calendar
+  FROM {{ ref("dim_calendar") }} AS dim_calendar
   WHERE
     cal_date = DATEADD('year', -1, TRUNC(GETDATE()))
 )

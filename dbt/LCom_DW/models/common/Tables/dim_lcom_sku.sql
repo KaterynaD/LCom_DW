@@ -37,10 +37,6 @@ isnull(sku.auditupdatedate, '{{ var("default_date") }}') as auditupdatedate
 from {{ source("staging","sku") }} sku
 left outer join {{ source("staging","sku") }} p
 on sku.parentskuid=p.skuid
-{% if is_incremental() %}
-where coalesce(sku.auditupdatedate,'1900-01-01') >= (select coalesce(max(t.auditupdatedate),'1900-01-01') from {{ this }}  t)
-{% endif %}
-{% if not is_incremental() %}
 union all
 select
 '{{ var("default_ID") }}' sku_id,
@@ -54,7 +50,7 @@ select
 {{ var("default_boolean") }} as is_valid,
 '{{ var("default_date") }}' as auditcreatedate,
  '{{ var("default_date") }}' as auditupdatedate
-{% endif %}
+ from {{ ref('dual') }}
 )
 select
  sku_id::VARCHAR(50) as sku_id

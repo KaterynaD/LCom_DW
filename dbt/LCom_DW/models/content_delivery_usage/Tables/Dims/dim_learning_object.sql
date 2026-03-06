@@ -50,6 +50,7 @@ select
 {{ var("default_numeric") }} satisfied_standards,
 '{{ var("default_date") }}'created_datetime,
 '{{ var("default_date") }}'deleted_datetime
+from {{ ref('dual') }}
 )
 select
 learning_object_id::varchar(300) as learning_object_id,
