@@ -18,7 +18,7 @@
         PARTITION BY h.contact_id, h.lead_status
         ORDER BY h.fromdate DESC
       ) AS rn
-  FROM  {{ ref("dim_contact_history") }} h --update to dw.common.vw_contact_history once it is ready to use
+  FROM  {{ ref("dim_contact_history") }} h --update to common.vw_contact_history once it is ready to use
   join {{ ref("dim_contact") }} c
   on h.contact_id = c.contact_id
   WHERE case when h.fromdate='1900-01-01' then c.created_date else  h.fromdate end > DATE '2023-12-31'
