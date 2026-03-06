@@ -54,6 +54,6 @@ from dim_month m
     join {{ ref("dim_account_history") }} ah
       on f.account_id = ah.account_id
       and case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between ah.fromdate and ah.todate  
-    join {{ source("common","dim_calendar") }} dc
+    join {{ ref("dim_calendar") }} dc
       on trunc(f.created_date) = dc.cal_date
 

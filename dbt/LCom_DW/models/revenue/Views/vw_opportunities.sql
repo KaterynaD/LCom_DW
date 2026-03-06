@@ -45,7 +45,7 @@
     from {{ ref('fact_opportunity') }} fo
     join {{ ref('dim_opportunity_line') }} oli
       on oli.opportunity_id = fo.opportunity_id
-    join {{ source("common","dim_calendar") }} dc
+    join {{ ref("dim_calendar") }} dc
       on fo.invoiced_date = dc.cal_date
     join {{ ref('dim_sfdc_product') }} p
       on oli.sfdc_product_id = p.sfdc_product_id
@@ -53,7 +53,7 @@
       on fo.account_id = a.account_id
     join {{ ref('dim_employee') }} e
       on fo.owner_id = e.employee_id
-     join {{ source("common","dim_calendar") }} dc_sy
+     join {{ ref("dim_calendar") }} dc_sy
       on fo.start_date = dc_sy.cal_date
 
 

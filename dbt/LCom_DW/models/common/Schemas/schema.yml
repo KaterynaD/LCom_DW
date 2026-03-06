@@ -20,3 +20,8 @@ models:
     config:
       tags:
         - dim
+  - name: dim_calendar
+    description: Calendar dates and derived attributes - as school Years start and end dates, fiscal years etc. The table was created once and no need to re-run the model. The model is needed only to be consistent with dbt environment
+    config:
+      tags:
+        - dim        

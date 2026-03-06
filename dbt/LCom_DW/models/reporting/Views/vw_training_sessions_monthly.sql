@@ -5,7 +5,7 @@
 
 with dim_month as --Thread to calculate monthly metrics
 (select distinct c.mon_year,  c.mon_lastday
-from {{ source("common","dim_calendar") }}  c 
+from {{ ref("dim_calendar") }}  c 
 where mon_year between 202508 and to_char(GetDate(),'yyyymm')
 )
 select
@@ -105,7 +105,7 @@ and case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDA
       on f.account_id = a.account_id   
     join {{ ref('dim_account') }} pa
       on a.sfdc_ultimate_parent_id = pa.sfdc_account_id                
-    join {{ source("common","dim_calendar") }} dc
+    join {{ ref("dim_calendar") }} dc
       on trunc(f.start_date) = dc.cal_date
     join {{ ref('dim_training_session_topic_session') }} tst
       on f.training_session_id = tst.training_session_id

@@ -10,7 +10,7 @@
  }}
 
 with dim_school_year as (select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_Mon, mon_year, mon_lastday 
-from {{ source("common","dim_calendar") }} 
+from {{ ref("dim_calendar") }} 
 where 
 
 {% if var("processing_mon_year")=="Current" %}

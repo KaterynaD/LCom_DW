@@ -21,14 +21,14 @@ c.fiscalyear,
 c.fiscalyear_mon, 
 c.fiscalyear_startdate, 
 c.fiscalyear_enddate 
-from {{ source("common","dim_calendar") }} c 
+from {{ ref("dim_calendar") }} c 
 where mon_year<=TO_CHAR(GETDATE(), 'YYYYMM')::int
 )
 ,fiscalyear as (
 select
 c.fiscalyear current_fiscalyear,
 lead(c.fiscalyear) over (order by fiscalyear) next_fisclayear
-from (select distinct fiscalyear from {{ source("common","dim_calendar") }}) c
+from (select distinct fiscalyear from {{ ref("dim_calendar") }}) c
 order by fiscalyear)
 --actual, not expired every month 
 ,starting_data as (

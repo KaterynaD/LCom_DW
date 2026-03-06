@@ -145,9 +145,9 @@ from all_opportunities ao
 		on oc.contact_id = c.contact_id
 	left join {{ ref("dim_campaign") }} dc
 		on o.campaign_id = dc.campaign_id
-	left join {{ source("common","dim_calendar") }} cal
+	left join {{ ref("dim_calendar") }} cal
 		on o.created_date::DATE = cal.cal_date
-	left join {{ source("common","dim_calendar") }} cal2
+	left join {{ ref("dim_calendar") }} cal2
 		on o.close_date::DATE = cal2.cal_date
 	left join contact_mql_dates cmd
 		on oc.contact_id = cmd.contact_id

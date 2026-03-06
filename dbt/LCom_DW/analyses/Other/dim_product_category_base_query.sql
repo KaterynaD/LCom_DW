@@ -27,7 +27,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2023/2024') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2023/2024') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='4801cdad-c7d2-4312-8ae9-3138629abe21' -- EasyTech
@@ -40,7 +40,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2024/2025') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2024/2025') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='034d0380-d1a7-4fc2-8c5d-634bef7170d2' -- EasyTech Curriculum
@@ -53,7 +53,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2023/2024') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2023/2024') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='67d69942-9f60-4203-a793-0fe7da6d8567' -- EasyTech Texas Edition
@@ -64,7 +64,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2024/2025') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2024/2025') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='087a6038-716e-439f-9795-a7f5371c5d6b' --  TechApps for Texas
@@ -115,7 +115,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2023/2024') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2023/2024') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='4801cdad-c7d2-4312-8ae9-3138629abe21' -- EasyTech
@@ -128,7 +128,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2024/2025') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2024/2025') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='034d0380-d1a7-4fc2-8c5d-634bef7170d2' -- EasyTech Curriculum
@@ -142,7 +142,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2023/2024') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2023/2024') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='67d69942-9f60-4203-a793-0fe7da6d8567' -- EasyTech Texas Edition
@@ -153,7 +153,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2024/2025') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2024/2025') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='087a6038-716e-439f-9795-a7f5371c5d6b' --  TechApps for Texas
@@ -187,7 +187,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2023/2024') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2023/2024') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='4801cdad-c7d2-4312-8ae9-3138629abe21' -- EasyTech
@@ -200,7 +200,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2024/2025') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2024/2025') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='034d0380-d1a7-4fc2-8c5d-634bef7170d2' -- EasyTech Curriculum
@@ -213,7 +213,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2023/2024') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2023/2024') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='67d69942-9f60-4203-a793-0fe7da6d8567' -- EasyTech Texas Edition
@@ -224,7 +224,7 @@ select
 'sku' product_type,
 sku_name product_original_name,
 sku_id product_original_id,
-(select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }} where SchoolYear='2024/2025') startdate
+(select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }} where SchoolYear='2024/2025') startdate
 from
 {{ ref("dim_lcom_sku") }}
 where sku_id='087a6038-716e-439f-9795-a7f5371c5d6b' --  TechApps for Texas
@@ -272,7 +272,7 @@ sequence_name as product_original_name,
 sequence_id as product_original_id,
 dim_school_year.SchoolYear_StartDate as startdate
 from {{ ref("dim_sequence") }} seq
-join (select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }}) dim_school_year
+join (select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }}) dim_school_year
 on to_char(auditcreatedate,'yyyy') = to_char(dim_school_year.SchoolYear_StartDate,'yyyy')
 where sequence_name ILIKE '%Digital Readiness%'
 and is_custom=false
@@ -287,7 +287,7 @@ sequence_name as product_original_name,
 sequence_id as product_original_id,
 dim_school_year.SchoolYear_StartDate as startdate
 from {{ ref("dim_sequence") }} seq
-join (select distinct SchoolYear_StartDate from {{ source("common","dim_calendar") }}) dim_school_year
+join (select distinct SchoolYear_StartDate from {{ ref("dim_calendar") }}) dim_school_year
 on to_char(auditcreatedate,'yyyy') = to_char(dim_school_year.SchoolYear_StartDate,'yyyy')
 where sequence_name ILIKE '%Tech Quest%' 
 and is_custom=false

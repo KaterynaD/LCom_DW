@@ -4,8 +4,8 @@
  }}
 with dim_date_prev as (
 select distinct FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate,Mon_Year
-from {{ source("common","dim_calendar") }}
-where FiscalYear_StartDate =  (select  max(FiscalYear_StartDate)  from {{ source("common","dim_calendar") }} where FiscalYear_StartDate<(select FiscalYear_StartDate from {{ source("common","dim_calendar") }} where cal_date=trunc(GetDate())))
+from {{ ref("dim_calendar") }}
+where FiscalYear_StartDate =  (select  max(FiscalYear_StartDate)  from {{ ref("dim_calendar") }} where FiscalYear_StartDate<(select FiscalYear_StartDate from {{ ref("dim_calendar") }} where cal_date=trunc(GetDate())))
 and FiscalYear_Mon=12
 )
 ,rawdata as (

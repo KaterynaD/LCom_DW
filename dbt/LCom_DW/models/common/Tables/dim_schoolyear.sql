@@ -12,7 +12,7 @@ distinct
 c.schoolyear,
 c.schoolyear_startdate, 
 c.schoolyear_enddate 
-from {{ source("common","dim_calendar") }} c 
+from {{ ref("dim_calendar") }} c 
 )
 select
 schoolyear, 

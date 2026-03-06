@@ -7,13 +7,13 @@
  with
 dim_date as (
 select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate, SchoolYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
-from {{ source("common","dim_calendar") }}
+from {{ ref("dim_calendar") }}
 where trunc(GetDate())between Mon_FirstDay and Mon_LastDay
 )
 ,dim_date_prev as (
 select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate
-from {{ source("common","dim_calendar") }}
-where SchoolYear_StartDate =  (select  max(SchoolYear_StartDate)  from {{ source("common","dim_calendar") }} where SchoolYear_StartDate<(select SchoolYear_StartDate from {{ source("common","dim_calendar") }} where cal_date=trunc(GetDate())))
+from {{ ref("dim_calendar") }}
+where SchoolYear_StartDate =  (select  max(SchoolYear_StartDate)  from {{ ref("dim_calendar") }} where SchoolYear_StartDate<(select SchoolYear_StartDate from {{ ref("dim_calendar") }} where cal_date=trunc(GetDate())))
 )
 , vw_usage_scorecard as 
 (select

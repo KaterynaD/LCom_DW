@@ -11,7 +11,7 @@
 
 with cal as (select distinct			
 c.mon_year, c.mon_firstday, c.mon_lastday,c.fiscalyear, c.fiscalyear_mon			
-from {{ source("common","dim_calendar") }} c			
+from {{ ref("dim_calendar") }} c			
 where 
 
 {{ month_range_to_load() }}		

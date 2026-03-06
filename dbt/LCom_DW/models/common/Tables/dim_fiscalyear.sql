@@ -13,7 +13,7 @@ distinct
 c.fiscalyear,
 c.fiscalyear_startdate, 
 c.fiscalyear_enddate 
-from {{ source("common","dim_calendar") }} c 
+from {{ ref("dim_calendar") }} c 
 )
 select
 fiscalyear, 

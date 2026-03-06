@@ -84,7 +84,7 @@ cp.owner_name as campaign_owner_name
  		on c.account_id = a.account_id
  	left join {{ ref("fact_opportunity") }} fo
  		on l.won_opp_id = fo.opportunity_id
- 	left join {{ source("common","dim_calendar") }} dc
+ 	left join {{ ref("dim_calendar") }} dc
  		on l.lead_stage_date_unified::date = dc.cal_date
  	left join {{ ref("dim_employee") }} e
  		on l.lead_stage_changed_by_id = e.employee_id	

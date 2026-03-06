@@ -6,8 +6,7 @@ sources:
       database: false
       schema: false
       identifier: false
-    tables:
-      - name: dim_calendar     
+    tables:  
       - name: dim_contact_history   
       - name: dim_account_history       
       - name: dim_account_history_deleted

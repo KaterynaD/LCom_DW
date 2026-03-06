@@ -3,7 +3,7 @@
 ) }}
 
 -- depends_on: {{ source("dbo","fact_assignment_launch") }}  
--- depends_on: {{ source("common","dim_calendar") }}
+-- depends_on: {{ ref("dim_calendar") }}
 -- depends_on: {{ source("dbo","mv_student_account") }} 
 -- depends_on: {{ ref("dim_district") }} 
 -- depends_on: {{ ref("dim_learning_object") }} 

@@ -21,7 +21,7 @@ c.schoolyear,
 c.schoolyear_mon, 
 c.schoolyear_startdate, 
 c.schoolyear_enddate 
-from {{ source("common","dim_calendar") }} c 
+from {{ ref("dim_calendar") }} c 
 )
 select
 mon_year, 

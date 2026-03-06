@@ -4,6 +4,6 @@
 ) }}
 
 -- depends_on: {{ source("dbo","fact_assignment_launch") }}  
--- depends_on: {{ source("common","dim_calendar") }}
+-- depends_on: {{ ref("dim_calendar") }}
 
 call {{ target.database }}.{{ schema }}.lc_load_launches_monthly_snapshots(cast('{{ var("loaddate") }}' as timestamp));
