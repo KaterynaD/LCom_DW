@@ -30,7 +30,7 @@ s.sku_name skuname,
 flo.studentcount,															
 sch.ishighschool,															
 dlos.organization_school_id															
-from {{ ref("fact_license_order") }} flo															
+from {{ ref("vw_fact_license_order") }} flo															
 join {{ ref("dim_account") }} dist															
 on dist.account_id = flo.organization_district_id															
 -- 															
@@ -293,7 +293,7 @@ from raw_license_data rld
 join district_data dd															
 on rld.mon_lastday = dd.mon_lastday															
 and rld.organization_district_id = dd.organization_district_id															
-join dw.common.dim_account a															
+join {{ ref("dim_account") }} a															
 on a.account_id=rld.organization_school_id															
 )															
 ,cnt_schools as															

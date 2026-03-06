@@ -1,13 +1,13 @@
 ---
 version: 2
 models:
-  - name: fact_license_order
-    description: "License Orders Fact table based on
-      content_delivery_usage.staging.license_order As on 20250305 only these
-      orders are loaded in Redshift staging table: EnforceDateRestrictions=n or
-      ExpirationDate>=cast(2020-01-01 as date) 
-      Table materialization is used because incremental was causing too many maintenance (later arrival organizations) 
-      and do not add a lot of speed to the refresh."
+  - name: vw_fact_license_order
+    description: "License Orders Fact view contains
+      limited data from License Orders Fact table:
+      Only Valid Orders
+      EXCLUDES: COVID19 Orders
+      EXCLUDES: Google Integration, Generic LTI Tool Consumer, Tech Apps TCEA
+      Assessment MS 19/20+ SKUs."
     config:
       contract:
         enforced: true

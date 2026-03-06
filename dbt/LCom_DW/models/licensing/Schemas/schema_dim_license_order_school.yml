@@ -2,11 +2,9 @@
 version: 2
 models:
   - name: dim_license_order_school
-    description: "Bridge table: Only valid (filter in the view) Schools in License
-      Orders based on
-      content_delivery_usage.staging.license_orderschool  (limited data from
-      LearningPlatform.dbo.OrderSchool) table See also comment for more details
-      in FACT_LICENSE_ORDER. Table materialization because incremental was causing too many maintenance and do not add a lot of sped to the refresh."
+    description: "Bridge table: Only valid Schools in License Orders.
+      Table materialization because incremental was causing too many maintenance (later arrival organizations) 
+      and do not add a lot of speed to the refresh."
     config:
       contract:
         enforced: true    

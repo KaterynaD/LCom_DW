@@ -9,7 +9,7 @@ where mon_year between 202207 and to_char(GetDate(),'yyyymm')
 ,alive_accounts as (
 select distinct account_id from {{ ref("fact_opportunity") }} 
 union
-select distinct organization_district_id from {{ ref("fact_license_order") }}
+select distinct organization_district_id from {{ ref("vw_fact_license_order") }}
 union
 select distinct organization_school_id from {{ ref("dim_license_order_school") }}
 union

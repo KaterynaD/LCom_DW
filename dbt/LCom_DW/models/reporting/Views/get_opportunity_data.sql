@@ -13,7 +13,7 @@
             flo.enforcedaterestrictions,
             sch.lcom_school_name
         FROM
-            {{ ref("fact_license_order") }} as flo
+            {{ ref("vw_fact_license_order") }} as flo
             JOIN {{ ref("dim_license_order_school" ) }} as flo_sch ON flo.order_id = flo_sch.order_id
             JOIN {{ ref("dim_school") }} as sch ON flo_sch.organization_school_id = sch.lcom_school_id
             JOIN {{ ref("dim_lcom_sku") }} as s ON flo.sku_id = s.sku_id

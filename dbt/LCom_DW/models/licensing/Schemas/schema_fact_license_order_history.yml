@@ -158,3 +158,10 @@ models:
         constraints:
           - type: not_null
             warn_unenforced: false     
+
+      - name: valid
+        data_type: varchar(1)
+        description: If Order valid or not (Y/N) LearningPlatform.dbo.[Order].valid
+        constraints:
+          - type: not_null
+

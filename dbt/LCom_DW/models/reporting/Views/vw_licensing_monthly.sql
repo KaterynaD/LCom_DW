@@ -3,7 +3,7 @@
 
 with dim_month as --Thread to calculate monthly metrics
 (select distinct c.mon_year, c.mon_firstday, c.mon_lastday, c.FiscalYear, c.FiscalYear_startdate, c.FiscalYear_enddate , c.FiscalYear_mon
-from {{ source("common","dim_calendar") }}  c 
+from {{ ref("dim_calendar") }}  c 
 where mon_year between 202207 and to_char(GetDate(),'yyyymm')
 )
 --
@@ -36,10 +36,12 @@ from (
      floh.expirationdate,
      floh.enforcedaterestrictions,
      floh.schoolcount,
-     floh.studentcount
+     floh.studentcount,
+     floh.valid,
+     floh.netsuite_order_id
      from
     {{ ref("fact_license_order_history") }} floh
-    join {{ ref("fact_license_order") }} flo
+    join {{ ref("vw_fact_license_order") }} flo
     on floh.order_id = flo.order_id
     )  floh
 join {{ ref("dim_lcom_sku") }} sku
@@ -54,6 +56,12 @@ on floh.organization_district_id = a.account_id
 and m.mon_lastday between a.fromdate and a.todate
 where a.lcom_trial=false 
 and a.lcom_demo=false
+and floh.valid='Y'
+and floh.netsuite_order_id != 'COVID19' 
+and floh.sku_id NOT IN ('63CC161C-A834-4017-8281-ED0C4C4C52B5' --Google Integration
+                 ,'CA3A733E-0F33-4918-897B-506C6BD6907C' --Generic LTI Tool Consumer
+                 ,'545DA6FB-B65D-4EA8-A374-30BEEAAA28D4' --Tech Apps TCEA Assessment MS 19/20+'
+                           )
 )
 ,data as (
 select

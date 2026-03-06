@@ -3,7 +3,7 @@
    
    unique_key='order_id',
 
-   check_cols=['sku_id','organization_district_id','startdate','expirationdate','enforcedaterestrictions','SchoolCount', 'StudentCount'],
+   check_cols=['sku_id','organization_district_id','startdate','expirationdate','enforcedaterestrictions','SchoolCount', 'StudentCount', 'valid'],
    update_cols=['auditupdatedate','netsuite_order_id'],
 
    updated_at='auditupdatedate',
@@ -35,6 +35,7 @@ startdate,
 expirationdate,
 enforcedaterestrictions,
 netsuite_order_id,
+valid,
 SchoolCount, 
 StudentCount,
 auditupdatedate

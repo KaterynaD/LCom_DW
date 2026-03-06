@@ -36,7 +36,7 @@ with raw_license_data as (
             ) HighSchools_Num,
             count(lcom_school_name) Schools_Num --,LISTAGG(distinct lcom_school_name,',' ) WITHIN GROUP (ORDER BY lcom_school_name) schools
         from
-            {{ ref("fact_license_order") }} flo
+            {{ ref("vw_fact_license_order") }} flo
             join {{ ref("dim_district") }} dist on flo.organization_district_id = dist.district_id --
             join {{ ref("dim_lcom_sku") }} s on flo.sku_id = s.sku_id --
             join {{ ref("dim_license_order_school") }} dlos on flo.order_id = dlos.order_id
@@ -78,7 +78,7 @@ with raw_license_data as (
             distinct Mon_WeekStart,
             Sun_WeekEnd
         from
-            dw.common.dim_calendar
+            {{ ref("dim_calendar") }}
     ),
     district_sku_license_data as (
         select

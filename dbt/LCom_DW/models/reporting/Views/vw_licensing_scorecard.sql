@@ -4,13 +4,13 @@
 with 
 dim_date as (
 select distinct FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
-from {{ source("common","dim_calendar") }}
+from {{ ref("dim_calendar") }}
 where trunc(GetDate()) between Mon_FirstDay and Mon_LastDay
 )
 ,dim_date_prev as (
 select distinct FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate,Mon_Year
-from {{ source("common","dim_calendar") }}
-where FiscalYear_StartDate =  (select  max(FiscalYear_StartDate)  from {{ source("common","dim_calendar") }} where FiscalYear_StartDate<(select FiscalYear_StartDate from {{ source("common","dim_calendar") }} where cal_date=trunc(GetDate())))
+from {{ ref("dim_calendar") }}
+where FiscalYear_StartDate =  (select  max(FiscalYear_StartDate)  from {{ ref("dim_calendar") }} where FiscalYear_StartDate<(select FiscalYear_StartDate from {{ ref("dim_calendar") }} where cal_date=trunc(GetDate())))
 and FiscalYear_Mon=12
 )
 ,rawdata as (select
@@ -18,7 +18,7 @@ a.account_id,
 flo.sku_id,
 sum(schoolcount) sum_schools,
 sum(studentcount) sum_students
-from {{ ref("fact_license_order") }} flo 
+from {{ ref("vw_fact_license_order") }} flo 
 join {{ ref("dim_account") }} a
 on flo.organization_district_id = a.account_id
 where  trunc(GETDATE()) between startdate and expirationdate
@@ -34,7 +34,7 @@ max(sum_students) max_students
 from rawdata
 group by account_id
 )
-,datedata as (select greatest(max(auditcreatedate), max(auditupdatedate)) last_updated from {{ ref("fact_license_order") }} flo)
+,datedata as (select greatest(max(auditcreatedate), max(auditupdatedate)) last_updated from {{ ref("vw_fact_license_order") }} flo)
 ,vw_licensing_scorecard as(
 select 
 count(distinct account_id) cnt_districts,

@@ -15,11 +15,12 @@ isnull(stg.expirationdate, '{{ var("default_date") }}') as  expirationdate,
 isnull(stg.enforcedaterestrictions, 'y') as enforcedaterestrictions,
 isnull(stg.SchoolCount, {{ var("default_numeric") }}) as SchoolCount, 
 isnull(stg.StudentCount, {{ var("default_numeric") }}) as StudentCount,
+case when len(stg.netsuiteorderid)<1 or stg.netsuiteorderid is null then '{{ var("default_varchar") }}' else stg.netsuiteorderid end  as netsuite_order_id,
 isnull(stg.auditcreatedate, '{{ var("default_date") }}') as  auditcreatedate,
 isnull(stg.auditupdatedate, '{{ var("default_date") }}') as auditupdatedate,
-'{{ var("loaddate") }}'::timestamp as loaddate,
-case when len(stg.netsuiteorderid)<1 or stg.netsuiteorderid is null then '{{ var("default_varchar") }}' else stg.netsuiteorderid end  as netsuite_order_id
-from {{ ref("stg_license_orders") }} stg
+case when stg.Valid_boolean then 'Y' else 'N' end as valid,
+'{{ var("loaddate") }}'::timestamp as loaddate
+from {{ source("staging","license_order") }} stg
 left outer join {{ ref("dim_account") }} a
 on lower(stg.ownerid) = a.lcom_organization_id
 left outer join {{ ref("dim_lcom_sku") }} s
