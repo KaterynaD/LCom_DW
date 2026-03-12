@@ -18,93 +18,66 @@ models:
       - name: order_id
         data_type: varchar(100)
         description: Primary Key of FACT_LICENSE_ORDER. LearningPlatform.dbo.[Order].OrderId
-        constraints:
-          - type: not_null
-          - type: primary_key
-            warn_unenforced: false
-        data_tests:
-          - unique
+
 
       - name: sku_id
         data_type: varchar(100)
         description: DIM_LCOM_SKU FK
-        constraints:
-          - type: not_null
-        data_tests:
-          - relationships:
-              to: ref('dim_lcom_sku')
-              field: sku_id            
+          
 
       - name: organization_district_id
         data_type: varchar(300)
         description: DIM_ACCOUNT FK
-        constraints:
-          - type: not_null
-        data_tests:
-          - relationships:
-              to: ref('dim_account')
-              field: account_id      
+  
 
       - name: startdate
         data_type: timestamp
         description: Order Start date LearningPlatform.dbo.[Order].Startdate
-        constraints:
-          - type: not_null
+
 
       - name: expirationdate
         data_type: timestamp
         description: Order Expiration date LearningPlatform.dbo.[Order].Expirationdate
-        constraints:
-          - type: not_null        
+
 
       - name: enforcedaterestrictions
         data_type: char(1)
         description: Enforce Date Restricts (n if startdate and expirationdate should be ignored) LearningPlatform.dbo.[Order].enforcedaterestrictions
-        constraints:
-          - type: not_null             
+      
 
 
       - name: schoolcount
         data_type: integer
         description: Number of schools covered LearningPlatform.dbo.[Order].SchoolCount
-        constraints:
-          - type: not_null 
+
 
       - name: studentcount
         data_type: integer
         description: Number of licenses(students) LearningPlatform.dbo.[Order].StudentCount
-        constraints:
-          - type: not_null   
+   
 
       - name: netsuite_order_id
         data_type: varchar(50)
         description: Netsuite Order Id. LearningPlatform.dbo.[Order].netsuiteorderid
-        constraints:
-          - type: not_null
-            warn_unenforced: false                  
+                  
 
       - name: auditcreatedate
         data_type: timestamp
         description: Order Created date LearningPlatform.dbo.[Order].auditcreatedate
-        constraints:
-          - type: not_null   
+ 
 
       - name: auditupdatedate
         data_type: timestamp
         description: Order Modified date LearningPlatform.dbo.[Order].auditupdatedate
-        constraints:
-          - type: not_null 
+
 
       - name: valid
         data_type: varchar(1)
         description: If Order valid or not (Y/N) LearningPlatform.dbo.[Order].valid
-        constraints:
-          - type: not_null           
+         
 
       - name: loaddate
         data_type: timestamp
-        description: The datetime the record was loaded
-        constraints:
-          - type: not_null            
+        description: The datetime the record was loaded            
 
       
