@@ -93,7 +93,7 @@ select
  {{ var("default_numeric") }} as sbqq_subscription_term,
  '{{ var("default_varchar") }}' as sbqq_subscription_type
  from {{ ref('dual') }}
- union allss
+ union all
 select 
  '{{ var("default_ID") }}' as sfdc_product_id,
  '{{ var("default_varchar") }}' as sfdc_product_name,
