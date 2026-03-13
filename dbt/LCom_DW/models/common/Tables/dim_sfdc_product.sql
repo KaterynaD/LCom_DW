@@ -62,7 +62,7 @@ isnull(stg.sbqq_subscription_type_c, '{{ var("default_varchar") }}') as sbqq_sub
 from rawdata as stg
 left outer join {{ ref("dim_lcom_suite") }} lcom_suite
 on stg.lcom_suite_c = lcom_suite.sfdc_suite_id
-union all
+union allsss
 select 
  '{{ var("default_ID") }}' as sfdc_product_id,
  '{{ var("default_varchar") }}' as sfdc_product_name,
