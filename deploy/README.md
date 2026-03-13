@@ -111,8 +111,8 @@ Location:
 
 Scripts:
 - `deploy_release.sh` – core host deploy logic
-- `deploy_release_from_actions.sh` – GitHub Actions entrypoint
-- `publish_dbt_docs.sh` – non-blocking docs publishing
+- `deploy_release_from_actions.sh` – deploy_to_ec2_AWSPRDDWH001 GitHub Actions entrypoint
+- `publish_dbt_docs.sh` – docs_publish GitHub Actions entrypoint
 
 ---
 
@@ -152,18 +152,51 @@ No rebuild. No redeploy.
 ## 11. Docs Publishing
 
 Docs are generated during deploy but published *after activation*.
-Docs failure never breaks production.
 
-These commands are run in deploy_release_from_actions.sh
+These commands are run in deploy_release_from_actions.sh (deploy_to_ec2_AWSPRDDWH001 GitHub Action runner)
+
 ```
 dbt docs generate --static 
 colibri generate 
 ```
 
-In publish_dbt_docs.sh: The output files in /home/kdrogaieva/Prod/dbt_target are renamed and copied to /home/kdrogaieva/Prod/docs folder and pushed to docs branch of learningcom/transformations.git
+In publish_dbt_docs.sh (docs_publish GitHub Action runner starts automatically when when deploy_to_ec2_AWSPRDDWH001 is successeded): The output files in /home/kdrogaieva/Prod/dbt_target are renamed and copied to /home/kdrogaieva/Prod/docs folder and pushed to docs branch of learningcom/transformations.git
+
+
+## 12. Testing of the New Release
+
+All release testing is orchestrated in `deploy_release_from_actions.sh` and includes both dbt and Airflow validation steps:
+
+### dbt Validation
+
+
+- `dbt compile` is run in the current release with `--vars '{"loaddate": "1900-01-01"}'` to ensure consistent model state comparison (the same `loaddate` is required for accurate diffing).
+- The manifest from the current working release is saved to `STATE_DIR="$DBT_TARGET_PATH/latest_prod_artifact"`.
+- The new release is deployed and `dbt deps` is executed to install dependencies.
+- `dbt compile` is run again (with the same `loaddate`) to generate a new manifest for the new release.
+- The old and new manifests are compared, and a list of changed models is printed.
+  - If `RUN_QA_STATE_TESTS` is set to `true`:
+    - The QA database is cleaned of all schemas using a dbt macro.
+    - A `dbt run` is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
+
+- Documentation and column-level lineage are generated:
+  - `dbt docs generate`
+  - `colibri generate`
+
+### Airflow DAG Validation
+
+- `dev_check_dags.py` is executed and must report "No import errors".
+
+### Failure Handling
+
+If any of the above steps fail, a rollback is triggered and the system reverts to the previous working release.
+
+### colibri generate errors
+
+You may see errors in the output of colibri. There are some models where it can not process. It is not a command failure and can be ignored.
 ---
 
-## 12. Observability
+## 13. Observability
 
 Logs live in:
 

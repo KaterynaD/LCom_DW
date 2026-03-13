@@ -66,7 +66,7 @@ rm -f /home/kdrogaieva/Prod/deploy/locks/deploy.lock
 
 ### Symptoms
 - Airflow errors
-- dbt failures
+- dbt failures (compile or run in QA)
 - Application misbehavior after deploy
 
 ### Diagnosis
