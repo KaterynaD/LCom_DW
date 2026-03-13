@@ -93,37 +93,6 @@ select
  {{ var("default_numeric") }} as sbqq_subscription_term,
  '{{ var("default_varchar") }}' as sbqq_subscription_type
  from {{ ref('dual') }}
- union all
-select 
- '{{ var("default_ID") }}' as sfdc_product_id,
- '{{ var("default_varchar") }}' as sfdc_product_name,
- {{ var("default_boolean") }} as is_active,
- {{ var("default_boolean") }} as active_in_platform,
- {{ var("default_boolean") }} as sbqq_component,
- {{ var("default_boolean") }} as sbqq_cost_editable,
- '{{ var("default_date") }}' as created_date,
- {{ var("default_boolean") }} as does_not_prorate,
- {{ var("default_boolean") }} as sbqq_exclude_from_maintenance,
- {{ var("default_boolean") }} as sbqq_hidden,
- {{ var("default_boolean") }} as sbqq_include_in_maintenance,
- {{ var("default_boolean") }} as is_not_provisioned,
- '{{ var("default_date") }}' as last_modified_date,
- '{{ var("default_varchar") }}' as lcom_suite,
- {{ var("default_numeric") }} as multiplier,
- '{{ var("default_varchar") }}' as netsuite_link,
- '{{ var("default_varchar") }}' as net_suite_sku,
- {{ var("default_boolean") }} as sbqq_non_discountable,
- '{{ var("default_varchar") }}' as price_dimensions,
- {{ var("default_boolean") }} as sbqq_price_editable,
- '{{ var("default_varchar") }}' as sbqq_pricing_method,
- '{{ var("default_varchar") }}' as sfdc_product_code,
- '{{ var("default_varchar") }}' as sfdc_product_description,
- '{{ var("default_varchar") }}' as sfdc_product_family,
- '{{ var("default_varchar") }}' as sfdc_product_sub_family,
- {{ var("default_boolean") }} as sbqq_quantity_editable,
- {{ var("default_numeric") }} as sbqq_subscription_term,
- '{{ var("default_varchar") }}' as sbqq_subscription_type
- from {{ ref('dual') }}
 )
 select
      sfdc_product_id::VARCHAR(50)

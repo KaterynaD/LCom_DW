@@ -43,6 +43,8 @@ REMOTE_NAME="${REMOTE_NAME:-origin}"
 # The branch ref we’ll fetch (we won’t auto-resolve SHA from it, but we’ll fetch it for verification)
 REMOTE_BRANCH_REF="${REMOTE_NAME}/${BRANCH}"
 
+RUN_QA_STATE_TESTS="true"
+
 ### ----------------------------
 ### Helpers
 ### ----------------------------
@@ -286,11 +288,47 @@ else
   echo '[container] No prior manifest found at '"\$DBT_TARGET_PATH"'/manifest.json; state comparison will be skipped.'
 fi
 
-
+# Preparing environment
 \"\$DBT_BIN\" deps
+
+# Compile project to test dbt changes
 \"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
 
+# Run modified models in QA ONLY if we have a state manifest to compare against
+if [[ -f "\$STATE_DIR/manifest.json" ]]; then
+
+# List of modified models
+  \"\$DBT_BIN\" list \
+  --select state:modified \
+  --state \"\$STATE_DIR\" \
+  --resource-type model \
+  --target ${DBT_TARGET_NAME} \
+  --vars '{\"loaddate\": \"1900-01-01\"}'
+
+if [[ \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
+# Cleaning QA environment
+\"\$DBT_BIN\" run-operation drop_qa_schemas --target QA --vars '{dry_run: false}'
+  
+# QA empty and defer run  
+\"\$DBT_BIN\" run \
+  --select state:modified \
+  --exclude \"config.materialized:view config.materialized:sql_runner config.materialized:profiling\" \
+  --empty \
+  --target QA \
+  --state \"\$STATE_DIR\" \
+  --defer \
+  --vars '{\"loaddate\": \"1900-01-01\"}'
+else
+    echo '[container] Skipping QA tests (RUN_QA_STATE_TESTS is false)'
+fi
+
+else
+  echo '[container] Skipping testing modified models (missing '"\$STATE_DIR"'/manifest.json)'
+fi
+
+# Creating Documentation
 \"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
+
 
 echo '[container] Running colibri...'
 colibri generate \
@@ -298,19 +336,6 @@ colibri generate \
   --catalog  \"\$DBT_TARGET_PATH/catalog.json\" \
   --output-dir \"\$DBT_TARGET_PATH\"
 
-# List modified models ONLY if we have a state manifest to compare against
-if [[ -f "\$STATE_DIR/manifest.json" ]]; then
-  
-\"\$DBT_BIN\" list \
-  --select state:modified \
-  --state \"\$STATE_DIR\" \
-  --resource-type model \
-  --target ${DBT_TARGET_NAME} \
-  --vars '{\"loaddate\": \"1900-01-01\"}'
-
-else
-  echo '[container] Skipping: dbt list --select state:modified (missing '"\$STATE_DIR"'/manifest.json)'
-fi
 
 
 
