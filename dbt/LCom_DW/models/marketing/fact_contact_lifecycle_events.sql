@@ -35,7 +35,9 @@ WITH historic_status_dates AS (
         PARTITION BY h.contact_id, h.new_value
         ORDER BY h.created_date::date DESC
       ) AS rn
-  FROM {{ source('fivetran_salesforce_quickstart', 'contact_history') }} h  	
+  FROM {{ source('fivetran_salesforce_quickstart', 'contact_history') }} h
+  join {{ ref("dim_contact") }} c
+    on h.contact_id = c.contact_id  	
   WHERE h.field = 'lead_Status__c'
     AND h.created_date > '2023-12-31'
     and h.new_value is not null
