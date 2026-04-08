@@ -88,6 +88,11 @@ models:
     description: "{{ doc('column_multiplier') }}"
     constraints:
     - type: not_null
+  - name: product_type
+    data_type: varchar(10)
+    description: "{{ doc('column_product_type') }}"
+    constraints:
+    - type: not_null    
   - name: netsuite_link
     data_type: varchar(190)
     description: "{{ doc('column_netsuite_link') }}"
