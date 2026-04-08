@@ -22,7 +22,7 @@ rawdata as (select
 'price_dimensions_c','sbqq_price_editable_c',
 'sbqq_pricing_method_c','product_code','description','family',
 'product_sub_family_c','sbqq_quantity_editable_c','sbqq_subscription_term_c',
-'sbqq_subscription_type_c','lcom_suite_c'
+'sbqq_subscription_type_c','lcom_suite_c', 'product_type_c'
 		],
 		profile_src=('profiles','vw_sfdc_schema_audit'),
 		base_profile='base',
@@ -46,6 +46,7 @@ isnull(stg.is_not_provisioned_c, {{ var("default_boolean") }}) as is_not_provisi
 isnull(stg.last_modified_date	 AT TIME ZONE 'PST',	 '{{ var("default_date") }}') as last_modified_date,
 isnull(lcom_suite.suite_name, '{{ var("default_varchar") }}') as lcom_suite,
 isnull(stg.multiplier_c, {{ var("default_numeric") }}) as multiplier,
+isnull(stg.product_type_c, '{{ var("default_varchar") }}') as product_type,
 isnull(stg.netsuite_link_c, '{{ var("default_varchar") }}') as netsuite_link,
 isnull(stg.net_suite_sku_c, '{{ var("default_varchar") }}') as net_suite_sku,
 isnull(stg.sbqq_non_discountable_c, {{ var("default_boolean") }}) as sbqq_non_discountable,
@@ -79,6 +80,7 @@ select
  '{{ var("default_date") }}' as last_modified_date,
  '{{ var("default_varchar") }}' as lcom_suite,
  {{ var("default_numeric") }} as multiplier,
+ '{{ var("default_varchar") }}' as product_type,
  '{{ var("default_varchar") }}' as netsuite_link,
  '{{ var("default_varchar") }}' as net_suite_sku,
  {{ var("default_boolean") }} as sbqq_non_discountable,
@@ -110,6 +112,7 @@ select
 	,last_modified_date::TIMESTAMP
 	,lcom_suite::VARCHAR(250)
 	,multiplier::DOUBLE PRECISION
+	,product_type::VARCHAR(10)
 	,netsuite_link::VARCHAR(190)
 	,net_suite_sku::VARCHAR(90)
 	,sbqq_non_discountable::BOOLEAN

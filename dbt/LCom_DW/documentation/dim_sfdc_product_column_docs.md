@@ -42,7 +42,7 @@ LCOM Suite (The associated LCOM Suite of this product for provisioning purposes)
 {% enddocs %}
 
 {% docs column_multiplier %}
-Multiplier (Multiplier for auto-generating the correct license count based on quote lines)
+Multiplier (Multiplier for auto-generating the correct license count based on quote lines). It's used for Site Product Type to get Number of Students from Quantity of Site Licenses
 {% enddocs %}
 
 {% docs column_netsuite_link %}
@@ -95,4 +95,8 @@ Subscription Term (Term length of this subscription. Only applicable if the prod
 
 {% docs column_sbqq_subscription_type %}
 Subscription Type (Renewable Subscriptions will transfer to Renewal Quotes. One-time Subscriptions will not.)
+{% enddocs %}
+
+{% docs column_product_type %}
+Type of licensing for this product: Student or Site
 {% enddocs %}
