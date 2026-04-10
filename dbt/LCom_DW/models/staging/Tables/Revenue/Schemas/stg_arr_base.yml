@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: stg_arr_base
+    description: >-
+      Staging model for valid opportunities with ARR at the product at bucket level and joined
+      parent opportunities product at bucket level ARR plus parent opportunities latest end date.
+    
+    config:
+      contract:
+        enforced: true   
+      tags:
+        - staging
+        - revenue
+        - arr
+        - backdated
+    
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - opportunity_id
+            - sfdc_product_id
+            - bucket
+    
+    columns:
+      - name: opportunity_id
+        description: Renewal or root (no parents) opportunity_id
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+      - name: hasparent
+        description: True when the opportunity has at least one prior parent opportunity in its renewal chain.
+        data_type: boolean
+        constraints:
+          - type: not_null          
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+      - name: bucket
+        description: "{{ doc('column_business_type_opty_product') }}"
+        data_type: VARCHAR(100)
+        constraints:
+          - type: not_null          
+      - name: total_price
+        description: Aggregated to this product and bucket total_price from renewal opportunity lines. 0 if product and bucket are not present in the opportunity lines, but only in parent opportunities lines.
+        data_type: NUMERIC(38,10)
+        constraints:
+          - type: not_null
+      - name: parent_total_price
+        description: Aggregated to this product and bucket total_price from parent opportunities. 0 if product and bucket are not present in the parent opportunities, but only in the renewal opportunity lines.
+        data_type: NUMERIC(38,10)
+        constraints:
+          - type: not_null
+      - name: max_parent_end_date
+        description: Latest end date across parent opportunities in the renewal chain. Used to prevent ARR overlap between parent and child opportunities. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null          
