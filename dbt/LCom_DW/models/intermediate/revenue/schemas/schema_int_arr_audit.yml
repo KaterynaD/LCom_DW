@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: int_arr_audit
+    description: >
+
+      Intermediate audit model identifies opportunities not recognized correctly in ARR processing.
+      It captures opportunities that are excluded from recurring revenue logic or have data
+      quality / configuration issues that prevent accurate ARR treatment.
+
+      This includes opportunities such as:
+      won but not invoiced,
+      non-recurring opportunities,
+      negative or replacement opportunities,
+      invalid contract dates,
+      invalid renewal-parent date relationships,
+      and opportunities that appear eligible for ARR but are still missing from fact_arr.
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - staging
+        - revenue
+        - arr      
+    
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - mon_year
+            - opportunity_id
+            - issue
+
+
+    columns:
+      - name: mon_year
+        description: >
+          Accounting month in YYYYMM integer format derived from the opportunity start date.
+          Used to align audit issues to the month in which the opportunity would be expected
+          to participate in ARR logic.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        description: >
+          "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: issue
+        description: >
+          Audit issue category explaining why the opportunity is excluded from ARR recognition
+          or why accurate ARR calculation cannot be performed.
+
+          Possible values currently produced by the model include:
+          Not Recurring Revenue,
+          Won, not Invoiced,
+          Negative or Replacement,
+          Won Start Date after End Date or missing,
+          Won Renewal Start or End Date before Parent Start or End Date,
+          Lost Start Date after End Date or missing,
+          Lost Renewal Start Date before Parent Start or End Date (Won),
+          Other.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
