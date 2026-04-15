@@ -1,7 +1,11 @@
-{{ config(materialized='view',
-   bind=False
-)
- }}
+{{
+    config(
+
+        materialized='table',        
+        dist='opportunity_id' 
+        
+        )
+}}
  
 with current as (
 select
@@ -9,7 +13,7 @@ r.arr_type,
 socr.parent_opportunities,
 r.opportunity_id,
 r.arr_amount amount
-from {{ ref("fact_current_arr") }} r
+from {{ ref("int_current_arr") }} r
 join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
 on r.opportunity_id = socr.opportunity_id
 )
@@ -20,7 +24,7 @@ r.opportunity_id,
 socr.parent_opportunities,
 sum(r.arr_amount) amount
 from {{ ref("fact_arr") }} r
-join {{ ref("stg_opportunities_chain_of_renewals") }}    socr
+join {{ ref("stg_opportunities_chain_of_renewals_v2") }}    socr
 on r.opportunity_id = socr.opportunity_id
 where r.record_type='ARR'
 and to_char(GetDate(),'yyyymm')::int = r.mon_year
@@ -172,20 +176,49 @@ from data_calculated_not_in_current_paired
 select arr_type, 'Amount mismatch' as issue, current_opportunity_id as opportunity_id,current_amount, calculated_amount, diff 
 from data_in_both_aggregated
 union all
-select e.arr_type, 'calculated not in current' as issue, e.opportunity_id, null current_amount, sum(e.amount) calculated_amount, -sum(e.amount) diff 
+select e.arr_type, 'In Calculated ARR, not in Current' as issue, e.opportunity_id, null current_amount, sum(e.amount) calculated_amount, -sum(e.amount) diff 
 from data_calculated_not_in_current_final d 
 join calculated e on d.opportunity_id = e.opportunity_id 
 group by e.arr_type, e.opportunity_id
 union all
-select e.arr_type,  'Corrupted calculated not in current' as issue, e.opportunity_id, null current_amount, sum(e.amount) calculated_amount, -sum(e.amount) diff 
+select e.arr_type,  'In Calculated ARR corrupted amount and not in Current' as issue, e.opportunity_id, null current_amount, sum(e.amount) calculated_amount, -sum(e.amount) diff 
 from corrupted_calculated e 
 group by e.arr_type, e.opportunity_id
 union all
-select s.arr_type,  'current not in calculated' as issue, s.opportunity_id,s.amount current_amount, null calculated_amount,s.amount diff 
+select s.arr_type,  'In Current ARR not in Calculated' as issue, s.opportunity_id,s.amount current_amount, null calculated_amount,s.amount diff 
 from data_current_not_in_calculated_final d 
 join current s 
 on d.opportunity_id = s.opportunity_id
 )
-select *
-from final_data
-order by arr_type, issue, opportunity_id
+, audit as (
+select
+r.opportunity_id,
+i.issue,
+socr.parent_opportunities
+from {{ ref("dim_arr_audit") }} r
+join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
+on r.opportunity_id = socr.opportunity_id
+join {{ ref('dim_arr_issue') }} i
+on r.issue_id =i.issue_id
+) 
+select distinct
+v.arr_type::varchar(20), 
+v.issue::varchar(100) as validation_issue, 
+v.opportunity_id::varchar(300) as opportunity_id,
+v.current_amount::numeric(38,10) as current_amount, 
+v.calculated_amount::numeric(38,10) as calculated_amount, 
+v.diff::numeric(38,10) as diff,
+case when a.opportunity_id is null then 'No' else 'Yes' end::varchar(3) as known_issue,
+listagg(isnull(a.issue,'Unknown')::varchar(100) ,'; ')  as known_issue_description
+from final_data v
+join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
+on v.opportunity_id = socr.opportunity_id
+left join audit as a
+    on 
+    (
+    a.parent_opportunities ilike '%'+v.opportunity_id+'%'
+    or
+    socr.parent_opportunities ilike '%'+a.opportunity_id+'%'
+    )
+   where diff!=0 
+   group by all

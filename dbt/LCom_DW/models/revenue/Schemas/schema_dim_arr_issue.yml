@@ -46,3 +46,11 @@ models:
         data_type: varchar(100)
         constraints:
           - type: not_null
+
+      - name: category
+        description: >
+          ARR audit issue category from int_arr_audit.
+          Represents the impact of the issue on ARR recognition.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null          

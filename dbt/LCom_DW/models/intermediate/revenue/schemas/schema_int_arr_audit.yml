@@ -66,3 +66,9 @@ models:
         data_type: varchar(100)
         constraints:
           - type: not_null
+      - name: category
+        description: >
+          Audit issue category explaining the impact of the issue: Included in ARR vs Not Included in ARR vs Other or Other
+        data_type: varchar(100)
+        constraints:
+          - type: not_null          

@@ -129,6 +129,17 @@ models:
         constraints:
           - type: not_null
 
+      - name: start_date
+        description: ARR start date adjusted for ARR type retained for downstream filtering. 
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: end_date
+        description: ARR end date adjusted for ARR type retained for downstream filtering.
+        data_type: date
+        constraints:
+          - type: not_null
 
       - name: arr_activation_date
         description: ARR activation date retained for downstream filtering. Primarily populated for Backdated ARR.
