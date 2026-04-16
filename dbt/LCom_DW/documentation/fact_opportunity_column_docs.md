@@ -179,10 +179,6 @@ Quote Notes (Quote Notes)
 Quote Start Date
 {% enddocs %}
 
-{% docs column_quote_total_discount %}
-Quote Total Discount
-{% enddocs %}
-
 {% docs column_renewable_revenue %}
 Renewable Revenue
 {% enddocs %}

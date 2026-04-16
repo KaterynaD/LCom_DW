@@ -50,8 +50,7 @@ select
 'x_2_nd_contact_c',
 'x_3_rd_contact_c','license_provisioned_date_c','subscription_start_date_c','subscription_end_date_c',
 'quota_c','quote_contract_type_c','quote_created_date_c','quote_expiry_date_c',
-'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c',
-'quote_total_discount_c'
+'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c'
             ],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
@@ -125,7 +124,6 @@ select
     isnull(o.quote_name_c,   '{{ var("default_varchar") }}') as quote_name ,
     isnull(o.quote_notes_c,   '{{ var("default_varchar") }}') as quote_notes ,
     isnull(o.quote_start_date_c,   '{{ var("default_date") }}') as quote_start_date ,
-    isnull(o.quote_total_discount_c , {{ var("default_numeric") }}) as quote_total_discount ,
     isnull(o.renewable_revenue_c, {{ var("default_numeric") }}) as renewable_revenue,
     isnull(o.renewal_opportunity_c, '{{ var("default_varchar") }}') as renewal_opportunity_id,
     isnull(o.sbqq_primary_quote_c, '{{ var("default_varchar") }}') as sbqq_primary_quote,
@@ -222,7 +220,6 @@ select
     quote_name::varchar(250)	,
     quote_notes::varchar(780)	,
     quote_start_date::date	,
-    quote_total_discount::double precision	,
     renewable_revenue::numeric(38,10),
     renewal_opportunity_id::varchar(300),
     sbqq_primary_quote::varchar(30),
