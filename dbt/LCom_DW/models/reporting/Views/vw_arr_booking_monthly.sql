@@ -23,6 +23,26 @@ arr_activation_date,
 arr_deactivation_date
 from  {{ ref('fact_arr') }}
 union all
+select 
+'ARR Target' arr_type,    
+'Target'  record_type,
+mon_year,
+mon_lastday,
+fiscalyear,
+fiscalyear_mon,
+'{{ var("default_ID") }}' account_id,
+null opportunity_id,
+'{{ var("default_ID") }}' sfdc_product_id,
+'Target' Bucket,
+'Target' Bucket_SFDC,
+null total_price,
+null parent_total_price,
+case when fiscalyear = '2025/2026' then 25800000 else 0 end arr_amount,
+null arr_activation_date,
+null arr_deactivation_date
+from {{ ref('dim_month') }}
+where mon_year<=TO_CHAR(GETDATE(), 'YYYYMM')::int
+union all
 select
 'Booking' arr_type,    
 record_type,
@@ -102,7 +122,7 @@ and f.mon_lastday between ah.fromdate and ah.todate
 join {{ ref('dim_sfdc_product') }} p
 on f.sfdc_product_id=p.sfdc_product_id
 and f.mon_lastday between ah.fromdate and ah.todate
-join {{ ref('fact_opportunity') }} o
+left outer /*to include Target data*/ join {{ ref('fact_opportunity') }} o
 on f.opportunity_id = o.opportunity_id
 left outer join {{ ref('fact_opportunity') }} ro
 on o.renewal_opportunity_id = ro.opportunity_id
