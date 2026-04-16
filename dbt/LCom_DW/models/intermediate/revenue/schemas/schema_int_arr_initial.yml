@@ -1,0 +1,170 @@
+version: 2
+
+models:
+  - name: int_arr_initial
+    description: >
+
+      Intermediate model that prepares ARR input data for int_arr_base from stg_arr_base.
+
+      The model expands the same base opportunity-product records into all three ARR types
+      (True, Preliminary, Backdated), enriches them with opportunity, account, product,
+      renewal, and valid parent context, and excludes records not intended for ARR processing.
+
+      It is the common preparation layer before ARR-specific movement and fact logic is applied.
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - staging
+        - revenue
+        - arr
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - arr_type
+            - opportunity_id
+            - sfdc_product_id
+            - bucket
+
+    columns:
+      - name: arr_type
+        description: >
+          Type of ARR (True, Preliminary, Backdated) determined by opportunity lifecycle timing logic.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: hasparent
+        description: >
+          True when the opportunity has at least one prior parent opportunity in its renewal chain.
+        data_type: boolean
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+        data_type: varchar(780)
+        constraints:
+          - type: not_null
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+
+      - name: state_code
+        description: >
+          Billing state code from the account associated with the opportunity.
+          Used in downstream ARR logic and reporting where geography-based treatment is needed.
+        data_type: varchar(30)
+        constraints:
+          - type: not_null
+
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: start_date
+        description: "{{ doc('column_start_date') }}"
+        data_type: date        
+        constraints:
+          - type: not_null
+
+      - name: end_date
+        description: "{{ doc('column_end_date') }}"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_opportunity_id
+        description: "{{ doc('column_renewal_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: renewal_stage_name
+        description: Stage name of the linked renewal opportunity. Defaults to 'Unknown' when absent.
+        data_type: varchar(780)
+        constraints:
+          - type: not_null
+
+      - name: renewal_invoiced_date
+        description: Invoiced date of the linked renewal opportunity. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_close_date
+        description: Close date of the linked renewal opportunity. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_start_date
+        description: Start date of the linked renewal opportunity. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_end_date
+        description: End date of the linked renewal opportunity. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+
+      - name: bucket
+        description: >
+          Original Salesforce classification bucket from stg_arr_base.
+          Represents the business category of the opportunity-product amount before downstream normalization.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+      - name: total_price
+        description: >
+          Current opportunity aggregated ARR amount for this month/opportunity/product/bucket grain.
+          For cancellation placeholder rows this may be 0 after final null handling.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: parent_total_price
+        description: >
+          Parent opportunity aggregated ARR amount for the same product and bucket context.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: max_parent_end_date
+        description: >
+          Maximum end date among valid parent opportunities renewing into the current opportunity.
+          Used to support multi-parent renewal scenarios and downstream continuity or gap logic.
+        data_type: date
+        constraints:
+          - type: not_null

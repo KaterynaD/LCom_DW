@@ -7,65 +7,53 @@
         )
 }}
 
-with base_data as 
-/*3 ARR types need identical data except start,end,activate and deactivate dates*/
-(
-    select 'True' ARR_Type, * from {{ ref("stg_arr_base") }}
-    union all
-    select 'Preliminary' ARR_Type, * from {{ ref("stg_arr_base") }}
-    union all
-    select 'Backdated' ARR_Type, * from {{ ref("stg_arr_base") }}
-)
-/*extended rawdata to all what's needed for ARR step 1*/
-, ARR_Data_base as (
+with 
+/*
+Step 1 - if a won contract invoiced later then a Start date or lost close date - Invoiced or Close dates are used as Start date
+Except backdated - this logic is implemented in ARR Activation date
+*/
+ARR_Data_base as (
 select distinct
-d.ARR_Type,
-d.HasParent,
-fo.opportunity_id,
-fo.stage_name,
-fo.account_id,
-a.sfdc_billing_state_code state_code,
-fo.invoiced_date ,
-fo.close_date,
+ARR_Type,
+HasParent,
+opportunity_id,
+stage_name,
+account_id,
+state_code,
+invoiced_date ,
+close_date,
 case 
- when d.ARR_Type!='Backdated' then
-  greatest(case when fo.stage_name ilike '%won%' then fo.invoiced_date else fo.close_date end, fo.start_date) 
+ when ARR_Type!='Backdated' then
+  greatest(case when stage_name ilike '%won%' then invoiced_date else close_date end, start_date) 
  else /*In Backdated ARR the shift related to invoiced_date and close_date is applied in Activateion Date*/
-  fo.start_date
+  start_date
 end as start_date,
-fo.start_date start_date_sfdc,
-fo.end_date,
-fo.renewal_opportunity_id,
-fro.stage_name renewal_stage_name,
-fro.invoiced_date renewal_invoiced_date,
-fro.close_date renewal_close_date,
+start_date start_date_sfdc,
+end_date,
+renewal_opportunity_id,
+renewal_stage_name,
+renewal_invoiced_date,
+renewal_close_date,
 case 
- when d.ARR_Type!='Backdated' then
-  greatest(case when fro.stage_name ilike '%won%' then fro.invoiced_date else fro.close_date end, fro.start_date)
+ when ARR_Type!='Backdated' then
+  greatest(case when renewal_stage_name ilike '%won%' then renewal_invoiced_date else renewal_close_date end, renewal_start_date)
  else 
-  fro.start_date
+  renewal_start_date
 end as renewal_start_date,
-fro.start_date renewal_start_date_sfdc,
-fro.end_date renewal_end_date,
-d.sfdc_product_id ,
-d.bucket ,
-d.total_price ,
-d.parent_total_price ,
-d.max_parent_end_date
-from base_data d
-join {{ ref("fact_opportunity") }} fo
-on fo.opportunity_id=d.opportunity_id
-left outer join (select fro.* from {{ ref("fact_opportunity") }} fro join {{ ref("stg_valid_opportunities") }} ooi on fro.opportunity_id = ooi.opportunity_id) as fro
-on fro.opportunity_id=fo.renewal_opportunity_id
-join {{ ref("dim_sfdc_product") }} dsp
-on d.sfdc_product_id = dsp.sfdc_product_id
-join {{ ref("dim_account") }} a
-on a.account_id = fo.account_id
-/*assuming renewal is for the same account as a parent. It is not true, but at least they should be in teh same state*/
-where dsp.sfdc_product_name not ilike '%wire transfer%'
-and not(fo.name ilike '%NEGATIVE OPP%' or fo.name ilike '%REPLACEMENT OPP%')
+renewal_start_date renewal_start_date_sfdc,
+renewal_end_date,
+sfdc_product_id ,
+bucket ,
+total_price ,
+parent_total_price ,
+max_parent_end_date
+from {{ ref("int_arr_initial") }}
 )
-/*extended rawdata to all what's needed for ARR step 2*/
+/*
+Step 2 - Adjusting Parent End dates to renewal Start dates to avoide duplicates
+- Adjusting End dates for ARR types based on business rules
+- Adding ARR Activation date for Backdated ARR Type
+*/
 , ARR_Data as (
 select distinct
 ARR_Type,
@@ -147,7 +135,7 @@ end as max_parent_end_date,
 max_parent_end_date as max_parent_end_date_sfdc
 from ARR_Data_base fb
 )
-/*fiscal calendar data*/
+/*fiscal calendar data based on Start Date*/
 , arr_data_extended as
 (
 select

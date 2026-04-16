@@ -4,9 +4,8 @@ models:
   - name: int_arr_base
     description: >-
       Intermediate model for ARR at ARR Type, month (based on Start Date), opportunity, product, and bucket grain.
-      Extends stg_arr_base with fiscal month attributes, opportunity lifecycle dates 
-      (start, end, renewal start, max parent end and activation dates) adjusted for each ARR Type logic,
-      renewal opportunity context, and placeholder/cancellation bucket rows used for
+      Extends int_arr_initial with fiscal month attributes, opportunity lifecycle dates 
+      (start, end, renewal start, and activation dates) adjusted for each ARR Type logic, and placeholder/cancellation bucket rows used for
       downstream ARR calculations.      
 
     config:

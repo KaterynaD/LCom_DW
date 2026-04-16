@@ -26,12 +26,7 @@ models:
         description: Renewal or root (no parents) opportunity_id
         data_type: varchar(300)
         constraints:
-          - type: not_null
-      - name: hasparent
-        description: True when the opportunity has at least one prior parent opportunity in its renewal chain.
-        data_type: boolean
-        constraints:
-          - type: not_null          
+          - type: not_null        
       - name: sfdc_product_id
         description: "{{ doc('column_sfdc_product_id') }}"
         data_type: varchar(300)
@@ -51,9 +46,4 @@ models:
         description: Aggregated to this product and bucket total_price from parent opportunities. 0 if product and bucket are not present in the parent opportunities, but only in the renewal opportunity lines.
         data_type: NUMERIC(38,10)
         constraints:
-          - type: not_null
-      - name: max_parent_end_date
-        description: Latest end date across parent opportunities in the renewal chain. Used to prevent ARR overlap between parent and child opportunities. Defaults to 1900-01-01 when absent.
-        data_type: date
-        constraints:
-          - type: not_null          
+          - type: not_null    

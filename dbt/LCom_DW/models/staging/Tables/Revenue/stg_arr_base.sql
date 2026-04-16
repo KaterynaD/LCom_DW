@@ -76,36 +76,19 @@ on rol.opportunity_id = pol.opportunity_id
 and rol.sfdc_product_id = pol.sfdc_product_id
 and rol.business_type_opty_product = pol.business_type_opty_product
 )
-/*max parents end date for each opportunity*/
-,parents_info as (
-select
-pfo.renewal_opportunity_id opportunity_id,
-max(pfo.end_date) max_parent_end_date
-from {{ ref("fact_opportunity") }} pfo
-join {{ ref("stg_valid_opportunities") }} ooi
-on pfo.opportunity_id = ooi.opportunity_id
-where pfo.renewal_opportunity_id!='Unknown'
-group by pfo.renewal_opportunity_id
-)
 ,final_data as (
 select
 combined_data.opportunity_id,
-case when parents_info.max_parent_end_date is not null then true else false end HasParent,
 combined_data.sfdc_product_id,
 combined_data.bucket as bucket,
 combined_data.total_price,
-combined_data.parent_total_price,
-isnull(parents_info.max_parent_end_date, '{{ var("default_date") }}') as max_parent_end_date
+combined_data.parent_total_price
 from combined_data
-left outer join parents_info
-on combined_data.opportunity_id = parents_info.opportunity_id
 )
 select 
 opportunity_id::varchar(300),
-HasParent::boolean,
 sfdc_product_id::varchar(300),
 bucket::varchar(100),
 total_price::numeric(38,10),
-parent_total_price::numeric(38,10),
-max_parent_end_date::date
+parent_total_price::numeric(38,10)
 from final_data
