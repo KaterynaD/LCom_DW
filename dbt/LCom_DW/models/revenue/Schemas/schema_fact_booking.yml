@@ -81,10 +81,18 @@ models:
               field: sfdc_product_id
 
       - name: bucket
-        description: Booking bucket derived from the opportunity product business type classification.
+        description: >-
+          Normalized ARR movement bucket with the 'Sales : ' prefix removed and delimiters standardized.
         data_type: varchar(100)
         constraints:
           - type: not_null
+       
+
+      - name: bucket_sfdc
+        description: Original Salesforce opportunity product business type classification.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null          
 
       - name: total_price
         description: Booking amount for the current opportunity, product, and bucket row.
