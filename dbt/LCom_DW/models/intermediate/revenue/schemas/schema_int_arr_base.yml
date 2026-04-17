@@ -2,12 +2,7 @@ version: 2
 
 models:
   - name: int_arr_base
-    description: >-
-      Intermediate model for ARR at ARR Type, month (based on Start Date), opportunity, product, and bucket grain.
-      Extends int_arr_initial with fiscal month attributes, opportunity lifecycle dates 
-      (start, end, renewal start, and activation dates) adjusted for each ARR Type logic, and placeholder/cancellation bucket rows used for
-      downstream ARR calculations.      
-
+    description: '{{ doc("table_int_arr_base") }}'
     config:
       contract:
         enforced: true
