@@ -52,7 +52,8 @@ cal.fiscalyear_mon,
 d.account_id,
 d.opportunity_id,
 d.sfdc_product_id ,
-d.bucket ,
+replace(replace(d.Bucket, 'Sales : ',''),' : ',': ') as bucket,
+d.Bucket as bucket_sfdc,
 d.total_price
 from Data d
 join dim_month cal
@@ -72,6 +73,7 @@ b.account_id,
 b.opportunity_id,
 b.sfdc_product_id ,
 bucket ,
+b.bucket_sfdc,
 b.total_price
 from booking_monthly_data b
 join dim_month mon
@@ -99,6 +101,7 @@ account_id::varchar(300),
 opportunity_id::varchar(300),
 sfdc_product_id::varchar(300),
 bucket::varchar(100),
+bucket_sfdc::varchar(100),
 total_price::numeric(38,10)
 from final_data
 where mon_year!=0
