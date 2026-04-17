@@ -29,12 +29,15 @@ fo.account_id,
 fo.opportunity_id,
 fo.invoiced_date,
 d.sfdc_product_id ,
-d.bucket ,
+d.business_type_opty_product as bucket ,
 d.total_price
-from {{ ref('stg_arr_base') }} d
-join {{ ref('fact_opportunity') }} fo
-on fo.opportunity_id=d.opportunity_id
-where fo.stage_name ilike '%won%'
+from {{ ref('dim_opportunity_line') }} d			
+join {{ ref('fact_opportunity') }} fo			
+on fo.opportunity_id=d.opportunity_id					
+join {{ ref('dim_sfdc_product') }} dsp			
+on d.sfdc_product_id = dsp.sfdc_product_id						
+where dsp.sfdc_product_name not ilike '%wire transfer%'			
+and fo.stage_name in ( 'Closed Won', 'Closed-Won Upsell')
 and fo.invoiced_date != '1900-01-01'
 )
 /*fiscal calendar data*/
@@ -68,7 +71,7 @@ mon.fiscalyear_mon,
 b.account_id,
 b.opportunity_id,
 b.sfdc_product_id ,
-b.bucket ,
+bucket ,
 b.total_price
 from booking_monthly_data b
 join dim_month mon
