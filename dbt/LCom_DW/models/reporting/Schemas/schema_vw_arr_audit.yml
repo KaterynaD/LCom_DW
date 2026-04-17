@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  - name: vw_arr_audit
+    description: >
+
+      Audit view that highlights opportunities with configuration issues in Salesforce.
+
+      The view combines opportunity data with ARR audit issues and categories,
+      allowing visibility into opportunities that are either excluded from fact_arr
+      or may produce incorrect ARR due to Salesforce configuration problems.
+
+      It is used for investigation, monitoring, and reporting of ARR data quality issues.
+
+    config:
+      tags:
+        - revenue
+        - arr
+
+    columns:
+      - name: mon_year
+        description: >
+          Reporting month in YYYYMM format associated with the ARR audit issue.
+
+
+      - name: mon_lastday
+        description: >
+          Last calendar day of the reporting month.
+
+
+      - name: fiscalyear
+        description: >
+          Fiscal year for the ARR movement month in a form yyyy_start/yyyy_end.
+
+
+      - name: fiscalyear_mon
+        description: >
+          Fiscal year and month representation used for reporting and grouping.
+
+
+      - name: category
+        description: >
+          High-level category of the ARR audit issue.
+
+
+      - name: issue
+        description: >
+          Specific ARR audit issue describing the problem with the opportunity configuration.
+
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+
+
+      - name: opportunity_number
+        description: "{{ doc('column_opportunity_number') }}"
+
+
+      - name: opportunity_name
+        description: "{{ doc('column_opportnity_name') }}"
+
+
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+
+
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+
+
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+
+
+      - name: start_date
+        description: "{{ doc('column_start_date') }}"
+
+
+      - name: end_date
+        description: "{{ doc('column_end_date') }}"
+
+
+      - name: arr
+        description: "{{ doc('column_arr') }}"
+
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+
+
+      - name: sfdc_account_id
+        description: "{{ doc('column_sfdc_account_id') }}"
+
+
+      - name: account_name
+        description: "{{ doc('column_sfdc_name') }}"

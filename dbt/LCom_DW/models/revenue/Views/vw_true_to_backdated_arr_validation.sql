@@ -23,7 +23,10 @@ and GetDate() between arr_activation_date and arr_deactivation_date
 group by mon_year
 )
 select
-ta.mon_year,
+d.mon_year,
+d.mon_lastday,
+d.fiscalyear,
+d.fiscalyear_mon,
 true_arr_amount,
 backdated_arr_amount,
 true_arr_amount - backdated_arr_amount diff,
@@ -31,3 +34,5 @@ true_arr_amount - backdated_arr_amount diff,
 from true_arr ta
 join backdated_arr ba
 on ta.mon_year = ba.mon_year
+join {{ ref('dim_month') }} d
+on ta.mon_year = d.mon_year

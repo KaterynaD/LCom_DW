@@ -17,8 +17,8 @@ group by all
 )
 ,data_final as (
 select 
-distinct
 mon_year,
+arr_type,
 data.opportunity_id,
 case 
  when bucket ilike '%cancel%' then bucket
@@ -32,6 +32,7 @@ where arr_amount != 0
 ,pivot_data as (
 select
     mon_year,
+    arr_type,
     opportunity_id,
     sum(case when bucket  ilike '%increase%'   then arr_amount else 0 end) as price_increase_calculated,
     sum(case when bucket  ilike '%reduction%'     then arr_amount else 0 end) as downsell_calculated,
@@ -39,11 +40,13 @@ select
 from data_final
 group by
     mon_year,
+    arr_type,
     opportunity_id
 )
 ,joined_data as (
 select
 mon_year,
+arr_type,
 fo.opportunity_id,
 fo.opportunity_number,
 fo.name as opportunity_name,
@@ -61,7 +64,7 @@ case when fo.stage_name != 'Closed Lost' then fo.price_increase_arr else 0 end p
 case when fo.stage_name != 'Closed Lost' then downsell_calculated else 0 end downsell_calculated,
 case when fo.stage_name != 'Closed Lost' then fo.downsell  else 0 end downsell_salesforce,
 case when fo.stage_name = 'Closed Lost' then cancelled_calculated  else 0 end cancelled_calculated,
-case when fo.stage_name = 'Closed Lost' then fo.true_arr_formula else 0 end cancelled_salesforce
+case when fo.stage_name = 'Closed Lost' then -fo.true_arr_formula else 0 end cancelled_salesforce
 from pivot_data as data
 join {{ ref("fact_opportunity") }} fo 
 on data.opportunity_id = fo.opportunity_id
@@ -70,6 +73,7 @@ on da.account_id = fo.account_id
 )
 select
 mon_year,
+arr_type,
 opportunity_id,
 opportunity_number,
 opportunity_name,

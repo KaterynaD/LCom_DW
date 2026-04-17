@@ -99,29 +99,21 @@ p.sfdc_product_name,
 p.lcom_suite,
 p.sfdc_product_family,
 p.sfdc_product_sub_family,
-ah.sfdc_name as account_name,
-uah.sfdc_name as ultimate_parent_account_name,
-uah.sfdc_billing_state state,
-uah.sfdc_billing_country country,
-case when uah.sfdc_district_enrollment=0 then uah.sfdc_school_enrollment else uah.sfdc_district_enrollment end as district_enrollment,
-case when (uah.sfdc_state_initiative or uah.sfdc_state_initiative_school) then true else false end as state_initiative,
-uah.sfdc_urban_rural as urban_rural ,
-uah.sfdc_owner_name_text as account_owner_name,
+a.sfdc_name as account_name,
+ua.sfdc_name as ultimate_parent_account_name,
+ua.sfdc_billing_state state,
+ua.sfdc_billing_country country,
+case when ua.sfdc_district_enrollment=0 then ua.sfdc_school_enrollment else ua.sfdc_district_enrollment end as district_enrollment,
+case when (ua.sfdc_state_initiative or ua.sfdc_state_initiative_school) then true else false end as state_initiative,
+ua.sfdc_urban_rural as urban_rural ,
 ua.sfdc_owner_name_text as current_account_owner_name
 from data f
 join {{ ref('dim_account') }} a
 on f.account_id = a.account_id
 join {{ ref('dim_account') }} ua
 on a.sfdc_ultimate_parent_id = ua.sfdc_account_id
-join {{ ref('dim_account_history') }} uah
-on ua.account_id = uah.account_id
-and f.mon_lastday between uah.fromdate and uah.todate
-join {{ ref('dim_account_history') }} ah
-on f.account_id = ah.account_id
-and f.mon_lastday between ah.fromdate and ah.todate
 join {{ ref('dim_sfdc_product') }} p
 on f.sfdc_product_id=p.sfdc_product_id
-and f.mon_lastday between ah.fromdate and ah.todate
 left outer /*to include Target data*/ join {{ ref('fact_opportunity') }} o
 on f.opportunity_id = o.opportunity_id
 left outer join {{ ref('fact_opportunity') }} ro
