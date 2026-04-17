@@ -2,7 +2,8 @@
 {{ config(
     materialized='incremental',
     unique_key=['year', 'organization_district_id', 'user_account_id', 'assessment_set_id'],
-    incremental_strategy='merge'
+    incremental_strategy='merge',
+    on_schema_change='fail'
 ) }}
 
 with source as (

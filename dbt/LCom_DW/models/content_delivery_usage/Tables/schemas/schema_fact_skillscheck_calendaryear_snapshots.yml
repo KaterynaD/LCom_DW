@@ -5,7 +5,7 @@ models:
     description: "This is the main fact table for skills check performance at the calendar year level. Captures the first pretest and last posttest per assessment set taken by each student in the calendar year."
     column_types:
       schoolyear: varchar(20) not null
-      country_code: char(2) null
+      country_code: char(2) not null
       state_province_key: varchar(6) null
       organization_district_id: varchar(255) not null
       organization_school_id: varchar(255) null
@@ -47,49 +47,65 @@ models:
       - name: year
         data_type: integer
         description: 'Calendar year for which the snapshot is taken.'
+        constraints:
+          - type: not_null
 
       - name: country_code
-        data_type: character
+        data_type: character(2)
         description: "ISO code for the country."
+        constraints:
+          - type: not_null
 
       - name: state_province_key
-        data_type: character varying
+        data_type: character varying(6)
         description: "Key for the state or province."
 
       - name: organization_district_id
-        data_type: character varying
+        data_type: character varying(255)
         description: "Identifier for the organization district."
+        constraints:
+          - type: not_null
 
       - name: organization_school_id
-        data_type: character varying
+        data_type: character varying(255)
         description: "Identifier for the organization school."
 
       - name: user_account_id
-        data_type: character varying
+        data_type: character varying(255)
         description: "Identifier for the user account."
+        constraints:
+          - type: not_null
 
       - name: user_grade_level_code
-        data_type: character
+        data_type: character(2)
         description: "Code representing the user's grade level."
 
       - name: assessment_set_id
         data_type: integer
         description: "Identifier for the assessment set (container for the pre and post test)."
+        constraints:
+          - type: not_null
 
       - name: level
-        data_type: character varying
+        data_type: character varying(10)
         description: "Level of the assessment (E.g., Level 1, Levels 4-5, Level MS, etc.)."
+        constraints:
+          - type: not_null
 
       - name: skill
-        data_type: character varying
+        data_type: character varying(100)
         description: "Skill being assessed."
+        constraints:
+          - type: not_null
 
       - name: took_both
         data_type: boolean
         description: "Indicates whether the student took both the pre and post assessments."
+        constraints:
+          - type: not_null
 
       - name: pre_learning_object_id
-        data_type: character varying
+        data_type: character varying(50)
         description: "Identifier for the pre-learning object."
 
       - name: pre_score_datetime
@@ -113,15 +129,15 @@ models:
         description: "Possible score for the pre-assessment."
 
       - name: pre_pct_score
-        data_type: numeric
+        data_type: numeric(8,6)
         description: "Percentage score for the pre-assessment."
 
       - name: pre_performance_bucket
-        data_type: character varying
+        data_type: character varying(10)
         description: "Performance bucket for the pre-assessment (e.g., Beginning, Developing, Proficient)."
 
       - name: post_learning_object_id
-        data_type: character varying
+        data_type: character varying(50)
         description: "Identifier for the post-learning object."
 
       - name: post_score_datetime
@@ -145,11 +161,11 @@ models:
         description: "Possible score for the post-assessment."
 
       - name: post_pct_score
-        data_type: numeric
+        data_type: numeric(8,6)
         description: "Percentage score for the post-assessment."
 
       - name: post_performance_bucket
-        data_type: character varying
+        data_type: character varying(10)
         description: "Performance bucket for the post-assessment (e.g., Beginning, Developing, Proficient)."
 
       - name: score_change
@@ -157,11 +173,11 @@ models:
         description: "Change in score from pre-assessment to post-assessment."
 
       - name: pct_score_change
-        data_type: numeric
+        data_type: numeric(8,6)
         description: "Percentage change in score from pre-assessment to post-assessment."
 
       - name: pct_growth
-        data_type: numeric
+        data_type: numeric(8,6)
         description: "Percentage growth from pre-assessment to post-assessment."
 
       - name: unique_items_completed_before
