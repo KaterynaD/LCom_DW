@@ -1,0 +1,133 @@
+version: 2
+
+models:
+  - name: fact_skillscheck_schoolyear_snapshots
+    description: "This is the main fact table for skills check performance at the school year level. Captures the first pretest and last posttest per assessment set taken by each student in the school year."
+    columns:
+      - name: schoolyear
+        data_type: character varying
+        description: '{{ doc("column_schoolyear") }}'
+
+      - name: country_code
+        data_type: character
+        description: "ISO code for the country."
+
+      - name: state_province_key
+        data_type: character varying
+        description: "Key for the state or province."
+
+      - name: organization_district_id
+        data_type: character varying
+        description: "Identifier for the organization district."
+
+      - name: organization_school_id
+        data_type: character varying
+        description: "Identifier for the organization school."
+
+      - name: user_account_id
+        data_type: character varying
+        description: "Identifier for the user account."
+
+      - name: user_grade_level_code
+        data_type: character
+        description: "Code representing the user's grade level."
+
+      - name: assessment_set_id
+        data_type: integer
+        description: "Identifier for the assessment set (container for the pre and post test)."
+
+      - name: level
+        data_type: character varying
+        description: "Level of the assessment (E.g., Level 1, Levels 4-5, Level MS, etc.)."
+
+      - name: skill
+        data_type: character varying
+        description: "Skill being assessed."
+
+      - name: took_both
+        data_type: boolean
+        description: "Indicates whether the student took both the pre and post assessments."
+
+      - name: pre_learning_object_id
+        data_type: character varying
+        description: "Identifier for the pre-learning object."
+
+      - name: pre_score_datetime
+        data_type: timestamp with time zone
+        description: "Timestamp of when the pre-assessment score was recorded."
+
+      - name: pre_time_spent_seconds
+        data_type: integer
+        description: "Time spent on the pre-assessment in seconds."
+
+      - name: pre_time_spent_seconds_capped
+        data_type: integer
+        description: "Time spent on the pre-assessment in seconds, capped at a maximum value (3500)."
+
+      - name: pre_score
+        data_type: integer
+        description: "Score obtained in the pre-assessment."
+
+      - name: pre_possible_score
+        data_type: integer
+        description: "Possible score for the pre-assessment."
+
+      - name: pre_pct_score
+        data_type: numeric
+        description: "Percentage score for the pre-assessment."
+
+      - name: pre_performance_bucket
+        data_type: character varying
+        description: "Performance bucket for the pre-assessment (e.g., Beginning, Developing, Proficient)."
+
+      - name: post_learning_object_id
+        data_type: character varying
+        description: "Identifier for the post-learning object."
+
+      - name: post_score_datetime
+        data_type: timestamp with time zone
+        description: "Timestamp of when the post-assessment score was recorded."
+
+      - name: post_time_spent_seconds
+        data_type: integer
+        description: "Time spent on the post-assessment in seconds."
+
+      - name: post_time_spent_seconds_capped
+        data_type: integer
+        description: "Time spent on the post-assessment in seconds, capped at a maximum value (3500)."
+
+      - name: post_score
+        data_type: integer
+        description: "Score obtained in the post-assessment."
+
+      - name: post_possible_score
+        data_type: integer
+        description: "Possible score for the post-assessment."
+
+      - name: post_pct_score
+        data_type: numeric
+        description: "Percentage score for the post-assessment."
+
+      - name: post_performance_bucket
+        data_type: character varying
+        description: "Performance bucket for the post-assessment (e.g., Beginning, Developing, Proficient)."
+
+      - name: score_change
+        data_type: integer
+        description: "Change in score from pre-assessment to post-assessment."
+
+      - name: pct_score_change
+        data_type: numeric
+        description: "Percentage change in score from pre-assessment to post-assessment."
+
+      - name: pct_growth
+        data_type: numeric
+        description: "Percentage growth from pre-assessment to post-assessment."
+
+      - name: unique_items_completed_before
+        data_type: integer
+        description: "Number of unique items completed before the assessment."
+
+      - name: unique_items_completed_between
+        data_type: integer
+        description: "Number of unique items completed between the pre-assessment and post-assessment."
