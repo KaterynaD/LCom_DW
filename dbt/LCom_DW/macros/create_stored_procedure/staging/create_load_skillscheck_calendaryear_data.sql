@@ -338,7 +338,17 @@ JOIN (
         COALESCE(pre.level, post.level) AS level,
         CASE WHEN pre.score IS NOT NULL AND post.score IS NOT NULL THEN 1 ELSE 0 END AS took_both,
         COALESCE(pre.assessment_set_id, post.assessment_set_id) AS assessment_set_id,
-        replace(left(replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check'), charindex(' Skills Check ', replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check')) - 1), ':', '') AS skill,
+        replace(
+            CASE
+                WHEN charindex(replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check'), ' Skills Check ') > 0 THEN
+                    left(
+                        replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check'),
+                        charindex(replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check'), ' Skills Check ') - 1
+                    )
+                ELSE replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check')
+            END,
+            ':', ''
+        ) AS skill,
         -- Pre test fields
         pre.learning_object_id AS pre_learning_object_id,
         pre.score_datetime AS pre_score_datetime,
