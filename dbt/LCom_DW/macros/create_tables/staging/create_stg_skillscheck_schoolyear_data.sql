@@ -6,7 +6,7 @@ CREATE TABLE staging.stg_skillscheck_schoolyear_data
 (
     schoolyear                       character varying(20)  NOT NULL,
     country_code                     character(2)           NOT NULL,
-    state_province_key               character varying(5)   NULL,
+    state_province_key               character varying(6)   NULL,
     organization_district_id         character varying(255) NOT NULL,
     organization_school_id           character varying(255) NULL,
     user_account_id                  character varying(255) NOT NULL,

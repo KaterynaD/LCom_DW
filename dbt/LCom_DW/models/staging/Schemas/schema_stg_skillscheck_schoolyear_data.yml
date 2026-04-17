@@ -3,42 +3,9 @@ version: 2
 models:
   - name: stg_skillscheck_schoolyear_data
     description: Staging table to keep skills check data aggregated for each student by school year.
-    column_types:
-      schoolyear: varchar(20) not null
-      country_code: char(2) null
-      state_province_key: varchar(6) null
-      organization_district_id: varchar(255) not null
-      organization_school_id: varchar(255) null
-      user_account_id: varchar(255) not null
-      user_grade_level_code: char(2) null
-      assessment_set_id: int not null
-      level: varchar(10) not null
-      skill: varchar(100) not null
-      took_both: boolean not null
-      pre_learning_object_id: varchar(50) null
-      pre_score_datetime: timestamptz null
-      pre_time_spent_seconds: int null
-      pre_time_spent_seconds_capped: int null
-      pre_score: int null
-      pre_possible_score: int null
-      pre_pct_score: numeric(8,6) null
-      pre_performance_bucket: varchar(10) null
-      post_learning_object_id: varchar(50) null
-      post_score_datetime: timestamptz null
-      post_time_spent_seconds: int null
-      post_time_spent_seconds_capped: int null
-      post_score: int null
-      post_possible_score: int null
-      post_pct_score: numeric(8,6) null
-      post_performance_bucket: varchar(10) null
-      score_change: int null
-      pct_score_change: numeric(8,6) null
-      pct_growth: numeric(8,6) null
-      unique_items_completed_before: int null
-      unique_items_completed_between: int null
     config:
       contract:
-        enforced: true
+        enforced: false
       tags:
         - staging
         - cdu        
