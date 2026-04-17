@@ -90,7 +90,7 @@ models:
 
       - name: pre_time_spent_seconds_capped
         data_type: int
-        description: Time spent on the pre-assessment in seconds, capped at a maximum value (3500).
+        description: Time spent on the pre-assessment in seconds, capped at a maximum value (3600).
 
       - name: pre_score
         data_type: int
@@ -122,7 +122,7 @@ models:
 
       - name: post_time_spent_seconds_capped
         data_type: int
-        description: Time spent on the post-assessment in seconds, capped at a maximum value (3500).
+        description: Time spent on the post-assessment in seconds, capped at a maximum value (3600).
 
       - name: post_score
         data_type: int
