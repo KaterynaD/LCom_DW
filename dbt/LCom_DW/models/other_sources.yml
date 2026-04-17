@@ -10,6 +10,7 @@ sources:
       - name: dim_contact_history   
       - name: dim_account_history       
       - name: dim_account_history_deleted
+      - name: dim_calendar
        
   - name: content_delivery_usage
     description: "History tables used as a model and as a source" 

@@ -591,7 +591,40 @@ sources:
     - name: alignment_start_date
       data_type: timestamp with time zone
       description: 'date the alignment became effective - According to Aaron: do not take it into account when join tables. For info only'
-      
+
+  - name: learning_assessment_set
+    columns:
+    - name: assessment_set_id
+      data_type: integer
+      description: 'unique id for the assessment set — Source: SQL CDSAssessment.scoring.AssessmentSet.AssessmentSetId; lower'
+    - name: assessment_set_name
+      data_type: varchar(150)
+      description: 'name of the assessment set — Source: SQL CDSAssessment.scoring.AssessmentSet.AssessmentSetName'
+    - name: assessment_type
+      data_type: varchar(10)
+      description: 'type of the assessment (DLA or SBA) — Source: SQL CDSAssessment.scoring.AssessmentDetail.AssessmentType'
+    - name: level
+      data_type: varchar(10)
+      description: 'level of the assessment (ex: Level 3, Levels 4-5, Level MS, etc.) — Source: SQL CDSAssessment.scoring.AssessmentDetail.Level'
+    - name: topic_name
+      data_type: varchar(100)
+      description: 'name of the topic associated with the assessment set — Source: SQL CDSAssessment.scoring.AssessmentSet.Category'
+    - name: learning_object_pretest_id
+      data_type: varchar(50)
+      description: 'unique id for the pretest learning object — Source: SQL CDSAssessment.scoring.AssessmentSet.PretestLearningObjectId'
+    - name: learning_object_posttest_id
+      data_type: varchar(50)
+      description: 'unique id for the posttest learning object — Source: SQL CDSAssessment.scoring.AssessmentSet.PosttestLearningObjectId'
+    - name: standard_topic_label
+      data_type: varchar(50)
+      description: 'codified identifier for the standard topic (ex: SC.5.CO.1.3) associated with the assessment set — Source: SQL CDSAssessment.scoring.Standard.StandardLabel'
+    - name: cut_score_level_1
+      data_type: numeric(3,2)
+      description: 'minimum percentage score to achieve level 1 (developing) on the assessment — Source: SQL CDSAssessment.scoring.AssessmentProficiency.CutScore (ProficiencyLevel = 1)'
+    - name: cut_score_level_2
+      data_type: numeric(3,2)
+      description: 'minimum percentage score to achieve level 2 (proficient) on the assessment — Source: SQL CDSAssessment.scoring.AssessmentProficiency.CutScore (ProficiencyLevel = 2)'
+
 - name: staging
   description: "Source tables for content delivery usage models. The tables in staging schema are from LCom Platform MS SQL Server databases loaded and processed by AWS Glue jobs and Redshift Stored Procedures."
   database: content_delivery_usage
