@@ -1,0 +1,435 @@
+version: 2
+
+unit_tests:
+  # TEST 1
+  # Validates starting row creation:
+  # invoiced won opportunity active on the day before fiscal month 1 starts must create ARR-Starting
+  # and must also create ARR-MonthlyAdded in the month tied to the given start_date
+  - name: int_arr_monthly_changes_creates_starting_record_for_active_invoiced_won_opportunity
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_START_1', stage_name: 'Closed Won', account_id: 'ACC_1', invoiced_date: '2025-06-15', close_date: '2025-06-10', start_date: '2025-06-15', start_date_sfdc: '2025-06-15', end_date: '2025-12-31', end_date_sfdc: '2025-12-31', arr_activation_date: '2025-06-15', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_1', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2025-07-01', mon_lastday: '2025-07-31', mon_year: 202507, fiscalyear: 'FY2026', fiscalyear_mon: 1}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_START_1', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR'}
+        - {opportunity_id: 'OPP_START_1', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR'}
+
+  # TEST 2
+  # Validates starting exclusion:
+  # opportunity ending the day before fiscal month 1 starts must not create ARR-Starting
+  # but should still create ARR-MonthlyAdded in the month tied to the given start_date
+  - name: int_arr_monthly_changes_does_not_create_starting_record_when_contract_ends_day_before_fiscal_month_1
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_START_NEG_1', stage_name: 'Closed Won', account_id: 'ACC_2', invoiced_date: '2025-06-15', close_date: '2025-06-10', start_date: '2025-06-15', start_date_sfdc: '2025-06-15', end_date: '2025-06-29', end_date_sfdc: '2025-06-29', arr_activation_date: '2025-06-15', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_2', bucket: 'Sales : New Business : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2025-07-01', mon_lastday: '2025-07-31', mon_year: 202507, fiscalyear: 'FY2026', fiscalyear_mon: 1}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_START_NEG_1', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR'}
+
+  # TEST 3
+  # Validates monthly added new logic:
+  # won invoiced opportunity with no parent must create ARR-MonthlyAdded.
+  # dim_month is intentionally empty so ARR-Starting cannot be created in this test.
+  - name: int_arr_monthly_changes_creates_monthly_added_for_won_invoiced_opportunity_without_parent
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_ADD_NEW_1', stage_name: 'Closed Won', account_id: 'ACC_3', invoiced_date: '2026-03-05', close_date: '2026-03-01', start_date: '2026-03-05', start_date_sfdc: '2026-03-01', end_date: '2027-03-04', end_date_sfdc: '2027-03-04', arr_activation_date: '2026-03-05', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_3', bucket: 'Sales : New Business : ARR', total_price: 1200, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows: []
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_ADD_NEW_1', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'New Business: ARR'}
+
+  # TEST 4
+  # Validates upsell monthly added logic:
+  # won invoiced upsell must create ARR-MonthlyAdded even with parent
+  - name: int_arr_monthly_changes_creates_monthly_added_for_upsell_even_with_parent
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: true, opportunity_id: 'OPP_UPSELL_1', stage_name: 'Closed Won', account_id: 'ACC_4', invoiced_date: '2026-03-10', close_date: '2026-03-08', start_date: '2026-03-10', start_date_sfdc: '2026-03-10', end_date: '2027-03-09', end_date_sfdc: '2027-03-09', arr_activation_date: '2026-03-10', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_4', bucket: 'Sales : Upsell : ARR', total_price: 300, parent_total_price: 200, max_parent_end_date: '2026-03-09', max_parent_end_date_sfdc: '2026-03-09'}
+      - input: ref('dim_month')
+        format: dict
+        rows: []
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_UPSELL_1', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Upsell: ARR'}
+
+  # TEST 5
+  # Validates like-new monthly added logic:
+  # renewal-like record with parent and a gap greater than 1 day must create ARR-MonthlyAdded
+  - name: int_arr_monthly_changes_creates_monthly_added_like_new_when_gap_after_parent_exceeds_one_day
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: true, opportunity_id: 'OPP_LIKE_NEW_1', stage_name: 'Closed Won', account_id: 'ACC_5', invoiced_date: '2026-03-20', close_date: '2026-03-15', start_date: '2026-03-20', start_date_sfdc: '2026-03-20', end_date: '2027-03-19', end_date_sfdc: '2027-03-19', arr_activation_date: '2026-03-20', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_5', bucket: 'Sales : Renewal : ARR', total_price: 1100, parent_total_price: 900, max_parent_end_date: '2026-03-10', max_parent_end_date_sfdc: '2026-03-10'}
+      - input: ref('dim_month')
+        format: dict
+        rows: []
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_LIKE_NEW_1', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Renewal: ARR'}
+
+  # TEST 6
+  # Validates placeholder monthly added logic:
+  # placeholder record with parent and no gap must create ARR-MonthlyAdded
+  - name: int_arr_monthly_changes_creates_placeholder_monthly_added_when_no_gap_after_parent
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: true, opportunity_id: 'OPP_PLACEHOLDER_1', stage_name: 'Closed Won', account_id: 'ACC_6', invoiced_date: '2026-03-11', close_date: '2026-03-10', start_date: '2026-03-11', start_date_sfdc: '2026-03-11', end_date: '2027-03-10', end_date_sfdc: '2027-03-10', arr_activation_date: '2026-03-11', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_6', bucket: 'Sales : Placeholder for Price Increase or Downsell : ARR', total_price: 150, parent_total_price: 1000, max_parent_end_date: '2026-03-10', max_parent_end_date_sfdc: '2026-03-10'}
+      - input: ref('dim_month')
+        format: dict
+        rows: []
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PLACEHOLDER_1', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Placeholder for Price Increase or Downsell: ARR'}
+
+  # TEST 7
+  # Validates like-new exclusion:
+  # non-placeholder parented won record with no gap must not create like-new monthly added
+  - name: int_arr_monthly_changes_does_not_create_like_new_monthly_added_when_no_gap_exists
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: true, opportunity_id: 'OPP_NOGAP_NO_LIKENEW_1', stage_name: 'Closed Won', account_id: 'ACC_7', invoiced_date: '2026-03-11', close_date: '2026-03-10', start_date: '2026-03-11', start_date_sfdc: '2026-03-11', end_date: '2027-03-10', end_date_sfdc: '2027-03-10', arr_activation_date: '2026-03-11', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_7', bucket: 'Sales : Renewal : ARR', total_price: 800, parent_total_price: 700, max_parent_end_date: '2026-03-10', max_parent_end_date_sfdc: '2026-03-10'}
+      - input: ref('dim_month')
+        format: dict
+        rows: []
+    expect:
+      rows: []
+
+  # TEST 8
+  # Validates placeholder exclusion:
+  # placeholder record with parent and a gap greater than 1 day must not create placeholder monthly added
+  - name: int_arr_monthly_changes_does_not_create_placeholder_monthly_added_when_gap_exceeds_one_day
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: true, opportunity_id: 'OPP_PLACEHOLDER_NEG_1', stage_name: 'Closed Won', account_id: 'ACC_8', invoiced_date: '2026-03-15', close_date: '2026-03-10', start_date: '2026-03-15', start_date_sfdc: '2026-03-15', end_date: '2027-03-14', end_date_sfdc: '2027-03-14', arr_activation_date: '2026-03-15', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_8', bucket: 'Sales : Placeholder for Price Increase or Downsell : ARR', total_price: 120, parent_total_price: 650, max_parent_end_date: '2026-03-10', max_parent_end_date_sfdc: '2026-03-10'}
+      - input: ref('dim_month')
+        format: dict
+        rows: []
+    expect:
+      rows: []
+
+  # TEST 9
+  # Validates cancellation reduced logic:
+  # closed lost renewal with no gap must create ARR-MonthlyReduced cancellation row
+  - name: int_arr_monthly_changes_creates_cancellation_reduced_record_for_closed_lost_renewal_with_no_gap
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: true, opportunity_id: 'OPP_CANCEL_1', stage_name: 'Closed Lost', account_id: 'ACC_9', invoiced_date: '1900-01-01', close_date: '2026-03-11', start_date: '2026-03-11', start_date_sfdc: '2026-03-11', end_date: '2027-03-10', end_date_sfdc: '2027-03-10', arr_activation_date: '2026-03-11', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_9', bucket: 'Sales : Cancellation : ARR', total_price: -500, parent_total_price: -500, max_parent_end_date: '2026-03-10', max_parent_end_date_sfdc: '2026-03-10'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_CANCEL_1', record_type: 'ARR-MonthlyReduced', mon_year: 202603, bucket: 'Cancellation: ARR'}
+
+  # TEST 10
+  # Validates cancellation exclusion:
+  # closed lost cancellation candidate with a gap must not create cancellation row
+  - name: int_arr_monthly_changes_does_not_create_cancellation_reduced_record_when_gap_exists
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: true, opportunity_id: 'OPP_CANCEL_NEG_1', stage_name: 'Closed Lost', account_id: 'ACC_10', invoiced_date: '1900-01-01', close_date: '2026-03-15', start_date: '2026-03-15', start_date_sfdc: '2026-03-15', end_date: '2027-03-14', end_date_sfdc: '2027-03-14', arr_activation_date: '2026-03-15', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_start_date_sfdc: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_10', bucket: 'Sales : Cancellation : ARR', total_price: -400, parent_total_price: -400, max_parent_end_date: '2026-03-10', max_parent_end_date_sfdc: '2026-03-10'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows: []
+      
+ # TEST 11
+  # Validates monthly-added expiration creation:
+  # renewal gap after monthly-added row must create expiration row.
+  # Each ARR type should create:
+  #   1) ARR-MonthlyAdded in its given month
+  #   2) ARR-MonthlyReduced expiration in the month after end_date
+  - name: int_arr_monthly_changes_creates_expiration_for_monthly_added_when_renewal_has_gap
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_GAP_1_TRUE', stage_name: 'Closed Won', account_id: 'ACC_11', invoiced_date: '2026-03-01', close_date: '2026-02-25', start_date: '2026-03-01', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-01', renewal_opportunity_id: 'OPP_REN_11_TRUE', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2026-04-20', renewal_close_date: '2026-04-15', renewal_start_date: '2026-04-10', renewal_start_date_sfdc: '2026-04-10', renewal_end_date: '2027-04-09', sfdc_product_id: 'PROD_11', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_GAP_1_PREL', stage_name: 'Closed Won', account_id: 'ACC_11', invoiced_date: '2026-03-03', close_date: '2026-02-26', start_date: '2026-03-03', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-03', renewal_opportunity_id: 'OPP_REN_11_PREL', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2026-04-22', renewal_close_date: '2026-04-16', renewal_start_date: '2026-04-12', renewal_start_date_sfdc: '2026-04-12', renewal_end_date: '2027-04-11', sfdc_product_id: 'PROD_11', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_GAP_1_BACK', stage_name: 'Closed Won', account_id: 'ACC_11', invoiced_date: '2026-03-05', close_date: '2026-02-27', start_date: '2026-03-05', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-05', renewal_opportunity_id: 'OPP_REN_11_BACK', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2026-04-25', renewal_close_date: '2026-04-18', renewal_start_date: '2026-04-15', renewal_start_date_sfdc: '2026-04-15', renewal_end_date: '2027-04-14', sfdc_product_id: 'PROD_11', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_M_ADD_GAP_1_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'New Business: ARR', arr_activation_date: '2026-03-01', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_M_ADD_GAP_1_TRUE', record_type: 'ARR-MonthlyReduced', mon_year: 202604, bucket: 'Expired: ARR', arr_activation_date: '2026-03-31', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_M_ADD_GAP_1_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'New Business: ARR', arr_activation_date: '2026-03-03', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_M_ADD_GAP_1_PREL', record_type: 'ARR-MonthlyReduced', mon_year: 202604, bucket: 'Expired: ARR', arr_activation_date: '2026-03-31', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_M_ADD_GAP_1_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'New Business: ARR', arr_activation_date: '2026-03-05', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_M_ADD_GAP_1_BACK', record_type: 'ARR-MonthlyReduced', mon_year: 202604, bucket: 'Expired: ARR', arr_activation_date: '2026-03-31', arr_deactivation_date: '3000-01-01'}
+
+  # TEST 12
+  # Validates monthly-added expiration creation when renewal is not ready.
+  # Each ARR type should create:
+  #   1) ARR-MonthlyAdded in its given month
+  #   2) ARR-MonthlyReduced expiration in the month after end_date
+  - name: int_arr_monthly_changes_creates_expiration_for_monthly_added_when_renewal_is_not_ready
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_TRUE', stage_name: 'Closed Won', account_id: 'ACC_12', invoiced_date: '2026-03-01', close_date: '2026-02-25', start_date: '2026-03-01', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-01', renewal_opportunity_id: 'OPP_REN_12_TRUE', renewal_stage_name: 'Open', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_12', bucket: 'Sales : Renewal : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_PREL', stage_name: 'Closed Won', account_id: 'ACC_12', invoiced_date: '2026-03-03', close_date: '2026-02-26', start_date: '2026-03-03', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-03', renewal_opportunity_id: 'OPP_REN_12_PREL', renewal_stage_name: 'Open', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_12', bucket: 'Sales : Renewal : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_BACK', stage_name: 'Closed Won', account_id: 'ACC_12', invoiced_date: '2026-03-05', close_date: '2026-02-27', start_date: '2026-03-05', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-05', renewal_opportunity_id: 'OPP_REN_12_BACK', renewal_stage_name: 'Open', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_12', bucket: 'Sales : Renewal : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Renewal: ARR', arr_activation_date: '2026-03-01', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_TRUE', record_type: 'ARR-MonthlyReduced', mon_year: 202604, bucket: 'Expired: ARR', arr_activation_date: '2026-03-31', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Renewal: ARR', arr_activation_date: '2026-03-03', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_PREL', record_type: 'ARR-MonthlyReduced', mon_year: 202604, bucket: 'Expired: ARR', arr_activation_date: '2026-03-31', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Renewal: ARR', arr_activation_date: '2026-03-05', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_M_ADD_NOTREADY_BACK', record_type: 'ARR-MonthlyReduced', mon_year: 202604, bucket: 'Expired: ARR', arr_activation_date: '2026-03-31', arr_deactivation_date: '3000-01-01'}
+
+  # TEST 14
+  # Closed Won renewal with valid invoice and no gap does not create monthly-added expiration.
+  # Only ARR-MonthlyAdded should be present.
+  - name: int_arr_monthly_changes_monthly_added_closed_won_continuous_renewal_does_not_create_expiration
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_WON_TRUE', stage_name: 'Closed Won', account_id: 'ACC_14', invoiced_date: '2026-03-01', close_date: '2026-02-25', start_date: '2026-03-01', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-01', renewal_opportunity_id: 'OPP_REN_14_TRUE', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2026-04-05', renewal_close_date: '2026-04-03', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_14', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_WON_PREL', stage_name: 'Closed Won', account_id: 'ACC_14', invoiced_date: '2026-03-03', close_date: '2026-02-26', start_date: '2026-03-03', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-03', renewal_opportunity_id: 'OPP_REN_14_PREL', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2026-04-07', renewal_close_date: '2026-04-04', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_14', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_WON_BACK', stage_name: 'Closed Won', account_id: 'ACC_14', invoiced_date: '2026-03-05', close_date: '2026-02-27', start_date: '2026-03-05', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-05', renewal_opportunity_id: 'OPP_REN_14_BACK', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2026-04-09', renewal_close_date: '2026-04-05', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_14', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_M_ADD_WON_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'New Business: ARR', arr_activation_date: '2026-03-01', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_M_ADD_WON_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'New Business: ARR', arr_activation_date: '2026-03-03', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_M_ADD_WON_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'New Business: ARR', arr_activation_date: '2026-03-05', arr_deactivation_date: '3000-01-01'}
+
+  # TEST 15
+  # Validates monthly-added behavior for closed lost renewal with no gap.
+  # For monthly-added rows, this scenario does not create expiration.
+  # Each ARR type should create only ARR-MonthlyAdded in its given month.
+  - name: int_arr_monthly_changes_monthly_added_closed_lost_continuous_renewal_does_not_create_expiration
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_LOST_TRUE', stage_name: 'Closed Won', account_id: 'ACC_15', invoiced_date: '2026-03-01', close_date: '2026-02-25', start_date: '2026-03-01', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-01', renewal_opportunity_id: 'OPP_REN_15_TRUE', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2026-04-07', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_15', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_LOST_PREL', stage_name: 'Closed Won', account_id: 'ACC_15', invoiced_date: '2026-03-03', close_date: '2026-02-26', start_date: '2026-03-03', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-03', renewal_opportunity_id: 'OPP_REN_15_PREL', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2026-04-09', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_15', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202603, mon_lastday: '2026-03-31', fiscalyear: 'FY2026', fiscalyear_mon: 9, HasParent: false, opportunity_id: 'OPP_EXP_M_ADD_LOST_BACK', stage_name: 'Closed Won', account_id: 'ACC_15', invoiced_date: '2026-03-05', close_date: '2026-02-27', start_date: '2026-03-05', start_date_sfdc: '2026-03-01', end_date: '2026-03-31', end_date_sfdc: '2026-03-31', arr_activation_date: '2026-03-05', renewal_opportunity_id: 'OPP_REN_15_BACK', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2026-04-11', renewal_start_date: '2026-04-01', renewal_start_date_sfdc: '2026-04-01', renewal_end_date: '2027-03-31', sfdc_product_id: 'PROD_15', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_M_ADD_LOST_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Renewal: ARR', arr_activation_date: '2026-03-01', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_M_ADD_LOST_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Renewal: ARR', arr_activation_date: '2026-03-03', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_M_ADD_LOST_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202603, bucket: 'Renewal: ARR', arr_activation_date: '2026-03-05', arr_deactivation_date: '3000-01-01'}
+
+
+  # TEST 18
+  # Validates starting expiration creation when renewal has a gap.
+  # Each ARR type should create:
+  #   1) ARR-MonthlyAdded in its given month
+  #   2) ARR-Starting in fiscal month 1
+  #   3) ARR-MonthlyReduced expiration from ARR-Starting in the month after end_date
+  - name: int_arr_monthly_changes_creates_expiration_for_starting_when_renewal_has_gap
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_GAP_TRUE', stage_name: 'Closed Won', account_id: 'ACC_18', invoiced_date: '2025-06-15', close_date: '2025-06-10', start_date: '2025-06-15', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-15', renewal_opportunity_id: 'OPP_REN_18_TRUE', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2025-09-20', renewal_close_date: '2025-09-15', renewal_start_date: '2025-09-10', renewal_start_date_sfdc: '2025-09-10', renewal_end_date: '2026-09-09', sfdc_product_id: 'PROD_18', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_GAP_PREL', stage_name: 'Closed Won', account_id: 'ACC_18', invoiced_date: '2025-06-17', close_date: '2025-06-11', start_date: '2025-06-17', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-17', renewal_opportunity_id: 'OPP_REN_18_PREL', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2025-09-22', renewal_close_date: '2025-09-16', renewal_start_date: '2025-09-12', renewal_start_date_sfdc: '2025-09-12', renewal_end_date: '2026-09-11', sfdc_product_id: 'PROD_18', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_GAP_BACK', stage_name: 'Closed Won', account_id: 'ACC_18', invoiced_date: '2025-06-19', close_date: '2025-06-12', start_date: '2025-06-19', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-19', renewal_opportunity_id: 'OPP_REN_18_BACK', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2025-09-25', renewal_close_date: '2025-09-18', renewal_start_date: '2025-09-15', renewal_start_date_sfdc: '2025-09-15', renewal_end_date: '2026-09-14', sfdc_product_id: 'PROD_18', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2025-07-01', mon_lastday: '2025-07-31', mon_year: 202507, fiscalyear: 'FY2026', fiscalyear_mon: 1}
+          - {mon_firstday: '2025-09-01', mon_lastday: '2025-09-30', mon_year: 202509, fiscalyear: 'FY2026', fiscalyear_mon: 3}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_GAP_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_GAP_TRUE', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_GAP_TRUE', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '3000-01-01'}
+
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_GAP_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_GAP_PREL', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_GAP_PREL', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '3000-01-01'}
+
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_GAP_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_GAP_BACK', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_GAP_BACK', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '3000-01-01'}
+
+  # TEST 19
+  # Validates starting expiration creation when renewal is not ready.
+  # Each ARR type should create:
+  #   1) ARR-MonthlyAdded in its given month
+  #   2) ARR-Starting in fiscal month 1
+  #   3) ARR-MonthlyReduced expiration from ARR-Starting in the month after end_date
+  - name: int_arr_monthly_changes_creates_expiration_for_starting_when_renewal_is_not_ready
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_NOTREADY_TRUE', stage_name: 'Closed Won', account_id: 'ACC_19', invoiced_date: '2025-06-15', close_date: '2025-06-10', start_date: '2025-06-15', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-15', renewal_opportunity_id: 'OPP_REN_19_TRUE', renewal_stage_name: 'Open', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_19', bucket: 'Sales : Renewal : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_NOTREADY_PREL', stage_name: 'Closed Won', account_id: 'ACC_19', invoiced_date: '2025-06-17', close_date: '2025-06-11', start_date: '2025-06-17', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-17', renewal_opportunity_id: 'OPP_REN_19_PREL', renewal_stage_name: 'Open', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_19', bucket: 'Sales : Renewal : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_NOTREADY_BACK', stage_name: 'Closed Won', account_id: 'ACC_19', invoiced_date: '2025-06-19', close_date: '2025-06-12', start_date: '2025-06-19', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-19', renewal_opportunity_id: 'OPP_REN_19_BACK', renewal_stage_name: 'Open', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_19', bucket: 'Sales : Renewal : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2025-07-01', mon_lastday: '2025-07-31', mon_year: 202507, fiscalyear: 'FY2026', fiscalyear_mon: 1}
+          - {mon_firstday: '2025-09-01', mon_lastday: '2025-09-30', mon_year: 202509, fiscalyear: 'FY2026', fiscalyear_mon: 3}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_NOTREADY_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'Renewal: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_NOTREADY_TRUE', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_NOTREADY_TRUE', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '3000-01-01'}
+
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_NOTREADY_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'Renewal: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_NOTREADY_PREL', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_NOTREADY_PREL', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '3000-01-01'}
+
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_NOTREADY_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'Renewal: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_NOTREADY_BACK', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_NOTREADY_BACK', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '3000-01-01'}
+
+  # TEST 20
+  # Validates starting behavior for continuous closed won renewal.
+  # For ARR-Starting rows, expiration is still created and deactivates the day before renewal invoice.
+  - name: int_arr_monthly_changes_starting_expiration_deactivates_day_before_closed_won_renewal_invoice
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_WON_TRUE', stage_name: 'Closed Won', account_id: 'ACC_20', invoiced_date: '2025-06-15', close_date: '2025-06-10', start_date: '2025-06-15', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-15', renewal_opportunity_id: 'OPP_REN_20_TRUE', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2025-09-05', renewal_close_date: '2025-09-03', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_20', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_WON_PREL', stage_name: 'Closed Won', account_id: 'ACC_20', invoiced_date: '2025-06-17', close_date: '2025-06-11', start_date: '2025-06-17', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-17', renewal_opportunity_id: 'OPP_REN_20_PREL', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2025-09-07', renewal_close_date: '2025-09-04', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_20', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_WON_BACK', stage_name: 'Closed Won', account_id: 'ACC_20', invoiced_date: '2025-06-19', close_date: '2025-06-12', start_date: '2025-06-19', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-19', renewal_opportunity_id: 'OPP_REN_20_BACK', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2025-09-09', renewal_close_date: '2025-09-05', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_20', bucket: 'Sales : New Business : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2025-07-01', mon_lastday: '2025-07-31', mon_year: 202507, fiscalyear: 'FY2026', fiscalyear_mon: 1}
+          - {mon_firstday: '2025-09-01', mon_lastday: '2025-09-30', mon_year: 202509, fiscalyear: 'FY2026', fiscalyear_mon: 3}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_WON_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_WON_TRUE', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_WON_TRUE', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '2025-09-04'}
+
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_WON_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_WON_PREL', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_WON_PREL', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '2025-09-06'}
+
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_WON_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_WON_BACK', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_WON_BACK', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '2025-09-08'}
+
+  # TEST 21
+  # Validates starting behavior for continuous closed lost renewal.
+  # For ARR-Starting rows, expiration is still created and deactivates the day before renewal close.
+  - name: int_arr_monthly_changes_starting_expiration_deactivates_day_before_closed_lost_renewal_close
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_LOST_TRUE', stage_name: 'Closed Won', account_id: 'ACC_21', invoiced_date: '2025-06-15', close_date: '2025-06-10', start_date: '2025-06-15', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-15', renewal_opportunity_id: 'OPP_REN_21_TRUE', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2025-09-07', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_21', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Preliminary', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_LOST_PREL', stage_name: 'Closed Won', account_id: 'ACC_21', invoiced_date: '2025-06-17', close_date: '2025-06-11', start_date: '2025-06-17', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-17', renewal_opportunity_id: 'OPP_REN_21_PREL', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2025-09-09', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_21', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+          - {ARR_Type: 'Backdated', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_LOST_BACK', stage_name: 'Closed Won', account_id: 'ACC_21', invoiced_date: '2025-06-19', close_date: '2025-06-12', start_date: '2025-06-19', start_date_sfdc: '2025-06-15', end_date: '2025-08-31', end_date_sfdc: '2025-08-31', arr_activation_date: '2025-06-19', renewal_opportunity_id: 'OPP_REN_21_BACK', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2025-09-11', renewal_start_date: '2025-09-01', renewal_start_date_sfdc: '2025-09-01', renewal_end_date: '2026-08-31', sfdc_product_id: 'PROD_21', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2025-07-01', mon_lastday: '2025-07-31', mon_year: 202507, fiscalyear: 'FY2026', fiscalyear_mon: 1}
+          - {mon_firstday: '2025-09-01', mon_lastday: '2025-09-30', mon_year: 202509, fiscalyear: 'FY2026', fiscalyear_mon: 3}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_LOST_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'Renewal: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_LOST_TRUE', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-15', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_LOST_TRUE', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '2025-09-06'}
+
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_LOST_PREL', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'Renewal: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_LOST_PREL', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-17', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_EXP_START_LOST_PREL', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '2025-09-08'}
+
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_LOST_BACK', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'Renewal: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_LOST_BACK', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2025-06-19', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_EXP_START_LOST_BACK', record_type: 'ARR-MonthlyReduced', mon_year: 202509, bucket: 'Expired: ARR', arr_activation_date: '2025-08-31', arr_deactivation_date: '2025-09-10'}
+
+
+  # TEST 22
+  # Validates starting expiration when ARR-Starting contract ends on 06/30.
+  # This scenario produces:
+  #   1) ARR-MonthlyAdded in the given month
+  #   2) ARR-Starting in fiscal month 1
+  #   3) ARR-MonthlyReduced expiration in that same fiscal month 1
+  - name: int_arr_monthly_changes_creates_starting_expiration_in_first_fiscal_month_when_contract_ends_on_june_30
+    model: int_arr_monthly_changes
+    given:
+      - input: ref('int_arr_base')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', mon_year: 202506, mon_lastday: '2025-06-30', fiscalyear: 'FY2025', fiscalyear_mon: 12, HasParent: false, opportunity_id: 'OPP_EXP_START_JUNE30_TRUE', stage_name: 'Closed Won', account_id: 'ACC_22', invoiced_date: '2024-06-10', close_date: '2024-06-03', start_date: '2024-07-01', start_date_sfdc: '2024-07-01', end_date: '2025-06-30', end_date_sfdc: '2025-06-30', arr_activation_date: '2024-06-10', renewal_opportunity_id: 'OPP_REN_22_TRUE', renewal_stage_name: 'Renewal Identified', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2032-06-30', renewal_start_date: '2032-07-01', renewal_start_date_sfdc: '2032-07-01', renewal_end_date: '2033-06-30', sfdc_product_id: 'PROD_22', bucket: 'Sales : New Business : ARR', total_price: 184800, parent_total_price: 0, max_parent_end_date: '1900-01-01', max_parent_end_date_sfdc: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2025-06-01', mon_lastday: '2025-06-30', mon_year: 202506, fiscalyear: 'FY2025', fiscalyear_mon: 12}
+          - {mon_firstday: '2025-07-01', mon_lastday: '2025-07-31', mon_year: 202507, fiscalyear: 'FY2026', fiscalyear_mon: 1}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_JUNE30_TRUE', record_type: 'ARR-MonthlyAdded', mon_year: 202506, bucket: 'New Business: ARR', arr_activation_date: '2024-06-10', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_JUNE30_TRUE', record_type: 'ARR-Starting', mon_year: 202507, bucket: 'Starting: ARR', arr_activation_date: '2024-06-10', arr_deactivation_date: '3000-01-01'}
+        - {ARR_Type: 'True', opportunity_id: 'OPP_EXP_START_JUNE30_TRUE', record_type: 'ARR-MonthlyReduced', mon_year: 202507, bucket: 'Expired: ARR', arr_activation_date: '2025-06-30', arr_deactivation_date: '3000-01-01'}

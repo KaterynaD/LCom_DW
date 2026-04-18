@@ -13,7 +13,7 @@ with
 starting_data as (
 select
 ARR_Type,
-'ARR-Starting' record_type,
+'ARR-Starting'::varchar(20) record_type,
 m.mon_year,
 m.mon_lastday,
 m.fiscalyear,
@@ -74,7 +74,7 @@ and fb.bucket in (
 ,add_monthly_new as (
 select
 ARR_Type,
-'ARR-MonthlyAdded' record_type,
+'ARR-MonthlyAdded'::varchar(20) record_type,
 fb.mon_year,
 fb.mon_lastday,
 fb.fiscalyear,
@@ -124,7 +124,7 @@ and fb.bucket in (
 ,add_monthly_upsell as (
 select
 ARR_Type,
-'ARR-MonthlyAdded' record_type,
+'ARR-MonthlyAdded'::varchar(20) record_type,
 fb.mon_year,
 fb.mon_lastday,
 fb.fiscalyear,
@@ -172,7 +172,7 @@ and fb.bucket in (
 ,add_monthly_like_new as (
 select 
 ARR_Type,
-'ARR-MonthlyAdded' record_type,
+'ARR-MonthlyAdded'::varchar(20) record_type,
 fb.mon_year,
 fb.mon_lastday,
 fb.fiscalyear,
@@ -225,7 +225,7 @@ and fb.bucket in (
 ,add_monthly_placeholder_for_PI_or_downsell as (
 select
 ARR_Type,
-'ARR-MonthlyAdded' record_type,
+'ARR-MonthlyAdded'::varchar(20) record_type,
 fb.mon_year,
 fb.mon_lastday,
 fb.fiscalyear,
@@ -292,7 +292,7 @@ select * from add_monthly_placeholder_for_PI_or_downsell
 ,expired_monthly_added as (
 select distinct
 ARR_Type,
-'ARR-MonthlyReduced' record_type,
+'ARR-MonthlyReduced'::varchar(20) record_type,
 m.mon_year,
 m.mon_lastday,
 m.fiscalyear,
@@ -349,7 +349,7 @@ and (DATEDIFF(day, fb.end_date, fb.renewal_start_date) > 1 or not((fb.renewal_st
 ,expired_starting_data as (
 select distinct
 ARR_Type,
-'ARR-MonthlyReduced' record_type,
+'ARR-MonthlyReduced'::varchar(20) record_type,
 /*if a starting opportunity expired - we add expiration next month after expiration - 1st month when starting was added*/
 m.mon_year,
 m.mon_lastday,
@@ -399,73 +399,13 @@ on dateadd(day,1,fb.end_date) between m.mon_firstday and m.mon_lastday
 and (m.fiscalyear = fb.fiscalyear or m.fiscalyear_mon=12)
 where  fb.total_price != 0
 )
-/*,other_then_backdated_expired_starting_data as (
-select distinct
-ARR_Type,
-'ARR-MonthlyReduced' record_type,
-/*if a starting opportunity expired - we add expiration next month after expiration - 1st month when starting was added*/
-m.mon_year,
-m.mon_lastday,
-m.fiscalyear,
-m.fiscalyear_mon,
-fb.HasParent,
-fb.opportunity_id,
-fb.stage_name,
-fb.account_id,
-fb.invoiced_date,
-fb.close_date,
-fb.end_date start_date,
-fb.start_date_sfdc,
-
-case
-   when DATEDIFF(day, fb.end_date, fb.renewal_start_date) > 1 then '3000-01-01'::date
-   when fb.renewal_stage_name in ( 'Closed Won', 'Closed-Won Upsell') and fb.renewal_invoiced_date!='1900-01-01' then dateadd(day, -1,fb.renewal_invoiced_date)
-   when fb.renewal_stage_name in ( 'Closed Lost') then dateadd(day, -1,fb.renewal_close_date)
-   else '3000-01-01'::date
-end  as end_date,
-
-fb.end_date_sfdc,
-
-fb.end_date as arr_activation_date,
-case
-   when DATEDIFF(day, fb.end_date, fb.renewal_start_date) > 1 then '3000-01-01'::date
-   when fb.renewal_stage_name in ( 'Closed Won', 'Closed-Won Upsell') and fb.renewal_invoiced_date!='1900-01-01' then dateadd(day, -1,fb.renewal_invoiced_date)
-   when fb.renewal_stage_name in ( 'Closed Lost') then dateadd(day, -1,fb.renewal_close_date)
-   else '3000-01-01'::date
-end as arr_deactivation_date,
-
-fb.renewal_opportunity_id,
-fb.renewal_stage_name,
-fb.renewal_invoiced_date,
-fb.renewal_close_date,
-fb.renewal_start_date,
-fb.renewal_start_date_sfdc,
-fb.renewal_end_date,
-fb.sfdc_product_id,
-'Sales : Expired: ' +case when fb.bucket ilike '%biz_dev%' then 'Biz Dev' else 'ARR' end as Bucket,
-fb.Bucket_SFDC,
-fb.total_price ,
-fb.parent_total_price,
-fb.max_parent_end_date,
-fb.max_parent_end_date_sfdc
-from starting_data as fb
---in the month of the opportunity End Date only in FY year when it was added as Starting
---or on the last day of a previous FY
-join {{ ref("dim_month") }} m
-on dateadd(day,1,fb.end_date) between m.mon_firstday and m.mon_lastday
-and (m.fiscalyear = fb.fiscalyear or m.fiscalyear_mon=12)
-where ARR_Type != 'Backdated'
-and fb.total_price != 0
---renewal (won or lost) with a gap or not "ready" (not invoiced or Close Lost)
---and (DATEDIFF(day, fb.end_date, fb.renewal_start_date) > 1 or not((fb.renewal_stage_name in ( 'Closed Won', 'Closed-Won Upsell') and fb.renewal_invoiced_date!='1900-01-01') or (fb.renewal_stage_name in ( 'Closed Lost')) ))
-)*/
 -- 
 -- 3.1 Cancellation 
 -- 
 ,cancellation_monthly as (
 select distinct
 ARR_Type,
-'ARR-MonthlyReduced' record_type,
+'ARR-MonthlyReduced'::varchar(20) record_type,
 fb.mon_year,
 fb.mon_lastday,
 fb.fiscalyear,
