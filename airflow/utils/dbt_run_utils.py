@@ -226,7 +226,7 @@ def make_run_tests_task(dag, **operator_kwargs) -> BashOperator:
         bash_command=(
             f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
             "dbt test "
-            "--exclude  \"tag:product_usage\" "
+            "--exclude  \"tag:product_usage test_type:unit\" "
             "--vars '{\"run_type\": \"Scheduled Prod test\"}'"
         ),
         on_failure_callback=notify_task_failure,
