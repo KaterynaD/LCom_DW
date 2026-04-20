@@ -115,11 +115,12 @@ The ARR model is designed to handle:
 - In the current business process, Upsell vs Renewal (increase or downsell) is determined at the **opportunity level** and then manually allocated across opportunity product lines. As a result, the same product’s ARR can be split between Upsell and Renewal buckets within a single opportunity. This allocation is not fully reliable, therefore reporting below the **opportunity level** (e.g., product or sub-family) is not recommended at this time.
 
 - Parent and renewal contracts may belong to different accounts within the same hierarchy and aggregation at ultimate parent account level makes more sense  
+
 ## Technical Implementation of ARR Types
 
 All three ARR types are processed in a single pipeline, with `ARR_Type` controlling behavior:
 
-stg_valid_opportunities → stg_arr_base → int_arr_base → int_arr_monthly_changes → int_fact_arr → fact_arr
+`stg_valid_opportunities → stg_arr_base → int_arr_initial → int_arr_base → int_arr_monthly_changes → int_fact_arr → fact_arr`
 
 ---
 
@@ -127,34 +128,44 @@ stg_valid_opportunities → stg_arr_base → int_arr_base → int_arr_monthly_ch
 
 **stg_valid_opportunities**  
 Filters to ARR-eligible contracts:
-- Closed Won with invoice and valid dates  
-- Closed Lost only if tied to a valid renewal  
+- Closed Won with invoice and not empty Start and End dates  
+- Closed Lost only if tied to a valid Won contract  
 → Defines the valid ARR population
 
 **stg_arr_base**  
 Builds ARR at product + bucket level and incorporates parent opportunities:
 - Aggregates current vs parent ARR  
-- Computes `max_parent_end_date` across all parents  
-→ Enables parent-child comparison and prevents overlap in renewals
+→ Enables parent-child comparison
+
+**int_arr_initial**  
+Prepares the common ARR input set for downstream ARR logic:
+- Expands the same base opportunity-product records into all three ARR types: `True`, `Preliminary`, and `Backdated`
+- Enriches records with opportunity, account, product, renewal, and valid parent context
+- Excludes records not intended for ARR processing
+- Removes records that should not enter ARR logic, including:
+  - Negative opportunities  
+  - Replacement opportunities  
+  - `wire transfer` product  
+- Computes `max_parent_end_date` across all ARR valid parents  
+→ Serves as the shared preparation layer before ARR-type-specific movement logic is applied
 
 ---
 
 ### Core ARR Type Logic (int_arr_base)
 
-All rows from stg_arr_base are duplicated into:
-`ARR_Type = True | Preliminary | Backdated`
-
-- Negative and Replacment opportunuties are ignored
-- "wire transfer" product is ignored
+`int_arr_base` applies ARR-type-specific timing logic to the prepared records from `int_arr_initial`.
 
 **Start Date Logic**
 - **True & Preliminary**
-  - Step 1: shift `start_date` to operational timing (`invoiced_date` (Won) or `close_date` (Lost))
+  - Step 1: shift `start_date` to operational timing (`invoiced_date` for Closed Won or `close_date` for Closed Lost)
   - Step 2: shift to `max_parent_end_date + 1` to prevent overlap
 - **Backdated**
   - Skip Step 1 → keep contractual `start_date`
   - Apply Step 2 (to prevent overlap)
-  - Store operational timing (`invoiced_date` (Won) or `close_date` (Lost)) separately in `arr_activation_date` / `arr_deactivation_date` → Defines when ARR becomes reportable
+  - Store operational timing (`invoiced_date` for Closed Won or `close_date` for Closed Lost) separately in:
+    - `arr_activation_date`
+    - `arr_deactivation_date`  
+  → Defines when ARR becomes reportable
 
 **End Date Logic**
 - **Preliminary only**
@@ -163,7 +174,8 @@ All rows from stg_arr_base are duplicated into:
     - 90 days for Texas
     - 60 days otherwise
 - **True & Backdated**
-  - No extension → This is the only difference between True and Preliminary
+  - No extension  
+  → This is the only difference between True and Preliminary
 
 ---
 
@@ -177,11 +189,8 @@ Transforms ARR into monthly events:
 
 **Gap vs Continuity Rule**
 - If `DATEDIFF(day, max_parent_end_date, start_date) > 1` → treated as new ARR (gap)
-- Otherwise → treated as placeholder for price change in the downstream reporting, not new ARR)
-
-**Backdated Behavior**
+- Otherwise → treated as placeholder for price change in downstream reporting, not new ARR
 - Uses `arr_activation_date` / `arr_deactivation_date` to delay recognition until operationally confirmed
-s
 
 ---
 
@@ -204,68 +213,6 @@ s
 
 - **Backdated**  
   ARR aligned to contractual start date, but recognized only after activation
-
----
-
-### ARR Amount Calculation (fact_arr)
-
-At this stage, `arr_amount` is not a standalone ARR value per row, but a **signed component of ARR movement**.
-
-The calculation assigns positive or negative contribution based on business meaning of each bucket:
-
-- Positive (`+total_price`)
-  - New Business, Renewal, Upsell, Starting  
-- Negative (`-total_price`)
-  - Expired ARR  
-- Negative (`-parent_total_price`)
-  - Cancellations (removal of prior ARR)  
-- Net change (`total_price - parent_total_price`)
-  - Price changes (increase / downsell)
-
-→ This logic converts business events into **directional ARR movements** 
-
----
-
-### Important Modeling Note
-
-Each row represents a **partial ARR movement**, not a final ARR balance.
-
-- The same opportunity/product may produce multiple rows  
-- Different buckets represent different components of ARR change  
-- Values are intentionally **not pre-aggregated**
-
-As a result:
-
-> `arr_amount` is only meaningful when **aggregated (SUM)** across the desired grain  
-> (e.g., month, opportunity, account, or total ARR)
-
----
-
-### Why Aggregation Is Required
-
-The model follows an **event-based design**:
-
-- `int_arr_monthly_changes` creates ARR movements  
-- `int_fact_arr` spreads them across time  
-- `fact_arr` assigns direction (+/-)
-
-Final ARR is derived as:
-
-- **Point-in-time ARR** → SUM of all active ARR rows  
-- **Net ARR change** → SUM of movements within a period  
-
-This ensures:
-- Full transparency of ARR drivers  
-- Correct handling of overlaps, renewals, and gaps  
-- Flexibility in downstream reporting (Tableau, views)
-
----
-
-### Practical Implication
-
-- Use `SUM(arr_amount)` in all reporting layers  
-- Do **not** interpret individual rows as ARR totals  
-- Avoid reporting at overly granular levels unless aggregated
 
 ---
 {% enddocs %}
