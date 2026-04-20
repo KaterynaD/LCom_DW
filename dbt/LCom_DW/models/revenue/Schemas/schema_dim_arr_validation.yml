@@ -1,0 +1,95 @@
+version: 2
+
+models:
+  - name: dim_arr_validation
+    description: >
+
+      Validation dimension that compares current ARR as of today (won invoiced oppotunitis active today) 
+      against ARR calculated in fact_arr at the opportunity level and amount level.
+
+      Some discrepancies are expected because of known ARR issues already tracked in dim_arr_audit.
+      If an opportunity appears in this model but does not exist in dim_arr_audit, it indicates
+      either a new ARR issue that should be added to dim_arr_audit or a defect in fact_arr logic.
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+        - revenue
+        - arr
+
+
+    columns:
+      - name: arr_type
+        description: >
+          ARR type being validated. Used to compare current ARR and calculated ARR
+          within the same ARR stream.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: validation_issue
+        description: >
+          Validation issue category identified by the comparison between current ARR
+          and calculated ARR.
+
+          Possible values currently produced by the model include:
+          Amount mismatch,
+          In Calculated ARR, not in Current,
+          In Calculated ARR corrupted amount and not in Current,
+          In Current ARR not in Calculated.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        description: >
+          Salesforce opportunity identifier for the record with ARR discrepancy.
+
+          This opportunity should normally also be represented in dim_arr_audit if the discrepancy
+          is explained by a known tracked ARR issue. If not, this indicates a new issue to track
+          or a problem in ARR calculation logic.
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        tests:
+          - relationships:
+              to: ref('fact_opportunity')
+              field: opportunity_id
+
+      - name: current_amount
+        description: >
+          ARR amount from the current ARR view for the active opportunity as of today.
+          Null when the discrepancy exists only on the calculated ARR side.
+        data_type: numeric(38,10)
+
+      - name: calculated_amount
+        description: >
+          ARR amount calculated from fact_arr for the current month and active ARR period.
+          Null when the discrepancy exists only on the current ARR side.
+        data_type: numeric(38,10)
+
+      - name: diff
+        description: >
+          Difference between current ARR amount and calculated ARR amount.
+
+          Positive values indicate ARR present in current ARR in excess of calculated ARR.
+          Negative values indicate ARR present in calculated ARR in excess of current ARR.
+        data_type: numeric(38,10)
+
+      - name: known_issue
+        description: >
+          Indicates whether the opportunity exists in the dim_arr_audit table.
+        data_type: varchar(3)
+        constraints:
+          - type: not_null
+
+      - name: known_issue_description
+        description: >
+          Description of the known issue from the dim_arr_audit table.
+        data_type: varchar(1000)
+        constraints:
+          - type: not_null
+
+        

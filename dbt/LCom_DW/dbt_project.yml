@@ -49,6 +49,8 @@ models:
       +schema: common  
     content_delivery_usage:
       +schema: content_delivery_usage
+    intermediate:
+      +schema: staging       
     licensing:
       +schema: licensing
     marketing:

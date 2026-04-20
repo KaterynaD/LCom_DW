@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: dim_arr_issue
+    description: >
+
+      Dimension table containing the unique ARR audit issue categories identified in int_arr_audit.
+
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - dim
+        - revenue
+        - arr
+
+
+    columns:
+      - name: issue_id
+        description: >
+          Surrogate key generated from issue using dbt_utils.generate_surrogate_key.
+          Uniquely identifies each ARR audit issue category.
+        data_type: varchar(50)
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false          
+        data_tests:
+          - unique
+
+      - name: issue
+        description: >
+          ARR audit issue category from int_arr_audit.
+          Represents the reason why an opportunity is excluded from ARR recognition
+          or cannot be processed accurately.
+
+          Possible values currently come from int_arr_audit and include:
+          Not Recurring Revenue,
+          Won, not Invoiced,
+          Negative or Replacement,
+          Won Start Date after End Date or missing,
+          Won Renewal Start or End Date before Parent Start or End Date,
+          Lost Start Date after End Date or missing,
+          Lost Renewal Start Date before Parent Start or End Date (Won),
+          Other.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+      - name: category
+        description: >
+          ARR audit issue category from int_arr_audit.
+          Represents the impact of the issue on ARR recognition.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null          

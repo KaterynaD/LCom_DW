@@ -1,0 +1,159 @@
+version: 2
+
+models:
+  - name: fact_arr
+    description: '{{ doc("table_fact_arr") }}'
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - fact
+        - revenue
+        - arr
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - ARR_Type
+            - record_type
+            - mon_year
+            - opportunity_id
+            - sfdc_product_id
+            - bucket
+            - bucket_sfdc        
+
+    columns:
+      - name: arr_type
+        description: Type of ARR (True, Preliminary, Backdated).
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+
+      - name: record_type
+        description: ARR row type such as ARR, ARR-Starting, ARR-MonthlyAdded, or ARR-MonthlyReduced.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+
+      - name: mon_year
+        description: Calendar month in YYYYMM-style integer for the ARR fact row.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+
+      - name: mon_lastday
+        description: Last day of the month corresponding to mon_year.
+        data_type: date
+        constraints:
+          - type: not_null
+
+
+      - name: fiscalyear
+        description: Fiscal year for the ARR fact row in the form yyyy_start/yyyy_end.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+
+      - name: fiscalyear_mon
+        description: Fiscal month number within the fiscal year for the ARR fact row.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('fact_opportunity')
+              field: opportunity_id
+
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_sfdc_product')
+              field: sfdc_product_id
+
+      - name: bucket
+        description: Reporting ARR bucket used in downstream reporting.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+
+      - name: bucket_sfdc
+        description: Original upstream Salesforce bucket value retained for filtering and reconciliation.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+
+      - name: total_price
+        description: Current opportunity ARR amount carried from int_fact_arr.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: parent_total_price
+        description: Parent opportunity ARR amount carried from int_fact_arr.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+
+      - name: arr_amount
+        description: Signed ARR contribution used in downstream aggregation and reporting.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: start_date
+        description: ARR start date adjusted for ARR type retained for downstream filtering. 
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: end_date
+        description: ARR end date adjusted for ARR type retained for downstream filtering.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: arr_activation_date
+        description: ARR activation date retained for downstream filtering. Primarily populated for Backdated ARR.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: arr_deactivation_date
+        description: ARR deactivation date retained for downstream filtering. Primarily populated for Backdated ARR.
+        data_type: date
+        constraints:
+          - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null          

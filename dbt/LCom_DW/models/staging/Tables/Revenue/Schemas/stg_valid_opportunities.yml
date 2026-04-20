@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_valid_opportunities
+    description: >-
+      Staging model for opportunities to include in ARR: won or lost but only if they are renewal of won opportunity.
+    
+    config:
+      contract:
+        enforced: true   
+      tags:
+        - staging
+        - revenue
+        - arr
+    
+    
+    columns:
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+        - unique      
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null

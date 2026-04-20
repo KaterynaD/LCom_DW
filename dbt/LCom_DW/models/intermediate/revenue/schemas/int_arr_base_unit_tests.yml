@@ -1,0 +1,354 @@
+version: 2
+
+unit_tests:
+  # TEST 1
+  # Validates TRUE ARR logic:
+  # start_date must shift to invoiced_date when invoiced_date > start_date
+  - name: int_arr_base_true_shifts_start_date_to_invoiced_date_when_later
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: false, opportunity_id: 'OPP_TRUE_1', stage_name: 'Closed Won', account_id: 'ACC_1', state_code: 'CA', invoiced_date: '2026-03-10', close_date: '2026-03-05', start_date: '2026-03-01', end_date: '2027-02-28', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_1', bucket: 'Sales : New Business : ARR', total_price: 1200, parent_total_price: 0, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_TRUE_1', mon_year: 202603, start_date: '2026-03-10', start_date_sfdc: '2026-03-01'}
+
+  # TEST 2
+  # Validates BACKDATED ARR logic:
+  # start_date remains SFDC start_date and arr_activation_date = invoiced_date
+  - name: int_arr_base_backdated_keeps_sfdc_start_date_and_sets_activation_date
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Backdated', HasParent: false, opportunity_id: 'OPP_BACKDATED_1', stage_name: 'Closed Won', account_id: 'ACC_2', state_code: 'CA', invoiced_date: '2026-03-10', close_date: '2026-03-05', start_date: '2026-03-01', end_date: '2027-02-28', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_2', bucket: 'Sales : New Business : ARR', total_price: 900, parent_total_price: 0, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+    expect:
+      rows:
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_BACKDATED_1', mon_year: 202603, start_date: '2026-03-01', start_date_sfdc: '2026-03-01', arr_activation_date: '2026-03-10'}
+
+  # TEST 3
+  # Validates PRELIMINARY TX grace-period end_date logic:
+  # end_date extends with TX grace-period and renewal_start_date uses renewal invoiced date
+  - name: int_arr_base_preliminary_uses_tx_grace_period_when_earlier_than_renewal_cutoff
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: false, opportunity_id: 'OPP_PRE_TX_1', stage_name: 'Closed Won', account_id: 'ACC_3', state_code: 'TX', invoiced_date: '2026-01-05', close_date: '2026-01-02', start_date: '2026-01-01', end_date: '2026-01-31', renewal_opportunity_id: 'OPP_REN_1', renewal_stage_name: 'Closed Won', renewal_invoiced_date: '2026-06-15', renewal_close_date: '2026-06-10', renewal_start_date: '2026-06-01', renewal_end_date: '2027-05-31', sfdc_product_id: 'PROD_3', bucket: 'Sales : Renewal : ARR', total_price: 500, parent_total_price: 450, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-01-01', mon_lastday: '2026-01-31', mon_year: 202601, fiscalyear: 'FY2026', fiscalyear_mon: 7}
+    expect:
+      rows:
+        - {ARR_Type: 'Preliminary', opportunity_id: 'OPP_PRE_TX_1', mon_year: 202601, end_date: '2026-05-01', end_date_sfdc: '2026-01-31', renewal_start_date: '2026-06-15', renewal_start_date_sfdc: '2026-06-01'}
+
+  # TEST 4
+  # Validates fallback logic:
+  # when renewal_start_date is missing, renewal_start_date defaults to end_date + 1 day
+  - name: int_arr_base_defaults_renewal_start_date_to_day_after_end_date_when_missing
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: false, opportunity_id: 'OPP_TRUE_2', stage_name: 'Closed Won', account_id: 'ACC_4', state_code: 'CA', invoiced_date: '2026-02-01', close_date: '2026-01-30', start_date: '2026-02-01', end_date: '2026-02-28', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_4', bucket: 'Sales : New Business : ARR', total_price: 300, parent_total_price: 0, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-02-01', mon_lastday: '2026-02-28', mon_year: 202602, fiscalyear: 'FY2026', fiscalyear_mon: 8}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_TRUE_2', mon_year: 202602, renewal_start_date: '2026-03-01', renewal_start_date_sfdc: '1900-01-01'}
+
+  # TEST 5
+  # Validates placeholder row creation:
+  # for Won Renewals, an additional placeholder row must be generated
+  - name: int_arr_base_creates_placeholder_row_for_parented_non_lost_opportunity
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: true, opportunity_id: 'OPP_PLACEHOLDER_1', stage_name: 'Closed Won', account_id: 'ACC_5', state_code: 'CA', invoiced_date: '2026-03-01', close_date: '2026-02-27', start_date: '2026-03-01', end_date: '2027-02-28', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_5', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 800, max_parent_end_date: '2026-02-28'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PLACEHOLDER_1', mon_year: 202603, bucket: 'Sales : Renewal : ARR'}
+        - {opportunity_id: 'OPP_PLACEHOLDER_1', mon_year: 202603, bucket: 'Sales : Placeholder for Price Increase or Downsell : ARR'}
+
+  # TEST 6
+  # Validates cancellation row creation:
+  # for HasParent = true , non 0 parent_total_price and Closed Lost opportunities, a cancellation row must be generated
+  - name: int_arr_base_creates_cancellation_row_for_parented_closed_lost_opportunity
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: true, opportunity_id: 'OPP_CANCEL_1', stage_name: 'Closed Lost', account_id: 'ACC_6', state_code: 'CA', invoiced_date: '1900-01-01', close_date: '2026-04-15', start_date: '2026-04-01', end_date: '2027-03-31', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_6', bucket: 'Sales : Renewal : Biz Dev', total_price: 200, parent_total_price: 150, max_parent_end_date: '2026-03-31'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_CANCEL_1', mon_year: 202604, bucket: 'Sales : Cancellation : Biz Dev'}
+
+  # TEST 7
+  # Validates GAP logic driven by max_parent_end_date:
+  # if original start_date is before max_parent_end_date + 1 day, start_date must shift forward
+  - name: int_arr_base_shifts_start_date_forward_when_gap_with_parent_exists
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: true, opportunity_id: 'OPP_GAP_1', stage_name: 'Closed Won', account_id: 'ACC_7', state_code: 'CA', invoiced_date: '2026-03-01', close_date: '2026-02-25', start_date: '2026-03-01', end_date: '2027-02-28', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_7', bucket: 'Sales : Renewal : ARR', total_price: 1000, parent_total_price: 800, max_parent_end_date: '2026-03-15'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_GAP_1', bucket: 'Sales : Renewal : ARR', mon_year: 202603, start_date: '2026-03-16', start_date_sfdc: '2026-03-01', max_parent_end_date: '2026-03-15'}
+        - {opportunity_id: 'OPP_GAP_1', bucket: 'Sales : Placeholder for Price Increase or Downsell : ARR', mon_year: 202603, start_date: '2026-03-16', start_date_sfdc: '2026-03-01', max_parent_end_date: '2026-03-15'}        
+
+  # TEST 8
+  # Validates NO-GAP logic driven by max_parent_end_date:
+  # if start_date is already later than max_parent_end_date + 1 day, it must remain unchanged
+  - name: int_arr_base_keeps_start_date_when_no_gap_adjustment_needed
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: true, opportunity_id: 'OPP_NOGAP_1', stage_name: 'Closed Won', account_id: 'ACC_8', state_code: 'CA', invoiced_date: '2026-03-20', close_date: '2026-03-18', start_date: '2026-03-20', end_date: '2027-03-19', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_8', bucket: 'Sales : Renewal : ARR', total_price: 1100, parent_total_price: 900, max_parent_end_date: '2026-03-10'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_NOGAP_1', mon_year: 202603, bucket: 'Sales : Renewal : ARR', start_date: '2026-03-20', start_date_sfdc: '2026-03-20', max_parent_end_date: '2026-03-10'}
+        - {opportunity_id: 'OPP_NOGAP_1', mon_year: 202603, bucket: 'Sales : Placeholder for Price Increase or Downsell : ARR', start_date: '2026-03-20', start_date_sfdc: '2026-03-20', max_parent_end_date: '2026-03-10'}
+
+  # TEST 9
+  # Validates PRELIMINARY Biz Dev grace-period end_date logic:
+  # when no earlier renewal cutoff exists, end_date must extend by 6 months
+  - name: int_arr_base_preliminary_biz_dev_uses_6_month_end_date_grace_period
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: false, opportunity_id: 'OPP_PRE_BIZDEV_1', stage_name: 'Closed Won', account_id: 'ACC_9', state_code: 'CA', invoiced_date: '2026-01-10', close_date: '2026-01-08', start_date: '2026-01-01', end_date: '2026-01-31', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_9', bucket: 'Sales : Renewal : Biz Dev', total_price: 400, parent_total_price: 350, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-01-01', mon_lastday: '2026-01-31', mon_year: 202601, fiscalyear: 'FY2026', fiscalyear_mon: 7}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PRE_BIZDEV_1', mon_year: 202601, end_date: '2026-07-31', end_date_sfdc: '2026-01-31', bucket: 'Sales : Renewal : Biz Dev'}
+
+  # TEST 10
+  # Validates PRELIMINARY non-TX, non-Biz Dev grace-period end_date logic:
+  # when no earlier renewal cutoff exists, end_date must extend by 60 days
+  - name: int_arr_base_preliminary_other_state_uses_60_day_end_date_grace_period
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: false, opportunity_id: 'OPP_PRE_OTHER_1', stage_name: 'Closed Won', account_id: 'ACC_10', state_code: 'CA', invoiced_date: '2026-01-10', close_date: '2026-01-08', start_date: '2026-01-01', end_date: '2026-01-31', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_10', bucket: 'Sales : Renewal : ARR', total_price: 450, parent_total_price: 300, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-01-01', mon_lastday: '2026-01-31', mon_year: 202601, fiscalyear: 'FY2026', fiscalyear_mon: 7}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PRE_OTHER_1', mon_year: 202601, end_date: '2026-04-01', end_date_sfdc: '2026-01-31', bucket: 'Sales : Renewal : ARR'}
+
+  # TEST 11
+  # Validates PRELIMINARY Biz Dev adjusted max_parent_end_date logic:
+  # when no earlier cutoff exists, max_parent_end_date must extend by 6 months
+  - name: int_arr_base_preliminary_biz_dev_uses_6_month_max_parent_end_date_grace_period
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: true, opportunity_id: 'OPP_PRE_BIZDEV_PARENT_1', stage_name: 'Closed Won', account_id: 'ACC_11', state_code: 'CA', invoiced_date: '1900-01-01', close_date: '1900-01-01', start_date: '2026-02-01', end_date: '2026-07-31', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_11', bucket: 'Sales : Renewal : Biz Dev', total_price: 700, parent_total_price: 650, max_parent_end_date: '2026-01-31'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-02-01', mon_lastday: '2026-02-28', mon_year: 202602, fiscalyear: 'FY2026', fiscalyear_mon: 8}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PRE_BIZDEV_PARENT_1', bucket: 'Sales : Renewal : Biz Dev', mon_year: 202602, max_parent_end_date: '2026-07-31', max_parent_end_date_sfdc: '2026-01-31', start_date: '2026-02-01'}
+        - {opportunity_id: 'OPP_PRE_BIZDEV_PARENT_1', bucket: 'Sales : Placeholder for Price Increase or Downsell : Biz Dev', mon_year: 202602, max_parent_end_date: '2026-07-31', max_parent_end_date_sfdc: '2026-01-31', start_date: '2026-02-01'}
+  
+  # TEST 12
+  # Validates PRELIMINARY non-TX, non-Biz Dev adjusted max_parent_end_date logic:
+  # when no earlier cutoff exists, max_parent_end_date must extend by 60 days
+  - name: int_arr_base_preliminary_other_state_uses_60_day_max_parent_end_date_grace_period
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: true, opportunity_id: 'OPP_PRE_OTHER_PARENT_1', stage_name: 'Closed Won', account_id: 'ACC_12', state_code: 'CA', invoiced_date: '1900-01-01', close_date: '1900-01-01', start_date: '2026-02-01', end_date: '2026-04-30', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_12', bucket: 'Sales : Renewal : ARR', total_price: 750, parent_total_price: 600, max_parent_end_date: '2026-01-31'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-02-01', mon_lastday: '2026-02-28', mon_year: 202602, fiscalyear: 'FY2026', fiscalyear_mon: 8}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PRE_OTHER_PARENT_1', bucket: 'Sales : Renewal : ARR', mon_year: 202602, max_parent_end_date: '2026-04-01', max_parent_end_date_sfdc: '2026-01-31', start_date: '2026-02-01'}
+        - {opportunity_id: 'OPP_PRE_OTHER_PARENT_1', bucket: 'Sales : Placeholder for Price Increase or Downsell : ARR', mon_year: 202602, max_parent_end_date: '2026-04-01', max_parent_end_date_sfdc: '2026-01-31', start_date: '2026-02-01'}        
+
+  # TEST 13
+  # Validates non-Backdated Closed Lost start_date logic:
+  # for Closed Lost, start_date must shift to close_date when close_date > start_date
+  - name: int_arr_base_true_closed_lost_shifts_start_date_to_close_date
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: true, opportunity_id: 'OPP_TRUE_LOST_1', stage_name: 'Closed Lost', account_id: 'ACC_13', state_code: 'CA', invoiced_date: '1900-01-01', close_date: '2026-03-20', start_date: '2026-03-01', end_date: '2027-02-28', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_13', bucket: 'Sales : Renewal : ARR', total_price: 500, parent_total_price: 400, max_parent_end_date: '2026-02-28'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}
+    expect:
+      rows:
+        - {ARR_Type: 'True', opportunity_id: 'OPP_TRUE_LOST_1', start_date: '2026-03-20', start_date_sfdc: '2026-03-01'}
+
+  # TEST 14
+  # Validates non-Backdated renewal Closed Lost logic:
+  # renewal_start_date must shift to renewal_close_date when renewal is Closed Lost
+  - name: int_arr_base_true_uses_renewal_close_date_for_closed_lost_renewal
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'True', HasParent: false, opportunity_id: 'OPP_TRUE_REN_LOST_1', stage_name: 'Closed Won', account_id: 'ACC_14', state_code: 'CA', invoiced_date: '2026-01-05', close_date: '2026-01-03', start_date: '2026-01-01', end_date: '2026-01-31', renewal_opportunity_id: 'OPP_REN_LOST_1', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2026-02-20', renewal_start_date: '2026-02-01', renewal_end_date: '2027-01-31', sfdc_product_id: 'PROD_14', bucket: 'Sales : Renewal : ARR', total_price: 520, parent_total_price: 300, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-01-01', mon_lastday: '2026-01-31', mon_year: 202601, fiscalyear: 'FY2026', fiscalyear_mon: 7}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_TRUE_REN_LOST_1', renewal_start_date: '2026-02-20', renewal_start_date_sfdc: '2026-02-01'}
+
+  # TEST 15
+  # Validates Backdated Closed Lost activation logic:
+  # arr_activation_date must equal close_date for Closed Lost
+  - name: int_arr_base_backdated_closed_lost_sets_activation_date_to_close_date
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Backdated', HasParent: true, opportunity_id: 'OPP_BACKDATED_LOST_1', stage_name: 'Closed Lost', account_id: 'ACC_15', state_code: 'CA', invoiced_date: '1900-01-01', close_date: '2026-04-10', start_date: '2026-04-01', end_date: '2027-03-31', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_15', bucket: 'Sales : Renewal : ARR', total_price: 600, parent_total_price: 600, max_parent_end_date: '2026-03-31'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-04-01', mon_lastday: '2026-04-30', mon_year: 202604, fiscalyear: 'FY2026', fiscalyear_mon: 10}
+    expect:
+      rows:
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_BACKDATED_LOST_1', arr_activation_date: '2026-04-10', start_date: '2026-04-01'}
+
+  # TEST 16
+  # Validates Backdated fallback activation logic:
+  # arr_activation_date must remain 1900-01-01 for stages other than Closed Won / Closed Lost
+  - name: int_arr_base_backdated_non_won_non_lost_keeps_default_activation_date
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Backdated', HasParent: false, opportunity_id: 'OPP_BACKDATED_OPEN_1', stage_name: 'Prospecting', account_id: 'ACC_16', state_code: 'CA', invoiced_date: '2026-05-10', close_date: '2026-05-12', start_date: '2026-05-01', end_date: '2027-04-30', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_16', bucket: 'Sales : New Business : ARR', total_price: 700, parent_total_price: 0, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-05-01', mon_lastday: '2026-05-31', mon_year: 202605, fiscalyear: 'FY2026', fiscalyear_mon: 11}
+    expect:
+      rows:
+        - {ARR_Type: 'Backdated', opportunity_id: 'OPP_BACKDATED_OPEN_1', arr_activation_date: '1900-01-01'}
+
+  # TEST 17
+  # Validates Preliminary Closed Lost renewal cutoff for end_date:
+  # when renewal is Closed Lost, end_date must use renewal_close_date - 1 day if earlier than grace-period end
+  - name: int_arr_base_preliminary_closed_lost_renewal_uses_renewal_close_date_minus_1_for_end_date
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: false, opportunity_id: 'OPP_PRE_REN_LOST_2', stage_name: 'Closed Won', account_id: 'ACC_17', state_code: 'CA', invoiced_date: '2026-01-05', close_date: '2026-01-03', start_date: '2026-01-01', end_date: '2026-01-31', renewal_opportunity_id: 'OPP_REN_LOST_2', renewal_stage_name: 'Closed Lost', renewal_invoiced_date: '1900-01-01', renewal_close_date: '2026-03-15', renewal_start_date: '2026-02-01', renewal_end_date: '2027-01-31', sfdc_product_id: 'PROD_17', bucket: 'Sales : Renewal : ARR', total_price: 800, parent_total_price: 500, max_parent_end_date: '1900-01-01'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-01-01', mon_lastday: '2026-01-31', mon_year: 202601, fiscalyear: 'FY2026', fiscalyear_mon: 7}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PRE_REN_LOST_2', end_date: '2026-03-14', end_date_sfdc: '2026-01-31'}
+
+  # TEST 18
+  # Validates Preliminary Closed Lost cutoff for adjusted max_parent_end_date:
+  # for Closed Lost, max_parent_end_date must use close_date - 1 day if earlier than grace-period extension
+  - name: int_arr_base_preliminary_closed_lost_uses_close_date_minus_1_for_max_parent_end_date
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: true, opportunity_id: 'OPP_PRE_PARENT_LOST_1', stage_name: 'Closed Lost', account_id: 'ACC_18', state_code: 'CA', invoiced_date: '1900-01-01', close_date: '2026-03-20', start_date: '2026-02-01', end_date: '2026-04-30', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_18', bucket: 'Sales : Renewal : ARR', total_price: 900, parent_total_price: 650, max_parent_end_date: '2026-01-31'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-02-01', mon_lastday: '2026-02-28', mon_year: 202602, fiscalyear: 'FY2026', fiscalyear_mon: 8}
+          - {mon_firstday: '2026-03-01', mon_lastday: '2026-03-31', mon_year: 202603, fiscalyear: 'FY2026', fiscalyear_mon: 9}          
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PRE_PARENT_LOST_1', max_parent_end_date: '2026-03-19', max_parent_end_date_sfdc: '2026-01-31'}
+
+  # TEST 19
+  # Validates Preliminary TX adjusted max_parent_end_date grace-period logic:
+  # when no earlier cutoff exists, max_parent_end_date must extend by 90 days for TX
+  - name: int_arr_base_preliminary_tx_uses_90_day_max_parent_end_date_grace_period
+    model: int_arr_base
+    given:
+      - input: ref('int_arr_initial')
+        format: dict
+        rows:
+          - {ARR_Type: 'Preliminary', HasParent: true, opportunity_id: 'OPP_PRE_TX_PARENT_1', stage_name: 'Closed Won', account_id: 'ACC_19', state_code: 'TX', invoiced_date: '1900-01-01', close_date: '1900-01-01', start_date: '2026-02-01', end_date: '2026-04-30', renewal_opportunity_id: 'Unknown', renewal_stage_name: 'Unknown', renewal_invoiced_date: '1900-01-01', renewal_close_date: '1900-01-01', renewal_start_date: '1900-01-01', renewal_end_date: '1900-01-01', sfdc_product_id: 'PROD_19', bucket: 'Sales : Renewal : ARR', total_price: 950, parent_total_price: 700, max_parent_end_date: '2026-01-31'}
+      - input: ref('dim_month')
+        format: dict
+        rows:
+          - {mon_firstday: '2026-02-01', mon_lastday: '2026-02-28', mon_year: 202602, fiscalyear: 'FY2026', fiscalyear_mon: 8}
+    expect:
+      rows:
+        - {opportunity_id: 'OPP_PRE_TX_PARENT_1', bucket: 'Sales : Renewal : ARR', max_parent_end_date: '2026-05-01', max_parent_end_date_sfdc: '2026-01-31'}
+        - {opportunity_id: 'OPP_PRE_TX_PARENT_1', bucket: 'Sales : Placeholder for Price Increase or Downsell : ARR', max_parent_end_date: '2026-05-01', max_parent_end_date_sfdc: '2026-01-31'}        
+
+
+

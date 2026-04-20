@@ -1,0 +1,76 @@
+version: 2
+
+models:
+  - name: int_current_arr
+    description: >
+
+      Intermediate model that calculates current ARR as of today from int_arr_base.
+      It is used as the current-state ARR source in dim_arr_validation, where current ARR
+      is compared against ARR calculated in fact_arr.
+
+      The model includes won, invoiced opportunities active today and aggregates ARR amount
+      at the grain of arr_type, current month, account, and opportunity.
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - intermediate
+        - revenue
+        - arr
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - arr_type
+            - opportunity_id
+
+    columns:
+      - name: arr_type
+        description: Type of ARR (True, Preliminary, Backdated) determined by opportunity lifecycle timing logic.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: mon_year
+        description: >
+          Current reporting month in YYYYMM integer format based on the system date.
+          Represents the month for which current ARR is being validated.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+      - name: account_id
+        description: >
+          Salesforce account identifier associated with the opportunity contributing to current ARR.
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        tests:
+          - relationships:
+              to: ref('fact_opportunity')
+              field: opportunity_id
+
+      - name: arr_amount
+        description: >
+          Current ARR amount for the opportunity, aggregated from int_arr_base total_price
+          for won, invoiced opportunities active today and included in won-ARR-relevant buckets.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
+		            
