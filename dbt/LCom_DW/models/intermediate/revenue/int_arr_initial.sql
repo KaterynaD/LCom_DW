@@ -113,5 +113,6 @@ sfdc_product_id::varchar(300) ,
 bucket::varchar(100) ,
 total_price::numeric(38,10) ,
 parent_total_price ::numeric(38,10),
-max_parent_end_date::date
+max_parent_end_date::date,
+'{{ var("loaddate") }}'::timestamp as loaddate
 from ARR_Data_base_2

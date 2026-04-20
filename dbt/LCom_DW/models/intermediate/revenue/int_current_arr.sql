@@ -12,7 +12,8 @@ arr_type::varchar(20),
 to_char(GetDate(),'yyyymm')::int mon_year,
 o.account_id :: varchar(300),
 r.opportunity_id :: varchar(300),
-sum(r.total_price)::numeric(38,10) as arr_amount
+sum(r.total_price)::numeric(38,10) as arr_amount,
+'{{ var("loaddate") }}'::timestamp as loaddate
 from {{ ref('int_arr_base') }} r
 join {{ ref('fact_opportunity') }} o
 on r.opportunity_id = o.opportunity_id

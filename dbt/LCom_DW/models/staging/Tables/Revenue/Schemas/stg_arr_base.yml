@@ -47,3 +47,8 @@ models:
         data_type: NUMERIC(38,10)
         constraints:
           - type: not_null    
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null          

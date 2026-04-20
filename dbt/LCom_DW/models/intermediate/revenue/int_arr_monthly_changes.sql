@@ -501,6 +501,7 @@ bucket_sfdc::varchar(100),
 total_price::numeric(38,10) as total_price ,
 parent_total_price::numeric(38,10) as parent_total_price,
 max_parent_end_date::date,
-max_parent_end_date_sfdc::date
+max_parent_end_date_sfdc::date,
+'{{ var("loaddate") }}'::timestamp as loaddate
 from all_data
 where mon_year<=TO_CHAR(GETDATE(), 'YYYYMM')::int

@@ -412,6 +412,7 @@ Bucket::varchar(100),
 isnull(total_price,0)::numeric(38,10) as total_price ,
 isnull(parent_total_price,0)::numeric(38,10) as parent_total_price,
 isnull(max_parent_end_date::date,'1900-01-01'::date) as max_parent_end_date,
-isnull(max_parent_end_date_sfdc::date,'1900-01-01'::date) as max_parent_end_date_sfdc
+isnull(max_parent_end_date_sfdc::date,'1900-01-01'::date) as max_parent_end_date_sfdc,
+'{{ var("loaddate") }}'::timestamp as loaddate
 from data
 where mon_year!=0

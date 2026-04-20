@@ -102,6 +102,7 @@ opportunity_id::varchar(300),
 sfdc_product_id::varchar(300),
 bucket::varchar(100),
 bucket_sfdc::varchar(100),
-total_price::numeric(38,10)
+total_price::numeric(38,10),
+'{{ var("loaddate") }}'::timestamp as loaddate	
 from final_data
 where mon_year!=0

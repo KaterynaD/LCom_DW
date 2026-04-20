@@ -95,7 +95,8 @@ select mon_year, opportunity_id, violation from data
 select distinct
 mon_year::int,
 opportunity_id::varchar(300),
-violation::varchar(100)
+violation::varchar(100),
+'{{ var("loaddate") }}'::timestamp as loaddate
 from final_data
 where mon_year <= to_char(GetDate(),'yyyymm')
 order by mon_year, violation, opportunity_id

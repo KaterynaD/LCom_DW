@@ -23,4 +23,9 @@ models:
           - type: primary_key
             warn_unenforced: false
         data_tests:
-          - unique      
+        - unique      
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null

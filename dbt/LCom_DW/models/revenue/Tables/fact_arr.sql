@@ -76,5 +76,6 @@ arr_amount::numeric(38,10),
 start_date::date,
 end_date::date,
 arr_activation_date::date,
-arr_deactivation_date::date
+arr_deactivation_date::date,
+'{{ var("loaddate") }}'::timestamp as loaddate	
 from final_data

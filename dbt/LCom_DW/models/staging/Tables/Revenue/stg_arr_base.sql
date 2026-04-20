@@ -90,5 +90,6 @@ opportunity_id::varchar(300),
 sfdc_product_id::varchar(300),
 bucket::varchar(100),
 total_price::numeric(38,10),
-parent_total_price::numeric(38,10)
+parent_total_price::numeric(38,10),
+'{{ var("loaddate") }}'::timestamp as loaddate
 from final_data

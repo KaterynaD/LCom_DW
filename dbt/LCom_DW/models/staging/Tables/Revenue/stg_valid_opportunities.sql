@@ -29,6 +29,12 @@ where fo.stage_name = 'Closed Lost'
 and fo.close_date != '1900-01-01'
 --if there is no start date parent opportunity end date is used
 )
-select opportunity_id::varchar(300) from valid_won_opportunities
+select 
+opportunity_id::varchar(300),
+'{{ var("loaddate") }}'::timestamp as loaddate
+from 
+(
+select opportunity_id from valid_won_opportunities
 union all
-select opportunity_id::varchar(300) from valid_lost_opportunities
+select opportunity_id from valid_lost_opportunities
+) data

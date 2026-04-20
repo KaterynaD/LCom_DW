@@ -115,6 +115,7 @@ select distinct
 mon_year::int,
 opportunity_id::varchar(300),
 issue::varchar(100),
-category::varchar(100)
+category::varchar(100),
+'{{ var("loaddate") }}'::timestamp as loaddate
 from final_data
 where mon_year <= to_char(GetDate(),'yyyymm')

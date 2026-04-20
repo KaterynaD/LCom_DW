@@ -148,11 +148,73 @@ where erm.record_type='ARR-MonthlyReduced'
 ,final_data as
 (
 select
-*
+ARR_Type,    
+record_type,
+mon_year,
+mon_lastday,
+fiscalyear,
+fiscalyear_mon,
+HasParent,
+opportunity_id,
+stage_name,
+account_id,
+invoiced_date,
+close_date,
+start_date,
+start_date_sfdc,
+end_date,
+end_date_sfdc,
+arr_activation_date,
+arr_deactivation_date,
+renewal_opportunity_id,
+renewal_stage_name,
+renewal_invoiced_date,
+renewal_close_date,
+renewal_start_date,
+renewal_start_date_sfdc,
+renewal_end_date,
+sfdc_product_id,
+Bucket,
+Bucket_SFDC,
+total_price,
+parent_total_price,
+max_parent_end_date,
+max_parent_end_date_sfdc
 from ARR_data
 union all
 select
-*
+ARR_Type,    
+record_type,
+mon_year,
+mon_lastday,
+fiscalyear,
+fiscalyear_mon,
+HasParent,
+opportunity_id,
+stage_name,
+account_id,
+invoiced_date,
+close_date,
+start_date,
+start_date_sfdc,
+end_date,
+end_date_sfdc,
+arr_activation_date,
+arr_deactivation_date,
+renewal_opportunity_id,
+renewal_stage_name,
+renewal_invoiced_date,
+renewal_close_date,
+renewal_start_date,
+renewal_start_date_sfdc,
+renewal_end_date,
+sfdc_product_id,
+Bucket,
+Bucket_SFDC,
+total_price,
+parent_total_price,
+max_parent_end_date,
+max_parent_end_date_sfdc
 from {{ ref("int_arr_monthly_changes")}}
 )
 select
@@ -187,5 +249,6 @@ Bucket_SFDC::varchar(100),
 total_price::numeric(38,10),
 parent_total_price::numeric(38,10),
 max_parent_end_date::date,
-max_parent_end_date_sfdc::date
+max_parent_end_date_sfdc::date,
+'{{ var("loaddate") }}'::timestamp as loaddate
 from final_data
