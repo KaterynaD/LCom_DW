@@ -16,6 +16,9 @@ ALTER TABLE licensing.fact_license_order_history ADD FOREIGN KEY (organization_d
 ALTER TABLE revenue.fact_opportunity ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE revenue.fact_opportunity_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 --
+ALTER TABLE revenue.fact_arr ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
+ALTER TABLE revenue.fact_booking ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
+--
 ALTER TABLE content_delivery_usage.fact_launches_monthly_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE content_delivery_usage.fact_launches_weekly_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE content_delivery_usage.fact_launches_monthly_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);
@@ -32,6 +35,8 @@ ALTER TABLE support.fact_case_history ADD FOREIGN KEY (account_id) REFERENCES co
 --
 ALTER TABLE content_delivery_usage.fact_training_session ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
+--
+
 
 -- TO common.dim_employee
 ALTER TABLE support.fact_case ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);
@@ -74,7 +79,10 @@ ALTER TABLE support.fact_case_history ADD FOREIGN KEY (case_id) REFERENCES suppo
 -- TO revenue.fact_opportunity
 ALTER TABLE revenue.fact_opportunity_history ADD FOREIGN KEY (opportunity_id) REFERENCES revenue.fact_opportunity(opportunity_id);
 ALTER TABLE revenue.dim_opportunity_line ADD FOREIGN KEY (opportunity_id) REFERENCES revenue.fact_opportunity(opportunity_id);
-
+--
+ALTER TABLE revenue.fact_arr ADD FOREIGN KEY (account_id) REFERENCES revenue.fact_opportunity(opportunity_id);
+ALTER TABLE revenue.fact_booking ADD FOREIGN KEY (account_id) REFERENCES revenue.fact_opportunity(opportunity_id);
+--
 -- TO content_delivery_usage.dim_sequence
 ALTER TABLE content_delivery_usage.dim_sequence_learning_object ADD FOREIGN KEY (sequence_id) REFERENCES content_delivery_usage.dim_sequence(sequence_id);
 
@@ -84,7 +92,10 @@ ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY
 --TO common.dim_sfdc_product
 ALTER TABLE revenue.dim_opportunity_line ADD FOREIGN KEY (sfdc_product_id) REFERENCES common.dim_sfdc_product(sfdc_product_id);
 ALTER TABLE revenue.dim_opportunity_line_history ADD FOREIGN KEY (sfdc_product_id) REFERENCES common.dim_sfdc_product(sfdc_product_id);
-
+--
+ALTER TABLE revenue.fact_arr ADD FOREIGN KEY (account_id) REFERENCES common.dim_sfdc_product(sfdc_product_id);
+ALTER TABLE revenue.fact_booking ADD FOREIGN KEY (account_id) REFERENCES common.dim_sfdc_product(sfdc_product_id);
+--
 -- TO content_delivery_usage.dim_topic
 ALTER TABLE content_delivery_usage.dim_training_session_topic_session ADD FOREIGN KEY (topic_id) REFERENCES content_delivery_usage.dim_training_session_topic(topic_id);
 
