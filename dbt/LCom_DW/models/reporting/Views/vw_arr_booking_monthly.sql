@@ -19,6 +19,10 @@ Bucket_SFDC,
 total_price,
 parent_total_price,
 arr_amount,
+start_date as start_date_adjusted,
+end_date as end_date_adjusted,
+renewal_start_date as renewal_start_date_adjusted,
+max_parent_end_date as max_parent_end_date_adjusted,
 arr_activation_date,
 arr_deactivation_date
 from  {{ ref('fact_arr') }}
@@ -38,6 +42,10 @@ null opportunity_id,
 null total_price,
 null parent_total_price,
 case when fiscalyear = '2025/2026' then 25800000 else 0 end arr_amount,
+null as start_date_adjusted,
+null as end_date_adjusted,
+null as renewal_start_date_adjusted,
+null as max_parent_end_date_adjusted,
 null arr_activation_date,
 null arr_deactivation_date
 from {{ ref('dim_month') }}
@@ -59,7 +67,11 @@ total_price,
 null parent_total_price,
 total_price arr_amount,
 '1900-01-01' as arr_activation_date,
-'3000-01-01' as arr_deactivation_date
+'3000-01-01' as arr_deactivation_date,
+null as start_date_adjusted,
+null as end_date_adjusted,
+null as renewal_start_date_adjusted,
+null as max_parent_end_date_adjusted
 from {{ ref('fact_booking') }}
 )
 select
@@ -81,6 +93,10 @@ case when o.invoiced_date='1900-01-01' then null else o.invoiced_date end as inv
 o.close_date,
 o.start_date,
 case when o.end_date in ('3000-01-01','1900-01-01') then null else o.end_date end as end_date,
+f.start_date_adjusted,
+f.end_date_adjusted,
+f.renewal_start_date_adjusted,
+f.max_parent_end_date_adjusted,
 f.arr_activation_date,
 f.arr_deactivation_date,
 ro.opportunity_id as renewal_opportunity_id,

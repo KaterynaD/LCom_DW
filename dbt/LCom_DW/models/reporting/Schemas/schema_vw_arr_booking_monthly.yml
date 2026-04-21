@@ -99,6 +99,17 @@ models:
       - name: end_date
         description: "{{ doc('column_end_date') }}"
 
+      - name: start_date_adjusted
+        description: ARR start date adjusted for ARR type retained for  data explanation.
+
+      - name: end_date_adjusted
+        description: ARR end date adjusted for ARR type retained for  data explanation.
+
+      - name: renewal_start_date_adjusted
+        description: ARR renewal start date adjusted for ARR type retained for data explanation.        
+
+      - name: max_parent_end_date_adjusted
+        description: Latest (maximum) parent end date adjusted for ARR type retained for data explanation.
 
       - name: arr_activation_date
         description: >

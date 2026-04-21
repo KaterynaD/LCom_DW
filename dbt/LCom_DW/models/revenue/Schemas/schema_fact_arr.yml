@@ -130,28 +130,48 @@ models:
           - type: not_null
 
       - name: start_date
-        description: ARR start date adjusted for ARR type retained for downstream filtering. 
+        description: ARR start date adjusted for ARR type retained for downstream filtering and data explanation. 
         data_type: date
         constraints:
           - type: not_null
 
       - name: end_date
-        description: ARR end date adjusted for ARR type retained for downstream filtering.
+        description: ARR end date adjusted for ARR type retained for downstream filtering and data explanation.
         data_type: date
         constraints:
           - type: not_null
 
+      - name: end_date
+        description: ARR end date adjusted for ARR type retained for downstream filtering and data explanation.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_start_date
+        description: ARR renewal start date retained for downstream filtering and data explanation.
+        data_type: date
+        constraints:
+          - type: not_null          
+
+      - name: max_parent_end_date
+        description: Maximum parent end date retained for downstream filtering and data explanation.
+        data_type: date
+        constraints:
+          - type: not_null                         
+
       - name: arr_activation_date
-        description: ARR activation date retained for downstream filtering. Primarily populated for Backdated ARR.
+        description: ARR activation date retained for downstream filtering.
         data_type: date
         constraints:
           - type: not_null
 
       - name: arr_deactivation_date
-        description: ARR deactivation date retained for downstream filtering. Primarily populated for Backdated ARR.
+        description: ARR deactivation date retained for downstream filtering. 
         data_type: date
         constraints:
           - type: not_null
+
+
       - name: loaddate
         data_type: timestamp
         description: "{{ doc('column_loaddate') }}"
