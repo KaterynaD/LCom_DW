@@ -82,7 +82,8 @@
   {% set num_used_columns = in_list | length %}
 
   {# Validate Current profile is present and has at least 90% used columns #}
-
+  {#  only if it's a Prod not QA, empty run                                #}
+  {% if not flags.EMPTY %}
   {% set vq %}
 
       select
@@ -111,6 +112,7 @@
     ) }}
   {% endif %}
 
+  {% endif %}
   {# ---------------------------------------------------------------------------
      SQL logic:
        1. Identify columns present in base profile but missing in current profile
