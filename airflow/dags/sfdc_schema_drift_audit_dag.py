@@ -106,7 +106,7 @@ def run_schema_drift_analysis():
 
 
 def to_html_table(rows: List[Dict[str, Any]]) -> str:
-    headers = ["source", "source_column", "direct_usage", "downstream_usage", "error"]
+    headers = ["source", "source_column", "direct_usage", "downstream_usage", "error", "flg"]
 
     def fmt_list(v: Any) -> str:
         if isinstance(v, list):
@@ -170,13 +170,19 @@ def generate_html_report(profiles_results, missing_columns_results):
 
         outputs: List[Dict[str, Any]] = []
         for row in missing_columns_results:
-            source_name, table_name, column_name = row
-            outputs.append(get_column_lineage(MANIFEST_PATH, source_name, column_name))
+            source_name, table_name, column_name, flg = row
+            lineage_info = get_column_lineage(MANIFEST_PATH, source_name, column_name, flg)
+            outputs.append(lineage_info)
+            if lineage_info["error"]!="Paths found, but none reached any model.* nodes.":
+                logging.info(f"{source_name}.{column_name} is used ins models. Base profile need to be reviewed")
+                Variable.set("USE_EXISTING_BASE_PROFILE", "YES")
 
         html += to_html_table(outputs)
     else:
         logging.info("No missing columns detected")
         html += "<p>No schema drift detected today.</p>"
+        logging.info(f"Base profile is replaced with current profile for next runs since no missing columns detected")
+        Variable.set("USE_EXISTING_BASE_PROFILE", "NO")
 
     return html
 
@@ -304,15 +310,7 @@ with DAG(
             task_id="skip_column_lineage",
         )
 
-        compile_query = BashOperator(
-            task_id="compile_analyses",
-            bash_command=(
-                f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
-                "dbt compile --select missing_columns_lineage profiles_stats"
-            ),
-            trigger_rule=TriggerRule.ALL_SUCCESS,
-            on_failure_callback=notify_task_failure,
-        )
+
 
         dbt_compile = BashOperator(
             task_id="dbt_compile",
@@ -343,8 +341,19 @@ with DAG(
             trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
         )
 
-        branch_column_lineage >> compile_query >> dbt_compile >> dbt_docs_generate >> colibri_generate >> column_lineage_join
+        branch_column_lineage >> dbt_compile >> dbt_docs_generate >> colibri_generate >> column_lineage_join
         branch_column_lineage >> skip_column_lineage >> column_lineage_join
+
+    # 6. Compile queries for analysis
+    compile_query = BashOperator(
+            task_id="compile_analyses",
+            bash_command=(
+                f"cd {DBT_LCOM_DW_PROJECT_DIR} && "
+                "dbt compile --select missing_columns_lineage profiles_stats"
+            ),
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            on_failure_callback=notify_task_failure,
+        )
 
     # 7. Run schema drift analysis and send report
     run_analysis = PythonOperator(
@@ -364,4 +373,4 @@ with DAG(
     # Final wiring
     # -----------------------------
     set_load_date_task >> create_connection >> tg_manage_base_profile >> run_sfdc_current_profiles >> tg_column_lineage
-    tg_column_lineage >> run_analysis >> notify_summary
+    tg_column_lineage >> compile_query >> run_analysis >> notify_summary
