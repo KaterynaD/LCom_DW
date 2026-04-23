@@ -3,39 +3,6 @@ version: 2
 models:
   - name: fact_skillscheck_calendaryear_snapshots
     description: "This is the main fact table for skills check performance at the calendar year level. Captures the first pretest and last posttest per assessment set taken by each student in the calendar year."
-    column_types:
-      schoolyear: varchar(20) not null
-      country_code: char(2) not null
-      state_province_key: varchar(6) null
-      organization_district_id: varchar(255) not null
-      organization_school_id: varchar(255) null
-      user_account_id: varchar(255) not null
-      user_grade_level_code: char(2) null
-      assessment_set_id: int not null
-      level: varchar(10) not null
-      skill: varchar(100) not null
-      took_both: boolean not null
-      pre_learning_object_id: varchar(50) null
-      pre_score_datetime: timestamptz null
-      pre_time_spent_seconds: int null
-      pre_time_spent_seconds_capped: int null
-      pre_score: int null
-      pre_possible_score: int null
-      pre_pct_score: numeric(8,6) null
-      pre_performance_bucket: varchar(10) null
-      post_learning_object_id: varchar(50) null
-      post_score_datetime: timestamptz null
-      post_time_spent_seconds: int null
-      post_time_spent_seconds_capped: int null
-      post_score: int null
-      post_possible_score: int null
-      post_pct_score: numeric(8,6) null
-      post_performance_bucket: varchar(10) null
-      score_change: int null
-      pct_score_change: numeric(8,6) null
-      pct_growth: numeric(8,6) null
-      unique_items_completed_before: int null
-      unique_items_completed_between: int null
     config:
       contract:
         enforced: true
@@ -59,6 +26,8 @@ models:
       - name: state_province_key
         data_type: character varying(6)
         description: "Key for the state or province."
+        constraints:
+          - type: not_null
 
       - name: organization_district_id
         data_type: character varying(255)
@@ -69,6 +38,8 @@ models:
       - name: organization_school_id
         data_type: character varying(255)
         description: "Identifier for the organization school."
+        constraints:
+          - type: not_null
 
       - name: user_account_id
         data_type: character varying(255)
@@ -79,6 +50,8 @@ models:
       - name: user_grade_level_code
         data_type: character(2)
         description: "Code representing the user's grade level."
+        constraints:
+          - type: not_null
 
       - name: assessment_set_id
         data_type: integer
@@ -107,83 +80,131 @@ models:
       - name: pre_learning_object_id
         data_type: character varying(50)
         description: "Identifier for the pre-learning object."
+        constraints:
+          - type: not_null
 
       - name: pre_score_datetime
         data_type: timestamp with time zone
         description: "Timestamp of when the pre-assessment score was recorded."
+        constraints:
+          - type: not_null
 
       - name: pre_time_spent_seconds
         data_type: integer
         description: "Time spent on the pre-assessment in seconds."
+        constraints:
+          - type: not_null
 
       - name: pre_time_spent_seconds_capped
         data_type: integer
         description: "Time spent on the pre-assessment in seconds, capped at a maximum value (3600)."
+        constraints:
+          - type: not_null
 
       - name: pre_score
         data_type: integer
         description: "Score obtained in the pre-assessment."
+        constraints:
+          - type: not_null
 
       - name: pre_possible_score
         data_type: integer
         description: "Possible score for the pre-assessment."
+        constraints:
+          - type: not_null
 
       - name: pre_pct_score
         data_type: numeric(8,6)
         description: "Percentage score for the pre-assessment."
+        constraints:
+          - type: not_null
 
       - name: pre_performance_bucket
         data_type: character varying(10)
         description: "Performance bucket for the pre-assessment (e.g., Beginning, Developing, Proficient)."
+        constraints:
+          - type: not_null
 
       - name: post_learning_object_id
         data_type: character varying(50)
         description: "Identifier for the post-learning object."
+        constraints:
+          - type: not_null
 
       - name: post_score_datetime
         data_type: timestamp with time zone
         description: "Timestamp of when the post-assessment score was recorded."
+        constraints:
+          - type: not_null
 
       - name: post_time_spent_seconds
         data_type: integer
         description: "Time spent on the post-assessment in seconds."
+        constraints:
+          - type: not_null
 
       - name: post_time_spent_seconds_capped
         data_type: integer
         description: "Time spent on the post-assessment in seconds, capped at a maximum value (3600)."
+        constraints:
+          - type: not_null
 
       - name: post_score
         data_type: integer
         description: "Score obtained in the post-assessment."
+        constraints:
+          - type: not_null
 
       - name: post_possible_score
         data_type: integer
         description: "Possible score for the post-assessment."
+        constraints:
+          - type: not_null
 
       - name: post_pct_score
         data_type: numeric(8,6)
         description: "Percentage score for the post-assessment."
+        constraints:
+          - type: not_null
 
       - name: post_performance_bucket
         data_type: character varying(10)
         description: "Performance bucket for the post-assessment (e.g., Beginning, Developing, Proficient)."
+        constraints:
+          - type: not_null
 
       - name: score_change
         data_type: integer
         description: "Change in score from pre-assessment to post-assessment."
+        constraints:
+          - type: not_null
 
       - name: pct_score_change
         data_type: numeric(8,6)
         description: "Percentage change in score from pre-assessment to post-assessment."
+        constraints:
+          - type: not_null
 
       - name: pct_growth
         data_type: numeric(8,6)
         description: "Percentage growth from pre-assessment to post-assessment."
+        constraints:
+          - type: not_null
 
       - name: unique_items_completed_before
         data_type: integer
         description: "Number of unique items completed before the assessment."
+        constraints:
+          - type: not_null
 
       - name: unique_items_completed_between
         data_type: integer
         description: "Number of unique items completed between the pre-assessment and post-assessment."
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
