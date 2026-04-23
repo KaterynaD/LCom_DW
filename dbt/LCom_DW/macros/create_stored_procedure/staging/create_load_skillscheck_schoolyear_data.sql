@@ -6,17 +6,28 @@ CREATE OR REPLACE PROCEDURE {{target.database}}.{{target.schema}}.load_skillsche
 	LANGUAGE plpgsql
 AS $$
 
-DECLARE v_start_date timestamp;
-        v_end_date   timestamp;
+DECLARE v_start_date date;
+        v_end_date   date;
+        v_curr_sy_start date;
         v_assessment_type char(3) := 'SBA';
 
 BEGIN	
 
-    v_start_date = CASE WHEN DATE_PART('month', ploaddate) >= 7 
-                            THEN DATE_PART('year', ploaddate)::varchar || '-07-01'
-                            ELSE (DATE_PART('year', ploaddate) - 1)::varchar  || '-07-01'
-                       END;    
-    v_end_date = DATEADD('day', 1, ploaddate);
+    SELECT schoolyear_startdate INTO v_curr_sy_start
+    FROM  {{ ref("dim_calendar") }}
+    WHERE cal_date = ploaddate::date;
+    
+    IF ploaddate::date = v_curr_sy_start THEN
+        -- It's the first day of the school year
+        -- Range: [First day of previous school year] to < [First day of current school year]
+        v_start_date := v_curr_sy_start - INTERVAL '1 year';
+        v_end_date   := v_curr_sy_start;
+    ELSE
+        -- Not the first day of the school year: Capture start of year until yesterday midnight
+        -- Range: [Start of current school year] to < [Input Date]
+        v_start_date := v_curr_sy_start;
+        v_end_date   := ploaddate::date;
+    END IF;
 
 -- Get the first completed pretest in the school year for each student
     DROP TABLE IF EXISTS _first_pre;
@@ -107,7 +118,7 @@ BEGIN
             JOIN content_delivery_usage.dbo.learning_assessment_set las ON fac.learning_object_id = las.learning_object_pretest_id --PRETEST
             JOIN content_delivery_usage.dbo.learning_object lo ON fac.learning_object_id = lo.learning_object_id
             WHERE
-                fac.score_datetime BETWEEN v_start_date AND v_end_date
+                fac.score_datetime >= v_start_date AND fac.score_datetime < v_end_date
                 AND dis.is_demo = FALSE
                 AND las.assessment_type = v_assessment_type
         ) eh
@@ -204,7 +215,7 @@ BEGIN
             JOIN content_delivery_usage.dbo.learning_assessment_set las ON fac.learning_object_id = las.learning_object_posttest_id --POSTTEST
             JOIN content_delivery_usage.dbo.learning_object lo ON fac.learning_object_id = lo.learning_object_id
             WHERE
-                fac.score_datetime BETWEEN v_start_date AND v_end_date
+                fac.score_datetime >= v_start_date AND fac.score_datetime < v_end_date
                 AND dis.is_demo = FALSE
                 AND las.assessment_type = v_assessment_type
         ) eh
@@ -388,7 +399,7 @@ JOIN (
         LEFT JOIN _curriculum_activity_standard cas ON cas.organization_district_id = COALESCE(pre.organization_district_id, post.organization_district_id) AND cas.user_account_id = COALESCE(pre.user_account_id, post.user_account_id) AND cas.assessment_set_id = COALESCE(pre.assessment_set_id, post.assessment_set_id)
         LEFT JOIN content_delivery_usage.dbo.organization sch ON sch.organization_id = COALESCE(pre.organization_school_id, post.organization_school_id)
 ) AS result ON m.assessment_set_name_partial = result.skill AND m.level = result.level
-JOIN {{target.database}}.common.dim_calendar cal ON cal.cal_date = v_start_date;
+JOIN {{ ref("dim_calendar") }} cal ON cal.cal_date = v_start_date;
 
 END;
 
