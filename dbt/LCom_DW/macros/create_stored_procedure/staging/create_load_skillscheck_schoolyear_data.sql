@@ -243,6 +243,7 @@ BEGIN
     (
       organization_district_id  varchar(255)
     , user_account_id           varchar(255)
+    , assessment_set_id         int
     , standard_topic_label      varchar(50)
     , unique_items              int
     );
@@ -251,20 +252,22 @@ BEGIN
     SELECT
         sco.organization_district_id,
         sco.user_account_id,
+        pre.assessment_set_id,
         pre.standard_topic_label,
         count(distinct sco.learning_object_id) AS unique_items
     FROM
         content_delivery_usage.dbo.fact_assignment_completion sco
-        JOIN _first_pre pre ON pre.organization_district_id = sco.organization_district_id And pre.user_account_id = sco.user_account_id 
-        LEFT JOIN _last_post post ON post.organization_district_id = pre.organization_district_id AND post.user_account_id = pre.user_account_id AND pre.assessment_set_id = post.assessment_set_id
+        JOIN _first_pre pre ON pre.organization_district_id = sco.organization_district_id AND pre.user_account_id = sco.user_account_id 
         JOIN _item_alignment ia ON sco.learning_object_id = ia.learning_object_id AND pre.standard_topic_label = ia.standard_topic_label
+        LEFT JOIN _last_post post ON post.organization_district_id = pre.organization_district_id AND post.user_account_id = pre.user_account_id AND pre.assessment_set_id = post.assessment_set_id
     WHERE
-        sco.score_datetime BETWEEN pre.score_datetime AND post.score_datetime
+        sco.score_datetime BETWEEN pre.score_datetime AND nvl(post.score_datetime, '1900-01-01')
         OR 
         (sco.score_datetime > pre.score_datetime AND post.score_datetime IS NULL)
     GROUP BY
         sco.organization_district_id,
         sco.user_account_id,
+        pre.assessment_set_id,
         pre.standard_topic_label;
 
 
@@ -273,6 +276,7 @@ BEGIN
     (
       organization_district_id   varchar(255)
     , user_account_id            varchar(255)
+    , assessment_set_id          int
     , standard_topic_label       varchar(50)
     , unique_items               int
     );
@@ -281,6 +285,7 @@ BEGIN
     SELECT
         sco.organization_district_id,
         sco.user_account_id,
+        pre.assessment_set_id,
         pre.standard_topic_label,
         count(distinct sco.learning_object_id) AS unique_items
     FROM
@@ -292,6 +297,7 @@ BEGIN
     GROUP BY
         sco.organization_district_id,
         sco.user_account_id,
+        pre.assessment_set_id,
         pre.standard_topic_label;
 
 TRUNCATE TABLE {{target.database}}.{{target.schema}}.stg_skillscheck_schoolyear_data;
@@ -343,10 +349,10 @@ JOIN (
         COALESCE(pre.assessment_set_id, post.assessment_set_id) AS assessment_set_id,
         replace(
             CASE
-                WHEN charindex(replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check'), ' Skills Check ') > 0 THEN
+                WHEN charindex(' Skills Check ', replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check')) > 0 THEN
                     left(
                         replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check'),
-                        charindex(replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check'), ' Skills Check ') - 1
+                        charindex(' Skills Check ', replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check')) - 1
                     )
                 ELSE replace(COALESCE(pre.assessment_set_name, post.assessment_set_name), 'Skills Test', 'Skills Check')
             END,
@@ -378,8 +384,8 @@ JOIN (
         _first_pre pre
         FULL OUTER JOIN _last_post post ON pre.organization_district_id = post.organization_district_id AND pre.user_account_id = post.user_account_id AND pre.assessment_set_id = post.assessment_set_id
         LEFT JOIN content_delivery_usage.dbo.organization org ON org.organization_id = COALESCE(pre.organization_district_id, post.organization_district_id)
-        LEFT JOIN _curriculum_activity_before cab ON cab.organization_district_id = COALESCE(pre.organization_district_id, post.organization_district_id) AND cab.user_account_id = COALESCE(pre.user_account_id, post.user_account_id) AND cab.standard_topic_label = COALESCE(pre.standard_topic_label, post.standard_topic_label)
-        LEFT JOIN _curriculum_activity_standard cas ON cas.organization_district_id = COALESCE(pre.organization_district_id, post.organization_district_id) AND cas.user_account_id = COALESCE(pre.user_account_id, post.user_account_id) AND cas.standard_topic_label = COALESCE(pre.standard_topic_label, post.standard_topic_label)
+        LEFT JOIN _curriculum_activity_before cab ON cab.organization_district_id = COALESCE(pre.organization_district_id, post.organization_district_id) AND cab.user_account_id = COALESCE(pre.user_account_id, post.user_account_id) AND cab.assessment_set_id = COALESCE(pre.assessment_set_id, post.assessment_set_id)
+        LEFT JOIN _curriculum_activity_standard cas ON cas.organization_district_id = COALESCE(pre.organization_district_id, post.organization_district_id) AND cas.user_account_id = COALESCE(pre.user_account_id, post.user_account_id) AND cas.assessment_set_id = COALESCE(pre.assessment_set_id, post.assessment_set_id)
         LEFT JOIN content_delivery_usage.dbo.organization sch ON sch.organization_id = COALESCE(pre.organization_school_id, post.organization_school_id)
 ) AS result ON m.assessment_set_name_partial = result.skill AND m.level = result.level
 JOIN {{target.database}}.common.dim_calendar cal ON cal.cal_date = v_start_date;
