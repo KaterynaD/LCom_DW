@@ -24,22 +24,16 @@ seeds:
         data_type: varchar(50)
         description: partial name of assessment set (stripped of level info)
         constraints:
-          - type: not_null    
-        data_tests:
-          - not_null  
+          - type: not_null
 
       - name: level
         data_type: varchar(10)
         description: level of the assessment set (e.g. 'Level 1', 'Levels 4-5', 'Level MS', etc.)
         constraints:
-          - type: not_null               
-        data_tests:
-          - not_null  
+          - type: not_null
 
       - name: topic_name
         data_type: varchar(50)
         description: topic or skill name that the assessment set maps to (e.g. 'Artificial Intelligence', 'Productivity Tools & Computational Thinking', etc.)
         constraints:
-          - type: not_null    
-        data_tests:
-          - not_null
+          - type: not_null
