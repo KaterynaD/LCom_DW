@@ -27,6 +27,12 @@ ALTER TABLE content_delivery_usage.fact_students_usage_monthly_snapshots ADD FOR
 ALTER TABLE content_delivery_usage.fact_students_completions_monthly_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);   
 ALTER TABLE content_delivery_usage.fact_students_completions_monthly_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);
 --
+ALTER TABLE content_delivery_usage.fact_skillscheck_schoolyear_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
+ALTER TABLE content_delivery_usage.fact_skillscheck_schoolyear_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);
+--
+ALTER TABLE content_delivery_usage.fact_skillscheck_calendaryear_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);
+ALTER TABLE content_delivery_usage.fact_skillscheck_calendaryear_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);
+--
 ALTER TABLE support.fact_case ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE support.fact_case_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 --
@@ -64,6 +70,10 @@ ALTER TABLE common.dim_lcom_suite_sku ADD FOREIGN KEY (sku_id) REFERENCES common
 ALTER TABLE content_delivery_usage.dim_lcom_sku_learning_object ADD FOREIGN KEY (learning_object_id) REFERENCES content_delivery_usage.dim_learning_object(learning_object_id);
 ALTER TABLE content_delivery_usage.dim_sequence_learning_object ADD FOREIGN KEY (learning_object_id) REFERENCES content_delivery_usage.dim_learning_object(learning_object_id);
 ALTER TABLE content_delivery_usage.dim_product_category_learning_object_monthly ADD FOREIGN KEY (learning_object_id) REFERENCES content_delivery_usage.dim_learning_object(learning_object_id);
+ALTER TABLE content_delivery_usage.fact_skillscheck_schoolyear_snapshots ADD FOREIGN KEY (pre_learning_object_id) REFERENCES content_delivery_usage.dim_learning_object(learning_object_id);
+ALTER TABLE content_delivery_usage.fact_skillscheck_schoolyear_snapshots ADD FOREIGN KEY (post_learning_object_id) REFERENCES content_delivery_usage.dim_learning_object(learning_object_id);
+ALTER TABLE content_delivery_usage.fact_skillscheck_calendaryear_snapshots ADD FOREIGN KEY (pre_learning_object_id) REFERENCES content_delivery_usage.dim_learning_object(learning_object_id);
+ALTER TABLE content_delivery_usage.fact_skillscheck_calendaryear_snapshots ADD FOREIGN KEY (post_learning_object_id) REFERENCES content_delivery_usage.dim_learning_object(learning_object_id); 
 
 -- TO common.dim_lcom_suite
 ALTER TABLE common.dim_lcom_suite_sku ADD FOREIGN KEY (suite_id) REFERENCES common.dim_lcom_suite(suite_id);
