@@ -3,7 +3,7 @@
    materialized='sql_runner'
 ) }}
 
--- depends_on: {{ source("common","dim_calendar") }}
+-- depends_on: {{ ref("dim_calendar") }}
 -- depends_on: {{ source("dbo","fact_assignment_completion") }}
 -- depends_on: {{ source("dbo","learning_assessment_set") }}
 -- depends_on: {{ source("dbo","learning_object") }}
