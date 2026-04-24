@@ -72,11 +72,11 @@ Contracts
 
 
 {% docs column_loss_reason %}
-Loss Reason
+Closed (Won or Lost)  Reason 
 {% enddocs %}
 
 {% docs column_loss_notes %}
-Lost Notes
+Closed (Won or Lost)  Notes
 {% enddocs %}
 
 {% docs column_multi_year_arr %}
