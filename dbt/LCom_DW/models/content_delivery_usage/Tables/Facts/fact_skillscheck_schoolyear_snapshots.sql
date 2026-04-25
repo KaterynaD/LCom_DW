@@ -1,15 +1,16 @@
-
 {{ config(
     materialized='incremental',
     unique_key=['schoolyear', 'organization_district_id', 'user_account_id', 'assessment_set_id'],
     incremental_strategy='merge',
-    on_schema_change='fail'
+    on_schema_change='fail',
+    dist='organization_district_id'
 ) }}
 
 with source as (
     select *
     from {{ ref('stg_skillscheck_schoolyear_data') }}
 ),
+
 changed as (
     select
         s.schoolyear,
@@ -44,49 +45,53 @@ changed as (
         coalesce(s.pct_growth, '{{ var("default_numeric") }}') as pct_growth,
         coalesce(s.unique_items_completed_before, '{{ var("default_numeric") }}') as unique_items_completed_before,
         coalesce(s.unique_items_completed_between, '{{ var("default_numeric") }}') as unique_items_completed_between
-    from source s
+    from source as s
     {% if is_incremental() %}
-    left join {{ this }} t
-      on s.schoolyear = t.schoolyear
-     and s.organization_district_id = t.organization_district_id
-     and s.user_account_id = t.user_account_id
-     and s.assessment_set_id = t.assessment_set_id
-   where t.user_account_id is null 
-      or coalesce(s.pre_score_datetime, '{{ var("default_date")}}') <> coalesce(t.pre_score_datetime, '{{ var("default_date")}}')
-      or coalesce(s.post_score_datetime, '{{ var("default_date")}}') > coalesce(t.post_score_datetime, '{{ var("default_date")}}')
+        left join {{ this }} as t
+            on
+                s.schoolyear = t.schoolyear
+                and s.organization_district_id = t.organization_district_id
+                and s.user_account_id = t.user_account_id
+                and s.assessment_set_id = t.assessment_set_id
+        where
+            t.user_account_id is null
+            or coalesce(s.pre_score_datetime, '{{ var("default_date") }}') <> coalesce(t.pre_score_datetime, '{{ var("default_date") }}')
+            or coalesce(s.post_score_datetime, '{{ var("default_date") }}') > coalesce(t.post_score_datetime, '{{ var("default_date") }}')
     {% endif %}
 )
-select schoolyear::VARCHAR(20),
-       country_code::CHARACTER(2),
-       state_province_key::VARCHAR(6),
-       organization_district_id::VARCHAR(255),
-       organization_school_id::VARCHAR(255),
-       user_account_id::VARCHAR(255),
-       user_grade_level_code::CHARACTER(2),
-       assessment_set_id::INTEGER,
-       level::VARCHAR(10),
-       skill::VARCHAR(100),
-       took_both::BOOLEAN,
-       pre_learning_object_id::VARCHAR(50),
-       pre_score_datetime::TIMESTAMPTZ,
-       pre_time_spent_seconds::INTEGER,
-       pre_time_spent_seconds_capped::INTEGER,
-       pre_score::INTEGER,
-       pre_possible_score::INTEGER,
-       pre_pct_score::NUMERIC(8,6),
-       pre_performance_bucket::VARCHAR(10),
-       post_learning_object_id::VARCHAR(50),
-       post_score_datetime::TIMESTAMPTZ,
-       post_time_spent_seconds::INTEGER,
-       post_time_spent_seconds_capped::INTEGER,
-       post_score::INTEGER,
-       post_possible_score::INTEGER,
-       post_pct_score::NUMERIC(8,6),
-       post_performance_bucket::VARCHAR(10),
-       score_change::INTEGER,
-       pct_score_change::NUMERIC(8,6),
-       pct_growth::NUMERIC(8,6),
-       unique_items_completed_before::INTEGER,
-       unique_items_completed_between::INTEGER,
-       '{{ var("loaddate") }}'::TIMESTAMP as loaddate
+
+select
+    schoolyear::VARCHAR(20),
+    country_code::CHARACTER(2),
+    state_province_key::VARCHAR(6),
+    organization_district_id::VARCHAR(255),
+    organization_school_id::VARCHAR(255),
+    user_account_id::VARCHAR(255),
+    user_grade_level_code::CHARACTER(2),
+    assessment_set_id::INTEGER,
+    level::VARCHAR(10),
+    skill::VARCHAR(100),
+    took_both::BOOLEAN,
+    pre_learning_object_id::VARCHAR(50),
+    pre_score_datetime::TIMESTAMPTZ,
+    pre_time_spent_seconds::INTEGER,
+    pre_time_spent_seconds_capped::INTEGER,
+    pre_score::INTEGER,
+    pre_possible_score::INTEGER,
+    pre_pct_score::NUMERIC(8, 6),
+    pre_performance_bucket::VARCHAR(10),
+    post_learning_object_id::VARCHAR(50),
+    post_score_datetime::TIMESTAMPTZ,
+    post_time_spent_seconds::INTEGER,
+    post_time_spent_seconds_capped::INTEGER,
+    post_score::INTEGER,
+    post_possible_score::INTEGER,
+    post_pct_score::NUMERIC(8, 6),
+    post_performance_bucket::VARCHAR(10),
+    score_change::INTEGER,
+    pct_score_change::NUMERIC(8, 6),
+    pct_growth::NUMERIC(8, 6),
+    unique_items_completed_before::INTEGER,
+    unique_items_completed_between::INTEGER,
+    '{{ var("loaddate") }}'::TIMESTAMP as loaddate
 from changed
