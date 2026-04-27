@@ -81,7 +81,7 @@
   {# Number of used columns #}
   {% set num_used_columns = in_list | length %}
 
-  {# Validate Current profile is present and has at least 90% used columns #}
+  {# Validate Current profile is present and has at least 60% used columns #}
   {#  only if it's a Prod not QA, empty run                                #}
   {% if not flags.EMPTY %}
   {% set vq %}
