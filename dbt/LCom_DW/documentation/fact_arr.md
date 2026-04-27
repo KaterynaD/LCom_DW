@@ -4,6 +4,8 @@
 
 The ARR (Annual Recurring Revenue) table establishes a consistent and business-aligned framework for tracking, interpreting, and reporting recurring revenue based on Salesforce opportunities data, while addressing real-world data inconsistencies and operational complexities.
 
+It preserve historical data calculated for previous months and adds new rows for the current month only in each run (Preliminary and True) and for the rolling 12 months for Backdated ARR.
+
 ---
 
 ## Business Context

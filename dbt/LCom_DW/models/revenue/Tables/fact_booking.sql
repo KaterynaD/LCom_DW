@@ -1,8 +1,11 @@
 {{
     config(
 
-        materialized='table',        
-        dist='account_id' ,
+        materialized='incremental',
+        unique_key='mon_year',
+        incremental_strategy='delete+insert',
+        on_schema_change='append_new_columns',
+        dist='account_id',
         sort='mon_year'
         
         )
@@ -106,3 +109,4 @@ total_price::numeric(38,10),
 '{{ var("loaddate") }}'::timestamp as loaddate	
 from final_data
 where mon_year!=0
+and {{ month_range_to_load() }}

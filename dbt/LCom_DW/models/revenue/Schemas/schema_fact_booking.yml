@@ -5,7 +5,9 @@ models:
     description: >-
       Fact table for bookings based on won and invoiced opportunities only.
       Produces both monthly booking rows and fiscal-year running total booking rows
-      at the grain of record type, month, opportunity, product, and bucket.
+      at the grain of record type, month, opportunity, product, and bucket. 
+      It preserve historical data calculated for previous months
+      and adds new rows for the current month only in each run
 
     config:
       contract:

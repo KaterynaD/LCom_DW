@@ -1,8 +1,11 @@
 {{
     config(
 
-        materialized='table',        
-        dist='account_id' ,
+        materialized='incremental',
+        unique_key=['arr_type','mon_year'],
+        incremental_strategy='delete+insert',
+        on_schema_change='append_new_columns',
+        dist='account_id',
         sort='mon_year'
         
         )
@@ -83,3 +86,12 @@ arr_activation_date::date,
 arr_deactivation_date::date,
 '{{ var("loaddate") }}'::timestamp as loaddate	
 from final_data
+where mon_year!=0
+and 
+(
+/*current and previous month first N days*/
+(arr_type!='Backdated' and {{ month_range_to_load() }})
+or
+/*rolling 12 months*/
+(arr_type='Backdated' and mon_year>=to_char(dateadd(month, -12, Getdate()),'yyyymm')::int)
+)
