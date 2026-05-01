@@ -4,11 +4,11 @@ models:
   - name: int_current_arr
     description: >
 
-      Intermediate model that calculates current ARR as of today from int_arr_base.
+      Intermediate model that calculates current ARR as of current month from int_arr_base.
       It is used as the current-state ARR source in dim_arr_validation, where current ARR
       is compared against ARR calculated in fact_arr.
 
-      The model includes won, invoiced opportunities active today and aggregates ARR amount
+      The model includes won, invoiced opportunities active in the current month and aggregates ARR amount
       at the grain of arr_type, current month, account, and opportunity.
 
     config:

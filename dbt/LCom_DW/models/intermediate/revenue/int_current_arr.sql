@@ -17,9 +17,15 @@ sum(r.total_price)::numeric(38,10) as arr_amount,
 from {{ ref('int_arr_base') }} r
 join {{ ref('fact_opportunity') }} o
 on r.opportunity_id = o.opportunity_id
+--current month start and end dates
+join {{ ref('dim_calendar') }} d
+on trunc(GetDate()) = d.cal_date
 where
 --Won, invoiced opportunities active Today
-trunc(GetDate()) between r.start_date and r.end_date
+--trunc(GetDate()) between r.start_date and r.end_date
+--Won, invoiced opportunities active current month
+r.start_date <= d.mon_lastday
+and r.end_date >= d.mon_firstday
 and r.stage_name ilike '%won%'
 and r.invoiced_date!='1900-01-01'
 and r.invoiced_date <= GetDate()
