@@ -17,8 +17,8 @@ CREATE TABLE content_delivery_usage.fact_launches_monthly_snapshots (
 SORTKEY
     (mon_lastday);
     
-ALTER TABLE content_delivery_usage.fact_launches_monthly_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);   
-ALTER TABLE content_delivery_usage.fact_launches_monthly_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);   
+--ALTER TABLE content_delivery_usage.fact_launches_monthly_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);   
+--ALTER TABLE content_delivery_usage.fact_launches_monthly_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);   
 
 
 COMMENT ON TABLE content_delivery_usage.fact_launches_monthly_snapshots IS 'Cumulative activity from the start of a  school year (YTD) till end of month per student aggregated to the school level';
