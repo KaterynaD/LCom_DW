@@ -8,8 +8,13 @@ It is written so that you can:
 - safely operate, debug, and extend the pipeline without surprises
 
 ---
+TBD
 
-## 1. CI/CD Goals (Non-Negotiables)
+Database objects created outside of dbt , even if they can be created via dbt macros are NOT part of the deployment
+Views, even if there is a corresponding dbt model are NOT created in the deployment process
+---
+
+## 1. CI/CD Goals
 
 The CI/CD system is designed around the following hard requirements:
 
@@ -178,6 +183,7 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
   - If `RUN_QA_STATE_TESTS` is set to `true`:
     - The QA database is cleaned of all schemas using a dbt macro.
     - A `dbt run` is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
+    - View and Profiling materialization are not validated (View creation does not validate SQL. Need to run select TBD and Profiling is very slow and need a specific target)
 
 - Documentation and column-level lineage are generated:
   - `dbt docs generate`

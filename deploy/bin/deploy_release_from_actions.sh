@@ -308,11 +308,14 @@ if [[ -f "\$STATE_DIR/manifest.json" ]]; then
 if [[ \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
 # Cleaning QA environment
 \"\$DBT_BIN\" run-operation drop_qa_schemas --target QA --vars '{dry_run: false}'
+
+# Setup QA environment for what is  not created in the following defer run SQL Run based models tables
+\"\$DBT_BIN\" run-operation set_QA_environment --target QA
   
 # QA empty and defer run  
 \"\$DBT_BIN\" run \
   --select state:modified \
-  --exclude \"config.materialized:view config.materialized:sql_runner config.materialized:profiling\" \
+  --exclude \"config.materialized:view config.materialized:profiling\" \
   --empty \
   --target QA \
   --state \"\$STATE_DIR\" \
