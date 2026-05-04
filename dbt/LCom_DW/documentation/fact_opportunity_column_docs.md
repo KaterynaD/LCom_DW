@@ -147,6 +147,39 @@ Primary Quote approved (Primary Quote approved checked if status is approved)
 Probability (%)
 {% enddocs %}
 
+{% docs column_progressive_billing %}
+Progressive Billing
+{% enddocs %}
+
+{% docs column_progressive_payment_amount_2 %}
+Progressive Payment Amount 2
+{% enddocs %}
+{% docs column_progressive_payment_amount_3 %}
+Progressive Payment Amount 3
+{% enddocs %}    
+{% docs column_progressive_payment_amount_4 %}
+Progressive Payment Amount 4
+{% enddocs %}    
+{% docs column_progressive_payment_amount_5 %}
+Progressive Payment Amount 5
+{% enddocs %}    
+{% docs column_progressive_payment_date_2 %}
+Progressive Payment Date 2
+{% enddocs %}    
+{% docs column_progressive_payment_date_3 %}
+Progressive Payment Date 3
+{% enddocs %}    
+{% docs column_progressive_payment_date_4 %}
+Progressive Payment Date 4
+{% enddocs %}    
+{% docs column_progressive_payment_date_5   %}
+Progressive Payment Date 5s
+{% enddocs %}    
+
+
+
+
+
 {% docs column_quota %}
 Quota
 {% enddocs %}

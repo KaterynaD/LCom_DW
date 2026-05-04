@@ -138,6 +138,7 @@ sources:
         - name: price_increase_arr_c
         - name: pricebook_2_id
         - name: probability
+        - name: progressive_billing_c
         - name: record_type_id
         - name: renewable_revenue_c
         - name: renewal_opportunity_c
@@ -176,6 +177,19 @@ sources:
         - name: quote_start_date_c
         - name: quote_total_discount_c
         - name: remaining_quota_c
+
+      - name: sbqq_quote_c
+        columns:     
+        - name: id
+        - name: progressive_payment_amount_2_c
+        - name: progressive_payment_amount_3_c
+        - name: progressive_payment_amount_4_c
+        - name: progressive_payment_amount_5_c
+        - name: progressive_payment_date_2_c
+        - name: progressive_payment_date_3_c
+        - name: progressive_payment_date_4_c
+        - name: progressive_payment_date_5_c
+
       - name: lcom_organization_c   
         columns: 
         - name: lcom_platform_organization_id_c

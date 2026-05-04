@@ -105,3 +105,15 @@ data_type_category,
 pct_nulls,
 loaddate
 from {{ ref('sfdc_user_profile') }}
+union all
+select 
+profile_name,
+database_name,
+schema_name,
+table_name, 
+column_name,
+data_type,
+data_type_category,
+pct_nulls,
+loaddate
+from {{ ref('sfdc_sbqq_quote_c_profile') }}

@@ -304,6 +304,51 @@ models:
     constraints:
     - type: not_null  
 
+  - name: progressive_billing
+    data_type: boolean
+    description: "{{ doc('column_progressive_billing') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_2
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_2') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_3
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_3') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_4
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_4') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_5
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_5') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_2
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_2') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_3
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_3') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_4
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_4') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_5
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_5') }}"
+    constraints:
+    - type: not_null
   - name: quota
     data_type: varchar(250)
     description: "{{ doc('column_quota') }}"
