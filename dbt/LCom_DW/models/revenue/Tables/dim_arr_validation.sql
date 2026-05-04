@@ -16,6 +16,7 @@ r.arr_amount amount
 from {{ ref("int_current_arr") }} r
 join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
 on r.opportunity_id = socr.opportunity_id
+where 1=1
 )
 ,calculated as (
 select
