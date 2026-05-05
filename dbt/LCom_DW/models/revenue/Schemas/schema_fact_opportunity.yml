@@ -433,7 +433,17 @@ models:
     data_type: date
     description: "{{ doc('column_subscription_start_date') }}"
     constraints:
-    - type: not_null    
+    - type: not_null 
+  - name: subscription_start_date
+    data_type: date
+    description: "{{ doc('column_subscription_start_date') }}"
+    constraints:
+    - type: not_null 
+  - name: subscription_term
+    data_type: integer
+    description: "{{ doc('column_subscription_term') }}"
+    constraints:
+    - type: not_null
   - name: total_arr_bookings
     data_type: numeric(38,10)
     description: "{{ doc('column_total_arr_bookings') }}"

@@ -220,3 +220,30 @@ models:
 
       - name: current_account_owner_name
         description: "{{ doc('column_sfdc_owner_name_text') }}"
+
+      - name: subscription_term
+        description: "{{ doc('column_subscription_term') }}"
+
+      - name: progressive_billing
+        description: "{{ doc('column_progressive_billing') }}"
+
+      - name: progressive_payment_amount_2    
+        description: "{{ doc('column_progressive_payment_amount_2') }}"
+
+      - name: progressive_payment_amount_3
+        description: "{{ doc('column_progressive_payment_amount_3') }}"
+
+      - name: progressive_payment_amount_4
+        description: "{{ doc('column_progressive_payment_amount_4') }}"
+
+      - name: progressive_payment_amount_5
+        description: "{{ doc('column_progressive_payment_amount_5') }}"
+
+      - name: progressive_payment_date_2
+        description: "{{ doc('column_progressive_payment_date_2') }}"
+      - name: progressive_payment_date_3
+        description: "{{ doc('column_progressive_payment_date_3') }}"
+      - name: progressive_payment_date_4
+        description: "{{ doc('column_progressive_payment_date_4') }}"
+      - name: progressive_payment_date_5
+        description: "{{ doc('column_progressive_payment_date_5') }}"

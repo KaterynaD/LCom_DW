@@ -301,3 +301,7 @@ Subscription End Date (Subscription End Date)
 {% docs column_subscription_start_date %}
 Subscription Start Date (Subscription Start Date)
 {% enddocs %}
+
+{% docs column_subscription_term %}
+Total Subscription term for a Progressive opportunity. It can be different then End Date - Start Date if there is a commitment to pay for few next years. progressive_billing is true "PROG" is in the name of the opportunity
+{% enddocs %}

@@ -147,6 +147,7 @@ sources:
         - name: source_opp_arr_c
         - name: stage_name
         - name: start_date_c
+        - name: subscription_term_c
         - name: total_arr_bookings_c
         - name: true_arr_c
         - name: true_arr_formula_c

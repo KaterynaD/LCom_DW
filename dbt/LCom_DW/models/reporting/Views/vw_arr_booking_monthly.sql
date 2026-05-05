@@ -122,7 +122,17 @@ ua.sfdc_billing_country country,
 case when ua.sfdc_district_enrollment=0 then ua.sfdc_school_enrollment else ua.sfdc_district_enrollment end as district_enrollment,
 case when (ua.sfdc_state_initiative or ua.sfdc_state_initiative_school) then true else false end as state_initiative,
 ua.sfdc_urban_rural as urban_rural ,
-ua.sfdc_owner_name_text as current_account_owner_name
+ua.sfdc_owner_name_text as current_account_owner_name ,
+o.subscription_term,
+o.progressive_billing,
+o.progressive_payment_amount_2,
+o.progressive_payment_amount_3,
+o.progressive_payment_amount_4,
+o.progressive_payment_amount_5,
+o.progressive_payment_date_2,
+o.progressive_payment_date_3,
+o.progressive_payment_date_4,
+o.progressive_payment_date_5
 from data f
 join {{ ref('dim_account') }} a
 on f.account_id = a.account_id
