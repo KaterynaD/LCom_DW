@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key=['year', 'organization_district_id', 'user_account_id', 'assessment_set_id'],
+    unique_key=['calendaryear', 'organization_district_id', 'user_account_id', 'assessment_set_id'],
     incremental_strategy='merge',
     on_schema_change='fail',
     dist='organization_district_id'
@@ -13,7 +13,8 @@ with source as (
 
 changed as (
     select
-        s.year,
+        s.calendaryear,
+        s.calendaryear_startdate,
         s.country_code,
         coalesce(s.state_province_key, '') as state_province_key,
         s.organization_district_id,
@@ -49,7 +50,7 @@ changed as (
     {% if is_incremental() %}
         left join {{ this }} as t
             on
-                s.year = t.year
+                s.calendaryear = t.calendaryear
                 and s.organization_district_id = t.organization_district_id
                 and s.user_account_id = t.user_account_id
                 and s.assessment_set_id = t.assessment_set_id
@@ -61,7 +62,8 @@ changed as (
 )
 
 select
-    year::INTEGER,
+    calendaryear::INTEGER,
+    calendaryear_startdate::DATE,
     country_code::CHARACTER(2),
     state_province_key::VARCHAR(6),
     organization_district_id::VARCHAR(255),

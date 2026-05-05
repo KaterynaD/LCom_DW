@@ -315,6 +315,7 @@ TRUNCATE TABLE {{target.database}}.{{target.schema}}.stg_skillscheck_schoolyear_
 
 INSERT INTO {{target.database}}.{{target.schema}}.stg_skillscheck_schoolyear_data
 SELECT cal.schoolyear
+     , cal.schoolyear_startdate
      , result.country_code
      , result.state_province_key
      , result.organization_district_id

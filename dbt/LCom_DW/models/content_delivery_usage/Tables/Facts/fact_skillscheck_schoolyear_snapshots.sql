@@ -14,6 +14,7 @@ with source as (
 changed as (
     select
         s.schoolyear,
+        s.schoolyear_startdate,
         s.country_code,
         coalesce(s.state_province_key, '') as state_province_key,
         s.organization_district_id,
@@ -62,6 +63,7 @@ changed as (
 
 select
     schoolyear::VARCHAR(20),
+    schoolyear_startdate::DATE,
     country_code::CHARACTER(2),
     state_province_key::VARCHAR(6),
     organization_district_id::VARCHAR(255),

@@ -17,6 +17,12 @@ models:
         constraints:
           - type: not_null
 
+      - name: schoolyear_startdate
+        data_type: date
+        description: 'Start date of the school year for which the snapshot is taken.'
+        constraints:
+          - type: not_null
+
       - name: country_code
         data_type: character(2)
         description: "ISO code for the country."

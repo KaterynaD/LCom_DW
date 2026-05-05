@@ -309,7 +309,8 @@ BEGIN
 TRUNCATE TABLE {{target.database}}.{{target.schema}}.stg_skillscheck_calendaryear_data;
 
 INSERT INTO {{target.database}}.{{target.schema}}.stg_skillscheck_calendaryear_data
-SELECT cal.year
+SELECT cal.year as calendaryear
+     , cal.cal_date as calendaryear_startdate
      , result.country_code
      , result.state_province_key
      , result.organization_district_id

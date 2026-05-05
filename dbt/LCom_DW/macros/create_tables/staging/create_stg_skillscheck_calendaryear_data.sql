@@ -4,7 +4,8 @@
 DROP TABLE if exists staging.stg_skillscheck_calendaryear_data;
 CREATE TABLE staging.stg_skillscheck_calendaryear_data
 (
-    year                             integer                NOT NULL,
+    calendaryear                     integer                NOT NULL,
+    calendaryear_startdate           date                   NOT NULL,
     country_code                     character(2)           NOT NULL,
     state_province_key               character varying(6)   NULL,
     organization_district_id         character varying(255) NOT NULL,

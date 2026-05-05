@@ -5,6 +5,7 @@ DROP TABLE if exists staging.stg_skillscheck_schoolyear_data;
 CREATE TABLE staging.stg_skillscheck_schoolyear_data
 (
     schoolyear                       character varying(20)  NOT NULL,
+    schoolyear_startdate             date                   NOT NULL,
     country_code                     character(2)           NOT NULL,
     state_province_key               character varying(6)   NULL,
     organization_district_id         character varying(255) NOT NULL,
