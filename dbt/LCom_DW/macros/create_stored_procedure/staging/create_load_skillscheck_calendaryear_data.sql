@@ -300,6 +300,7 @@ BEGIN
         JOIN _item_alignment ia ON sco.learning_object_id = ia.learning_object_id AND pre.standard_topic_label = ia.standard_topic_label
     WHERE
         sco.score_datetime < pre.score_datetime
+        AND sco.score_datetime >= v_start_date
     GROUP BY
         sco.organization_district_id,
         sco.user_account_id,
