@@ -50,7 +50,7 @@ select
 'x_2_nd_contact_c',
 'x_3_rd_contact_c','license_provisioned_date_c','subscription_start_date_c','subscription_end_date_c',
 'quota_c','quote_contract_type_c','quote_created_date_c','quote_expiry_date_c',
-'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c','progressive_billing_c'
+'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c','progressive_billing_c','Override_ARR_c'
             ],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
@@ -131,6 +131,7 @@ select
     isnull(o.number_c, '{{ var("default_varchar") }}') as opportunity_number,
     isnull(o.opportunity_score_id, '{{ var("default_varchar") }}') as opportunity_score_id,
     isnull(o.owner_id, '{{ var("default_ID") }}') as owner_id,
+    isnull(o.Override_ARR_c, {{ var("default_numeric") }}) as Override_ARR,
     isnull(o.paid_date_c, '{{ var("default_date") }}') as paid_date,
     isnull(o.payment_terms_c, '{{ var("default_varchar") }}') as payment_terms,
     isnull(o.po_amount_c, {{ var("default_numeric") }}) as po_amount,
@@ -239,6 +240,7 @@ select
     opportunity_number::varchar(100),
     opportunity_score_id::varchar(30),
     owner_id::varchar(30),
+    Override_ARR::numeric(38,10),
     paid_date::date,
     payment_terms::varchar(780),
     po_amount::numeric(35,10),

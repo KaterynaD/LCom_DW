@@ -305,3 +305,10 @@ Subscription Start Date (Subscription Start Date)
 {% docs column_subscription_term %}
 Total Subscription term for a Progressive opportunity. It can be different then End Date - Start Date if there is a commitment to pay for few next years. progressive_billing is true "PROG" is in the name of the opportunity
 {% enddocs %}
+
+{% docs column_Override_ARR %}
+ARR used as interim value when source opp ARR is not present due to no contract history.  Used in opps that were imported from NS at SF go live.  Should be deprecated by end of 2023. But it's still in active use as of May 2026 active opportunities
+{% enddocs %}
+
+
+Override_ARR

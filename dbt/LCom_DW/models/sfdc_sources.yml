@@ -131,6 +131,7 @@ sources:
         - name: number_c
         - name: opportunity_score_id
         - name: owner_id
+        - name: Override_ARR_c
         - name: paid_date_c
         - name: payment_terms_c
         - name: po_amount_c

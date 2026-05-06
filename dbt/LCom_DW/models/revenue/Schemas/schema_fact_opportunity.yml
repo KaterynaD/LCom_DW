@@ -268,6 +268,13 @@ models:
     description: "{{ doc('column_owner_id') }}"
     constraints:
     - type: not_null
+
+  - name: Override_ARR
+    data_type: numeric(38,10)
+    description: "{{ doc('column_Override_ARR') }}"
+    constraints:
+    - type: not_null
+
   - name: paid_date
     data_type: date
     description: "{{ doc('column_paid_date') }}"

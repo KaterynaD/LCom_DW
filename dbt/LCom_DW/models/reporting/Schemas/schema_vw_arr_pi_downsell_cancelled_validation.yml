@@ -18,14 +18,15 @@ models:
         - arr
 
     columns:
-      - name: mon_year
+      - name: fiscalyear
         description: >
-          Reporting month in YYYYMM integer format for the ARR amounts being validated.
+          Fiscal year for the ARR amounts being validated.
 
 
       - name: arr_type
         description: >
           ARR type of the validated record, such as True, Preliminary, or Backdated.
+
 
 
       - name: opportunity_id
@@ -74,6 +75,26 @@ models:
 
       - name: account_name
         description: "{{ doc('column_sfdc_name') }}"
+
+
+      - name: isMultiParents
+        description: >
+          Indicates whether the opportunity has multiple parent opportunities.
+
+
+      - name: hasUpsellParent
+        description: >
+          Indicates whether the opportunity has an upsell parent opportunity.
+
+
+      - name: hasOverrideARR
+        description: >
+          Indicates whether the opportunity has an override ARR amount.
+
+
+      - name: hasIssues
+        description: >
+          Indicates whether the opportunity has issues based on the dim_arr_audit table.
 
 
       - name: price_increase_calculated
