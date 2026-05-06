@@ -4,7 +4,7 @@ models:
   - name: dim_arr_validation
     description: >
 
-      Validation dimension that compares current ARR as of current month (won invoiced oppotunitis active in the current month) 
+      Validation dimension that compares current ARR as of today (won invoiced opportunities active today) 
       against ARR calculated in fact_arr at the opportunity level and amount level.
 
       Some discrepancies are expected because of known ARR issues already tracked in dim_arr_audit.

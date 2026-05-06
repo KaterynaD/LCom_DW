@@ -87,6 +87,7 @@ arr_deactivation_date::date,
 '{{ var("loaddate") }}'::timestamp as loaddate	
 from final_data
 where mon_year!=0
+and start_date<=GetDate()
 and 
 (
 /*current and previous month first N days*/

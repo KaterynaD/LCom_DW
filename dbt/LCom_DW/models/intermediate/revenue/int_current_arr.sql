@@ -22,10 +22,7 @@ join {{ ref('dim_calendar') }} d
 on trunc(GetDate()) = d.cal_date
 where
 --Won, invoiced opportunities active Today
---trunc(GetDate()) between r.start_date and r.end_date
---Won, invoiced opportunities active current month
-r.start_date <= d.mon_lastday
-and r.end_date >= d.mon_firstday
+trunc(GetDate()) between r.start_date and r.end_date
 and r.stage_name ilike '%won%'
 and r.invoiced_date!='1900-01-01'
 and r.invoiced_date <= GetDate()
