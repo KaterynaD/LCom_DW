@@ -72,7 +72,7 @@ models:
         - rep        
        
   - name: vw_revenue_scorecard
-    description: ARR, NRR and GRR current, previous (end of a previous FY) and target for scorecard dashboard
+    description: ARR, NRR and GDR current, previous (end of a previous FY) and target for scorecard dashboard
     config:
       tags:
         - rep           
