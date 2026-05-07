@@ -26,6 +26,8 @@ LCOM_deleted_datetime,
 --Salesforce columns only populated for districts
 sfdc_account_id as SFDC_district_id,
 SFDC_name as SFDC_District_Name,
+SFDC_ULTIMATE_PARENT_ID,
+SFDC_ultimate_parent_account,
 SFDC_created_date	,
 SFDC_last_modified_date	,
 sfdc_county_name,

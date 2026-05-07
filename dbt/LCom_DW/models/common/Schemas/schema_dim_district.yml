@@ -21,6 +21,10 @@ models:
         description: Salesforce District ID (DIM_ACCOUNT.SFDC_Account_Id)
       - name: sfdc_district_name
         description: Salesforce District Name (DIM_ACCOUNT.SFDC_Name)
+      - name: sfdc_ultimate_parent_id
+        description: "{{ doc('column_sfdc_ultimate_parent_id') }}"
+      - name: sfdc_ultimate_parent_account
+        description: "{{ doc('column_sfdc_ultimate_parent_account') }}"
       - name: sfdc_state_initiative
         description: State Initiative
       - name: sfdc_district_state_initiative
