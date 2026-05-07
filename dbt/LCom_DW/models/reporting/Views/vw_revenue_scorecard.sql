@@ -7,8 +7,8 @@ with month_params as (
         to_char(getdate(), 'yyyymm')::int as current_mon,
         to_char(dateadd(month, -11, getdate()), 'yyyymm')::int as current_window_start,
         to_char(dateadd(month, -12, getdate()), 'yyyymm')::int as previous_mon,
-        to_char(dateadd(month, -24, getdate()), 'yyyymm')::int as previous_window_start,
-        to_char(dateadd(month, -25, getdate()), 'yyyymm')::int as previous_base_mon
+        to_char(dateadd(month, -23, getdate()), 'yyyymm')::int as previous_window_start,
+        to_char(dateadd(month, -24, getdate()), 'yyyymm')::int as previous_base_mon
 ),
 
 opportunities_data as (
@@ -18,9 +18,11 @@ opportunities_data as (
         fa.record_type, 
         fa.bucket, 
         fa.opportunity_id,
+        dsp.sfdc_product_sub_family,
         sum(fa.arr_amount) as arr_amount,
         max(fa.loaddate) as loaddate
     from {{ ref('fact_arr') }} fa
+    join {{ ref("dim_sfdc_product") }} dsp on fa.sfdc_product_id = dsp.sfdc_product_id
     cross join month_params mp
     where getdate() between fa.arr_activation_date and fa.arr_deactivation_date
       and fa.mon_year between mp.previous_base_mon and mp.current_mon
@@ -29,7 +31,8 @@ opportunities_data as (
         fa.mon_year, 
         fa.record_type, 
         fa.bucket, 
-        fa.opportunity_id
+        fa.opportunity_id,
+        dsp.sfdc_product_sub_family
 ),
 
 rawdata as (
@@ -94,6 +97,25 @@ data as (
             then r.arr 
             else 0 
         end) as arr,
+
+        sum(case 
+                when r.mon_year = cw.base_mon 
+                then r.arr 
+                else 0 
+            end) as arr_base,
+
+        sum(case 
+                when r.mon_year between cw.movement_start_mon and cw.movement_end_mon
+                then r.arr_monthly_reduced 
+                else 0 
+            end) as arr_movement_reduced,
+
+        sum(case 
+                when r.mon_year between cw.movement_start_mon and cw.movement_end_mon
+                then r.arr_monthly_upsell 
+                else 0 
+            end) as arr_movement_upsell,
+
 
         (
             sum(case 
@@ -162,8 +184,11 @@ data as (
         
    select 
     'Target' as category,
-    'Target' as arr_type,
+    'Target' as arr_type,    
     26400000 as arr,
+    0 as arr_base,
+    0 as arr_movement_reduced,
+    0 as arr_movement_upsell,
     1 as gdr,
     0.9 as nrr,
     cast('1900-01-01' as date) loaddate
@@ -175,6 +200,9 @@ select
     category,
     arr_type,
     arr,
+    arr_base,
+    arr_movement_reduced,
+    arr_movement_upsell,
     gdr,
     nrr,
     loaddate as last_updated
