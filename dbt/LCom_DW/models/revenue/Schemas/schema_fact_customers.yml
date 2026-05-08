@@ -1,0 +1,87 @@
+version: 2
+
+models:
+  - name: fact_customers
+    description: '{{ doc("table_fact_customers") }}'
+    config:
+      contract:
+        enforced: false
+      tags:
+        - fact
+        - revenue
+        - customers   
+        
+
+
+    columns:
+
+      - name: arr_type
+        description: Base type of ARR (True, Preliminary, Backdated) for customers
+        data_type: varchar(20)
+        constraints:
+          - type: not_null    
+
+      - name: fiscalyear
+        description: "{{ doc('column_fiscalyear') }}"
+        data_type: varchar(20)
+        constraints:
+          - type: not_null           
+
+      - name: mon_year
+        description: "{{ doc('column_revenue_mon_year') }}"
+        data_type: integer
+        constraints:
+          - type: not_null        
+
+      - name: mon_lastday
+        description: "{{ doc('column_revenue_mon_lastday') }}"
+        data_type: date
+        constraints:
+          - type: not_null      
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: sfdc_ultimate_parent_id
+        description: "{{ doc('column_sfdc_ultimate_parent_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null            
+
+
+      - name: record_type
+        data_type: varchar(20)
+        description: >
+          Lifecycle category assigned to the parent account for the month.  
+          Includes both raw and derived types:
+            • **Starting** – contract carried into the period  
+            • **New** – first contract ever for the parent account  
+            • **Returning** – contract resumes (had activit contract in a previous Fiscal Year but not in the current)  
+            • **Churn** – contract canceled during the period  
+            • **Expired** – contract expired during the period  when no Closed Lost associated opportunity exists
+            • **Contract Active** – calculated from `Starting` records of the next month.
+            • **Net Active** – cumulative metric starting from contract carried into the period:
+            Starting + New + Returning + ReturningFY - Churn
+            • **Total Active** – same as Net Active but excluding Churn/NonRenewal/Ghost deductions.
+        constraints:
+          - type: not_null 
+        tests:
+          - accepted_values:
+              values: [
+                'Starting', 'New', 'Returning', 'Churn', 'Expiration', 'Total Active', 'Net Active', 'Contract Active'
+              ]
+
+      - name: BizDevFlg
+        description: If a customer has BizDev ARR, it's state funding customer (State). This funding is used for eligible districts usage. Otherwise, it's a district or an other organization paying for themself.
+        data_type: varchar(10)
+        constraints:
+          - type: not_null   
+
+      - name: loaddate
+        description: "{{ doc('column_loaddate') }}"
+        data_type: timestamp
+        constraints:
+          - type: not_null                    
