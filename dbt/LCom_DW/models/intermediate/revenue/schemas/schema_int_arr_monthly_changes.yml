@@ -107,7 +107,7 @@ models:
       - name: start_date
         description: >-
           It derives from int_arr_base start_date except ARR-MonthlyReduced rows produced by expiration logic where
-          it is overwritten with the original opportunity end_date, because the reduction starts when the prior ARR term ends.          
+          it is overwritten with the original opportunity end_date plus 1 day, because the reduction starts when the prior ARR term ends.          
 
         data_type: date
         constraints:
@@ -141,10 +141,10 @@ models:
 
       - name: arr_activation_date
         description: >-
-          ARR activation date is applicable only for Backdated ARR.
+          ARR activation date is applicable only for Backdated ARR in most cases and for Expiration date for all ARR types.
           • ARR-Starting: invoiced_date  
           • ARR-MonthlyAdded & Cancellations: derives from arr_activation_date in int_arr_base
-          • ARR-MonthlyReduced (Expirations): original opportunity end_date (reduction activates when the prior ARR term expires.)
+          • ARR-MonthlyReduced (Expirations): original opportunity end_date plus 1 day (reduction activates when the prior ARR term expires.)
           
           Default, 1900-01-01 in allother ARR types
 

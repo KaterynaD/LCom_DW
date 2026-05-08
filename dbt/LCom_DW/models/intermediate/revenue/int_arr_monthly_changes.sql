@@ -303,7 +303,7 @@ fb.stage_name,
 fb.account_id,
 fb.invoiced_date,
 fb.close_date,
-fb.end_date start_date,
+dateadd(day, 1,fb.end_date)  start_date,
 fb.start_date_sfdc,
 
 case
@@ -315,7 +315,7 @@ end as end_date,
 
 fb.end_date_sfdc,
 
-fb.end_date as arr_activation_date,
+dateadd(day, 1,fb.end_date)  as arr_activation_date,
 case
    when DATEDIFF(day, fb.end_date, fb.renewal_start_date) > 1 then '3000-01-01'::date
    when fb.renewal_stage_name in ( 'Closed Won', 'Closed-Won Upsell') and fb.renewal_invoiced_date!='1900-01-01' then dateadd(day, -1,fb.renewal_invoiced_date)
@@ -361,7 +361,7 @@ fb.stage_name,
 fb.account_id,
 fb.invoiced_date,
 fb.close_date,
-fb.end_date start_date,
+dateadd(day, 1,fb.end_date)  start_date,
 fb.start_date_sfdc,
 case
    when DATEDIFF(day, fb.end_date, fb.renewal_start_date) > 1 then '3000-01-01'::date
@@ -370,7 +370,7 @@ case
    else '3000-01-01'::date
 end as end_date,
 fb.end_date_sfdc,
-fb.end_date as arr_activation_date,
+dateadd(day, 1,fb.end_date)  as arr_activation_date,
 case
    when DATEDIFF(day, fb.end_date, fb.renewal_start_date) > 1 then '3000-01-01'::date
    when fb.renewal_stage_name in ( 'Closed Won', 'Closed-Won Upsell') and fb.renewal_invoiced_date!='1900-01-01' then dateadd(day, -1,fb.renewal_invoiced_date)

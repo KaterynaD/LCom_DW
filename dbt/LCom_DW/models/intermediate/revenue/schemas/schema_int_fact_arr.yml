@@ -136,7 +136,7 @@ models:
 
       - name: arr_activation_date
         description: >-
-          ARR activation date is applicable only for Backdated ARRs.
+          ARR activation date is applicable only for Backdated ARRs in most cases, but also for other ARR types for Expirations.
           This model does not recalculate or apply any additional logic to end_date.
           
           Default, 1900-01-01 in allother ARR types
