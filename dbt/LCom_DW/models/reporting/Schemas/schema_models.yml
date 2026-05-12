@@ -56,6 +56,12 @@ models:
     config:
       tags:
         - rep        
+
+  - name: vw_preliminary_customer_scorecard
+    description: Contract Active, Net Active and Total Active current, previous (the same month of a previous FY) and target  numbers of customers based on Preliminary ARR for scorecard dashboard. It should replace vw_customer_scorecard model when it will no longer needed
+    config:
+      tags:
+        - rep        
      
 
   - name: vw_paying_customers_monthly
