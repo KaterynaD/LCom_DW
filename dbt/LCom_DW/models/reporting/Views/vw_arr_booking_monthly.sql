@@ -26,6 +26,64 @@ max_parent_end_date as max_parent_end_date_adjusted,
 arr_activation_date,
 arr_deactivation_date
 from  {{ ref('fact_arr') }}
+where record_type!='ARR'
+union all
+select
+arr_type,    
+'ARR-Starting' as record_type,
+m.next_mon_year   as mon_year,
+m.next_mon_lastday as mon_lastday,
+m.next_mon_fiscalyear as fiscalyear,
+m.next_mon_fiscalyear_mon as  fiscalyear_mon,
+account_id,
+opportunity_id,
+sfdc_product_id,
+case 
+ when Bucket ilike '%ARR%' then 'Starting: ARR' 
+ else 'Starting: Biz Dev' 
+end as Bucket,
+Bucket_SFDC,
+total_price,
+parent_total_price,
+arr_amount,
+start_date as start_date_adjusted,
+end_date as end_date_adjusted,
+renewal_start_date as renewal_start_date_adjusted,
+max_parent_end_date as max_parent_end_date_adjusted,
+arr_activation_date,
+arr_deactivation_date
+from  {{ ref('fact_arr') }} fa
+join {{ ref('dim_month') }} m
+on fa.mon_year = m.mon_year
+where record_type='ARR'
+and DATE_PART(month, fa.mon_lastday) <> 6
+union all
+select
+arr_type,    
+'ARR-Ending' as record_type,
+mon_year,
+mon_lastday,
+fiscalyear,
+fiscalyear_mon,
+account_id,
+opportunity_id,
+sfdc_product_id,
+case 
+ when Bucket ilike '%ARR%' then 'Ending: ARR' 
+ else 'Ending: Biz Dev' 
+end as Bucket,
+Bucket_SFDC,
+total_price,
+parent_total_price,
+arr_amount,
+start_date as start_date_adjusted,
+end_date as end_date_adjusted,
+renewal_start_date as renewal_start_date_adjusted,
+max_parent_end_date as max_parent_end_date_adjusted,
+arr_activation_date,
+arr_deactivation_date
+from  {{ ref('fact_arr') }}
+where record_type='ARR'
 union all
 select 
 'ARR Target' arr_type,    
