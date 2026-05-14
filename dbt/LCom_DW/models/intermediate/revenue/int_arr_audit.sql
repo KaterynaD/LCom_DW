@@ -65,6 +65,13 @@ where
 and
 (ro.stage_name ilike '%won%' and ro.invoiced_date != '1900-01-01')
 and ((ro.start_date = o.start_date) or (ro.end_date = o.end_date))
+union all
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Negative Total Price' issue, 'Included in ARR' category
+from {{ ref('stg_arr_base') }} b
+join {{ ref('fact_opportunity') }} o
+on b.opportunity_id = o.opportunity_id
+where  
+b.total_price<0
 /*union all
 select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Lost Renewal Start Date after End Date or missing' issue, 'Included in ARR' category
 from {{ ref('stg_arr_base') }} b
