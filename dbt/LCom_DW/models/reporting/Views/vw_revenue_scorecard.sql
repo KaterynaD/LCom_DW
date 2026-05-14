@@ -12,17 +12,16 @@ with month_params as (
 ),
 
 opportunities_data as (
+    /*P.I. and Reductions are at the opportunity level */
     select 
         fa.arr_type, 
         fa.mon_year, 
         fa.record_type, 
         fa.bucket, 
         fa.opportunity_id,
-        dsp.sfdc_product_sub_family,
         sum(fa.arr_amount) as arr_amount,
         max(fa.loaddate) as loaddate
     from {{ ref('fact_arr') }} fa
-    join {{ ref("dim_sfdc_product") }} dsp on fa.sfdc_product_id = dsp.sfdc_product_id
     cross join month_params mp
     where getdate() between fa.arr_activation_date and fa.arr_deactivation_date
       and fa.mon_year between mp.previous_base_mon and mp.current_mon
@@ -31,8 +30,7 @@ opportunities_data as (
         fa.mon_year, 
         fa.record_type, 
         fa.bucket, 
-        fa.opportunity_id,
-        dsp.sfdc_product_sub_family
+        fa.opportunity_id
 ),
 
 rawdata as (
