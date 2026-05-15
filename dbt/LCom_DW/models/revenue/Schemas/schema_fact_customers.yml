@@ -37,7 +37,19 @@ models:
         description: "{{ doc('column_revenue_mon_lastday') }}"
         data_type: date
         constraints:
-          - type: not_null      
+          - type: not_null   
+
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null           
+
+      - name: BizDevFlg
+        description: Based on ARR (District) or Biz Dev (State) ARR type. Identifyes busness model. State funding is used for eligible districts usage. Otherwise, it's a district or another selfpaying organization.
+        data_type: varchar(10)
+        constraints:
+          - type: not_null            
 
       - name: account_id
         description: "{{ doc('column_account_id') }}"
@@ -72,13 +84,7 @@ models:
           - accepted_values:
               values: [
                 'Starting', 'New', 'Returning', 'Churn', 'Expiration', 'Total Active', 'Net Active', 'Contract Active'
-              ]
-
-      - name: BizDevFlg
-        description: If a customer has BizDev ARR, it's state funding customer (State). This funding is used for eligible districts usage. Otherwise, it's a district or an other organization paying for themself.
-        data_type: varchar(10)
-        constraints:
-          - type: not_null   
+              ] 
 
       - name: loaddate
         description: "{{ doc('column_loaddate') }}"
