@@ -32,9 +32,14 @@ sources:
         - name: data_quality_score_c
         - name: de_identified_district_c
         - name: description
+        - name: district_easy_code_tam_c
+        - name: district_easy_tech_tam_c        
         - name: district_enrollment_c
         - name: district_k_8_enrollment_c
+        - name: district_expansion_potential_c        
         - name: district_state_initiative_c
+        - name: district_total_tam_c  
+        - name: free_lunch_students_c              
         - name: grade_levels_c
         - name: k_12_enrollment_c
         - name: k_5_enrollment_c
@@ -59,9 +64,11 @@ sources:
         - name: phone
         - name: pre_k_enrollment_c
         - name: record_type_c
+        - name: reduced_lunch_student_c        
         - name: school_enrollment_c
         - name: state_initiative_c
         - name: state_program_eligible_c
+        - name: schools_in_district_c        
         - name: test_account_c
         - name: ultimate_account_owner_c
         - name: ultimate_parent_account_c
@@ -80,7 +87,6 @@ sources:
         - name: pct_multi_racial_c
         - name: pct_native_c 
         - name: pct_pacific_c
-
 
 
       - name: opportunity

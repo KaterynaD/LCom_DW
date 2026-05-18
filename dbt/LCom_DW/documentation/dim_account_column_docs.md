@@ -274,13 +274,9 @@ Detailed Grade
 District Segment Size (to be populated by rule looking at enrollment)
 {% enddocs %}
 
-{% docs column_sfdc_district_easy_code_tam %}
-District EasyCode TAM (Total EasyCode TAM for a district based on sum of all children TAM values)
-{% enddocs %}
 
-{% docs column_sfdc_district_easy_tech_tam %}
-District EasyTech TAM (Total EasyTech TAM for a district based on sum of all children TAM values  Integrations: Gainsight.)
-{% enddocs %}
+
+
 
 {% docs column_sfdc_district_elementary_teachers %}
 District Elementary Teachers
@@ -290,9 +286,6 @@ District Elementary Teachers
 District Enrollment (Integrations: Gainsight.)
 {% enddocs %}
 
-{% docs column_sfdc_district_expansion_potential %}
-District Expansion Potential (If Total TAM is greater than current renewal ARR, display the delta, else display zero. System estimated upsell potential. Meant as a guideline only.)
-{% enddocs %}
 
 {% docs column_sfdc_district_faculty_library_media_fte %}
 District Faculty - Library/Media FTE
@@ -366,9 +359,7 @@ District Total Revenue
 District Total State Revenue
 {% enddocs %}
 
-{% docs column_sfdc_district_total_tam %}
-District Total TAM (Total TAM for a district based on sum of all children ET and EC TAM values. Source values for EC and ET are populated by Gainsight rule)
-{% enddocs %}
+
 
 {% docs column_sfdc_district_type %}
 District Type (This field is mapped and will sync with Agile/ConnectLink)
@@ -483,13 +474,8 @@ Fiscal - Title I Schoolwide
 Fiscal - Title I Schoolwide - Yes No
 {% enddocs %}
 
-{% docs column_sfdc_free_lunch_students %}
-Free Lunch Students
-{% enddocs %}
 
-{% docs column_sfdc_free_reduced_lunch %}
-Free/Reduced Lunch % (% of Free + Reduced Lunch Students based on School Enrollment)
-{% enddocs %}
+
 
 {% docs column_sfdc_gainsight_customer %}
 Gainsight Customer
@@ -893,9 +879,7 @@ Priority Account
 Record Type (L is for district and B is for school  Integrations: Gainsight.)
 {% enddocs %}
 
-{% docs column_sfdc_reduced_lunch_student %}
-Reduced Lunch Student (Number of students eligible for reduced price lunch)
-{% enddocs %}
+
 
 {% docs column_sfdc_reference_customer %}
 Reference Customer
@@ -954,9 +938,7 @@ School Year End (Integrations: Gainsight.)
 School Year Start (Integrations: Gainsight.)
 {% enddocs %}
 
-{% docs column_sfdc_schools_in_district %}
-Schools in District (Integrations: Gainsight.)
-{% enddocs %}
+
 
 {% docs column_sfdc_state_initiative %}
 Boolean indicating if account is part of a state initiative. (Integrations: Gainsight.)
@@ -1205,4 +1187,26 @@ For State progam reports where HS need to be excluded - Indicates if the school 
 
 {% docs column_SFDC_ultimate_parent_current_renewal_arr %}
 Aggregated current renewal ARR across all ultimate parent account child accounts.
+{% enddocs %}
+
+{% docs column_sfdc_district_easy_code_tam %}
+District EasyCode TAM (Total EasyCode TAM for a district based on sum of all children TAM values)
+{% enddocs %}
+{% docs column_sfdc_district_easy_tech_tam %}
+District EasyTech TAM (Total EasyTech TAM for a district based on sum of all children TAM values  Integrations: Gainsight.)
+{% enddocs %}
+{% docs column_sfdc_district_total_tam %}
+District Total TAM (Total TAM for a district based on sum of all children ET and EC TAM values. Source values for EC and ET are populated by Gainsight rule)
+{% enddocs %}
+{% docs column_sfdc_district_expansion_potential %}
+District Expansion Potential (If Total TAM is greater than current renewal ARR, display the delta, else display zero. System estimated upsell potential. Meant as a guideline only.)
+{% enddocs %}
+{% docs column_sfdc_schools_in_district %}
+Integrations: Gainsight.
+{% enddocs %}
+{% docs column_sfdc_free_lunch_students %}
+Number of students eligible for free lunch
+{% enddocs %}
+{% docs column_sfdc_reduced_lunch_students %}
+Free/Reduced Lunch % (% of Free + Reduced Lunch Students based on School Enrollment)
 {% enddocs %}

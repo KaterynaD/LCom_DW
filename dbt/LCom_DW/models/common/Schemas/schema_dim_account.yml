@@ -470,6 +470,44 @@ models:
     constraints:
     - type: not_null
 
+
+
+  - name: sfdc_district_easy_code_tam
+    data_type: double precision
+    description: "{{ doc('column_sfdc_district_easy_code_tam') }}"
+    constraints:
+    - type: not_null  
+  - name: sfdc_district_easy_tech_tam
+    data_type: double precision
+    description: "{{ doc('column_sfdc_district_easy_tech_tam') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_district_total_tam
+    data_type: double precision
+    description: "{{ doc('column_sfdc_district_total_tam') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_district_expansion_potential
+    data_type: double precision
+    description: "{{ doc('column_sfdc_district_expansion_potential') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_schools_in_district
+    data_type: integer
+    description: "{{ doc('column_sfdc_schools_in_district') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_free_lunch_students
+    data_type: integer
+    description: "{{ doc('column_sfdc_free_lunch_students') }}"
+    constraints:
+    - type: not_null
+  - name: sfdc_reduced_lunch_students
+    data_type: integer
+    description: "{{ doc('column_sfdc_reduced_lunch_students') }}"
+    constraints:
+    - type: not_null
+
   - name: sfdc_state_initiative_school
     data_type: boolean
     description: "{{ doc('column_sfdc_state_initiative_school') }}"

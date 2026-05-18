@@ -6,36 +6,4 @@ models:
     config:
       tags:
         - dim
-    
-    columns:
-      - name: district_id
-        description: Primary Key of DIM_DISTRICT (DIM_ACCOUNT.Account_Id). 
-      - name: lcom_district_id
-        description: LCOM Organization District ID (DIM_ACCOUNT.LCOM_Organization_Id)
-          Can be skew with default values if an account does not exist in LCOM
-          Platform. Can be used in joins with LCOM related tables but better use
-          Organization_id as a distribution key
-      - name: lcom_district_name
-        description: LCOM Organization District Name (DIM_ACCOUNT.LCOM_Organization_Name)
-      - name: sfdc_district_id
-        description: Salesforce District ID (DIM_ACCOUNT.SFDC_Account_Id)
-      - name: sfdc_district_name
-        description: Salesforce District Name (DIM_ACCOUNT.SFDC_Name)
-      - name: sfdc_ultimate_parent_id
-        description: "{{ doc('column_sfdc_ultimate_parent_id') }}"
-      - name: sfdc_ultimate_parent_account
-        description: "{{ doc('column_sfdc_ultimate_parent_account') }}"
-      - name: sfdc_state_initiative
-        description: State Initiative
-      - name: sfdc_district_state_initiative
-        description: District State Initiative
-      - name: sfdc_urban_rural
-        description: "Urban Rural (Integrations: Gainsight.)"
-      - name: sfdc_state_initiative_school
-        description: State Initiative from the child(school) level. True if any school
-          has True attribute
-      - name: sfdc_district_state_initiative_school
-        description: District State Initiative from the child(school) level. True if any
-          school has True attribute
-      - name: loaddate
-        description: The datetime the record was loaded
+

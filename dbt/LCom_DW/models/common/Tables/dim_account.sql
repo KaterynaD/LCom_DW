@@ -99,7 +99,14 @@ on sfdc_parent_account.owner_id= sfdc_user.id
 'technology_measure_c','account_grade_c','fiscal_title_i_school_yes_no_c',
 'title_iv_funding_21_st_century_grants_c','title_iv_funding_student_support_c',
 'pct_asian_c', 'pct_afro_amer_c', 'pct_white_c', 'pct_hisp_c', 'pct_multi_racial_c',
- 'pct_native_c', 'pct_pacific_c'
+ 'pct_native_c', 'pct_pacific_c',
+ 'district_easy_code_tam_c',
+'district_easy_tech_tam_c',
+'district_total_tam_c',
+'district_expansion_potential_c',
+'schools_in_district_c',
+'free_lunch_students_c',
+'reduced_lunch_student_c'
         ],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
@@ -272,6 +279,14 @@ isnull(SFDC_data.pct_multi_racial_c,    {{ var("default_numeric") }}) as SFDC_pc
 isnull(SFDC_data.pct_native_c,  {{ var("default_numeric") }}) as SFDC_pct_native,
 isnull(SFDC_data.pct_pacific_c , {{ var("default_numeric") }}) as SFDC_pct_pacific,
 --
+isnull(SFDC_data.district_easy_code_tam_c::double precision, {{ var("default_numeric") }}) as SFDC_district_easy_code_tam,
+isnull(SFDC_data.district_easy_tech_tam_c::double precision, {{ var("default_numeric") }}) as SFDC_district_easy_tech_tam,
+isnull(SFDC_data.district_total_tam_c::double precision, {{ var("default_numeric") }}) as SFDC_district_total_tam,
+isnull(SFDC_data.district_expansion_potential_c::double precision, {{ var("default_numeric") }}) as SFDC_district_expansion_potential,
+isnull(SFDC_data.schools_in_district_c::integer, {{ var("default_numeric") }}) as SFDC_schools_in_district,
+isnull(SFDC_data.free_lunch_students_c::integer, {{ var("default_numeric") }}) as SFDC_free_lunch_students,
+isnull(SFDC_data.reduced_lunch_student_c::integer, {{ var("default_numeric") }}) as SFDC_reduced_lunch_students,
+--
 --School (some child accounts info)
 isnull(SFDC_data.state_initiative_school, {{ var("default_boolean") }}) as SFDC_state_initiative_school,
 isnull(SFDC_data.district_state_initiative_school, {{ var("default_boolean") }}) as SFDC_district_state_initiative_school,
@@ -386,6 +401,14 @@ select
 {{ var("default_numeric") }} as SFDC_pct_native,
 {{ var("default_numeric") }} as SFDC_pct_pacific,
 --
+{{ var("default_numeric") }} as SFDC_district_easy_code_tam,
+{{ var("default_numeric") }} as SFDC_district_easy_tech_tam,
+{{ var("default_numeric") }} as SFDC_district_total_tam,
+{{ var("default_numeric") }} as SFDC_district_expansion_potential,
+{{ var("default_numeric") }} as SFDC_schools_in_district,
+{{ var("default_numeric") }} as SFDC_free_lunch_students,
+{{ var("default_numeric") }} as SFDC_reduced_lunch_students,
+--
 --School (some child accounts info)
 {{ var("default_boolean") }} as SFDC_state_initiative_school,
 {{ var("default_boolean") }} as SFDC_district_state_initiative_school,
@@ -486,6 +509,15 @@ select
     sfdc_pct_multi_racial:: double precision,
     sfdc_pct_native:: double precision,
     sfdc_pct_pacific:: double precision,
+    --
+    sfdc_district_easy_code_tam::double precision,
+    sfdc_district_easy_tech_tam::double precision,
+    sfdc_district_total_tam::double precision,
+    sfdc_district_expansion_potential::double precision,
+    sfdc_schools_in_district::integer,
+    sfdc_free_lunch_students::integer,
+    sfdc_reduced_lunch_students::integer,
+    --
     sfdc_state_initiative_school :: boolean,
     sfdc_district_state_initiative_school :: boolean,
     sfdc_state_initiative_district :: boolean,
