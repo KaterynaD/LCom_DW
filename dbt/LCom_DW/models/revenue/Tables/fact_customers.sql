@@ -133,8 +133,36 @@ and vfrms.mon_year = ah.mon_year
 and vfrms.arr_type = ah.arr_type
 and vfrms.sfdc_product_id = ah.sfdc_product_id
 and vfrms.BizDevFlg = ah.BizDevFlg
-where vfrms.record_type='ARR-MonthlyReduced'
+where 
+vfrms.record_type='ARR-MonthlyReduced'
 and vfrms.bucket like '%Expir%'
+and ah.sfdc_ultimate_parent_id is null
+group by
+all
+having max(case when abs(vfrms.amount)>0 then 1 else 0 end) = 1
+)
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+,NonRenewed as (
+select distinct
+vfrms.arr_type,
+vfrms.mon_year,
+vfrms.mon_lastday,
+vfrms.fiscalyear,
+vfrms.sfdc_product_id,
+vfrms.BizDevFlg,
+vfrms.sfdc_ultimate_parent_id,
+'NonRenewed' record_type
+from
+vw_fact_revenue_monthly_snapshots vfrms
+--not active customer anymore
+left outer join active_paying_customers ah
+on ah.sfdc_ultimate_parent_id = vfrms.sfdc_ultimate_parent_id
+and vfrms.mon_year = ah.mon_year
+and vfrms.arr_type = ah.arr_type
+and vfrms.sfdc_product_id = ah.sfdc_product_id
+and vfrms.BizDevFlg = ah.BizDevFlg
+where (vfrms.record_type='ARR-MonthlyAdded' and vfrms.bucket like '%Placeholder%' and vfrms.amount<0)
 and ah.sfdc_ultimate_parent_id is null
 group by
 all
@@ -202,7 +230,7 @@ left outer join Starting s
 on vfrms.sfdc_ultimate_parent_id = s.sfdc_ultimate_parent_id
 and vfrms.fiscalyear = s.fiscalyear
 and vfrms.arr_type = s.arr_type
-and vfrms.sfdc_product_id = s.sfdc_product_id
+--and vfrms.sfdc_product_id = s.sfdc_product_id
 and vfrms.BizDevFlg = s.BizDevFlg
 -- 
 --if included in MonthlyAdded it is not New or Returning, unless it was Churned after MonthlyAdded
@@ -224,7 +252,13 @@ data.sfdc_product_id,
 data.BizDevFlg,
 sfdc_ultimate_parent_id,
 max(mon_lastday) last_churned_mon_lastday
-from (select arr_type, fiscalyear, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Churn union all select arr_type, fiscalyear, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Expired) data
+from (
+select arr_type, fiscalyear, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Churn 
+union all 
+select arr_type, fiscalyear, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Expired
+union all 
+select arr_type, fiscalyear, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from NonRenewed
+) data
 group by all
 ) c
 on vfrms.sfdc_ultimate_parent_id = c.sfdc_ultimate_parent_id
@@ -317,7 +351,13 @@ m.Mon_LastDay,
 s.sfdc_product_id,
 s.BizDevFlg,
 s.sfdc_ultimate_parent_id
-from (select arr_type, fiscalyear, Mon_Year, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Churn union all select arr_type, fiscalyear, Mon_Year, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Expired) s
+from (
+    select arr_type, fiscalyear, Mon_Year, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Churn 
+    union all 
+    select arr_type, fiscalyear, Mon_Year, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from Expired
+    union all 
+    select arr_type, fiscalyear, Mon_Year, sfdc_product_id, BizDevFlg, sfdc_ultimate_parent_id, mon_lastday from NonRenewed 
+    ) s
 left outer join new_and_returning nr
 on s.sfdc_ultimate_parent_id = nr.sfdc_ultimate_parent_id
 and s.fiscalyear = nr.fiscalyear
