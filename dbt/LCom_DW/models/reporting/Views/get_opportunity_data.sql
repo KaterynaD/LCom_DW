@@ -9,7 +9,7 @@
             flo.schoolcount AS ord_school_count,
             flo.studentcount AS ord_student_count,
             flo.startdate AS ord_start_date,
-            flo.expirationdate AS ord_end_date,
+            flo.expirationdate  ord_end_date,
             flo.enforcedaterestrictions,
             sch.lcom_school_name
         FROM
