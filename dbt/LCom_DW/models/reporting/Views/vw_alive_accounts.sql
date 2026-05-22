@@ -24,7 +24,7 @@ m.mon_lastday ,
 m.FiscalYear,
 m.FiscalYear_mon,
 m.SchoolYear,
-m.SchoolYear_mon,
+,m.SchoolYear_mon
 --
 ah.lcom_organization_id as lcom_organization_id ,
 a.lcom_parent_organization_id as lcom_parent_organization_id ,
