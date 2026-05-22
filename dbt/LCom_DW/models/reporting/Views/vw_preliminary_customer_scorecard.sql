@@ -16,55 +16,55 @@ from {{ ref("dim_month") }}
 where date_add('year', -1, trunc(GetDate())) between Mon_FirstDay and Mon_LastDay
 )
 ,contract_based_active_data as (
-select count(distinct sfdc_ultimate_parent_id) cnt_customers
-from {{ ref("fact_customers") }} s
+select count(distinct customer_id) cnt_customers
+from {{ ref("fact_customer") }} s
 join dim_month m
 on s.Mon_Year = m.Mon_Year
 where record_type='Contract Active'
 and arr_type='Preliminary'
 )
 ,contract_based_active_data_prev as (
-select count(distinct sfdc_ultimate_parent_id) cnt_customers
-from {{ ref("fact_customers") }} s
+select count(distinct customer_id) cnt_customers
+from {{ ref("fact_customer") }} s
 join dim_month_prev m
 on s.Mon_Year = m.Mon_Year
 where record_type='Contract Active'
 and arr_type='Preliminary'
 )
 ,net_active_data as (
-select count(distinct sfdc_ultimate_parent_id) cnt_customers
-from {{ ref("fact_customers") }} s
+select count(distinct customer_id) cnt_customers
+from {{ ref("fact_customer") }} s
 join dim_month m
 on s.Mon_Year = m.Mon_Year
 where record_type='Net Active'
 and arr_type='Preliminary'
 )
 ,net_active_data_prev as (
-select count(distinct sfdc_ultimate_parent_id) cnt_customers
-from {{ ref("fact_customers") }} s
+select count(distinct customer_id) cnt_customers
+from {{ ref("fact_customer") }} s
 join dim_month_prev m
 on s.Mon_Year = m.Mon_Year
 where record_type='Net Active'
 and arr_type='Preliminary'
 )
 ,total_active_data as (
-select count(distinct sfdc_ultimate_parent_id) cnt_customers
-from {{ ref("fact_customers") }} s
+select count(distinct customer_id) cnt_customers
+from {{ ref("fact_customer") }} s
 join dim_month m
 on s.Mon_Year = m.Mon_Year
 where record_type='Total Active'
 and arr_type='Preliminary'
 )
 ,total_active_data_prev as (
-select count(distinct sfdc_ultimate_parent_id) cnt_customers
-from {{ ref("fact_customers") }} s
+select count(distinct customer_id) cnt_customers
+from {{ ref("fact_customer") }} s
 join dim_month_prev m
 on s.Mon_LastDay = m.Mon_LastDay
 where record_type='Total Active'    
 and arr_type='Preliminary'
 )
 ,datedata as ( select max(fcms.loaddate) last_updated 
-from {{ ref("fact_customers") }} fcms
+from {{ ref("fact_customer") }} fcms
 where arr_type='Preliminary'
 )
 ,vw_customer_scorecard as (

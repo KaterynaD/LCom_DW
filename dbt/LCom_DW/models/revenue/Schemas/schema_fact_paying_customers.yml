@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: fact_paying_customers
-    description: '{{ doc("table_fact_customers") }}'
+    description: '{{ doc("table_fact_customer") }}'
     config:
       contract:
         enforced: false
