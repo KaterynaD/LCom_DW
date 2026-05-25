@@ -179,7 +179,7 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
 - The new release is deployed and `dbt deps` is executed to install dependencies.
 - `dbt compile` is run again (with the same `loaddate`) to generate a new manifest for the new release.
 - The old and new manifests are compared, and a list of changed models is printed.
-  - If `RUN_QA_STATE_TESTS` is set to `true`:
+  - If `RUN_QA_STATE_TESTS` is set to `true` and there are dbt modified models:
     - The QA database is cleaned of all schemas using a dbt macro.
     - A `dbt run` is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
     - TBD preparation QA environment for SQL materialization (Sstored procedures and tables are created in QA) I may remove this step soon.
