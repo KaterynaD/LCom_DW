@@ -2,7 +2,7 @@
    bind=False
 )
  }}
-with data_12_fy_mon AS (									
+with data_12_fy_mon as (									
 select	
 mon_year,
 case when sfdc_ultimate_parent_id='00000000-0000-0000-0000-000000000000' then sfdc_account_id else sfdc_ultimate_parent_id end sfdc_ultimate_parent_id,									
@@ -17,7 +17,7 @@ group by
 mon_year,
 case when sfdc_ultimate_parent_id='00000000-0000-0000-0000-000000000000' then sfdc_account_id else sfdc_ultimate_parent_id end									
 )									
-,starting_1_fy_mon AS (									
+,starting_1_fy_mon as (									
 select		
 mon_year,
 case when sfdc_ultimate_parent_id='00000000-0000-0000-0000-000000000000' then sfdc_account_id else sfdc_ultimate_parent_id end sfdc_ultimate_parent_id,
