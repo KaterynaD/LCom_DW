@@ -46,7 +46,6 @@ starting_1_fy_mon
 on data_12_fy_mon.sfdc_ultimate_parent_id = starting_1_fy_mon.sfdc_ultimate_parent_id	
 and starting_1_fy_mon.mon_year - data_12_fy_mon.mon_year = 1
 )		
---Final select
 select																	
 a.sfdc_name,
 data.sfdc_ultimate_parent_id,		
