@@ -305,7 +305,22 @@ if [[ -f "\$STATE_DIR/manifest.json" ]]; then
   --target ${DBT_TARGET_NAME} \
   --vars '{\"loaddate\": \"1900-01-01\"}'
 
-if [[ \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
+
+MODIFIED_MODELS=\$(
+  \"\$DBT_BIN\" list \
+    --quiet \
+    --select state:modified \
+    --state \"\$STATE_DIR\" \
+    --resource-type model \
+    --target ${DBT_TARGET_NAME} \
+    --vars '{\"loaddate\": \"1900-01-01\"}' \
+    || true
+)
+
+
+
+if [[ -n \"\$MODIFIED_MODELS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
+
 # Cleaning QA environment
 \"\$DBT_BIN\" run-operation drop_qa_schemas --target QA --vars '{dry_run: false}'
 
@@ -365,7 +380,7 @@ fi
 
 
 else
-    echo '[container] Skipping QA tests (RUN_QA_STATE_TESTS is false)'
+    echo '[container] Skipping dbt QA tests: nothing modified or RUN_QA_STATE_TESTS is false'
 fi
 
 else
