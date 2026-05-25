@@ -30,7 +30,7 @@ group by
 mon_year,
 case when sfdc_ultimate_parent_id='00000000-0000-0000-0000-000000000000' then sfdc_account_id else sfdc_ultimate_parent_id end									
 )									
-,data as (									
+,data AS (									
 select	
 coalesce(data_12_fy_mon.sfdc_ultimate_parent_id,starting_1_fy_mon.sfdc_ultimate_parent_id) sfdc_ultimate_parent_id,		
 data_12_fy_mon.mon_year mon_year_12,
@@ -46,6 +46,7 @@ starting_1_fy_mon
 on data_12_fy_mon.sfdc_ultimate_parent_id = starting_1_fy_mon.sfdc_ultimate_parent_id	
 and starting_1_fy_mon.mon_year - data_12_fy_mon.mon_year = 1
 )		
+--Final select
 select																	
 a.sfdc_name,
 data.sfdc_ultimate_parent_id,		
