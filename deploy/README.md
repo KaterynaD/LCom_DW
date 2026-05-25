@@ -115,7 +115,6 @@ Location:
 ```
 
 Scripts:
-- `deploy_release.sh` – core host deploy logic
 - `deploy_release_from_actions.sh` – deploy_to_ec2_AWSPRDDWH001 GitHub Actions entrypoint
 - `publish_dbt_docs.sh` – docs_publish GitHub Actions entrypoint
 
@@ -183,7 +182,9 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
   - If `RUN_QA_STATE_TESTS` is set to `true`:
     - The QA database is cleaned of all schemas using a dbt macro.
     - A `dbt run` is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
-    - View and Profiling materialization are not validated (View creation does not validate SQL. Need to run select TBD and Profiling is very slow and need a specific target)
+    - TBD preparation QA environment for SQL materialization (Sstored procedures and tables are created in QA) I may remove this step soon.
+    - Profiling materialization are not validated (and Profiling is very slow and need a specific target)
+    - List of modified views is sent to validate_views macro and select runs. This is required to validate No Schema Binding Redshift views. If no errors, modified view materialized models are deployed in Prod once because they are not part of routing daily runs.
 
 - Documentation and column-level lineage are generated:
   - `dbt docs generate`

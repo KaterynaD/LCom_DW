@@ -315,12 +315,55 @@ if [[ \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
 # QA empty and defer run  
 \"\$DBT_BIN\" run \
   --select state:modified \
-  --exclude \"config.materialized:view config.materialized:profiling\" \
+  --exclude \"config.materialized:profiling\" \
   --empty \
   --target QA \
   --state \"\$STATE_DIR\" \
   --defer \
   --vars '{\"loaddate\": \"1900-01-01\"}'
+
+
+# No Schema Binding redshift Views must be run (select) to be fully validated
+# 1. List of modified view
+ VIEW_LIST=\$(
+  \"\$DBT_BIN\" list \
+    --quiet \
+    --select state:modified,config.materialized:view \
+    --state \"\$STATE_DIR\" \
+    --resource-type model \
+    --target ${DBT_TARGET_NAME} \
+    --vars '{\"loaddate\": \"1900-01-01\"}' \
+  | grep '^LCom_DW\.' \
+  | awk -F'.' '{print \"'\''\" \$NF \"'\''\"}' \
+  | paste -sd, -
+)
+
+echo '[container] VIEW_LIST:' \"\$VIEW_LIST\"
+
+# 2. Run select in dbt macros from each view in QA
+if [[ -n \"\$VIEW_LIST\" ]]; then
+
+  \"\$DBT_BIN\" run-operation validate_views \
+    --target QA \
+    --args \"{'models':[\${VIEW_LIST}]}\"
+
+# 3. Deploying in Prod validated views
+\"\$DBT_BIN\" run \
+  --select state:modified,config.materialized:view \
+  --target ${DBT_TARGET_NAME} \
+  --state \"\$STATE_DIR\" \
+  --vars '{\"loaddate\": \"1900-01-01\"}'
+
+
+
+
+
+else
+  echo '[container] No views to validate.'
+fi
+
+
+
 else
     echo '[container] Skipping QA tests (RUN_QA_STATE_TESTS is false)'
 fi
