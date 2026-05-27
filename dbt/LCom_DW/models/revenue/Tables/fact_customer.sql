@@ -92,7 +92,7 @@ select
     mon_lastday,
     fiscalyear,
     fiscalyear_mon
-from common.dim_month
+from {{ ref('dim_month') }}
 )
 ,churn_rawdata as
 (
