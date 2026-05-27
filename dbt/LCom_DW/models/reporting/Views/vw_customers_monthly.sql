@@ -11,8 +11,6 @@ select distinct
 ,c.FiscalYear_Mon
 ,f.record_type
 ,f.customer_id as sfdc_ultimate_parent_id
-,f.BizDevFlg
-,p.sfdc_product_sub_family product
 ,ah.sfdc_billing_state state
 ,ah.sfdc_billing_country country
 ,a.sfdc_customer_level
@@ -21,8 +19,6 @@ select distinct
 ,case when (ah.sfdc_state_initiative or ah.sfdc_state_initiative_school) then true else false end as state_initiative
 ,ah.sfdc_urban_rural as urban_rural
 from {{ ref("fact_customer") }} f
-join {{ ref("dim_sfdc_product") }} p
-on f.sfdc_product_id = p.sfdc_product_id
 join {{ ref("dim_account_history") }} ah
 on f.customer_id = ah.account_id
 and f.mon_lastday between ah.fromdate and ah.todate
@@ -32,3 +28,4 @@ on f.customer_id = a.account_id
 --
 join {{ ref("dim_month") }} c
 on f.mon_year=c.mon_year
+where f.mon_year >= 201907

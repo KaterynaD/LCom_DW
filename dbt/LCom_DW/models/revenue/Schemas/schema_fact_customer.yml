@@ -44,7 +44,7 @@ models:
         data_tests:
           - accepted_values:
               values: [
-                'New', 'Returning', 'Churn', 'Expiration', 'Total Active', 'Net Active', 'Contract Active'
+                'New', 'Returning', 'Churn', 'Total Active', 'Net Active', 'Contract Active'
               ]                   
 
       - name: mon_year
@@ -69,23 +69,7 @@ models:
         description: "{{ doc('column_fiscalyear_mon') }}"
         data_type: integer
         constraints:
-          - type: not_null                      
-
-      - name: sfdc_product_id
-        description: Ref to a SFDC product can not be reliably identified for  New and Returning record types. An existing customer can add a new product replacing the same by functionality just "updated" internally. Or it can be a new product from a different Sub Family. New and Returning has default SFDC Product ID now. DO not use for now in reporting.
-        data_type: varchar(300)
-        constraints:
-          - type: not_null    
-        data_tests:
-          - relationships:
-              to: ref('dim_sfdc_product')
-              field: sfdc_product_id                 
-
-      - name: BizDevFlg
-        description: Based on ARR (District) or Biz Dev (State) ARR type. Identifyes busness model. State funding is used for eligible districts usage. Otherwise, it's a district or another selfpaying organization.
-        data_type: varchar(10)
-        constraints:
-          - type: not_null            
+          - type: not_null                           
 
 
       - name: customer_id
