@@ -46,6 +46,11 @@
   {{ log('create_fact_usage_monthly_snapshots_table', info=True) }}
   {{ create_fact_usage_monthly_snapshots_table() }}
 
+  {{ log('create_stg_skillscheck_schoolyear_data', info=True) }}
+  {{ create_stg_skillscheck_schoolyear_data() }}
+  {{ log('create_stg_skillscheck_calendaryear_data', info=True) }}
+  {{ create_stg_skillscheck_calendaryear_data() }}
+  
   {{ log('create_stg_opportunities_chain_of_renewals', info=True) }}
   {{ create_stg_opportunities_chain_of_renewals() }}
   {{ log('create_stg_opportunities_chain_of_renewals_v2', info=True) }}
@@ -64,6 +69,11 @@
   {{ create_processing_opportunities_chain_of_renewals_v2() }}
   {{ log('create_processing_ultimate_parent_accounts', info=True) }}
   {{ create_processing_ultimate_parent_accounts() }}
+
+  {{ log('create_load_skillscheck_schoolyear_data', info=True) }}
+  {{ create_load_skillscheck_schoolyear_data() }}
+  {{ log('create_load_skillscheck_calendaryear_data', info=True) }}
+  {{ create_load_skillscheck_calendaryear_data() }}
 
   {{ log('create_lc_load_launches_weekly_snapshots', info=True) }}
   {{ create_lc_load_launches_weekly_snapshots() }}
