@@ -1,0 +1,108 @@
+version: 2
+
+models:
+  - name: fact_booking
+    description: >-
+      Fact table for bookings based on won and invoiced opportunities only.
+      Produces both monthly booking rows and fiscal-year running total booking rows
+      at the grain of record type, month, opportunity, product, and bucket. 
+      It preserve historical data calculated for previous months
+      and adds new rows for the current month only in each run
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - revenue
+        - booking
+
+    columns:
+      - name: record_type
+        description: Booking row type, either MonthlyBooking or Booking.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+
+      - name: mon_year
+        description: Calendar month in YYYYMM-style integer for the booking fact row.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+
+      - name: mon_lastday
+        description: Last day of the month corresponding to mon_year.
+        data_type: date
+        constraints:
+          - type: not_null
+
+
+      - name: fiscalyear
+        description: Fiscal year for the booking fact row in the form yyyy_start/yyyy_end.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+
+      - name: fiscalyear_mon
+        description: Fiscal month number within the fiscal year for the booking fact row.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('fact_opportunity')
+              field: opportunity_id
+
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+        data_tests:
+          - relationships:
+              to: ref('dim_sfdc_product')
+              field: sfdc_product_id
+
+      - name: bucket
+        description: >-
+          Normalized ARR movement bucket with the 'Sales : ' prefix removed and delimiters standardized.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+       
+
+      - name: bucket_sfdc
+        description: Original Salesforce opportunity product business type classification.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null          
+
+      - name: total_price
+        description: Booking amount for the current opportunity, product, and bucket row.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null          

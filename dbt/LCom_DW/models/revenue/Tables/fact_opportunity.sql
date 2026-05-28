@@ -25,7 +25,7 @@ select
 'disable_auto_renewal_opp_c','downsell_c','end_date_c',
 'invoiced_date_c',
 'last_modified_by_id','last_modified_date',
-'license_unenforced_c','loss_reason_c','loss_notes_c',
+'license_unenforced_c','closed_reason_c','closed_notes_c',
 'multi_year_arr_c','multi_year_order_c',
 'netsuite_id_c','new_biz_arr_trigger_c',
 'nnarr_c','nrr_renewal_c',
@@ -39,7 +39,7 @@ select
 'renewal_opportunity_c',
 'sbqq_primary_quote_c','school_list_c',
 'source_opp_arr_c','stage_name',
-'start_date_c',
+'start_date_c', 'subscription_term_c',
 'total_arr_bookings_c',
 'true_arr_c','true_arr_formula_c','true_renewal_arr_c',
 'x_1_st_contact_c','x_1_st_contact_email_c',
@@ -50,14 +50,35 @@ select
 'x_2_nd_contact_c',
 'x_3_rd_contact_c','license_provisioned_date_c','subscription_start_date_c','subscription_end_date_c',
 'quota_c','quote_contract_type_c','quote_created_date_c','quote_expiry_date_c',
-'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c',
-'quote_total_discount_c'
+'quote_list_amount_c','quote_name_c','quote_notes_c','quote_start_date_c','progressive_billing_c','Override_ARR_c'
             ],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
         current_profile='current'
     ) }}
 from {{ source('fivetran_salesforce_quickstart', 'opportunity') }} sfdc_opportunity
+)
+,staging_quote as (
+    select
+    {{ safe_select_list_from_profiles(
+        table_name='sbqq_quote_c',
+        alias='sfdc_quote',
+        used_columns=[ 
+            'id',
+            'progressive_payment_amount_2_c',
+            'progressive_payment_amount_3_c',
+            'progressive_payment_amount_4_c',
+            'progressive_payment_amount_5_c',
+            'progressive_payment_date_2_c',
+            'progressive_payment_date_3_c',
+            'progressive_payment_date_4_c',
+            'progressive_payment_date_5_c'
+            ],
+        profile_src=('profiles','vw_sfdc_schema_audit'),
+        base_profile='base',
+        current_profile='current'
+    ) }}
+from {{ source('fivetran_salesforce_quickstart', 'sbqq_quote_c') }} sfdc_quote
 )
 ,data as (
 select 
@@ -96,8 +117,8 @@ select
     isnull(o.last_modified_date AT TIME ZONE 'PST', '{{ var("default_date") }}') as last_modified_date,
     isnull(o.license_unenforced_c, {{ var("default_boolean") }}) as license_unenforced,
     isnull(o.license_provisioned_date_c,   '{{ var("default_date") }}') as license_provisioned_date ,
-    isnull(o.loss_reason_c, '{{ var("default_varchar") }}') as loss_reason,
-    isnull(o.loss_notes_c, '{{ var("default_varchar") }}') as loss_notes,
+    case when o.stage_name='Closed Lost' then  isnull(o.closed_reason_c, '{{ var("default_varchar") }}') else '{{ var("default_varchar") }}' end as loss_reason,
+    case when o.stage_name='Closed Lost' then  isnull(o.closed_notes_c, '{{ var("default_varchar") }}') else '{{ var("default_varchar") }}' end as loss_notes,
     isnull(o.multi_year_arr_c, {{ var("default_numeric") }}) as multi_year_arr,
     isnull(o.multi_year_order_c, {{ var("default_boolean") }}) as multi_year_order,
     isnull(o.netsuite_id_c, '{{ var("default_varchar") }}') as netsuite_id,
@@ -110,6 +131,7 @@ select
     isnull(o.number_c, '{{ var("default_varchar") }}') as opportunity_number,
     isnull(o.opportunity_score_id, '{{ var("default_varchar") }}') as opportunity_score_id,
     isnull(o.owner_id, '{{ var("default_ID") }}') as owner_id,
+    isnull(o.Override_ARR_c, {{ var("default_numeric") }}) as Override_ARR,
     isnull(o.paid_date_c, '{{ var("default_date") }}') as paid_date,
     isnull(o.payment_terms_c, '{{ var("default_varchar") }}') as payment_terms,
     isnull(o.po_amount_c, {{ var("default_numeric") }}) as po_amount,
@@ -117,6 +139,15 @@ select
     isnull(o.price_increase_arr_c, {{ var("default_numeric") }}) as price_increase_arr,
     isnull(o.pricebook_2_id, '{{ var("default_varchar") }}') as pricebook_2_id,
     isnull(o.probability, {{ var("default_numeric") }}) as probability,
+    isnull(o.progressive_billing_c, {{ var("default_boolean") }}) as progressive_billing,
+    isnull(q.progressive_payment_amount_2_c, {{ var("default_numeric") }}) as progressive_payment_amount_2,
+    isnull(q.progressive_payment_amount_3_c, {{ var("default_numeric") }}) as progressive_payment_amount_3,
+    isnull(q.progressive_payment_amount_4_c, {{ var("default_numeric") }}) as progressive_payment_amount_4,
+    isnull(q.progressive_payment_amount_5_c, {{ var("default_numeric") }}) as progressive_payment_amount_5,
+    isnull(q.progressive_payment_date_2_c, '{{ var("default_date") }}') as progressive_payment_date_2,
+    isnull(q.progressive_payment_date_3_c, '{{ var("default_date") }}') as progressive_payment_date_3,
+    isnull(q.progressive_payment_date_4_c, '{{ var("default_date") }}') as progressive_payment_date_4,
+    isnull(q.progressive_payment_date_5_c, '{{ var("default_date") }}') as progressive_payment_date_5,
     isnull(o.quota_c,   '{{ var("default_varchar") }}') as quota ,
     isnull(o.quote_contract_type_c,   '{{ var("default_varchar") }}') as quote_contract_type ,
     isnull(o.quote_created_date_c,   '{{ var("default_date") }}') as quote_created_date ,
@@ -125,7 +156,6 @@ select
     isnull(o.quote_name_c,   '{{ var("default_varchar") }}') as quote_name ,
     isnull(o.quote_notes_c,   '{{ var("default_varchar") }}') as quote_notes ,
     isnull(o.quote_start_date_c,   '{{ var("default_date") }}') as quote_start_date ,
-    isnull(o.quote_total_discount_c , {{ var("default_numeric") }}) as quote_total_discount ,
     isnull(o.renewable_revenue_c, {{ var("default_numeric") }}) as renewable_revenue,
     isnull(o.renewal_opportunity_c, '{{ var("default_varchar") }}') as renewal_opportunity_id,
     isnull(o.sbqq_primary_quote_c, '{{ var("default_varchar") }}') as sbqq_primary_quote,
@@ -135,6 +165,7 @@ select
     isnull(o.start_date_c, '{{ var("default_date") }}') as start_date,
     isnull(o.subscription_end_date_c,   '{{ var("default_date") }}') as subscription_end_date ,
     isnull(o.subscription_start_date_c,   '{{ var("default_date") }}') as subscription_start_date ,
+    isnull(o.subscription_term_c, '{{ var("default_numeric") }}') as subscription_term,
     isnull(o.total_arr_bookings_c, {{ var("default_numeric") }}) as total_arr_bookings,
     isnull(o.true_arr_c, {{ var("default_numeric") }}) as true_arr,
     isnull(o.true_arr_formula_c, {{ var("default_numeric") }}) as true_arr_formula,
@@ -155,6 +186,8 @@ left outer join  {{ ref('dim_account') }} as a
 on o.account_id = a.SFDC_account_id
 left outer join {{ source('fivetran_salesforce_quickstart', 'record_type') }} rt
 on o.record_type_id = rt.id
+left outer join staging_quote as q
+on o.sbqq_primary_quote_c = q.id
 where o.test_account_c = false
 )
 select
@@ -207,6 +240,7 @@ select
     opportunity_number::varchar(100),
     opportunity_score_id::varchar(30),
     owner_id::varchar(30),
+    Override_ARR::numeric(38,10),
     paid_date::date,
     payment_terms::varchar(780),
     po_amount::numeric(35,10),
@@ -214,6 +248,15 @@ select
     price_increase_arr::double precision,
     pricebook_2_id::varchar(30),
     probability::double precision,
+    progressive_billing::boolean,
+    progressive_payment_amount_2::numeric(38,10),
+    progressive_payment_amount_3::numeric(38,10),
+    progressive_payment_amount_4::numeric(38,10),
+    progressive_payment_amount_5::numeric(38,10),
+    progressive_payment_date_2::date,
+    progressive_payment_date_3::date,
+    progressive_payment_date_4::date,
+    progressive_payment_date_5::date,    
     quota::varchar(250)	,
     quote_contract_type::varchar(780)	,
     quote_created_date::date	,
@@ -222,7 +265,6 @@ select
     quote_name::varchar(250)	,
     quote_notes::varchar(780)	,
     quote_start_date::date	,
-    quote_total_discount::double precision	,
     renewable_revenue::numeric(38,10),
     renewal_opportunity_id::varchar(300),
     sbqq_primary_quote::varchar(30),
@@ -232,6 +274,7 @@ select
     start_date::date,
     subscription_end_date::date	,
     subscription_start_date::date	,
+    subscription_term::integer	,
     total_arr_bookings::numeric(38,10),
     true_arr::numeric(35,10),
     true_arr_formula::double precision,

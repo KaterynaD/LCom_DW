@@ -32,9 +32,14 @@ sources:
         - name: data_quality_score_c
         - name: de_identified_district_c
         - name: description
+        - name: district_easy_code_tam_c
+        - name: district_easy_tech_tam_c        
         - name: district_enrollment_c
         - name: district_k_8_enrollment_c
+        - name: district_expansion_potential_c        
         - name: district_state_initiative_c
+        - name: district_total_tam_c  
+        - name: free_lunch_students_c              
         - name: grade_levels_c
         - name: k_12_enrollment_c
         - name: k_5_enrollment_c
@@ -59,9 +64,11 @@ sources:
         - name: phone
         - name: pre_k_enrollment_c
         - name: record_type_c
+        - name: reduced_lunch_student_c        
         - name: school_enrollment_c
         - name: state_initiative_c
         - name: state_program_eligible_c
+        - name: schools_in_district_c        
         - name: test_account_c
         - name: ultimate_account_owner_c
         - name: ultimate_parent_account_c
@@ -80,7 +87,6 @@ sources:
         - name: pct_multi_racial_c
         - name: pct_native_c 
         - name: pct_pacific_c
-
 
 
       - name: opportunity
@@ -118,8 +124,8 @@ sources:
         - name: last_modified_by_id
         - name: last_modified_date
         - name: license_unenforced_c
-        - name: loss_reason_c
-        - name: loss_notes_c
+        - name: closed_reason_c
+        - name: closed_notes_c
         - name: multi_year_arr_c
         - name: multi_year_order_c
         - name: netsuite_id_c
@@ -131,6 +137,7 @@ sources:
         - name: number_c
         - name: opportunity_score_id
         - name: owner_id
+        - name: Override_ARR_c
         - name: paid_date_c
         - name: payment_terms_c
         - name: po_amount_c
@@ -138,6 +145,7 @@ sources:
         - name: price_increase_arr_c
         - name: pricebook_2_id
         - name: probability
+        - name: progressive_billing_c
         - name: record_type_id
         - name: renewable_revenue_c
         - name: renewal_opportunity_c
@@ -146,6 +154,7 @@ sources:
         - name: source_opp_arr_c
         - name: stage_name
         - name: start_date_c
+        - name: subscription_term_c
         - name: total_arr_bookings_c
         - name: true_arr_c
         - name: true_arr_formula_c
@@ -176,6 +185,19 @@ sources:
         - name: quote_start_date_c
         - name: quote_total_discount_c
         - name: remaining_quota_c
+
+      - name: sbqq_quote_c
+        columns:     
+        - name: id
+        - name: progressive_payment_amount_2_c
+        - name: progressive_payment_amount_3_c
+        - name: progressive_payment_amount_4_c
+        - name: progressive_payment_amount_5_c
+        - name: progressive_payment_date_2_c
+        - name: progressive_payment_date_3_c
+        - name: progressive_payment_date_4_c
+        - name: progressive_payment_date_5_c
+
       - name: lcom_organization_c   
         columns: 
         - name: lcom_platform_organization_id_c

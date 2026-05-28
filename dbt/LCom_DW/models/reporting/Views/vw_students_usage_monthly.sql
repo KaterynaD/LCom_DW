@@ -15,7 +15,8 @@ select
 	,dist.SFDC_name  sfdc_district_name 
     ,case when dist.sfdc_district_enrollment=0 then dist.sfdc_school_enrollment else dist.sfdc_district_enrollment end as district_enrollment
 	,case when (dist.sfdc_state_initiative or dist.sfdc_state_initiative_school) then true else false end as state_initiative
-	,dist.sfdc_urban_rural as urban_rural
+	,cdist.sfdc_urban_rural as urban_rural
+	,cdist.sfdc_owner_name_text as district_owner_name
 	,fal.organization_school_id
 	,sch.lcom_organization_name as lcom_school_name	
 	,sch.SFDC_name as sfdc_school_name 
@@ -47,6 +48,8 @@ from {{ ref("fact_students_usage_monthly_snapshots") }} fal
 join {{ ref("dim_account_history") }} dist
 on fal.organization_district_id=dist.account_id 
 and fal.mon_lastday between dist.fromdate and  dist.todate
+join {{ ref("dim_account") }} cdist
+on fal.organization_district_id=cdist.account_id 
 join {{ ref("dim_account_history") }} sch
 on fal.organization_school_id=sch.account_id
 and fal.mon_lastday between sch.fromdate and  sch.todate

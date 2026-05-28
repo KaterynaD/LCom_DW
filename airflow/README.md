@@ -366,7 +366,7 @@ All manual DAGs have `schedule=None` and require manual trigger. They provide gr
 ### `sfdc_schema_drift_audit_dag.py`
 **DAG ID**: `sfdc_schema_drift_audit`
 
-**Purpose**: Automated schema drift detection for Salesforce tables — profiles current schema, compares with baseline, identifies missing columns, and traces downstream impact via column lineage.
+**Purpose**: Automated schema drift detection for Salesforce tables — profiles current schema, compares with baseline, identifies missing and 100% empty columns, and traces downstream impact via column lineage.
 
 **Schedule**: Controlled by `SCHEDULE_SFDC_SCHEMA_DRIFT_AUDIT` variable (default: 8:00 PM UTC)
 
@@ -376,7 +376,7 @@ Set LoadDate
     ↓
 Create Redshift Connections (from dbt profiles)
     ↓
-Manage Base Profile (if USE_EXISTING_BASE_PROFILE=NO: delete old base, rename current→base)
+Manage Base Profile (if USE_EXISTING_BASE_PROFILE=NO: delete old base, rename current→base otherwise preserve existing base profile)
     ↓
 ┌────────┬─────────┬──────────┬──────┬──────────┬──────────┬──────┬─────────┬──────────┐
 │Account │Opportunity│Opp Line │Case  │Training  │Product_2 │User  │Contact  │Campaign  │
@@ -384,9 +384,11 @@ Manage Base Profile (if USE_EXISTING_BASE_PROFILE=NO: delete old base, rename cu
 └────────┴──────────┴──────────┴──────┴──────────┴──────────┴──────┴─────────┴──────────┘
     ↓ (require at least 1 success)
 Branch on RUN_COLUMN_LINEAGE_FLAG
-    ├── YES → dbt compile → dbt docs generate → colibri generate → Compile Analyses
+    ├── YES → dbt docs generate → colibri generate → Compile Analyses
     └── NO → Skip
     ↓ (join)
+dbt compile
+    ↓
 Run Schema Drift Analysis & Send Report
     ↓
 Summary Notification
@@ -404,6 +406,10 @@ Summary Notification
    - Generates dbt docs and Colibri manifest
    - Uses `colibri_lineage.py` to trace missing column impact
    - Identifies which models directly/indirectly use missing columns
+   - If a missing or empty column is used in models -> USE_EXISTING_BASE_PROFILE variable is set to YES. Base profile is not recreated automatically till all issues are resoved (no drift, empty report). It can be recreated manually if needed using **sfdc_base_profiles_manual_run** dag
+   - Missing or empty columns not used in models do not impact USE_EXISTING_BASE_PROFILE variable. 
+   - If no schema drift issues detected -> USE_EXISTING_BASE_PROFILE variable is set to NO.
+   - Issues can be resolved by removing columns from models or by changing/reverting changes in Salesforce. In both case, finally, USE_EXISTING_BASE_PROFILE is set to NO when no missing or empty important for models columns are detected.
 
 3. **Drift Detection**:
    - Runs compiled SQL analyses: `profiles_stats.sql` and `missing_columns_lineage.sql`

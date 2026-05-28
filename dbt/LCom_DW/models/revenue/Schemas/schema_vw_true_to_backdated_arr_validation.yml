@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: vw_true_to_backdated_arr_validation
+    description: >
+
+      Validation view that compares True ARR to Backdated ARR by month.
+
+      It is used to validate that True ARR and Backdated ARR are nearly aligned for the same month
+      when evaluated at month-end. A small difference is expected, primarily due to contracts
+      with incorrect or inconsistent start and end dates.
+
+
+    config:
+      tags:
+        - validation
+        - revenue
+        - arr
+
+    columns:
+      - name: mon_year
+        description: >
+          Reporting month in YYYYMM integer format.
+          Identifies the month for which True ARR and Backdated ARR are compared.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+      - name: true_arr_amount
+        description: >
+          Total True ARR amount for the month.
+          Includes ARR records from fact_arr where arr_type = 'True', record_type = 'ARR',
+          and the current date falls between ARR activation and deactivation dates.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: backdated_arr_amount
+        description: >
+          Total Backdated ARR amount for the month.
+          Includes ARR records from fact_arr where arr_type = 'Backdated', record_type = 'ARR',
+          and the day after mon_lastday falls between ARR activation and deactivation dates.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: diff
+        description: >
+          Absolute signed difference between True ARR and Backdated ARR for the month,
+          calculated as true_arr_amount minus backdated_arr_amount.
+        data_type: numeric(38,10)
+
+      - name: pct_diff
+        description: >
+          Percent difference between True ARR and Backdated ARR relative to True ARR,
+          calculated as 100 * abs(true_arr_amount - backdated_arr_amount) / true_arr_amount.
+
+          This value is expected to remain very small, typically below 1 percent,
+          with residual variance mainly caused by contracts that have issues in start and end dates.
+        data_type: float

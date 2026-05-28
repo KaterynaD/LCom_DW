@@ -103,6 +103,7 @@ end as current_enrollment,
 case
 when a.sfdc_record_type = 'L' then 'District'
 else 'School' END as current_account_type,
+a.sfdc_customer_level as current_customer_level,
 a.sfdc_urban_rural as current_urban_rural,
 --
 a.LCOM_organization_type current_lcom_organization_type
@@ -164,6 +165,7 @@ current_county ,
 current_owner ,
 current_enrollment ,
 current_account_type ,
+current_customer_level,
 current_urban_rural ,
 current_lcom_organization_type
 from data

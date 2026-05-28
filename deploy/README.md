@@ -8,8 +8,13 @@ It is written so that you can:
 - safely operate, debug, and extend the pipeline without surprises
 
 ---
+TBD
 
-## 1. CI/CD Goals (Non-Negotiables)
+Database objects created outside of dbt , even if they can be created via dbt macros are NOT part of the deployment
+Views, even if there is a corresponding dbt model are NOT created in the deployment process
+---
+
+## 1. CI/CD Goals
 
 The CI/CD system is designed around the following hard requirements:
 
@@ -110,7 +115,6 @@ Location:
 ```
 
 Scripts:
-- `deploy_release.sh` – core host deploy logic
 - `deploy_release_from_actions.sh` – deploy_to_ec2_AWSPRDDWH001 GitHub Actions entrypoint
 - `publish_dbt_docs.sh` – docs_publish GitHub Actions entrypoint
 
@@ -175,9 +179,12 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
 - The new release is deployed and `dbt deps` is executed to install dependencies.
 - `dbt compile` is run again (with the same `loaddate`) to generate a new manifest for the new release.
 - The old and new manifests are compared, and a list of changed models is printed.
-  - If `RUN_QA_STATE_TESTS` is set to `true`:
+  - If `RUN_QA_STATE_TESTS` is set to `true` and there are dbt modified models:
     - The QA database is cleaned of all schemas using a dbt macro.
     - A `dbt run` is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
+    - TBD preparation QA environment for SQL materialization (Sstored procedures and tables are created in QA) I may remove this step soon.
+    - Profiling materialization are not validated (and Profiling is very slow and need a specific target)
+    - List of modified views is sent to validate_views macro and select runs. This is required to validate No Schema Binding Redshift views. If no errors, modified view materialized models are deployed in Prod once because they are not part of routing daily runs.
 
 - Documentation and column-level lineage are generated:
   - `dbt docs generate`

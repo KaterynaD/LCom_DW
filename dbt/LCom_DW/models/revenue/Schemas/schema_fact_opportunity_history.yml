@@ -198,7 +198,7 @@ models:
     - not_null
   - name: quote_total_discount
     data_type: double precision
-    description: "{{ doc('column_quote_total_discount') }}"
+    description: Do not use. Depricated.
     constraints:
     - type: not_null
     data_tests:

@@ -24,8 +24,8 @@ DISTSTYLE KEY
 	)
 ;
 
-ALTER TABLE content_delivery_usage.fact_launches_weekly_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);   
-ALTER TABLE content_delivery_usage.fact_launches_weekly_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);   
+--ALTER TABLE content_delivery_usage.fact_launches_weekly_snapshots ADD FOREIGN KEY (organization_district_id) REFERENCES common.dim_account(account_id);   
+--ALTER TABLE content_delivery_usage.fact_launches_weekly_snapshots ADD FOREIGN KEY (organization_school_id) REFERENCES common.dim_account(account_id);   
 
 
 COMMENT ON TABLE content_delivery_usage.fact_launches_weekly_snapshots IS 'Cumulative activity from the start of a  school year (YTD) till week end (Sunday) per student aggregated to the school level';

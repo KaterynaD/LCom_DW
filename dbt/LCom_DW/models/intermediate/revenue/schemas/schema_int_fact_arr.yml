@@ -1,0 +1,252 @@
+version: 2
+
+models:
+  - name: int_fact_arr
+    description: >-
+      Intermediate fact-style model for ARR. Combines monthly ARR movement rows
+      with fiscal-year running total ARR rows, producing ARR facts at the grain of
+      ARR type, record type, month, opportunity, product, and sfdc bucket.
+      It's possible to have duplicates accross Starting and Expired bucket because it's the same for New, Upsell or Renewal sfdc bucket.
+      In ARR record_type (running total) Starting and Expired buckets can be in the same month
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - intermediate
+        - revenue
+        - arr
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - ARR_Type
+            - record_type
+            - mon_year
+            - opportunity_id
+            - sfdc_product_id
+            - bucket
+            - bucket_sfdc
+
+    columns:
+
+      - name: ARR_Type
+        description: Type of ARR (True, Preliminary, Backdated) determined by opportunity lifecycle timing logic.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: record_type
+        description: >-
+          ARR row type. Includes ARR for fiscal-year running totals and source monthly movement
+          row types such as ARR-Starting, ARR-MonthlyAdded, and ARR-MonthlyReduced.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: mon_year
+        description: Calendar month in YYYYMM-style integer for the ARR fact row.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+      - name: mon_lastday
+        description: Last day of the month corresponding to mon_year.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: fiscalyear
+        description: Fiscal year for the ARR fact row in a form yyyy_start/yyyy_end.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: fiscalyear_mon
+        description: Fiscal month number within the fiscal year for the ARR fact row.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+      - name: hasparent
+        description: True when the opportunity has at least one prior parent opportunity in its renewal chain.
+        data_type: boolean
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+        data_type: varchar(780)
+        constraints:
+          - type: not_null
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: start_date
+        description: >-
+          Effective start date carried from int_arr_monthly_changes.
+          This model does not recalculate or apply any additional logic to start_date.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: start_date_sfdc
+        description: >-
+          Original Salesforce opportunity start date before ARR timing adjustments.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: end_date
+        description: >-
+          Effective end date carried from int_arr_monthly_changes.
+          This model does not recalculate or apply any additional logic to end_date.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: end_date_sfdc
+        description: >-
+          Original Salesforce opportunity end date before ARR timing adjustments.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: arr_activation_date
+        description: >-
+          ARR activation date is applicable only for Backdated ARRs in most cases, but also for other ARR types for Expirations.
+          This model does not recalculate or apply any additional logic to end_date.
+          
+          Default, 1900-01-01 in allother ARR types
+
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: arr_deactivation_date
+        description: >-
+          ARR deactivation date is applicable only for Backdated ARR.
+          This model does not recalculate or apply any additional logic to end_date.
+
+          Default, 3000-01-01 in allother ARR types
+        data_type: date
+        constraints:
+          - type: not_null          
+
+      - name: renewal_opportunity_id
+        description: "{{ doc('column_renewal_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: renewal_stage_name
+        description: Stage name of the linked renewal opportunity.
+        data_type: varchar(780)
+        constraints:
+          - type: not_null
+
+      - name: renewal_invoiced_date
+        description: Invoiced date of the linked renewal opportunity.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_close_date
+        description: Close date of the linked renewal opportunity.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_start_date
+        description: >-
+          Effective renewal start date carried from int_arr_monthly_changes.
+          This model does not recalculate or apply any additional logic to renewal_start_date.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_start_date_sfdc
+        description: >-
+          Original Salesforce start date of the linked renewal opportunity before ARR timing adjustments.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_end_date
+        description: End date of the linked renewal opportunity.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: bucket
+        description: >-
+          Normalized ARR bucket used for reporting and fiscal-year running calculations.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+      - name: bucket_sfdc
+        description: Original upstream bucket value before normalization.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+      - name: total_price
+        description: ARR amount for the current opportunity contribution on this fact row.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: parent_total_price
+        description: ARR amount from the parent opportunity context on this fact row.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: max_parent_end_date
+        description: >-
+          Effective parent opportunity end date carried from int_arr_monthly_changes.
+          This model does not recalculate or apply any additional logic to max_parent_end_date.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: max_parent_end_date_sfdc
+        description: Original latest parent opportunity end date before ARR timing adjustments.
+        data_type: date
+        constraints:
+          - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
+		            

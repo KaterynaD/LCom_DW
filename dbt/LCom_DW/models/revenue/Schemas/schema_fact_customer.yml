@@ -1,0 +1,90 @@
+version: 2
+
+models:
+  - name: fact_customer
+    description: '{{ doc("table_fact_customer") }}'
+    config:
+      contract:
+        enforced: false
+      tags:
+        - fact
+        - revenue
+        - customers   
+        
+
+
+    columns:
+
+      - name: arr_type
+        description: Base type of ARR (True, Preliminary, Backdated) for customers
+        data_type: varchar(20)
+        constraints:
+          - type: not_null   
+        data_tests:
+          - accepted_values:
+              values: [
+                'Preliminary', 'Backdated', 'True'
+              ]              
+
+      - name: record_type
+        data_type: varchar(20)
+        description: >
+          Lifecycle category assigned to the parent account for the month.  
+          Includes both raw and derived types:
+            • **New** – first contract ever for the parent account  in the month
+            • **Returning** – contracts resume in the month (had an active contract in a past, but not in a previous month)  
+            • **Churn** – contract canceled (Closed Lost) during the month and no other active contracts exist for the customer or its child accounts in the month.
+            • **Expired** – contract expired during the month when no Closed Lost associated opportunity present and no other active contracts exist for the customer or its child accounts in the month.
+            • **Contract Active** – calculated from active contracts in the current month.
+            • **Net Active** – cumulative metric starting from Fiscal Year contracts active at teh Start of Fiscal Year plus contracts carried into the period or removed from the period. 
+            Calculated as: Starting + New + Returning - Churn - Expired
+            • **Total Active** – same as Net Active but excluding Churn/Expired deductions.
+        constraints:
+          - type: not_null 
+        data_tests:
+          - accepted_values:
+              values: [
+                'New', 'Returning', 'Churn', 'Total Active', 'Net Active', 'Contract Active'
+              ]                   
+
+      - name: mon_year
+        description: "{{ doc('column_revenue_mon_year') }}"
+        data_type: integer
+        constraints:
+          - type: not_null        
+
+      - name: mon_lastday
+        description: "{{ doc('column_revenue_mon_lastday') }}"
+        data_type: date
+        constraints:
+          - type: not_null   
+
+      - name: fiscalyear
+        description: "{{ doc('column_fiscalyear') }}"
+        data_type: varchar(20)
+        constraints:
+          - type: not_null      
+
+      - name: fiscalyear_mon
+        description: "{{ doc('column_fiscalyear_mon') }}"
+        data_type: integer
+        constraints:
+          - type: not_null                           
+
+
+      - name: customer_id
+        description: "{{ doc('column_sfdc_ultimate_parent_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null         
+        data_tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id             
+
+
+      - name: loaddate
+        description: "{{ doc('column_loaddate') }}"
+        data_type: timestamp
+        constraints:
+          - type: not_null                    

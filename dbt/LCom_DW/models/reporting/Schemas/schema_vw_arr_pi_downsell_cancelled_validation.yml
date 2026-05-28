@@ -1,0 +1,127 @@
+version: 2
+
+models:
+  - name: vw_arr_pi_downsell_cancelled_validation
+    description: >
+
+      Validation view that compares Price Increase, Downsell, and Cancelled ARR amounts
+      calculated from fact_arr to the corresponding metrics calculated in Salesforce
+      at the opportunity level.
+
+      The view is used to identify discrepancies between warehouse ARR logic and Salesforce metrics.
+      Some differences may be expected because of manual adjustments, timing differences,
+      or issues in Salesforce-calculated metrics.
+
+    config:
+      tags:
+        - revenue
+        - arr
+
+    columns:
+      - name: fiscalyear
+        description: >
+          Fiscal year for the ARR amounts being validated.
+
+
+      - name: arr_type
+        description: >
+          ARR type of the validated record, such as True, Preliminary, or Backdated.
+
+
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+
+
+      - name: opportunity_number
+        description: "{{ doc('column_opportunity_number') }}"
+
+
+      - name: opportunity_name
+        description: "{{ doc('column_opportnity_name') }}"
+
+
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+
+
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+
+
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+
+
+      - name: start_date
+        description: "{{ doc('column_start_date') }}"
+
+
+      - name: end_date
+        description: "{{ doc('column_end_date') }}"
+
+
+      - name: arr
+        description: "{{ doc('column_arr') }}"
+
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+
+
+      - name: sfdc_account_id
+        description: "{{ doc('column_sfdc_account_id') }}"
+
+
+      - name: account_name
+        description: "{{ doc('column_sfdc_name') }}"
+
+
+      - name: isMultiParents
+        description: >
+          Indicates whether the opportunity has multiple parent opportunities.
+
+
+      - name: hasUpsellParent
+        description: >
+          Indicates whether the opportunity has an upsell parent opportunity.
+
+
+      - name: hasOverrideARR
+        description: >
+          Indicates whether the opportunity has an override ARR amount.
+
+
+      - name: hasIssues
+        description: >
+          Indicates whether the opportunity has issues based on the dim_arr_audit table.
+
+
+      - name: price_increase_calculated
+        description: >
+          Price Increase amount calculated from fact_arr using placeholder price increase/downsell buckets
+          for opportunities that are not Closed Lost.
+
+
+      - name: price_increase_salesforce
+        description: "{{ doc('column_price_increase_arr') }}"
+
+
+      - name: downsell_calculated
+        description: >
+          Downsell amount calculated from fact_arr using placeholder price increase/downsell buckets
+          for opportunities that are not Closed Lost.
+
+
+      - name: downsell_salesforce
+        description: "{{ doc('column_downsell') }}"
+
+
+      - name: cancelled_calculated
+        description: >
+          Cancelled amount calculated from fact_arr using cancellation buckets
+          for Closed Lost opportunities.
+
+
+      - name: cancelled_salesforce
+        description: "{{ doc('column_true_arr_formula') }}"

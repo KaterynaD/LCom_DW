@@ -24,7 +24,7 @@ from {{ source("fivetran_salesforce_quickstart","user") }} sfdc_user
 (
 select
 stg.id as employee_id,
-isnull(stg.name, '{{ var("default_varchar") }}') as name,
+isnull(stg.name, '{{ var("default_varchar") }}') AS name,
 isnull(stg.alias, '{{ var("default_varchar") }}') as alias,
 isnull(stg.community_nickname, '{{ var("default_varchar") }}') as community_nickname,
 isnull(stg.username, '{{ var("default_varchar") }}') as username,

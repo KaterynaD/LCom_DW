@@ -72,11 +72,11 @@ Contracts
 
 
 {% docs column_loss_reason %}
-Loss Reason
+Closed (Won or Lost)  Reason 
 {% enddocs %}
 
 {% docs column_loss_notes %}
-Lost Notes
+Closed (Won or Lost)  Notes
 {% enddocs %}
 
 {% docs column_multi_year_arr %}
@@ -147,6 +147,39 @@ Primary Quote approved (Primary Quote approved checked if status is approved)
 Probability (%)
 {% enddocs %}
 
+{% docs column_progressive_billing %}
+Progressive Billing
+{% enddocs %}
+
+{% docs column_progressive_payment_amount_2 %}
+Progressive Payment Amount 2
+{% enddocs %}
+{% docs column_progressive_payment_amount_3 %}
+Progressive Payment Amount 3
+{% enddocs %}    
+{% docs column_progressive_payment_amount_4 %}
+Progressive Payment Amount 4
+{% enddocs %}    
+{% docs column_progressive_payment_amount_5 %}
+Progressive Payment Amount 5
+{% enddocs %}    
+{% docs column_progressive_payment_date_2 %}
+Progressive Payment Date 2
+{% enddocs %}    
+{% docs column_progressive_payment_date_3 %}
+Progressive Payment Date 3
+{% enddocs %}    
+{% docs column_progressive_payment_date_4 %}
+Progressive Payment Date 4
+{% enddocs %}    
+{% docs column_progressive_payment_date_5   %}
+Progressive Payment Date 5s
+{% enddocs %}    
+
+
+
+
+
 {% docs column_quota %}
 Quota
 {% enddocs %}
@@ -177,10 +210,6 @@ Quote Notes (Quote Notes)
 
 {% docs column_quote_start_date %}
 Quote Start Date
-{% enddocs %}
-
-{% docs column_quote_total_discount %}
-Quote Total Discount
 {% enddocs %}
 
 {% docs column_renewable_revenue %}
@@ -272,3 +301,14 @@ Subscription End Date (Subscription End Date)
 {% docs column_subscription_start_date %}
 Subscription Start Date (Subscription Start Date)
 {% enddocs %}
+
+{% docs column_subscription_term %}
+Total Subscription term for a Progressive opportunity. It can be different then End Date - Start Date if there is a commitment to pay for few next years. progressive_billing is true "PROG" is in the name of the opportunity
+{% enddocs %}
+
+{% docs column_Override_ARR %}
+ARR used as interim value when source opp ARR is not present due to no contract history.  Used in opps that were imported from NS at SF go live.  Should be deprecated by end of 2023. But it's still in active use as of May 2026 active opportunities
+{% enddocs %}
+
+
+Override_ARR

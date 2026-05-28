@@ -1,0 +1,100 @@
+version: 2
+
+models:
+  - name: vw_arr_validation_current_to_calculated
+    description: >
+
+      Validation view that compares current ARR based on opportunities active today
+      to ARR calculated in fact_arr.
+
+      Current ARR is based on today's active opportunities using opportunity start and end dates.
+      Calculated ARR comes from fact_arr and includes renewal, price increase, downsell,
+      and cancellation logic.
+
+      The view is used to investigate discrepancies between current ARR and calculated ARR,
+      including whether the discrepancy is already explained by a known ARR issue.
+
+    config:
+      tags:
+        - revenue
+        - arr
+
+    columns:
+      - name: known_issue
+        description: >
+          Indicator showing whether the discrepancy is already recognized as a known ARR issue.
+
+
+      - name: known_issue_description
+        description: >
+          Description of the known ARR issue associated with the opportunity, when applicable.
+
+
+      - name: arr_type
+        description: >
+          ARR type of the validated record, such as True, Preliminary, or Backdated.
+
+
+      - name: validation_issue
+        description: >
+          Validation issue identified when comparing current ARR to ARR calculated in fact_arr.
+
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+
+
+      - name: opportunity_number
+        description: "{{ doc('column_opportunity_number') }}"
+
+
+      - name: opportunity_name
+        description: "{{ doc('column_opportnity_name') }}"
+
+
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+
+
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+
+
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+
+
+      - name: start_date
+        description: "{{ doc('column_start_date') }}"
+
+
+      - name: end_date
+        description: "{{ doc('column_end_date') }}"
+
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+
+
+      - name: sfdc_account_id
+        description: "{{ doc('column_sfdc_account_id') }}"
+
+
+      - name: account_name
+        description: "{{ doc('column_sfdc_name') }}"
+
+
+      - name: current_amount
+        description: >
+          Current ARR amount based on opportunities active today using opportunity start and end dates.
+
+
+      - name: calculated_amount
+        description: >
+          ARR amount calculated in fact_arr for the same opportunity, including renewal,
+          price increase, downsell, and cancellation logic.
+
+
+      - name: diff
+        description: >
+          Difference between current ARR amount and calculated ARR amount for the opportunity.

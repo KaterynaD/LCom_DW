@@ -59,6 +59,8 @@
     {{ return({}) }}
   {% endif %}
 
+ 
+
   {# Resolve the schema audit source relation #}
   {% set profiles_relation = source(profile_src[0], profile_src[1]) %}
 
@@ -76,6 +78,41 @@
     {% do in_list.append("'" ~ c ~ "'") %}
   {% endfor %}
 
+  {# Number of used columns #}
+  {% set num_used_columns = in_list | length %}
+
+  {# Validate Current profile is present and has at least 60% used columns #}
+  {#  only if it's a Prod not QA, empty run                                #}
+  {% if not flags.EMPTY %}
+  {% set vq %}
+
+      select
+        count(column_name)/{{ num_used_columns }}::float as rt_present
+      from {{ profiles_relation }}
+      where profile_name = '{{ current_profile }}'
+        and lower(table_name) = lower('{{ table_name }}')
+        and lower(column_name) in ({{ in_list | join(', ') }})
+        and pct_nulls < 100 --100% empty column is considered missing
+
+  {% endset %}
+
+  {# Execute the query against the warehouse #}
+  {% set res = run_query(vq) %}
+  {% if res is none %}
+    {{ exceptions.raise_compiler_error(
+        "current_profile: run_query returned none; check profiles source & permissions."
+    ) }}
+  {% endif %}
+
+  {% set row = res.rows[0] %}
+  {% set rt_present = row[0] %}
+  {% if rt_present <= 0.6 %}
+    {{ exceptions.raise_compiler_error(
+        "current_profile: current profile is completely missing or more than 60% of used columns are not present"
+    ) }}
+  {% endif %}
+
+  {% endif %}
   {# ---------------------------------------------------------------------------
      SQL logic:
        1. Identify columns present in base profile but missing in current profile
@@ -99,6 +136,7 @@
       from {{ profiles_relation }}
       where profile_name = '{{ current_profile }}'
         and lower(table_name) = lower('{{ table_name }}')
+        and pct_nulls < 100 --100% empty column is considered missing
     )
     select
       a.column_name,

@@ -1,0 +1,252 @@
+version: 2
+
+models:
+  - name: int_arr_base
+    description: '{{ doc("table_int_arr_base") }}'
+    config:
+      contract:
+        enforced: true
+      tags:
+        - staging
+        - revenue
+        - arr
+
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - ARR_Type
+            - mon_year
+            - opportunity_id
+            - sfdc_product_id
+            - bucket
+
+    columns:
+
+      - name: ARR_Type
+        description: Type of ARR (True, Preliminary, Backdated) determined by opportunity lifecycle timing logic.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: mon_year
+        description: Calendar month in YYYYMM-style integer from dim_month for the effective ARR start month.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+      - name: mon_lastday
+        description: Last day of the month corresponding to mon_year.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: fiscalyear
+        description: Fiscal year for the effective ARR start month  in a form yyyy_start/yyyy_end.
+        data_type: varchar(20)
+        constraints:
+          - type: not_null
+
+      - name: fiscalyear_mon
+        description: Fiscal month number within the fiscal year for the effective ARR start month.
+        data_type: integer
+        constraints:
+          - type: not_null
+
+      - name: hasparent
+        description: True when the opportunity has at least one prior parent opportunity in its renewal chain.
+        data_type: boolean
+        constraints:
+          - type: not_null
+
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+        data_type: varchar(780)
+        constraints:
+          - type: not_null
+
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: start_date
+        description: >-
+          Adjusted ARR start date used for True and Preliminary ARR logic: 
+          - In the first step it is the greater of the current opportunity invoiced date if it's won or close date if lost and the original start date.
+          - In the second step it is further adjusted so, if a parent of the current opportunity ends after the current starts, the current start date is the next day after its parent ends.
+          
+          Backdated ARR logic uses only the second step based on the original Salesforce start date. The first step is implemented in Activation date.
+          
+          This  transformed start_date is the date used to assign the row to dim_month and therefore drives the monthly grain of the model.
+
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: start_date_sfdc
+        description: >-
+          Original Salesforce opportunity start date before preliminary ARR timing logic
+          and parent-overlap adjustment were applied.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: end_date
+        description: >-           
+          Adjusted ARR end date used ONLY for Preliminary ARR logic. 
+          It is calculated as the earlier of the renewal-based stop date and the grace-period stop date:
+          - The renewal-based stop date is: one day before won renewal invoiced date or lost renewal close date or 3000-01-01 when no qualifying renewal stop dates exists.
+          - The grace-period stop date is: end_date + 6 months for Biz Dev buckets, end_date + 90 days for all Texas accounts, and end_date + 60 days for all other accounts.
+          
+          So this field is not simply the contractual end date. It is the effective ARR stop date after considering renewal replacement timing and allowed post-term grace periods.
+
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: end_date_sfdc
+        description: >-
+          Original Salesforce opportunity end date before preliminary ARR end-date extension
+          logic was applied.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: arr_activation_date
+        description: >-
+          ARR activation date is applicable only for Backdated ARR and used in downstream ARR logic:
+          - For Closed Won / Closed-Won Upsell it is invoiced_date; 
+          - For Closed Lost it is close_date; otherwise default date.
+          It's a default 1900-01-01 in other ARR types.
+
+        data_type: date
+        constraints:
+          - type: not_null          
+
+      - name: renewal_opportunity_id
+        description: "{{ doc('column_renewal_opportunity_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: renewal_stage_name
+        description: Stage name of the linked renewal opportunity. Defaults to 'Unknown' when absent.
+        data_type: varchar(780)
+        constraints:
+          - type: not_null
+
+      - name: renewal_invoiced_date
+        description: Invoiced date of the linked renewal opportunity. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_close_date
+        description: Close date of the linked renewal opportunity. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_start_date
+        description: >-
+          Adjusted ARR start date of the linked renewal opportunity used for True and Preliminary ARR logic. 
+          - In the first step it is the greater of the renewal opportunity invoiced date if it's won or close date if lost and the renewal start date.
+          - In the second step it is further adjusted so, if the current opportunity ends after the renewal starts, the renewal start date is the next day after the current ends.
+          
+          Backdated ARR logic uses only the second step based on the original Salesforce renewal start date.
+
+          This field is used later to determine continuity or gaps between current and renewal ARR.
+
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_start_date_sfdc
+        description: >-
+          Original Salesforce start date of the linked renewal opportunity before preliminary
+          ARR timing adjustments were applied.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: renewal_end_date
+        description: End date of the linked renewal opportunity. Defaults to 1900-01-01 when absent.
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: bucket
+        description: >-
+          ARR bucket at the opportunity product line level. May also contain generated placeholder
+          or cancellation bucket values for downstream price increase, downsell, and cancellation logic.
+        data_type: varchar(100)
+        constraints:
+          - type: not_null
+
+      - name: total_price
+        description: >-
+          Current opportunity aggregated ARR amount for this month/opportunity/product/bucket grain.
+          For cancellation placeholder rows this may be 0 after final null handling.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: parent_total_price
+        description: >-
+          Parent opportunity aggregated ARR amount for the same product and bucket context.
+          Defaults to 0 when null.
+        data_type: numeric(38,10)
+        constraints:
+          - type: not_null
+
+      - name: max_parent_end_date
+        description: >-
+          Adjusted latest parent opportunity end date used for preliminary ARR logic. 
+          It is calculated as the earlier of the current-based stop date and the grace-period stop date:
+          - The current-based stop date is: one day before won current opportunity invoiced date or lost current opportunity close date or 3000-01-01 when no qualifying current stop dates exists (this is added just in case, there is always current stop logic).
+          - The grace-period stop date is: latest parent opportunity end_date + 6 months for Biz Dev buckets, latest parent opportunity end_date + 90 days for all Texas accounts, and latest parent opportunity end_date + 60 days for all other accounts.
+          
+          So this field is not simply the contractual latest parent opportunity end date. It is the effective ARR stop date after considering current replacement timing and allowed post-term grace periods.
+
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: max_parent_end_date_sfdc
+        description: Original latest parent opportunity end date before preliminary extension logic was applied.
+        data_type: date
+        constraints:
+          - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
+		  

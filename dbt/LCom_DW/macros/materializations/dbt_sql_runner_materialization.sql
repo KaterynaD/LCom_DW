@@ -16,8 +16,7 @@
 {{ run_hooks(pre_hooks, inside_transaction=True) }}
 
 {# Run model SQL (as a stored procedure call)#}
-{# If it's "empty" excution for QA - we do not use non dbt functionality #}
-{% if not flags.EMPTY %}
+
 
 {% set run_sp_operation %}
 
@@ -54,16 +53,7 @@ select 1
 
   {{ run_hooks(post_hooks, inside_transaction=False) }}
 
-{# ===== If it's "empty" excution we just need to run main  ===== #}
-{% else %}
 
-{% call statement('main') %}
-
-select 1
-
- {% endcall %}
-
-{% endif %}
 
  {{ return({'relations': [target_relation]}) }}
 

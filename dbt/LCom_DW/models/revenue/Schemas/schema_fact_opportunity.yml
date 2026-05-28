@@ -268,6 +268,13 @@ models:
     description: "{{ doc('column_owner_id') }}"
     constraints:
     - type: not_null
+
+  - name: Override_ARR
+    data_type: numeric(38,10)
+    description: "{{ doc('column_Override_ARR') }}"
+    constraints:
+    - type: not_null
+
   - name: paid_date
     data_type: date
     description: "{{ doc('column_paid_date') }}"
@@ -304,6 +311,51 @@ models:
     constraints:
     - type: not_null  
 
+  - name: progressive_billing
+    data_type: boolean
+    description: "{{ doc('column_progressive_billing') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_2
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_2') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_3
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_3') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_4
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_4') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_amount_5
+    data_type: numeric(38,10)
+    description: "{{ doc('column_progressive_payment_amount_5') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_2
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_2') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_3
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_3') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_4
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_4') }}"
+    constraints:
+    - type: not_null
+  - name: progressive_payment_date_5
+    data_type: date
+    description: "{{ doc('column_progressive_payment_date_5') }}"
+    constraints:
+    - type: not_null
   - name: quota
     data_type: varchar(250)
     description: "{{ doc('column_quota') }}"
@@ -343,12 +395,7 @@ models:
     data_type: date
     description: "{{ doc('column_quote_start_date') }}"
     constraints:
-    - type: not_null
-  - name: quote_total_discount
-    data_type: double precision
-    description: "{{ doc('column_quote_total_discount') }}"
-    constraints:
-    - type: not_null      
+    - type: not_null   
   - name: renewable_revenue
     data_type: numeric(38,10)
     description: "{{ doc('column_renewable_revenue') }}"
@@ -393,7 +440,17 @@ models:
     data_type: date
     description: "{{ doc('column_subscription_start_date') }}"
     constraints:
-    - type: not_null    
+    - type: not_null 
+  - name: subscription_start_date
+    data_type: date
+    description: "{{ doc('column_subscription_start_date') }}"
+    constraints:
+    - type: not_null 
+  - name: subscription_term
+    data_type: integer
+    description: "{{ doc('column_subscription_term') }}"
+    constraints:
+    - type: not_null
   - name: total_arr_bookings
     data_type: numeric(38,10)
     description: "{{ doc('column_total_arr_bookings') }}"

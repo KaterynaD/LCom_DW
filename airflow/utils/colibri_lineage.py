@@ -21,15 +21,16 @@ Expected manifest structure:
 }
 
 Public API:
-  get_column_lineage(manifest_path: str, source: str, source_column: str) -> dict
+  get_column_lineage(manifest_path: str, source: str, source_column: str, flg: str) -> dict
 
-Output schema (as requested):
+Output schema :
 {
   "source": "<source parameter>",
   "source_column": "<source_column parameter>",
   "direct_usage": [ "<immediate model targets>", ... ],
   "downstream_usage": [ "<unique downstream model targets>", ... ],
-  "error": "<string or empty>"
+  "error": "<string or empty>",
+  "flg": "<flg parameter>"
 }
 """
 
@@ -175,7 +176,7 @@ def _all_models_in_path(path: List[Tuple[str, str]]) -> List[str]:
     return out
 
 
-def get_column_lineage(manifest_path: str, source: str, source_column: str) -> Dict[str, object]:
+def get_column_lineage(manifest_path: str, source: str, source_column: str, flg: str) -> Dict[str, object]:
     """
     Main function requested by you.
 
@@ -185,6 +186,7 @@ def get_column_lineage(manifest_path: str, source: str, source_column: str) -> D
       - direct_usage
       - downstream_usage
       - error
+      - flg (Missing or Empty)
     """
     result: Dict[str, object] = {
         "source": source,
@@ -192,6 +194,7 @@ def get_column_lineage(manifest_path: str, source: str, source_column: str) -> D
         "direct_usage": [],
         "downstream_usage": [],
         "error": "",
+        "flg": flg,
     }
 
     try:
