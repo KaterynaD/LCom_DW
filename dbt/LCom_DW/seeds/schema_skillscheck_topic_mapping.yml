@@ -1,0 +1,39 @@
+version: 2
+
+seeds:
+  - name: skillscheck_topic_mapping
+    description: |
+      Staging table for mapping of partial assessment names and levels to their topic (or skill). This table is used to populate a working table (model) as a source because dbt contract does not work in Redshift 
+      for seeds. The dbt seed can be replaced with an external table based on a file in S3 bucket if populated more than once a year.
+
+      This mapping is a manually created csv file that primarily gives topics to the "unit"-based skills check tests and combines tests for Productivity Tools and Computational Thinking into one topic.
+    config:
+      schema: staging
+      column_types:
+        assessment_set_name_partial: varchar(50) not null
+        level: varchar(10) not null
+        topic_name: varchar(50) not null
+      contract:
+        enforced: true
+      tags: 
+        - dim
+
+    columns:
+
+      - name: assessment_set_name_partial
+        data_type: varchar(50)
+        description: partial name of assessment set (stripped of level info)
+        constraints:
+          - type: not_null
+
+      - name: level
+        data_type: varchar(10)
+        description: level of the assessment set (e.g. 'Level 1', 'Levels 4-5', 'Level MS', etc.)
+        constraints:
+          - type: not_null
+
+      - name: topic_name
+        data_type: varchar(50)
+        description: topic or skill name that the assessment set maps to (e.g. 'Artificial Intelligence', 'Productivity Tools & Computational Thinking', etc.)
+        constraints:
+          - type: not_null
