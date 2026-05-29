@@ -57,5 +57,5 @@ opportunity_id::varchar(300),
 sfdc_account_id::varchar(300),
 sfdc_ultimate_parent_id::varchar(300),
 amount::float,
-'{{ var("loaddate") }}'::timestamp as loaddate
+'{{ var("loaddate") }}'::timestamp AS loaddate
 from starting_data
