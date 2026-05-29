@@ -1,7 +1,7 @@
 -- Uniqueness test for the configured unique_key
 -- Ensures no duplicate rows for the unique grain
 select
-  schoolyear,
+  calendaryear,
   organization_district_id,
   user_account_id,
   assessment_set_id,
