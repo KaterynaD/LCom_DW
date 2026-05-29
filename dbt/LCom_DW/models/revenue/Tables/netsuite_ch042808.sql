@@ -25,7 +25,7 @@ rev_rec_start_date_::date as start_date,
 rev_rec_end_date_::date as end_date,
 transaction_number_::varchar(500) as transaction_number,
 date_::date as invoiced_date,
-replace(replace(sales_, '$', ''), ',', '')::double precision as sales,
+replace(replace(replace(replace(sales_, '$', ''), ',', ''), '(', '-'), ')', '')::double precision as sales,
 Created_From_::varchar(100) as created_from,
 sf_net_suite_order_id_::varchar(500) as sf_netsuite_order_id,
 address_billing_address_state_::varchar(100) as billing_state
