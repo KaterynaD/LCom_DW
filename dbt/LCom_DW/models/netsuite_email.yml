@@ -1,0 +1,13 @@
+---
+sources:
+  - name: fivetran_email
+    description: "Source for email data sent to lighthouse_averaging.fivetran_netsuite.netsuite@email-connector.fivetran.com and loaded by Fivetran. Fivetran loads data in rawdata.fivetran_email schema."
+    database: rawdata
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+
+      - name: ch_042808
+        description: "Table for data from NetSuite CH042808 report."
