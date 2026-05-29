@@ -16,7 +16,7 @@
         fo.invoiced_date ,
         fo.close_date,
         -- Owner
-        e.name AS opportunity_owner_name,
+        e.name as opportunity_owner_name,
 
         -- Account
         a.sfdc_account_id,

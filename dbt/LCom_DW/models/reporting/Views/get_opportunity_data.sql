@@ -6,7 +6,7 @@
             DISTINCT flo.netsuite_order_id,
             s.sku_id,
             s.sku_name,
-            flo.schoolcount AS ord_school_count,
+            flo.schoolcount as ord_school_count,
             flo.studentcount AS ord_student_count,
             flo.startdate  AS ord_start_date,
             flo.expirationdate as ord_end_date,
