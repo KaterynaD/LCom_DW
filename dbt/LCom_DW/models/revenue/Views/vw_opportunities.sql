@@ -23,7 +23,7 @@
         a.sfdc_name account_name,
         a.sfdc_customer_level account_customer_level,
         a.sfdc_billing_state account_billing_state,
-        case when (a.sfdc_state_initiative or a.sfdc_state_initiative_school) then true else false end as account_state_initiative,
+        case when (a.sfdc_state_initiative or a.sfdc_state_initiative_school) then true else false end AS account_state_initiative,
         a.sfdc_state_program_eligible as account_state_program_eligible,
         a.sfdc_urban_rural as account_urban_rural,
         case
