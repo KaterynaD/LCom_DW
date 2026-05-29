@@ -339,8 +339,8 @@ if [[ -n \"\$MODIFIED_MODELS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
 
 
 # No Schema Binding redshift Views must be run (select) to be fully validated
-# 1. List of modified view
- VIEW_LIST=\$(
+# 1. List of modified views
+VIEW_LIST=\$(
   \"\$DBT_BIN\" list \
     --quiet \
     --select state:modified,config.materialized:view \
@@ -348,10 +348,12 @@ if [[ -n \"\$MODIFIED_MODELS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
     --resource-type model \
     --target ${DBT_TARGET_NAME} \
     --vars '{\"loaddate\": \"1900-01-01\"}' \
-  | grep '^LCom_DW\.' \
-  | awk -F'.' '{print \"'\''\" \$NF \"'\''\"}' \
+  | awk -F'.' '/^LCom_DW\./ {print \"'\''\" \$NF \"'\''\"}' \
   | paste -sd, -
 )
+
+
+
 
 echo '[container] VIEW_LIST:' \"\$VIEW_LIST\"
 
@@ -413,9 +415,13 @@ python dev_check_dags.py
 
 echo "$DAG_CHECK_OUTPUT"
 
-if ! echo "$DAG_CHECK_OUTPUT" | grep -q "No import errors"; then
+
+
+
+if ! grep -Fq "No import errors" <<< "$DAG_CHECK_OUTPUT"; then
   die "dev_check_dags.py did not report 'No import errors' -> FAIL"
 fi
+
 
 
 docker compose exec -T "$SERVICE_NAME" bash -c "
