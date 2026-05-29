@@ -1,0 +1,98 @@
+version: 2
+
+models:
+  - name: netsuite_ch042808
+    description: >
+      NetSuite CH042808 report transformed into standardized fields and data types.
+      Used for validation and reconciliation between HubSpot, Salesforce,
+      and NetSuite data sources.
+
+    config:
+      contract:
+        enforced: true
+      tags:
+        - netsuite
+        - revenue        
+
+    columns:
+      - name: mon_year
+        description: Calendar month in YYYYMM format derived from invoiced_date.
+        data_type: integer
+        constraints:
+          - type: not_null        
+
+      - name: business_class
+        description: Original NetSuite order product business type classification.
+        data_type: varchar(500)
+        constraints:
+          - type: not_null        
+
+      - name: primary_sales_rep
+        description: Primary sales representative.
+        data_type: varchar(500)
+
+      - name: name
+        description: Account name.
+        data_type: varchar(500)
+
+      - name: bill_to
+        description: Bill-to name.
+        data_type: varchar(500)
+
+      - name: target_level
+        description: Customer implementation target level.
+        data_type: varchar(500)
+
+      - name: item
+        description: Grouped item name.
+        data_type: varchar(500)
+
+      - name: progressive_billing
+        description: Progressive billing indicator/value.
+        data_type: varchar(500)
+
+      - name: memo
+        description: Netsuite memo text.
+        data_type: varchar(65535)
+
+      - name: start_date
+        description: Revenue recognition start date.
+        data_type: date
+
+      - name: end_date
+        description: Revenue recognition end date.
+        data_type: date
+
+      - name: transaction_number
+        description: Transaction number.
+        data_type: varchar(500)
+
+      - name: invoiced_date
+        description: Invoice date.
+        data_type: date
+        constraints:
+          - type: not_null        
+
+      - name: sales
+        description: Sales amount.
+        data_type: double precision
+        constraints:
+          - type: not_null        
+
+      - name: created_from
+        description: Source transaction reference.
+        data_type: varchar(100)
+
+      - name: sf_netsuite_order_id
+        description: Salesforce Netsuite order identifier.
+        data_type: varchar(500)
+
+      - name: billing_state
+        description: Billing state from billing address.
+        data_type: varchar(100)
+
+      - name: loaddate
+        description: "{{ doc('column_loaddate') }}"
+        data_type: timestamp
+        constraints:
+          - type: not_null      
