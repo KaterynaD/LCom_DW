@@ -8,44 +8,43 @@
 }}
 
 with data as (
-select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Won, Invoiced, Empty Start or End Dates' issue, 'Not Included in ARR' category
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Empty Start/End Dates' issue
 from {{ ref('fact_opportunity') }} o
 where o.stage_name ilike '%won%'
 and o.invoiced_date != '1900-01-01'
 and (o.start_date='1900-01-01'  or o.end_date='1900-01-01')
 union all
-select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Not Recurring Revenue' issue, 'Included in ARR' category
-from {{ ref('stg_arr_base') }} b
-join {{ ref('fact_opportunity') }} o
-on b.opportunity_id = o.opportunity_id
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Not Recurring Revenue' issue
+from {{ ref('fact_opportunity') }} o
 where o.stage_name ilike '%won%'
 and o.invoiced_date != '1900-01-01'
 and o.renewal_opportunity_id = 'Unknown'
 union all
-select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Won, not Invoiced' issue, 'Not Included in ARR' category
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Won, not Invoiced' issue
 from  {{ ref('fact_opportunity') }} o
 where o.stage_name ilike '%won%'
 and o.invoiced_date = '1900-01-01'
 union all
-select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Negative or Replacement' issue, 'Not Included in ARR' category
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Negative Opp' issue
 from {{ ref('fact_opportunity') }} o
-where o.name ilike '%NEGATIVE OPP%' or o.name ilike '%REPLACEMENT OPP%'
+where o.name ilike '%NEGATIVE OPP%'
 and o.invoiced_date != '1900-01-01'
 union all
-select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Won Start Date after End Date' issue, 'Potential ARR Impact' category
-from {{ ref('stg_arr_base') }} b
-join {{ ref('fact_opportunity') }} o
-on b.opportunity_id = o.opportunity_id
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Replacement Opp' issue
+from {{ ref('fact_opportunity') }} o
+where o.name ilike '%REPLACEMENT OPP%'
+and o.invoiced_date != '1900-01-01'
+union all
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Start Date >= End Date' issue
+from {{ ref('fact_opportunity') }} o
 where  
 o.stage_name ilike '%won%'
 and o.invoiced_date != '1900-01-01'
 and o.start_date!='1900-01-01'
 and o.start_date >= o.end_date
 union all
-select to_char(ro.start_date,'yyyymm')::int mon_year, ro.opportunity_id, 'Won Renewal Start or End Date before Parent Start or End Date' issue, 'Potential ARR Impact' category
-from {{ ref('stg_arr_base') }} b
-join {{ ref('fact_opportunity') }} o
-on b.opportunity_id = o.opportunity_id
+select to_char(ro.start_date,'yyyymm')::int mon_year, ro.opportunity_id, 'Renewal dates precede parent dates' issue
+from  {{ ref('fact_opportunity') }} o
 join {{ ref('fact_opportunity') }} ro
 on ro.opportunity_id = o.renewal_opportunity_id
 where  
@@ -54,44 +53,12 @@ and
 (ro.stage_name ilike '%won%' and ro.invoiced_date != '1900-01-01')
 and ((ro.start_date <= o.start_date) or (ro.end_date <= o.end_date))
 union all
-select to_char(ro.start_date,'yyyymm')::int mon_year, ro.opportunity_id, 'Won Renewal Start or End Date are the same as Parent Start or End Date' issue, 'Potential ARR Impact' category
-from {{ ref('stg_arr_base') }} b
-join {{ ref('fact_opportunity') }} o
-on b.opportunity_id = o.opportunity_id
-join {{ ref('fact_opportunity') }} ro
-on ro.opportunity_id = o.renewal_opportunity_id
-where  
-(o.stage_name ilike '%won%' and o.invoiced_date != '1900-01-01')
-and
-(ro.stage_name ilike '%won%' and ro.invoiced_date != '1900-01-01')
-and ((ro.start_date = o.start_date) or (ro.end_date = o.end_date))
-union all
-select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Negative Total Price' issue, 'Included in ARR' category
+select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Negative ARR' issue
 from {{ ref('stg_arr_base') }} b
 join {{ ref('fact_opportunity') }} o
 on b.opportunity_id = o.opportunity_id
 where  
 b.total_price<0
-/*union all
-select to_char(o.start_date,'yyyymm')::int mon_year, o.opportunity_id, 'Lost Renewal Start Date after End Date or missing' issue, 'Included in ARR' category
-from {{ ref('stg_arr_base') }} b
-join {{ ref('fact_opportunity') }} o
-on b.opportunity_id = o.opportunity_id
-where  
-(o.stage_name = 'Closed Lost' and o.close_date != '1900-01-01')
-and o.start_date >= o.end_date
-union all
-select to_char(ro.start_date,'yyyymm')::int mon_year, ro.opportunity_id, 'Lost Renewal Start Date before Parent Start or End Date' issue, 'Included in ARR' category
-from {{ ref('stg_arr_base') }} b
-join {{ ref('fact_opportunity') }} o
-on b.opportunity_id = o.opportunity_id
-join {{ ref('fact_opportunity') }} ro
-on ro.opportunity_id = o.renewal_opportunity_id
-where  
-(o.stage_name ilike '%won%' and o.invoiced_date != '1900-01-01')
-and
-(ro.stage_name = 'Closed Lost' and o.close_date != '1900-01-01')
-and ((ro.start_date <= o.start_date) or (ro.end_date <= o.end_date))*/
 )
 ,other as (
 select opportunity_id
@@ -116,7 +83,10 @@ from data
 join {{ ref('fact_opportunity') }} o
 on b.opportunity_id = o.opportunity_id
 union all
-select mon_year, opportunity_id, issue, category from data
+select distinct data.mon_year, data.opportunity_id, data.issue, case when f.opportunity_id is not null then 'Included in ARR' else 'Not Included in ARR' end as category
+from data
+left outer join {{ ref('fact_arr') }} f
+on data.opportunity_id = f.opportunity_id
 )
 select distinct
 mon_year::int,

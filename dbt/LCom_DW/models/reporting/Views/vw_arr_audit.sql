@@ -9,7 +9,7 @@ m.mon_lastday,
 m.fiscalyear,
 m.fiscalyear_mon,
 i.category,
-i.issue,
+listagg(i.issue, ', ') within group (order by i.issue) as issue,
 o.opportunity_id,
 o.opportunity_number,
 o.name as opportunity_name,
@@ -31,3 +31,4 @@ join {{ ref('dim_month') }} m
 on m.mon_year = a.mon_year
 join {{ ref('dim_account') }} da
 on da.account_id = o.account_id
+group by all

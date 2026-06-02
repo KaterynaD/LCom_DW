@@ -132,6 +132,15 @@ null as renewal_start_date_adjusted,
 null as max_parent_end_date_adjusted
 from {{ ref('fact_booking') }}
 )
+,opportunities_issues as (
+select 
+a.opportunity_id,
+listagg(i.issue, ', ') WITHIN GROUP (ORDER BY i.issue) AS  issues
+from {{ ref('dim_arr_audit') }} a
+join {{ ref('dim_arr_issue') }} i
+on a.issue_id = i.issue_id
+group by a.opportunity_id
+)
 select
 f.arr_type data_type,
 f.record_type,
@@ -190,7 +199,8 @@ o.progressive_payment_amount_5,
 o.progressive_payment_date_2,
 o.progressive_payment_date_3,
 o.progressive_payment_date_4,
-o.progressive_payment_date_5
+o.progressive_payment_date_5,
+case when f.arr_type!='Booking' then isnull(i.issues, 'Valid') else 'Valid' end as issues
 from data f
 join {{ ref('dim_account') }} a
 on f.account_id = a.account_id
@@ -202,5 +212,7 @@ left outer /*to include Target data*/ join {{ ref('fact_opportunity') }} o
 on f.opportunity_id = o.opportunity_id
 left outer join {{ ref('fact_opportunity') }} ro
 on o.renewal_opportunity_id = ro.opportunity_id
+left outer join opportunities_issues i
+on f.opportunity_id = i.opportunity_id
 where f.mon_year<=TO_CHAR(GETDATE(), 'YYYYMM')::int
 
