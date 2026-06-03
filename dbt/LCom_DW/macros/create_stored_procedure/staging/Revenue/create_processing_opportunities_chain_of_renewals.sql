@@ -26,7 +26,7 @@ batch_count int;
 offset_value int;					
 BEGIN					
 
-Stored procedure to be replaced with v2 soon
+--Stored procedure to be replaced with v2 soon
 
 RAISE INFO 'Creating temp table with list of renewable opportunities...';					
 drop table if exists temp_opportunities_ids;					
