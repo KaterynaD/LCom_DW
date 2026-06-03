@@ -23,6 +23,8 @@ batch_count int;
 offset_value int;
 BEGIN
 
+--v2 for new ARR recognition
+
 RAISE INFO 'Creating temp table with list of renewable opportunities...';
 drop table if exists temp_opportunities_ids;
 create temporary table temp_opportunities_ids as
