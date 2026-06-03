@@ -35,7 +35,7 @@ SELECT
 opportunity_id,					
 max(invoiced_date) as invoiced_date,					
 renewal_opportunity_id					
-FROM staging.stg_revenue a	
+FROM {{ ref('stg_revenue') }} a	
 group by opportunity_id, renewal_opportunity_id				
 order by opportunity_id;					
 SELECT count(opportunity_id) into record_count from temp_opportunities_ids;					

@@ -22,7 +22,7 @@ and fo.end_date!='1900-01-01'
 --renew only valid won opportunities
  --staging is Lost, close date is populated
 select distinct fo.opportunity_id
-from {{ ref("fact_opportunity") }} fo
+from {{ ref("fact_opportunity") }} as fo
 join valid_won_opportunities pfo
 on fo.opportunity_id = pfo.renewal_opportunity_id
 where fo.stage_name = 'Closed Lost'
