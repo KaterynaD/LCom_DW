@@ -23,7 +23,7 @@ batch_count int;
 offset_value int;
 BEGIN
 
---v2 for new ARR recognition
+
 
 RAISE INFO 'Creating temp table with list of renewable opportunities...';
 drop table if exists temp_opportunities_ids;
@@ -32,8 +32,8 @@ SELECT
 f.opportunity_id,
 max(f.close_date) as close_date,
 f.renewal_opportunity_id
-FROM staging.stg_valid_opportunities a
-join dw.revenue.fact_opportunity f
+FROM {{ ref('stg_valid_opportunities') }} a
+join {{ ref('fact_opportunity') }} f
 on a.opportunity_id = f.opportunity_id
 group by f.opportunity_id, f.renewal_opportunity_id
 order by f.opportunity_id;
