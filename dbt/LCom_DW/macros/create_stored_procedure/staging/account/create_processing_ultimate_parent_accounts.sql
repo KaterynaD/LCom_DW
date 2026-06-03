@@ -1,10 +1,22 @@
 {% macro create_processing_ultimate_parent_accounts() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+ {{ log('Creating processing_ultimate_parent_accounts stored procedure in schema ' ~ custom_schema, info=True) }}
+ 
  {% set create_sp_operation %}
 
 
-CREATE OR REPLACE PROCEDURE staging.processing_ultimate_parent_accounts(ploaddate timestamp)
-LANGUAGE plpgsql
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.processing_ultimate_parent_accounts(ploaddate timestamp)
+	LANGUAGE plpgsql
 AS $$
+	
 DECLARE
 rec RECORD;
 query text;
@@ -107,10 +119,14 @@ drop table if exists tempdata_for_ultimate_parent_accounts;
 drop table if exists temp_ultimate_parent_accounts_ids;
 
 END;
-$$;
+
+$$
+;
 
 {% endset %}
 
 {% do run_query(create_sp_operation) %}
+
+{% endif %}
 
 {% endmacro %} 

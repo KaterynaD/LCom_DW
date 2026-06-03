@@ -1,8 +1,20 @@
 {% macro create_sfdc_ultimate_parent_accounts_data() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+{{ log('Creating sfdc_ultimate_parent_accounts_data table in schema ' ~ custom_schema, info=True) }}
+
+ 
+
  {% set create_table_operation %}
 
-DROP TABLE if exists staging.sfdc_ultimate_parent_accounts_data;
-CREATE TABLE staging.sfdc_ultimate_parent_accounts_data
+CREATE TABLE IF NOT EXISTS {{target.database}}.{{custom_schema}}.sfdc_ultimate_parent_accounts_data
 (
  sfdc_ultimate_parent_id VARCHAR(300) NOT NULL ENCODE RAW
 ,sfdc_current_renewal_arr NUMERIC(38,10) NOT NULL ENCODE az64
@@ -23,5 +35,7 @@ COMMENT ON TABLE staging.sfdc_ultimate_parent_accounts_data IS 'Staging table to
 {% endset %}
 
 {% do run_query(create_table_operation) %}
+
+{% endif %}
 
 {% endmacro %} 

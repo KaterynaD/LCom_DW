@@ -55,8 +55,7 @@
   {{ create_stg_opportunities_chain_of_renewals() }}
   {{ log('create_stg_opportunities_chain_of_renewals_v2', info=True) }}
   {{ create_stg_opportunities_chain_of_renewals_v2() }}
-  {{ log('create_sfdc_ultimate_parent_accounts_data', info=True) }}
-  {{ create_sfdc_ultimate_parent_accounts_data() }}
+
 
   {# 1) Stored Procedures #}
   {{ log('create_lc_load_students_usage_monthly_snapshots', info=True) }}
@@ -67,8 +66,7 @@
   {{ create_processing_opportunities_chain_of_renewals() }}
   {{ log('create_processing_opportunities_chain_of_renewals_v2', info=True) }}
   {{ create_processing_opportunities_chain_of_renewals_v2() }}
-  {{ log('create_processing_ultimate_parent_accounts', info=True) }}
-  {{ create_processing_ultimate_parent_accounts() }}
+
 
   {{ log('create_load_skillscheck_schoolyear_data', info=True) }}
   {{ create_load_skillscheck_schoolyear_data() }}
