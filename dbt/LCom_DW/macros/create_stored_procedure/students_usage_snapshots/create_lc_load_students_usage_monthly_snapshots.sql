@@ -1,6 +1,19 @@
 {% macro create_lc_load_students_usage_monthly_snapshots() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+ {{ log('Creating lc_load_students_usage_monthly_snapshots stored procedure in schema ' ~ custom_schema, info=True) }}
+
+ 
  {% set create_sp_operation %}
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_usage_monthly_snapshots(pmonth_year int4, ploaddate timestamp)
+ 
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_usage_monthly_snapshots(pmonth_year int4, ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -283,7 +296,7 @@ $$
 
 
 
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_usage_monthly_snapshots(ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_usage_monthly_snapshots(ploaddate timestamp)
 	LANGUAGE plpgsql
 AS $$
 	
@@ -317,7 +330,7 @@ END;
 $$
 ;
 
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_usage_monthly_snapshots()
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_usage_monthly_snapshots()
 	LANGUAGE plpgsql
 AS $$
 	
@@ -350,7 +363,7 @@ $$
 /**************************************************************************************************/
 /**************************************************************************************************/
 
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_usage_monthly_snapshots_details(columns_level varchar, table_level varchar)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_usage_monthly_snapshots_details(columns_level varchar, table_level varchar)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -714,7 +727,7 @@ END;
 $$
 ;
 
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_usage_monthly_snapshots_levels(ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_usage_monthly_snapshots_levels(ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -851,5 +864,7 @@ $$
 
 
  {% do run_query(create_sp_operation) %}
+
+ {% endif %}
  
  {% endmacro %}

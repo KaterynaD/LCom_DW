@@ -1,6 +1,10 @@
 
 {{ config(
-   materialized='sql_runner'
+   materialized='sql_runner',
+   pre_hook = [
+                    '{{ create_stg_skillscheck_calendaryear_data() }}', 
+                    '{{ create_load_skillscheck_calendaryear_data() }}'
+                   ]
 ) }}
 
 -- depends_on: {{ ref("dim_calendar") }}

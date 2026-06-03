@@ -1,4 +1,10 @@
 {% macro create_levenshtein() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+
+ {{ log('Creating levenshtein function in public schema ' , info=True) }}
+ 
  {% set create_sp_operation %}
 
 CREATE OR REPLACE FUNCTION public.levenshtein(s varchar, t varchar)
@@ -52,5 +58,7 @@ $$
 {% endset %}
 
 {% do run_query(create_sp_operation) %}
+
+ {% endif %}
 
 {% endmacro %} 

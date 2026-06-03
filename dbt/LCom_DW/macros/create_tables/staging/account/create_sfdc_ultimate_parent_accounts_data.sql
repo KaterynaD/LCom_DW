@@ -30,7 +30,7 @@ sfdc_ultimate_parent_id
 ;
 
 
-COMMENT ON TABLE staging.sfdc_ultimate_parent_accounts_data IS 'Staging table to keep ultimate parent accounts aggregated from childs info using recursive query in staging.processing_ultimate_parent_accounts';
+COMMENT ON TABLE {{target.database}}.{{custom_schema}}.sfdc_ultimate_parent_accounts_data IS 'Staging table to keep ultimate parent accounts aggregated from childs info using recursive query in staging.processing_ultimate_parent_accounts';
 
 {% endset %}
 

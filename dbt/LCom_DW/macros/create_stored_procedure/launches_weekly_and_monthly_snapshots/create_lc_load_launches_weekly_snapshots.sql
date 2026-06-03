@@ -1,8 +1,19 @@
 {% macro create_lc_load_launches_weekly_snapshots() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+ {{ log('Creating lc_load_launches_weekly_snapshots stored procedure in schema ' ~ custom_schema, info=True) }}
+ 
  {% set create_sp_operation %}
 
 --Historical load
-CREATE OR REPLACE PROCEDURE  {{target.database}}.content_delivery_usage.lc_load_launches_weekly_snapshots(pstart_date date, pend_date date, ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE  {{target.database}}.{{custom_schema}}.lc_load_launches_weekly_snapshots(pstart_date date, pend_date date, ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 begin
@@ -104,7 +115,7 @@ $$
 
 --Ongoing load with managed loaddate
 
-CREATE OR REPLACE PROCEDURE  {{target.database}}.content_delivery_usage.lc_load_launches_weekly_snapshots(ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE  {{target.database}}.{{custom_schema}}.lc_load_launches_weekly_snapshots(ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -172,7 +183,7 @@ $$
 
 --Ongoing load with current date and time loaddate
 
-CREATE OR REPLACE PROCEDURE  {{target.database}}.content_delivery_usage.lc_load_launches_weekly_snapshots()
+CREATE OR REPLACE PROCEDURE  {{target.database}}.{{custom_schema}}.lc_load_launches_weekly_snapshots()
 LANGUAGE plpgsql
 AS $$
 begin
@@ -201,4 +212,8 @@ $$
  {% endset %}
 
 {% do run_query(create_sp_operation) %}
+
+{% endif %}
+
+
 {% endmacro %}

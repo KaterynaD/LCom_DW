@@ -1,7 +1,18 @@
 {% macro create_lc_load_students_completions_monthly_snapshots() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+ {{ log('Creating lc_load_students_completions_monthly_snapshots_details stored procedure in schema ' ~ custom_schema, info=True) }}
+
  {% set create_sp_operation %}
 
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_completions_monthly_snapshots_details
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_completions_monthly_snapshots_details
 (
 columns_level varchar, -- e.g. 'country, state_province_code, organization_district_id, organization_school_id, '
 table_level varchar -- final temporary table name, e.g. 'school_level'
@@ -478,5 +489,7 @@ $$
 
 
  {% do run_query(create_sp_operation) %}
+
+  {% endif %}
  
  {% endmacro %}

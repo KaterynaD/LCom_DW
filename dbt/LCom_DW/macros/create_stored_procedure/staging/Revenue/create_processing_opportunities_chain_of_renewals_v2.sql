@@ -1,8 +1,19 @@
 {% macro create_processing_opportunities_chain_of_renewals_v2() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+ {{ log('Creating processing_opportunities_chain_of_renewals_v2 stored procedure in schema ' ~ custom_schema, info=True) }}
+ 
  {% set create_sp_operation %}
 
 
-CREATE OR REPLACE PROCEDURE staging.processing_opportunities_chain_of_renewals_v2(ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.processing_opportunities_chain_of_renewals_v2(ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -101,5 +112,7 @@ $$
 {% endset %}
 
 {% do run_query(create_sp_operation) %}
+
+{% endif %}
 
 {% endmacro %} 

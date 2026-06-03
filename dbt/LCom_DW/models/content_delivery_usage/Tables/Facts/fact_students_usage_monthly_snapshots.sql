@@ -1,5 +1,9 @@
 {{ config(
-   materialized='sql_runner'
+   materialized='sql_runner',
+   pre_hook = [
+                    '{{ create_fact_usage_monthly_snapshots_table() }}', 
+                    '{{ create_lc_load_students_usage_monthly_snapshots() }}'
+                   ]
 ) }}
 
 -- depends_on: {{ source("dbo","fact_assignment_launch") }}  

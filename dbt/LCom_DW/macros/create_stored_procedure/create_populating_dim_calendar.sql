@@ -1,17 +1,21 @@
 {% macro create_populating_dim_calendar() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+ {{ log('Creating populating_dim_calendar stored procedure in schema ' ~ custom_schema, info=True) }}
+ 
  {% set create_sp_operation %}
 
-CREATE OR REPLACE FUNCTION {{target.database}}.common.f_USFederalHolidayCalendar(dt DATE)
-RETURNS bool STABLE AS 
-$$
-from pandas.tseries.holiday import USFederalHolidayCalendar
-holidays = USFederalHolidayCalendar().holidays(start='1990-01-01', end='2050-12-31')
-return dt in holidays
-$$ 
-LANGUAGE plpythonu;
 
 
-CREATE OR REPLACE PROCEDURE common.populating_dim_calendar(pstart_date date, pend_date date)
+
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.populating_dim_calendar(pstart_date date, pend_date date)
 	LANGUAGE plpgsql
 AS $$
 	
@@ -54,7 +58,7 @@ LOOP
 
 
 
-insert into common.dim_calendar
+insert into {{target.database}}.{{custom_schema}}.dim_calendar
 SELECT
     cal_date,
     TO_NUMBER(TO_CHAR(cal_date, 'YYYYMMDD'), '99999999')::INTEGER AS Date_Int,
@@ -122,14 +126,14 @@ SELECT
     END AS FiscalYear_Mon,
     (((DATE_PART(month, cal_date)::INTEGER - 7 + 12) % 12) / 3 + 1)::INTEGER AS FiscalQuarter,
     (DATE_PART(year, cal_date)::VARCHAR +'0'+ FiscalQuarter::VARCHAR)::INTEGER  AS FiscalQuarter_Year
-    ,common.f_USFederalHolidayCalendar(cal_date) AS IsUSFederalHoliday  -- Using the Python UDF
+    ,False AS IsUSFederalHoliday  -- Can not use the Python UDF anymore TBD
 FROM  stg_calendar;
 
 drop table if exists stg_calendar;
 
 --Default data
 
-INSERT INTO common.dim_calendar
+INSERT INTO {{target.database}}.{{custom_schema}}.dim_calendar
 (cal_date, date_int, day_of_week, day_of_week_name_short, day_of_week_name, week_in_year, day_of_month, mon, mon_name_short, mon_name, mon_year, quarter, quarter_year, "year", mon_weekstart, sun_weekend, mon_firstday, mon_lastday, schoolyear, schoolyear_startdate, schoolyear_enddate, schoolyear_mon, fiscalyear, fiscalyear_startdate, fiscalyear_enddate, fiscalyear_mon, fiscalquarter, fiscalquarter_year, isusfederalholiday)
 VALUES(
 '1/1/1900',
@@ -171,5 +175,7 @@ $$
 {% endset %}
 
 {% do run_query(create_sp_operation) %}
+
+{% endif %}
 
 {% endmacro %} 

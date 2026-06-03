@@ -1,5 +1,9 @@
 {{ config(
-   materialized='sql_runner'
+   materialized='sql_runner',
+   pre_hook = [
+                    '{{ create_common_dim_calendar_table() }}', 
+                    '{{ create_populating_dim_calendar() }}'
+                   ]
 ) }}
 
 --do not run this model. Calendar table was createtd once and the model is needed only to be consistent with dbt environment

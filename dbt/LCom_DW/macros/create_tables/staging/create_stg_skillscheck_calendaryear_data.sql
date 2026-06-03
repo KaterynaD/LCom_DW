@@ -1,8 +1,19 @@
 {% macro create_stg_skillscheck_calendaryear_data() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+
+{{ log('Creating stg_skillscheck_calendaryear_data table in schema ' ~ custom_schema, info=True) }}
+
  {% set create_table_operation %}
 
-DROP TABLE if exists staging.stg_skillscheck_calendaryear_data;
-CREATE TABLE staging.stg_skillscheck_calendaryear_data
+
+CREATE TABLE IF NOT EXISTS {{target.database}}.{{custom_schema}}.stg_skillscheck_calendaryear_data
 (
     calendaryear                     integer                NOT NULL,
     calendaryear_startdate           date                   NOT NULL,
@@ -41,10 +52,12 @@ CREATE TABLE staging.stg_skillscheck_calendaryear_data
 DISTKEY (organization_district_id)
 SORTKEY (user_account_id, assessment_set_id);
 
-COMMENT ON TABLE staging.stg_skillscheck_calendaryear_data IS 'Staging table to keep skills check calendar year data per user for pre- and post-test results';
+COMMENT ON TABLE {{target.database}}.{{custom_schema}}.stg_skillscheck_calendaryear_data IS 'Staging table to keep skills check calendar year data per user for pre- and post-test results';
 
 {% endset %}
 
 {% do run_query(create_table_operation) %}
+
+ {% endif %}
 
 {% endmacro %} 

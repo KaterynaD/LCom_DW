@@ -1,8 +1,19 @@
 {% macro create_load_skillscheck_calendaryear_data() %}
+
+{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+
+ {% if flags.WHICH in ('run','build') %}
+  {% set custom_schema = model.config.schema | default(target.schema, true) %}
+ {% else %}
+  {% set custom_schema = target.schema %}
+ {% endif %}
+ 
+ {{ log('Creating load_skillscheck_calendaryear_data stored procedure in schema ' ~ custom_schema, info=True) }}
+ 
  {% set create_sp_operation %}
 
 
-CREATE OR REPLACE PROCEDURE {{target.database}}.{{target.schema}}.load_skillscheck_calendaryear_data(ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.load_skillscheck_calendaryear_data(ploaddate timestamp)
 	LANGUAGE plpgsql
 AS $$
 
@@ -307,9 +318,9 @@ BEGIN
         pre.assessment_set_id,
         pre.standard_topic_label;
 
-TRUNCATE TABLE {{target.database}}.{{target.schema}}.stg_skillscheck_calendaryear_data;
+TRUNCATE TABLE {{target.database}}.{{custom_schema}}.stg_skillscheck_calendaryear_data;
 
-INSERT INTO {{target.database}}.{{target.schema}}.stg_skillscheck_calendaryear_data
+INSERT INTO {{target.database}}.{{custom_schema}}.stg_skillscheck_calendaryear_data
 SELECT cal.year as calendaryear
      , cal.cal_date as calendaryear_startdate
      , result.country_code
@@ -406,5 +417,7 @@ $$
 {% endset %}
 
 {% do run_query(create_sp_operation) %}
+
+{% endif %}
 
 {% endmacro %} 
