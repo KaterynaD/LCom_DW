@@ -28,7 +28,7 @@ BEGIN
 
 RAISE INFO 'Creating temp table with current raw data for processing ultimate parents...';
 --Current raw data for processing ultimate parent summarized info
---temp table to make the process faster
+--temp table to make the process faster !!!
 drop table if exists tempdata_for_ultimate_parent_accounts;
 create temporary table tempdata_for_ultimate_parent_accounts as
 SELECT distinct 
