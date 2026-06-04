@@ -223,7 +223,7 @@ $$;
 
 
 /*-------------------------------------------------------------------------------------*/
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_completions_monthly_snapshots(pmonth_year int4, ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_completions_monthly_snapshots(pmonth_year int4, ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -251,7 +251,7 @@ drop table if exists temp_completions_data_for_snapshot;
 create temporary table temp_completions_data_for_snapshot as (
 with dim_month as (
 select mon_year, mon_lastday, SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate, SchoolYear_mon
-from common.dim_month
+from {{ ref("dim_month") }}
 --where mon_lastday between pstart_date and pend_date
 where mon_year = pmonth_year
 )
@@ -279,12 +279,12 @@ dlo.meets_digital_citizenship_cipa,
 dlo.meets_cyberbullying_cipa,
 dlo.meets_both_cipa,
 fac.score_datetime
-from content_delivery_usage.dbo.fact_assignment_completion fac
-join content_delivery_usage.dim_learning_object dlo
+from {{ source('dbo', 'fact_assignment_completion') }} fac
+join {{ ref('dim_learning_object') }} dlo
 on fac.learning_object_id = dlo.learning_object_id
-join content_delivery_usage.dbo.mv_student_account st
+join {{ source('dbo', 'mv_student_account') }} st
 on fac.user_account_id=st.user_account_id and fac.organization_district_id=st.organization_district_id
-join common.dim_district dist
+join {{ ref('dim_district') }} dist
 on fac.organization_district_id = dist.district_id
 JOIN dim_month dt
 ON TIMEZONE('UTC', fac.score_datetime) BETWEEN dt.SchoolYear_StartDate AND DATEADD(day, 1, dt.mon_lastday)
@@ -318,10 +318,10 @@ RAISE INFO 'Insert into fact_students_completions_monthly_snapshots';
 --drop table if exists content_delivery_usage.fact_students_completions_monthly_snapshots;
 --create table content_delivery_usage.fact_students_completions_monthly_snapshots as
 
-delete from content_delivery_usage.fact_students_completions_monthly_snapshots
+delete from {{target.database}}.{{custom_schema}}.fact_students_completions_monthly_snapshots
 where mon_year= pmonth_year;
 
-insert into content_delivery_usage.fact_students_completions_monthly_snapshots
+insert into {{target.database}}.{{custom_schema}}.fact_students_completions_monthly_snapshots
 select
 sl.mon_year,
 sl.mon_lastday,
@@ -412,7 +412,7 @@ $$
 
 
 /*-------------------------------------------------------------------------------------*/
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_completions_monthly_snapshots(ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_completions_monthly_snapshots(ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -433,9 +433,9 @@ begin
 **************************************************************************************************/
 
 select to_char(max(cast(score_datetime as date)),'yyyymm') into latest_month_year
-from content_delivery_usage.dbo.fact_assignment_completion;
+from {{ source("dbo", "fact_assignment_completion") }};
 
-call content_delivery_usage.lc_load_students_completions_monthly_snapshots(latest_month_year, ploaddate);
+call {{ custom_schema }}.lc_load_students_completions_monthly_snapshots(latest_month_year, ploaddate);
 
 
 
@@ -447,7 +447,7 @@ $$
 ;
 
 /*-------------------------------------------------------------------------------------*/
-CREATE OR REPLACE PROCEDURE content_delivery_usage.lc_load_students_completions_monthly_snapshots(pstart_date date, pend_date date, ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.lc_load_students_completions_monthly_snapshots(pstart_date date, pend_date date, ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -471,7 +471,7 @@ begin
 FOR rec IN (SELECT mon_year FROM common.dim_month WHERE mon_firstday between pstart_date and pend_date) LOOP
 
 
-call content_delivery_usage.lc_load_students_completions_monthly_snapshots(rec.mon_year, ploaddate);
+call {{ custom_schema }}.lc_load_students_completions_monthly_snapshots(rec.mon_year, ploaddate);
 
 
 END LOOP;

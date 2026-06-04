@@ -100,9 +100,9 @@ END LOOP;
 
 drop table if exists temp_opportunities_ids;	
 
-truncate table staging.stg_opportunities_chain_of_renewals;	
+truncate table {{target.database}}.{{custom_schema}}.stg_opportunities_chain_of_renewals;	
 
-insert into staging.stg_opportunities_chain_of_renewals
+insert into {{target.database}}.{{custom_schema}}.stg_opportunities_chain_of_renewals
 select distinct * from 	temp_opportunities_chain_of_renewals	;
 
 drop table if exists temp_opportunities_chain_of_renewals;

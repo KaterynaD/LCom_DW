@@ -38,14 +38,14 @@ BEGIN
 *       
 **************************************************************************************************/
 
-delete from content_delivery_usage.fact_launches_monthly_snapshots
+delete from {{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots
 where mon_lastday between pstart_date and pend_date;
 
-insert into content_delivery_usage.fact_launches_monthly_snapshots
+insert into {{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots
 with
 dim_date as (
 select distinct mon_lastday, SchoolYear_StartDate, SchoolYear_EndDate
-from common.dim_calendar
+from {{ ref("dim_calendar") }}
 where mon_lastday between pstart_date and pend_date
 )
 ,dsu as (
@@ -62,7 +62,7 @@ end organization_school_id,
 fal.user_account_id,
 count(0) as Launches,
 count(distinct fal.learning_object_id) as DistinctItemsStudent
-from content_delivery_usage.dbo.fact_assignment_launch fal
+from {{ source('dbo', 'fact_assignment_launch') }} fal
 join dim_date dt
 on TIMEZONE('UTC', launch_datetime) between dt.SchoolYear_StartDate and DATEADD(day,1,dt.mon_lastday) 
 AND TIMEZONE('UTC', launch_datetime) < SchoolYear_EndDate
@@ -119,7 +119,7 @@ END AS DistinctItemsStudent_Month,
 --
 ploaddate
 from ds
-join content_delivery_usage.dbo.organization o
+join {{ source("dbo","organization") }} o
 on ds.organization_school_id = o.organization_id
 order by o.parent_organization_id, mon_lastday, organization_school_id;
 
@@ -153,13 +153,13 @@ begin
 **************************************************************************************************/
 
 select max(cast(launch_datetime as date)) into latest_date
-from content_delivery_usage.dbo.fact_assignment_launch;
+from {{ source("dbo","fact_assignment_launch") }};
 
-call content_delivery_usage.lc_load_launches_monthly_snapshots(latest_date, LAST_DAY( latest_date ), ploaddate);
+call {{ custom_schema }}.lc_load_launches_monthly_snapshots(latest_date, LAST_DAY( latest_date ), ploaddate);
 
 --update Month amounts for the latest month (previous month is not available for ongoing (only current month) updates
 with 
-latest as (select max(mon_lastday) mon_lastday from content_delivery_usage.fact_launches_monthly_snapshots)
+latest as (select max(mon_lastday) mon_lastday from {{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots)
 ,data as (
 select 
 mon_lastday,
@@ -172,17 +172,17 @@ DistinctItemsStudent_YTD,
 isnull(Active_Students_YTD - lag(Active_Students_YTD) over(partition by organization_school_id order by mon_lastday),0) Active_Students_month,
 isnull(Launches_YTD - lag(Launches_YTD) over(partition by organization_school_id order by mon_lastday),0) Launches_month,
 isnull(DistinctItemsStudent_YTD - lag(DistinctItemsStudent_YTD) over(partition by organization_school_id order by mon_lastday),0) DistinctItemsStudent_month
-from content_delivery_usage.fact_launches_monthly_snapshots 
+from {{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots
 where  mon_lastday in (
 --the latest month
 select mon_lastday from latest
 union all
 --the month before the latest
-select max(mon_lastday) from content_delivery_usage.fact_launches_monthly_snapshots
+select max(mon_lastday) from {{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots
 where mon_lastday<(select mon_lastday from latest)
 )
 )
-update content_delivery_usage.fact_launches_monthly_snapshots
+update {{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots
 set 
 Active_Students_month=data.Active_Students_month,
 Launches_month=data.Launches_month,
@@ -190,8 +190,8 @@ DistinctItemsStudent_month=data.DistinctItemsStudent_month
 from data
 join latest
 on data.mon_lastday=latest.mon_lastday
-where data.mon_lastday=content_delivery_usage.fact_launches_monthly_snapshots.mon_lastday 
-and   data.organization_school_id = content_delivery_usage.fact_launches_monthly_snapshots.organization_school_id;
+where data.mon_lastday={{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots.mon_lastday 
+and   data.organization_school_id = {{target.database}}.{{custom_schema}}.fact_launches_monthly_snapshots.organization_school_id;
 
 END;
 
@@ -219,7 +219,7 @@ begin
 **************************************************************************************************/
 
 
-call content_delivery_usage.lc_load_launches_monthly_snapshots(GetDate());
+call {{custom_schema}}.lc_load_launches_monthly_snapshots(GetDate());
 
 END;
 

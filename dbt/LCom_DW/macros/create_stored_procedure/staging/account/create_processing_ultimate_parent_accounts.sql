@@ -36,7 +36,7 @@ a.id                        as sfdc_account_id,
 a.parent_id                 as sfdc_parent_id,
 a.current_renewal_arr_c     as sfdc_current_renewal_arr,
 ultimate_parent_id_c        as sfdc_ultimate_parent_id
-FROM rawdata.fivetran_salesforce_quickstart.account a;
+FROM {{ source('fivetran_salesforce_quickstart', 'account') }} a;
 
 RAISE INFO 'Creating temp table with list ultimate parents with opportunities...';
 --Limit only to the ultimate parent accounts where child opportunities exist
@@ -46,7 +46,7 @@ create temporary table temp_ultimate_parent_accounts_ids as
 SELECT distinct 
 sfdc_ultimate_parent_id
 FROM tempdata_for_ultimate_parent_accounts a
-join rawdata.fivetran_salesforce_quickstart.opportunity fop
+join {{ source('fivetran_salesforce_quickstart', 'opportunity') }} fop
 on a.sfdc_account_id=fop.account_id
 where sfdc_ultimate_parent_id is not null
 order by sfdc_ultimate_parent_id;
@@ -60,7 +60,7 @@ batch_count := CEIL(record_count / batch::float) ;
 
 RAISE INFO 'Num of batches: %', batch_count;
 
-truncate table staging.sfdc_ultimate_parent_accounts_data;
+truncate table {{target.database}}.{{custom_schema}}.sfdc_ultimate_parent_accounts_data;
 
 FOR i IN 1..batch_count LOOP
 RAISE INFO 'Batch: %', i;
@@ -69,7 +69,7 @@ offset_value := (i - 1) * 100;
 
 RAISE INFO 'offset_value: %', offset_value;
 
-insert into staging.sfdc_ultimate_parent_accounts_data
+insert into {{target.database}}.{{custom_schema}}.sfdc_ultimate_parent_accounts_data
 (
 sfdc_ultimate_parent_id
 ,sfdc_current_renewal_arr

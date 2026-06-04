@@ -36,7 +36,7 @@ begin
 **************************************************************************************************/
 
 /*delete the date range we are going to insert*/
-delete from common.dim_calendar where cal_date between pstart_date and pend_date;
+delete from {{target.database}}.{{custom_schema}}.dim_calendar where cal_date between pstart_date and pend_date;
 
 drop table if exists stg_calendar;
 create temporary table stg_calendar

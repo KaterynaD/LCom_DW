@@ -37,14 +37,14 @@ begin
 **************************************************************************************************/
 /**delete previously loaded data if any*/
 
-delete from content_delivery_usage.fact_launches_weekly_snapshots
+delete from {{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots
 where WeekEnd between pstart_date and pend_date;
 
-insert into content_delivery_usage.fact_launches_weekly_snapshots
+insert into {{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots
 with
 dim_date as (
 select distinct Sun_WeekEnd, SchoolYear_StartDate, SchoolYear_EndDate
-from common.dim_calendar
+from {{ ref("dim_calendar") }}
 where Sun_WeekEnd=Cal_date and Sun_WeekEnd between pstart_date and pend_date
 )
 ,dsu as (
@@ -61,7 +61,7 @@ end organization_school_id,
 fal.user_account_id,
 count(0) as Launches,
 count(distinct fal.learning_object_id) as DistinctItemsStudent
-from content_delivery_usage.dbo.fact_assignment_launch fal
+from {{ source("dbo","fact_assignment_launch") }} fal
 join dim_date dt
 on TIMEZONE('UTC', launch_datetime) between dt.SchoolYear_StartDate and DATEADD(day,1,dt.Sun_WeekEnd)  
 AND TIMEZONE('UTC', launch_datetime) < SchoolYear_EndDate
@@ -103,7 +103,7 @@ isnull(DistinctItemsStudent_YTD - lag(DistinctItemsStudent_YTD) over(partition b
 --
 ploaddate
 from ds
-join content_delivery_usage.dbo.organization o
+join {{ source("dbo","organization") }} o
 on ds.organization_school_id = o.organization_id
 order by o.parent_organization_id, WeekEnd, organization_school_id;
 
@@ -136,13 +136,13 @@ begin
 **************************************************************************************************/
 
 select max(cast(launch_datetime as date)) into latest_date
-from content_delivery_usage.dbo.fact_assignment_launch;
+from {{ source("dbo","fact_assignment_launch") }};
 
 call content_delivery_usage.lc_load_launches_weekly_snapshots(latest_date, cast(DATEADD(day, 6, DATE_TRUNC('week', latest_date)) as date), ploaddate);
 
 --update Week amounts for the latest week (previous week is not available for ongoing (only current week) updates
 with 
-latest as (select max(weekend) weekend from content_delivery_usage.fact_launches_weekly_snapshots)
+latest as (select max(weekend) weekend from {{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots)
 ,data as (
 select 
 WeekEnd,
@@ -155,17 +155,17 @@ DistinctItemsStudent_YTD,
 isnull(Active_Students_YTD - lag(Active_Students_YTD) over(partition by organization_school_id order by WeekEnd),0) Active_Students_Week,
 isnull(Launches_YTD - lag(Launches_YTD) over(partition by organization_school_id order by WeekEnd),0) Launches_Week,
 isnull(DistinctItemsStudent_YTD - lag(DistinctItemsStudent_YTD) over(partition by organization_school_id order by WeekEnd),0) DistinctItemsStudent_Week
-from content_delivery_usage.fact_launches_weekly_snapshots 
+from {{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots
 where  weekend in (
 --the latest week
 select weekend from latest
 union all
 --the week before the latest
-select max(weekend) from content_delivery_usage.fact_launches_weekly_snapshots
+select max(weekend) from {{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots
 where weekend<(select weekend from latest)
 )
 )
-update content_delivery_usage.fact_launches_weekly_snapshots
+update {{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots
 set 
 Active_Students_Week=data.Active_Students_Week,
 Launches_Week=data.Launches_Week,
@@ -173,8 +173,8 @@ DistinctItemsStudent_Week=data.DistinctItemsStudent_Week
 from data
 join latest
 on data.weekend=latest.weekend
-where data.weekend=content_delivery_usage.fact_launches_weekly_snapshots.weekend 
-and   data.organization_school_id = content_delivery_usage.fact_launches_weekly_snapshots.organization_school_id;
+where data.weekend={{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots.weekend 
+and   data.organization_school_id = {{target.database}}.{{custom_schema}}.fact_launches_weekly_snapshots.organization_school_id;
 
 END;
 

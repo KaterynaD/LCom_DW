@@ -9,5 +9,6 @@
 
 -- depends_on: {{ source("dbo","fact_assignment_launch") }}  
 -- depends_on: {{ ref("dim_calendar") }}
+-- depends_on: {{ source("dbo","organization") }}
 
 call {{ target.database }}.{{ schema }}.lc_load_launches_weekly_snapshots(cast('{{ var("loaddate") }}' as timestamp));
