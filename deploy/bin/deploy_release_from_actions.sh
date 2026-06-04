@@ -297,35 +297,36 @@ fi
 # Run modified models in QA ONLY if we have a state manifest to compare against
 if [[ -f "\$STATE_DIR/manifest.json" ]]; then
 
-# List of modified models
-  \"\$DBT_BIN\" list \
-  --select state:modified \
-  --state \"\$STATE_DIR\" \
-  --resource-type model \
-  --target ${DBT_TARGET_NAME} \
-  --vars '{\"loaddate\": \"1900-01-01\"}'
 
 
-MODIFIED_MODELS=\$(
+MODIFIED_OBJECTS=\$(
   \"\$DBT_BIN\" list \
     --quiet \
     --select state:modified \
     --state \"\$STATE_DIR\" \
-    --resource-type model \
+    --resource-type model test seed \
     --target ${DBT_TARGET_NAME} \
     --vars '{\"loaddate\": \"1900-01-01\"}' \
     || true
 )
 
+echo ====================================================
+echo MODIFIED OBJECTS
+echo ====================================================
+echo "\$MODIFIED_OBJECTS"
+echo ====================================================
 
-
-if [[ -n \"\$MODIFIED_MODELS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
+if [[ -n \"\$MODIFIED_OBJECTS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
 
 # Cleaning QA environment
 \"\$DBT_BIN\" run-operation drop_qa_schemas --target QA --vars '{dry_run: false}'
 
 # Setup QA environment for what is  not created in the following defer run SQL Run based models tables
 \"\$DBT_BIN\" run-operation set_QA_environment --target QA
+
+# Create tables from seeds
+\"\$DBT_BIN\" seed --target QA
+
   
 # QA empty and defer run  
 \"\$DBT_BIN\" run \
@@ -335,7 +336,31 @@ if [[ -n \"\$MODIFIED_MODELS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; then
   --target QA \
   --state \"\$STATE_DIR\" \
   --defer \
-  --vars '{\"loaddate\": \"1900-01-01\"}'
+  --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
+
+
+# QA defer test  
+TEST_OUTPUT=\$(
+  \"\$DBT_BIN\" test \
+    --select state:modified \
+    --exclude \"config.materialized:profiling\" \
+    --target QA \
+    --state \"\$STATE_DIR\" \
+    --defer \
+    --vars '{\"loaddate\": \"1900-01-01\"}' \
+  2>&1 || true
+)
+
+echo "\$TEST_OUTPUT"
+
+
+if echo "\$TEST_OUTPUT" | grep -Eq 'ERROR=([1-9][0-9]*)|(^|[[:space:]])ERROR([[:space:]]|$)'; then
+  echo 'ERROR: dbt test returned ERROR -> FAIL CI/CD'
+  exit 1
+fi
+
+echo '[container] dbt test completed without ERROR. Test FAIL is allowed.'
+
 
 
 # No Schema Binding redshift Views must be run (select) to be fully validated
@@ -364,20 +389,19 @@ if [[ -n \"\$VIEW_LIST\" ]]; then
     --target QA \
     --args \"{'models':[\${VIEW_LIST}]}\"
 
-# 3. Deploying in Prod validated views
-\"\$DBT_BIN\" run \
-  --select state:modified,config.materialized:view \
-  --target ${DBT_TARGET_NAME} \
-  --state \"\$STATE_DIR\" \
-  --vars '{\"loaddate\": \"1900-01-01\"}'
-
-
-
-
-
 else
   echo '[container] No views to validate.'
 fi
+
+
+
+# Deploying in Prod validated models
+\"\$DBT_BIN\" run \
+  --select state:modified \
+  --exclude \"config.materialized:profiling\" \
+  --target ${DBT_TARGET_NAME} \
+  --state \"\$STATE_DIR\" \
+  --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
 
 
