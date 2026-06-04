@@ -34,7 +34,7 @@ BEGIN
 **************************************************************************************************/
 RAISE INFO 'processing %...',pmonth_year;
 
-delete from content_delivery_usage.fact_students_usage_monthly_snapshots
+delete from {{target.database}}.{{custom_schema}}.fact_students_usage_monthly_snapshots
 where mon_year=pmonth_year;
 
 
@@ -43,7 +43,7 @@ drop table if exists temp_base_data_for_snapshot;
 create temporary table temp_base_data_for_snapshot as
 with
 dim_date as (select distinct SchoolYear, SchoolYear_StartDate, SchoolYear_EndDate, SchoolYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
-from common.dim_calendar
+from {{ ref("dim_calendar") }}
 where Mon_Year= pmonth_year
 )
 select
@@ -70,12 +70,12 @@ dlo.Topic as Topic,
 TIMEZONE('UTC', fal.launch_datetime) launch_datetime,
 fal.user_account_id,
 fal.assignment_launch_id
-from content_delivery_usage.dbo.fact_assignment_launch fal
-join common.dim_district dist
+from {{ source("dbo","fact_assignment_launch") }} fal
+join {{ ref("dim_district") }} dist
 on fal.organization_district_id = dist.district_id
-join content_delivery_usage.dim_learning_object dlo
+join {{ ref("dim_learning_object") }} dlo
 on fal.learning_object_id=dlo.learning_object_id
-left outer join content_delivery_usage.dbo.mv_student_account st
+left outer join {{ source("dbo","mv_student_account") }} st
 on fal.user_account_id=st.user_account_id and fal.organization_district_id=st.organization_district_id
 join dim_date dt
 on TIMEZONE('UTC', fal.launch_datetime) between dt.SchoolYear_StartDate and DATEADD(day,1,dt.Mon_LastDay)
@@ -111,7 +111,7 @@ RAISE INFO 'Processing %', product_categories.product_category;
 drop table if exists temp_product_categories_learning_objects;
 create temporary table temp_product_categories_learning_objects as
 select distinct product_category, learning_object_id, fromdate,todate
-from dw.content_delivery_usage.dim_product_category_learning_object_monthly dpclom
+from {{ ref("dim_product_category_learning_object_monthly") }} dpclom
 where dpclom.mon_year=pmonth_year
 and product_category=product_categories.product_category;
 
@@ -158,7 +158,7 @@ RAISE INFO 'Processing Medium Categories together...';
 drop table if exists temp_product_categories_learning_objects;
 create temporary table temp_product_categories_learning_objects as
 select distinct product_category, learning_object_id, fromdate,todate
-from dw.content_delivery_usage.dim_product_category_learning_object_monthly dpclom
+from {{ ref("dim_product_category_learning_object_monthly") }} dpclom
 where dpclom.mon_year=pmonth_year
 and product_category in ('Digital Readiness','Texas Essentials Blended Learning Path');
 
@@ -203,7 +203,7 @@ RAISE INFO 'Processing Small Categories together...';
 drop table if exists temp_product_categories_learning_objects;
 create temporary table temp_product_categories_learning_objects as
 select distinct product_category, learning_object_id, fromdate,todate
-from dw.content_delivery_usage.dim_product_category_learning_object_monthly dpclom
+from {{ ref("dim_product_category_learning_object_monthly") }} dpclom
 where dpclom.mon_year=pmonth_year
 and product_category in (
 'Online Safety & Digital Citizenship',
@@ -318,9 +318,9 @@ begin
 **************************************************************************************************/
 
 select to_char(max(cast(launch_datetime as date)),'yyyymm') into latest_month_year
-from content_delivery_usage.dbo.fact_assignment_launch;
+from {{ source("dbo","fact_assignment_launch") }};
 
-call content_delivery_usage.lc_load_students_usage_monthly_snapshots(latest_month_year, ploaddate);
+call {{custom_schema}}.lc_load_students_usage_monthly_snapshots(latest_month_year, ploaddate);
 
 
 
@@ -350,7 +350,7 @@ begin
 **************************************************************************************************/
 
 
-call content_delivery_usage.lc_load_students_usage_monthly_snapshots(GetDate());
+call {{custom_schema}}.lc_load_students_usage_monthly_snapshots(GetDate());
 
 END;
 
@@ -769,7 +769,7 @@ RAISE INFO '- company level';
 CALL content_delivery_usage.lc_load_students_usage_monthly_snapshots_details('', 'temp_fact_usage_monthly_snapshots_company');
 
 RAISE INFO 'Insert into fact_students_usage_monthly_snapshots';
-insert into content_delivery_usage.fact_students_usage_monthly_snapshots
+insert into {{target.database}}.{{custom_schema}}.fact_students_usage_monthly_snapshots
 select
 sch.SchoolYear,
 sch.SchoolYear_Mon,
