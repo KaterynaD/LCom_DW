@@ -27,7 +27,7 @@ offset_value int;
 BEGIN					
 
 
-
+--To replace with v2
 RAISE INFO 'Creating temp table with list of renewable opportunities...';					
 drop table if exists temp_opportunities_ids;					
 create temporary table temp_opportunities_ids as					
