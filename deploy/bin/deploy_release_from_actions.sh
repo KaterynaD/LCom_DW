@@ -327,11 +327,21 @@ if [[ -n \"\$MODIFIED_OBJECTS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; the
 # Create tables from seeds
 \"\$DBT_BIN\" seed --target QA
 
+
+# QA pre-deploy tasks
+\"\$DBT_BIN\" run \
+  --select state:modified,deployment_pre_tasks \
+  --target QA \
+  --state \"\$STATE_DIR\" \
+  --defer \
+  --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
+
+
   
 # QA empty and defer run  
 \"\$DBT_BIN\" run \
   --select state:modified \
-  --exclude \"config.materialized:profiling\" \
+  --exclude \"config.materialized:profiling deployment_pre_tasks deployment_post_tasks\" \
   --empty \
   --target QA \
   --state \"\$STATE_DIR\" \
@@ -394,15 +404,41 @@ else
 fi
 
 
-
-# Deploying in Prod validated models
+# QA post-deploy tasks
 \"\$DBT_BIN\" run \
-  --select state:modified \
-  --exclude \"config.materialized:profiling\" \
+  --select state:modified,deployment_post_tasks \
+  --target QA \
+  --state \"\$STATE_DIR\" \
+  --defer \
+  --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
+
+
+# Prod pre-deploy tasks
+\"\$DBT_BIN\" run \
+  --select state:modified,deployment_pre_tasks \
   --target ${DBT_TARGET_NAME} \
   --state \"\$STATE_DIR\" \
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
+
+
+
+# Deploying in Prod validated models
+\"\$DBT_BIN\" run \
+  --select state:modified \
+  --exclude \"config.materialized:profiling deployment_pre_tasks deployment_post_tasks\" \
+  --target ${DBT_TARGET_NAME} \
+  --state \"\$STATE_DIR\" \
+  --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
+
+
+
+# Prod post-deploy tasks
+\"\$DBT_BIN\" run \
+  --select state:modified,deployment_post_tasks \
+  --target ${DBT_TARGET_NAME} \
+  --state \"\$STATE_DIR\" \
+  --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
 
 else

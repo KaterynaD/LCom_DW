@@ -142,6 +142,15 @@ select
 from common.dim_contact_history
 union all
 
+select
+	'dw' as database_name
+	,'common' as schema_name
+	,'dim_account_history' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from common.dim_account_history
+union all
+
 
 --content_delivery_usage
 
@@ -252,6 +261,66 @@ union all
 select
 	'dw' as database_name
 	,'content_delivery_usage' as schema_name
+	,'dim_product_category' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.dim_product_category
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'dim_training_session_topic' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.dim_training_session_topic
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'dim_training_session_topic_session' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.dim_training_session_topic_session
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'fact_enrollment_monthly_snapshots' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.fact_enrollment_monthly_snapshots
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'fact_skillscheck_calendaryear_snapshots' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.fact_skillscheck_calendaryear_snapshots
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
+	,'fact_skillscheck_schoolyear_snapshots' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from content_delivery_usage.fact_skillscheck_schoolyear_snapshots
+
+union all
+
+select
+	'dw' as database_name
+	,'content_delivery_usage' as schema_name
 	,'fact_training_session' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
@@ -266,6 +335,29 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from content_delivery_usage.fact_training_session_history
+
+
+--marketing
+
+union all
+
+select
+	'dw' as database_name
+	,'marketing' as schema_name
+	,'dim_campaign' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from marketing.dim_campaign
+
+union all
+
+select
+	'dw' as database_name
+	,'marketing' as schema_name
+	,'fact_contact_lifecycle_events' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from marketing.fact_contact_lifecycle_events
 
 
 --revenue
@@ -306,6 +398,16 @@ union all
 select
 	'dw' as database_name
 	,'revenue' as schema_name
+	,'dim_opportunity_line_history' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.dim_opportunity_line_history
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
 	,'fact_paying_customers' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
@@ -320,6 +422,76 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from revenue.fact_revenue_monthly_snapshots
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'dim_arr_audit' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.dim_arr_audit
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'dim_arr_issue' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.dim_arr_issue
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'dim_arr_validation' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.dim_arr_validation
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'fact_arr' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.fact_arr
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'fact_booking' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.fact_booking
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'fact_customer' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.fact_customer
+
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'netsuite_ch042808' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from revenue.netsuite_ch042808
 
 --licensing
 

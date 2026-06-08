@@ -171,7 +171,7 @@ In publish_dbt_docs.sh (docs_publish GitHub Action runner starts automatically w
 
 All release testing is orchestrated in `deploy_release_from_actions.sh` and includes both dbt and Airflow validation steps:
 
-### dbt Validation
+### dbt Validation and Deployment
 
 
 - `dbt compile` is run in the current release with `--vars '{"loaddate": "1900-01-01"}'` to ensure consistent model state comparison (the same `loaddate` is required for accurate diffing).
@@ -180,11 +180,24 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
 - `dbt compile` is run again (with the same `loaddate`) to generate a new manifest for the new release.
 - The old and new manifests are compared, and a list of changed models is printed.
   - If `RUN_QA_STATE_TESTS` is set to `true` and there are dbt modified models:
-    - The QA database is cleaned of all schemas using a dbt macro.
-    - A `dbt run` is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
-    - TBD preparation QA environment for SQL materialization (Sstored procedures and tables are created in QA) I may remove this step soon.
-    - Profiling materialization are not validated (and Profiling is very slow and need a specific target)
-    - List of modified views is sent to validate_views macro and select runs. This is required to validate No Schema Binding Redshift views. If no errors, modified view materialized models are deployed in Prod once because they are not part of routing daily runs.
+
+ #### Validation
+
+    - The QA database is cleaned of all schemas using drop_qa_schemas macros
+    - QA environment (schemas) is created in QA database using set_QA_environment macros
+    - deployment_pre_tasks model is run in QA target if pre_deployment_tasks macros was modified
+    - dbt run is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
+    - Profiling materialization is not validated (it is very slow and need a specific target)    
+    - List of modified views is sent to validate_views macro and select SQL runs. This is required to validate No Schema Binding Redshift views. 
+    - Modified tests are run in QA. Only ERROR is validated. FAILED tests in QA is Ok
+    - deployment_post_tasks model is run in QA target if post_deployment_tasks macros was modified
+
+#### Deployment
+
+    - deployment_pre_tasks model is run in Prod target if pre_deployment_tasks macros was modified
+    - dbt run is performed in Prod target with `state:modified` to deploy modified models.
+    - Profiling materialization is not validated (it is very slow and need a specific target)
+    - deployment_post_tasks model is run in Prod target if post_deployment_tasks macros was modified
 
 - Documentation and column-level lineage are generated:
   - `dbt docs generate`
