@@ -16,5 +16,5 @@ models:
     columns:
       - name: deployment_date
         description: Timestamp (America/Los_Angeles)when the pre-deployment task was executed.
-        data_tests:
-          - not_null
+        constraints:
+          - type: not_null
