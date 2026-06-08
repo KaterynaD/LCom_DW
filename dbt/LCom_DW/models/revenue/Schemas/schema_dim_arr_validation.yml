@@ -92,4 +92,8 @@ models:
         constraints:
           - type: not_null
 
-        
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null                  

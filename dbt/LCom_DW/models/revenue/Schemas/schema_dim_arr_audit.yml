@@ -54,3 +54,9 @@ models:
           - relationships:
               to: ref('dim_arr_issue')
               field: issue_id
+
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null                        

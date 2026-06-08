@@ -209,7 +209,8 @@ v.current_amount::numeric(38,10) as current_amount,
 v.calculated_amount::numeric(38,10) as calculated_amount, 
 v.diff::numeric(38,10) as diff,
 case when a.opportunity_id is null then 'No' else 'Yes' end::varchar(3) as known_issue,
-listagg(isnull(a.issue,'Unknown')::varchar(100) ,'; ')  as known_issue_description
+listagg(isnull(a.issue,'Unknown')::varchar(100) ,'; ')  as known_issue_description,
+'{{ var("loaddate") }}'::timestamp as loaddate	
 from final_data v
 join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
 on v.opportunity_id = socr.opportunity_id
