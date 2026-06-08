@@ -5,6 +5,7 @@
     on_schema_change='append_new_columns'
 ) }}
 
+--test model
 select
     id,
     name

@@ -44,7 +44,10 @@ models:
 
     +persist_docs:
       relation: true
-      columns: true        
+      columns: true  
+
+    audit:
+      +schema: audit            
     common:
       +schema: common  
     content_delivery_usage:
