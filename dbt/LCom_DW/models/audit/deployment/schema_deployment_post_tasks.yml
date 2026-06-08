@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: deployment_post_tasks
+    description: >
+      Placeholder audit model used exclusively to execute post-deployment
+      tasks during CI/CD releases. The model itself has no business logic;
+      its purpose is to provide a dbt object whose post-hook can run
+      deployment-specific SQL after the main deployment completes.
+
+      The model will run only when it or the associated deployment macros
+      are modified and `deploy_flag` is set to `True`. No variables other
+      than `deploy_flag` should be referenced to avoid triggering runs due
+      to non-deployment-related changes.
+
+    columns:
+      - name: deployment_date
+        description: Timestamp (America/Los_Angeles) when the post-deployment task was executed.
+        data_tests:
+          - not_null
