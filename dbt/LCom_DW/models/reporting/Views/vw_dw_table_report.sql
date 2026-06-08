@@ -10,54 +10,7 @@ select
 	,'dim_account' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_account
-union all
-select
-	'dw' as database_name
-	,'common' as schema_name
-	,'dim_student' as table_name
-	,COUNT(*) as row_count
-	,MAX(greatest(
-		(cast(created_datetime as date)), 
-		(cast(modified_datetime as date)), 
-		(cast(deleted_datetime as date))
-		--(cast(launch_datetime as date))
-				)) as last_action_date
-from common.dim_student
-
-
-union all
-
-select
-	'dw' as database_name
-	,'common' as schema_name
-	,'dim_teacher' as table_name
-	,COUNT(*) as row_count
-	,MAX(greatest(
-		(cast(created_datetime as date)), 
-		(cast(modified_datetime as date)), 
-		(cast(deleted_datetime as date))
-		--(cast(launch_datetime as date))
-				)) as last_action_date
-from common.dim_teacher
-
-
-union all
-
-select
-	'dw' as database_name
-	,'common' as schema_name
-	,'dim_user' as table_name
-	,COUNT(*) as row_count
-	,MAX(greatest(
-	--different naming scheme for timestamps
-		(cast(lcom_created_datetime as date)), 
-		(cast(lcom_modified_datetime as date)), 
-		(cast(lcom_deleted_datetime as date))
-		--(cast(launch_datetime as date))
-				)) as last_action_date
-from common.dim_user
-
+from dw.common.dim_account
 union all
 
 
@@ -68,7 +21,7 @@ select
 	,'dim_lcom_sku' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_lcom_sku
+from dw.common.dim_lcom_sku
 union all
 
 select
@@ -77,7 +30,7 @@ select
 	,'dim_lcom_suite' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_lcom_suite
+from dw.common.dim_lcom_suite
 union all
 
 select
@@ -86,7 +39,7 @@ select
 	,'dim_lcom_suite_sku' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_lcom_suite_sku
+from dw.common.dim_lcom_suite_sku
 
 
 
@@ -99,7 +52,7 @@ select
 	,'dim_sfdc_product' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_sfdc_product
+from dw.common.dim_sfdc_product
 
 union all
 
@@ -109,7 +62,7 @@ select
 	,'dim_employee' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_employee
+from dw.common.dim_employee
 
 union all
 
@@ -119,7 +72,7 @@ select
 	,'dim_contact' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_contact
+from dw.common.dim_contact
 
 union all
 
@@ -129,7 +82,7 @@ select
 	,'dim_employee_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_employee_history
+from dw.common.dim_employee_history
 
 union all
 
@@ -139,7 +92,7 @@ select
 	,'dim_contact_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_contact_history
+from dw.common.dim_contact_history
 union all
 
 select
@@ -148,32 +101,20 @@ select
 	,'dim_account_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from common.dim_account_history
+from dw.common.dim_account_history
 union all
 
 
 --content_delivery_usage
 
-	select
-	'dw' as database_name
-	,'content_delivery_usage' as schema_name
-	,'dim_context' as table_name
-	,COUNT(*) as row_count
-	,MAX(greatest((
-		cast(created_datetime as date)), 
-		(cast(modified_datetime as date)), 
-		(cast(deleted_datetime as date))
-		--(cast(launch_datetime as date))
-			)) as last_action_date
-from content_delivery_usage.dim_context
-union all
+
 select
 	'dw' as database_name
 	,'content_delivery_usage' as schema_name
 	,'dim_learning_object' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_learning_object
+from dw.content_delivery_usage.dim_learning_object
 
 
 
@@ -185,7 +126,7 @@ select
 	,'fact_launches_monthly_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(greatest(cast(loaddate as date))) as last_action_date
-from content_delivery_usage.fact_launches_monthly_snapshots
+from dw.content_delivery_usage.fact_launches_monthly_snapshots
 
 union all
 
@@ -195,7 +136,7 @@ select
 	,'fact_launches_weekly_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(greatest(cast(loaddate as date))) as last_action_date
-from content_delivery_usage.fact_launches_weekly_snapshots
+from dw.content_delivery_usage.fact_launches_weekly_snapshots
 
 union all
 select
@@ -204,7 +145,7 @@ select
 	,'dim_lcom_sku_learning_object' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_lcom_sku_learning_object
+from dw.content_delivery_usage.dim_lcom_sku_learning_object
 
 
 union all
@@ -214,7 +155,7 @@ select
 	,'dim_sequence' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_sequence
+from dw.content_delivery_usage.dim_sequence
 
 
 union all
@@ -224,7 +165,7 @@ select
 	,'dim_sequence_learning_object' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_sequence_learning_object
+from dw.content_delivery_usage.dim_sequence_learning_object
 
 union all
 
@@ -234,7 +175,7 @@ select
 	,'fact_students_usage_monthly_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.fact_students_usage_monthly_snapshots
+from dw.content_delivery_usage.fact_students_usage_monthly_snapshots
 
 union all
 
@@ -244,7 +185,7 @@ select
 	,'fact_students_completions_monthly_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.fact_students_completions_monthly_snapshots
+from dw.content_delivery_usage.fact_students_completions_monthly_snapshots
 
 union all
 
@@ -254,7 +195,7 @@ select
 	,'dim_product_category_learning_object_monthly' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_product_category_learning_object_monthly
+from dw.content_delivery_usage.dim_product_category_learning_object_monthly
 
 union all
 
@@ -264,7 +205,7 @@ select
 	,'dim_product_category' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_product_category
+from dw.content_delivery_usage.dim_product_category
 
 union all
 
@@ -274,7 +215,7 @@ select
 	,'dim_training_session_topic' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_training_session_topic
+from dw.content_delivery_usage.dim_training_session_topic
 
 union all
 
@@ -284,7 +225,7 @@ select
 	,'dim_training_session_topic_session' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.dim_training_session_topic_session
+from dw.content_delivery_usage.dim_training_session_topic_session
 
 union all
 
@@ -294,7 +235,7 @@ select
 	,'fact_enrollment_monthly_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.fact_enrollment_monthly_snapshots
+from dw.content_delivery_usage.fact_enrollment_monthly_snapshots
 
 union all
 
@@ -304,7 +245,7 @@ select
 	,'fact_skillscheck_calendaryear_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.fact_skillscheck_calendaryear_snapshots
+from dw.content_delivery_usage.fact_skillscheck_calendaryear_snapshots
 
 union all
 
@@ -314,7 +255,7 @@ select
 	,'fact_skillscheck_schoolyear_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.fact_skillscheck_schoolyear_snapshots
+from dw.content_delivery_usage.fact_skillscheck_schoolyear_snapshots
 
 union all
 
@@ -324,7 +265,7 @@ select
 	,'fact_training_session' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.fact_training_session
+from dw.content_delivery_usage.fact_training_session
 
 union all
 
@@ -334,7 +275,7 @@ select
 	,'fact_training_session_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from content_delivery_usage.fact_training_session_history
+from dw.content_delivery_usage.fact_training_session_history
 
 
 --marketing
@@ -347,7 +288,7 @@ select
 	,'dim_campaign' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from marketing.dim_campaign
+from dw.marketing.dim_campaign
 
 union all
 
@@ -357,7 +298,7 @@ select
 	,'fact_contact_lifecycle_events' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from marketing.fact_contact_lifecycle_events
+from dw.marketing.fact_contact_lifecycle_events
 
 
 --revenue
@@ -370,7 +311,7 @@ select
 	,'fact_opportunity' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_opportunity
+from dw.revenue.fact_opportunity
 
 
 union all
@@ -381,7 +322,7 @@ select
 	,'fact_opportunity_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_opportunity_history
+from dw.revenue.fact_opportunity_history
 
 union all
 
@@ -391,7 +332,7 @@ select
 	,'dim_opportunity_line' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.dim_opportunity_line
+from dw.revenue.dim_opportunity_line
 
 union all
 
@@ -401,7 +342,7 @@ select
 	,'dim_opportunity_line_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.dim_opportunity_line_history
+from dw.revenue.dim_opportunity_line_history
 
 union all
 
@@ -411,7 +352,7 @@ select
 	,'fact_paying_customers' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_paying_customers
+from dw.revenue.fact_paying_customers
 
 union all
 
@@ -421,7 +362,7 @@ select
 	,'fact_revenue_monthly_snapshots' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_revenue_monthly_snapshots
+from dw.revenue.fact_revenue_monthly_snapshots
 
 union all
 
@@ -431,7 +372,7 @@ select
 	,'dim_arr_audit' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.dim_arr_audit
+from dw.revenue.dim_arr_audit
 
 union all
 
@@ -441,7 +382,7 @@ select
 	,'dim_arr_issue' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.dim_arr_issue
+from dw.revenue.dim_arr_issue
 
 union all
 
@@ -451,7 +392,7 @@ select
 	,'dim_arr_validation' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.dim_arr_validation
+from dw.revenue.dim_arr_validation
 
 union all
 
@@ -461,7 +402,7 @@ select
 	,'fact_arr' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_arr
+from dw.revenue.fact_arr
 
 union all
 
@@ -471,7 +412,7 @@ select
 	,'fact_booking' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_booking
+from dw.revenue.fact_booking
 
 union all
 
@@ -481,7 +422,7 @@ select
 	,'fact_customer' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.fact_customer
+from dw.revenue.fact_customer
 
 union all
 
@@ -491,7 +432,7 @@ select
 	,'netsuite_ch042808' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from revenue.netsuite_ch042808
+from dw.revenue.netsuite_ch042808
 
 --licensing
 
@@ -503,7 +444,7 @@ select
 	,'fact_license_order' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from licensing.fact_license_order
+from dw.licensing.fact_license_order
 
 union all
 
@@ -513,7 +454,7 @@ select
 	,'fact_license_order_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from licensing.fact_license_order_history
+from dw.licensing.fact_license_order_history
 
 union all
 
@@ -523,7 +464,7 @@ select
 	,'dim_license_order_school' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from licensing.dim_license_order_school
+from dw.licensing.dim_license_order_school
 
 --support
 union all
@@ -534,7 +475,7 @@ select
 	,'fact_case' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from support.fact_case
+from dw.support.fact_case
 
 union all
 
@@ -544,7 +485,7 @@ select
 	,'fact_case_history' as table_name
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
-from support.fact_case_history
+from dw.support.fact_case_history
 
 ) 
 
