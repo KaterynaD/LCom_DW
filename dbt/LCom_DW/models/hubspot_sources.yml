@@ -1,0 +1,14 @@
+---
+sources:
+  - name: fivetran_hubspot
+    description: "Source for HubSpot data managed by Fivetran. Fivetran loads data in rawdata.fivetran_hubspot schema"
+    database: rawdata
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+
+      - name: deal
+        description: "Deals are analogous to opportunities in Salesforce. Only EComm deals are originated in HubSpot. The renewals are created in Salesforce but can be modified in HubSpot"
+      

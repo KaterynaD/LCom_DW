@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: hubspot_deal
+    description: "HubSpot ecommerce cart and renewal deals."
+    config:
+      contract:
+        enforced: true
+      tags:
+        - hubspot
+        - revenue
+
+
+    columns:
+      - name: deal_id
+        description: "Primary Key of HubSpot Deal ID."
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        data_tests:
+          - unique
+          - not_null
+
+      - name: deal_name
+        description: "HubSpot deal name."
+        data_type: varchar(256)
+        constraints:
+          - type: not_null
+
+      - name: purchased_date
+        description: "Date when the ecommerce purchase occurred. customer paid and licenses are created in the system"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: amount
+        description: "Deal amount."
+        data_type: numeric(35,10)
+        constraints:
+          - type: not_null
+
+      - name: sfdc_opportunity_id
+        description: "Salesforce Opportunity ID FK"
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: sfdc_invoiced_date
+        description: "Invoiced Date integrated from Salesforce. There is no HubSpot Invoiced Date"
+        data_type: date
+        constraints:
+          - type: not_null
+
+      - name: sfdc_last_synctime
+        description: "Salesforce last sync timestamp."
+        data_type: timestamp
+        constraints:
+          - type: not_null
+
+      - name: ecomm_renewal
+        description: "Flag indicating ecommerce renewal deal. New EComm deals are created in HubSpot, renewals are created in Salesforce but can be edited in HubSpot"
+        data_type: boolean
+        constraints:
+          - type: not_null
+
+      - name: invoice_link_id
+        description: "Invoice link ID extracted from ecommerce invoice URL. It can be added to https://info.learning.com/cart/{invoice_link_id} to access the invoice details in HubSpot."
+        data_type: varchar(300)
+        constraints:
+          - type: not_null
+
+      - name: deal_type
+        description: "EComm for now in all records"
+        data_type: varchar(5)
+        constraints:
+          - type: not_null
+
+      - name: loaddate
+        description: "{{ doc('column_loaddate') }}"
+        data_type: timestamp
+        constraints:
+          - type: not_null  
