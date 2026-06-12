@@ -5,7 +5,7 @@ models:
     description: '{{ doc("table_fact_customer") }}'
     config:
       contract:
-        enforced: false
+        enforced: true
       tags:
         - fact
         - revenue
