@@ -3,7 +3,8 @@
 
         materialized='table',        
         sort='start_date', 
-        dist='account_id'  
+        dist='account_id',
+        post_hook=['{{ update_history_table_changed_uk("revenue", "fact_opportunity_history") }}' ]
         
         )
 }}

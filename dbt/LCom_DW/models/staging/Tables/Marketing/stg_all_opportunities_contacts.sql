@@ -8,7 +8,8 @@
         
         )
 }}
-
+  
+  -- depends_on: {{ ref('dim_contact') }}
 
 	--primary contact
     SELECT DISTINCT

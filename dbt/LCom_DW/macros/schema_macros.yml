@@ -61,25 +61,24 @@ macros:
   - name: sql_runner
     description: Used in custom materialization to populate a table from a stored procedure
 
-  - name: run_populating_dim_calendar
-    description: To populate dim_calendar    (call common.populating_dim_calendar)
-
   - name: get_day_of_month_now
     description: Returns day of teh current month to be used in month_range_to_load macro
 
   - name: month_range_to_load
     description: For staging tables used to populate revenue.fact_customers_monthly_snapshots returns mon_year condition to load data. It can be a historical range or based on the current day of month to process only current month or current and previous in a case there were changes in INVOICED_DATE.
 
+  - name: update_history_table_changed_uk
+    description: Generic macro to update ACCOUNT_ID in any fact history source table when DIM_ACCOUNT switches from SFDC Account Id to LCOM Organization Id.
+    arguments:
+      - name: source_schema
+        description: Source schema name used in source(source_schema, source_table)
+      - name: source_table
+        description: Source table name used in source(source_schema, source_table)
+
   - name: update_DIM_ACCOUNT_HISTORY_changed_UK
     description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage accounts deleted in SFDC
 
   - name: delete_from_DIM_ACCOUNT_HISTORY_from_to_the_same
     description: Deletes records from DIM_ACCOUNT_HISTORY if fromdate=todate They are not usable for history tracking anyway    
-
-  - name: update_FACT_OPPORTUNITY_HISTORY_changed_UK
-    description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage opportunities deleted in SFDC    
-
-  - name: update_FACT_CASE_HISTORY_changed_UK
-    description: Updates ACCOUNT_ID if it's changed in DIM_ACCOUNT (LCom Organization was created joined to SFDC Account) and deletes history of garbage cases deleted in SFDC        
-
+    
     

@@ -4,7 +4,7 @@
         materialized='table',        
         sort='start_date', 
         dist='account_id' ,
-        post_hook=['{{ update_FACT_TRAINING_SESSION_HISTORY_changed_UK() }}' ]
+        post_hook=['{{ update_history_table_changed_uk("content_delivery_usage", "fact_training_session_history") }}' ]
         
         )
 }}

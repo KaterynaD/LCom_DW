@@ -3,7 +3,7 @@
         materialized='table',        
         sort='contact_id', 
         dist='account_id'        ,
-        post_hook=['{{ update_DIM_CONTACT_HISTORY_changed_UK() }}' ]                                         
+        post_hook=['{{ update_history_table_changed_uk("common", "dim_contact_history")  }}' ]
          )
 }}
 with rawdata as (select

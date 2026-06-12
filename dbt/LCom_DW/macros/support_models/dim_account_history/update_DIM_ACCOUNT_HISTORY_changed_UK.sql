@@ -1,6 +1,6 @@
 {% macro update_DIM_ACCOUNT_HISTORY_changed_UK() %}
 
-{% if target.name != 'QA' %}
+{% if execute  and flags.WHICH in ('run','run-operation', 'build') and target.name != 'QA' %}
  
  {% set hist_relation = source('common', 'dim_account_history')  %}
 
@@ -73,7 +73,7 @@ select distinct id from {{ source('fivetran_salesforce_quickstart', 'account') }
 
 {% macro delete_from_DIM_ACCOUNT_HISTORY_from_to_the_same() %}
 
-{% if target.name != 'QA' %}
+{% if execute  and flags.WHICH in ('run','run-operation', 'build') and target.name != 'QA' %}
  
  {% set hist_relation = source('common', 'dim_account_history')  %}
 

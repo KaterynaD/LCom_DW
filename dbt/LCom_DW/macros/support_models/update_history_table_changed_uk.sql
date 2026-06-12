@@ -1,18 +1,19 @@
-{% macro update_FACT_TRAINING_SESSION_HISTORY_changed_UK() %}
+{% macro update_history_table_changed_uk(source_schema, source_table) %}
 
 
 
 
 
 
-{% if target.name != 'QA' %}
+
+{% if execute  and flags.WHICH in ('run','run-operation', 'build') and target.name != 'QA' %}
  
-{% set hist_relation = source('content_delivery_usage', 'fact_training_session_history')  %}
+{% set hist_relation = source(source_schema, source_table)  %}
 
 {% set run_operation %}
 
 /* PK (dist key) in DIM_ACCOUNT is changed to LCOM Org Id when available */
-/* adjusting FACT_TRAINING_SESSION_HISTORY unique key before regular run */
+/* adjusting FACT or DIM_*_HISTORY unique key before regular run */
 
 with accounts_to_adjuste as 
 (
