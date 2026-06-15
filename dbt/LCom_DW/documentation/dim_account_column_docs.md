@@ -243,7 +243,7 @@ Customer Type (Creates text value for Record Type field for easier user understa
 {% enddocs %}
 
 {% docs column_sfdc_customer_level %}
-Customer Level. Strategic level of customer.  Integrations: Gainsight.
+Combination of Salesforce Customer Level (Strategic level of customer.  Integrations: Gainsight). and Salesforce Tier (Used in approval process, automation, and dynamic viewership.) when Customer Level is blank. 
 {% enddocs %}
 
 {% docs column_sfdc_customer_level_override %}

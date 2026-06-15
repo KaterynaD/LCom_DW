@@ -62,6 +62,7 @@ on sfdc_parent_account.owner_id= sfdc_user.id
 'current_renewal_arr_c',
 'customer_type_c',
 'customer_level_c',
+'tier_c',
 'customer_level_override_c',
 'data_quality_description_c',
 'data_quality_score_c',
@@ -225,7 +226,19 @@ isnull(SFDC_data.created_by_id, '{{ var("default_varchar") }}') as SFDC_created_
 isnull(SFDC_data.created_date AT TIME ZONE 'PST', '{{ var("default_date") }}') as SFDC_created_date,
 isnull(SFDC_data.current_renewal_arr_c, {{ var("default_numeric") }}) as SFDC_current_renewal_arr,
 isnull(SFDC_data.customer_type_c, '{{ var("default_varchar") }}') as SFDC_customer_type,
-isnull(SFDC_data.customer_level_c, '{{ var("default_varchar") }}') as SFDC_customer_level,
+isnull(case
+	when SFDC_data.customer_level_c is null
+		then
+			case when SFDC_data.tier_c = 'Ecommerce'		then 'eComm'
+			when SFDC_data.tier_c = 'Emerging' then 'Emerging Account'
+			when SFDC_data.tier_c = 'Key' then 'Key Account'
+			when SFDC_data.tier_c = 'Midmarket' then 'Mid-Market Account'
+			when SFDC_data.tier_c = 'Specialty' then 'Specialty Account'
+			else SFDC_data.customer_level_c
+			end
+	else SFDC_data.customer_level_c
+end 
+, '{{ var("default_varchar") }}') as SFDC_customer_level,
 isnull(SFDC_data.customer_level_override_c, '{{ var("default_varchar") }}') as SFDC_customer_level_override,
 isnull(SFDC_data.grade_levels_c, '{{ var("default_varchar") }}') as SFDC_grade_levels,
 isnull(SFDC_data.data_quality_description_c, '{{ var("default_varchar") }}') as SFDC_data_quality_description,
