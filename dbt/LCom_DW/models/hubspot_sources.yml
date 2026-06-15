@@ -11,4 +11,8 @@ sources:
 
       - name: deal
         description: "Deals are analogous to opportunities in Salesforce. Only EComm deals are originated in HubSpot. The renewals are created in Salesforce but can be modified in HubSpot"
+      - name: deal_company
+        description: "Associates deals with accounts( companies) in HubSpot."
+      - name: company
+        description: "Represents companies (accounts) in HubSpot."        
       

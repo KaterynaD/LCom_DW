@@ -29,6 +29,13 @@ models:
         constraints:
           - type: not_null
 
+
+      - name: account_name
+        description: "HubSpot company (account) name associated with the deal."
+        data_type: varchar(256)
+        constraints:
+          - type: not_null
+
       - name: purchased_date
         description: "Date when the ecommerce purchase occurred. customer paid and licenses are created in the system"
         data_type: date

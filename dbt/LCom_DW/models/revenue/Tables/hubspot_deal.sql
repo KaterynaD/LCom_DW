@@ -11,6 +11,7 @@
 select
 d.deal_id::varchar(300),
 isnull(d.property_dealname,'{{ var("default_varchar") }}')::varchar(256) deal_name,
+isnull(c.property_name,'Unknown')::varchar(256) account_name,
 isnull((d.property_cart_purchased_date AT TIME ZONE 'utc'), '{{ var("default_date") }}')::date as purchased_date,
 isnull(d.property_amount,{{ var("default_numeric") }})::numeric(35,10) as amount,
 isnull(d.property_hs_salesforceopportunityid,'{{ var("default_ID") }}')::varchar(300) as sfdc_opportunity_id,
@@ -21,6 +22,12 @@ isnull(replace(property_ecommerce_invoice_link_sync , 'https://info.learning.com
 'EComm'::varchar(5) deal_type,
 '{{ var("loaddate") }}'::TIMESTAMP WITHOUT TIME ZONE as loaddate
 from {{ source('fivetran_hubspot', 'deal') }} d
+join {{ source('fivetran_hubspot', 'deal_company') }}  dc
+on d.deal_id = dc.deal_id
+join {{ source('fivetran_hubspot', 'company') }}  c
+on dc.company_id = c.id
 where (d.property_ecommerce_cart is True or d.property_ecommerce_renewal is True)
-and is_deleted is False
-and _fivetran_deleted is false
+and d.is_deleted is False
+and d._fivetran_deleted is false
+and c.is_deleted is False
+and c._fivetran_deleted is false
