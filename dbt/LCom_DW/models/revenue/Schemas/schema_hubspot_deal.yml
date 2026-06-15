@@ -36,6 +36,12 @@ models:
         constraints:
           - type: not_null
 
+      - name: billing_state
+        description: "Billing state associated with the HubSpot deal."
+        data_type: varchar(256)
+        constraints:
+          - type: not_null
+
       - name: purchased_date
         description: "Date when the ecommerce purchase occurred. customer paid and licenses are created in the system"
         data_type: date

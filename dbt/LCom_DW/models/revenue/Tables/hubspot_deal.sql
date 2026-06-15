@@ -12,6 +12,7 @@ select
 d.deal_id::varchar(300),
 isnull(d.property_dealname,'{{ var("default_varchar") }}')::varchar(256) deal_name,
 isnull(c.property_name,'Unknown')::varchar(256) account_name,
+isnull(d.property_billing_state_c,'Unknown')::varchar(256) billing_state,
 isnull((d.property_cart_purchased_date AT TIME ZONE 'utc'), '{{ var("default_date") }}')::date as purchased_date,
 isnull(d.property_amount,{{ var("default_numeric") }})::numeric(35,10) as amount,
 isnull(d.property_hs_salesforceopportunityid,'{{ var("default_ID") }}')::varchar(300) as sfdc_opportunity_id,
