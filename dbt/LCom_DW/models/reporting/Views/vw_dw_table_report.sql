@@ -434,6 +434,17 @@ select
 	,MAX(loaddate) as last_action_date
 from dw.revenue.netsuite_ch042808
 
+union all
+
+select
+	'dw' as database_name
+	,'revenue' as schema_name
+	,'hubspot_deal' as table_name
+	,COUNT(*) as row_count
+	,MAX(loaddate) as last_action_date
+from dw.revenue.hubspot_deal
+
+
 --licensing
 
 union all
