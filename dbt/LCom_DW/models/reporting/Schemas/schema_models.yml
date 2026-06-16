@@ -26,23 +26,12 @@ models:
       tags:
         - rep
 
-  - name: vw_fivetran_sync_table_report
-    description: Row counts and last fivetran sync date for all tables synced using fivetran. Direct table name instead of source is used to eliminated lineage mess and not all tables are used as source
+  - name: vw_fivetran_sources_report
+    description: Row counts, last fivetran sync date and source system creation date for all tables synced using fivetran. Direct table name instead of source is used to eliminated lineage mess and not all tables are used as source
     config:
       tags:
         - rep     
-
-  - name: vw_salesforce_object_created_report
-    description: Row counts and last created date for all salesforce tables synced using fivetran. Direct table name instead of source is used to eliminated lineage mess and not all tables are used as source
-    config:
-      tags:
-        - rep      
-
-  - name: vw_hubspot_object_created_report
-    description: Row counts and last created date for all hubspot tables synced using fivetran. Direct table name instead of source is used to eliminated lineage mess and not all tables are used as source
-    config:
-      tags:
-        - rep                     
+    
 
   - name: vw_cdu_table_report
     description: Row counts and last action date for all tabless/views in CONTENT_DELIVERY_USAGE database schemas
