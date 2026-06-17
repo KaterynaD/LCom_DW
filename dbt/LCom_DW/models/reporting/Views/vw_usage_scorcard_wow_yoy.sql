@@ -1,6 +1,9 @@
 {{ config(
     materialized = 'view',
-    bind = false
+    bind = false,
+   post_hook = [
+                    '{{ validate_view() }}'
+                   ]
 ) }}
 
 WITH date_periods AS (

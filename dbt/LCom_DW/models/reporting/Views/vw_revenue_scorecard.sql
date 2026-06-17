@@ -1,5 +1,8 @@
 {{ config(materialized='view',
-   bind=False
+   bind=False,
+   post_hook = [
+                    '{{ validate_view() }}'
+                   ]
 )
  }}
 with month_params as (

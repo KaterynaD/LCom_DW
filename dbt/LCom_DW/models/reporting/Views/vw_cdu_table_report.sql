@@ -1,4 +1,7 @@
-{{ config(materialized='view', bind=False) }}
+{{ config(materialized='view', bind=False,
+   post_hook = [
+                    '{{ validate_view() }}'
+                   ]) }}
 
 --row count and last action date for all tables/views in content_delivery_usage
 with table_report as (

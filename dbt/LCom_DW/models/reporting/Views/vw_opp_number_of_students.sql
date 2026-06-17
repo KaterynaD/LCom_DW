@@ -1,4 +1,7 @@
-{{ config(materialized='view', bind=False) }}
+{{ config(materialized='view', bind=False,
+   post_hook = [
+                    '{{ validate_view() }}'
+                   ]) }}
 
 with dim_month as --Thread to calculate monthly metrics
 (select substring(c.mon_year,5,2)::int mon, c.mon_year, c.mon_firstday, c.mon_lastday, c.FiscalYear, c.SchoolYear, c.FiscalYear_startdate, c.FiscalYear_enddate , c.FiscalYear_mon, c.SchoolYear_mon

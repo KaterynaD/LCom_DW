@@ -1,4 +1,7 @@
-{{ config(materialized='view', bind=False) }}
+{{ config(materialized='view', bind=False,
+   post_hook = [
+                    '{{ validate_view() }}'
+                   ]) }}
 
 --V19 - query using DW tables
 --adding rejected reason and other newly added fields

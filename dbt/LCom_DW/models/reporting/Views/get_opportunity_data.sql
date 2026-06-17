@@ -1,4 +1,7 @@
-{{ config(materialized='view', bind=False) }}
+{{ config(materialized='view', bind=False,
+   post_hook = [
+                    '{{ validate_view() }}'
+                   ]) }}
 
 
     WITH license_order_counts AS (

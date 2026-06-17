@@ -1,4 +1,7 @@
-{{ config(materialized='view', bind=False) }}
+{{ config(materialized='view', bind=False,
+   post_hook = [
+                    '{{ validate_view() }}'
+                   ]) }}
 
 
 with dim_month as --Thread to calculate monthly metrics
