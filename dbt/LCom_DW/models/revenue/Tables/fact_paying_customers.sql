@@ -11,6 +11,7 @@
         )
 }}
 
+--Depracate soon
 with dim_month as			
 (			
 select FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year			
