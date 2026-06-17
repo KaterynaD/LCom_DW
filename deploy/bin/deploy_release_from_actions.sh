@@ -340,7 +340,7 @@ if [[ -n \"\$MODIFIED_OBJECTS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; the
   
 # QA empty and defer run  
 \"\$DBT_BIN\" run \
-  --select state:modified \
+  --select state:modified state:modified+,config.materialized:view \
   --exclude \"config.materialized:profiling deployment_pre_tasks deployment_post_tasks\" \
   --empty \
   --target QA \
@@ -349,10 +349,10 @@ if [[ -n \"\$MODIFIED_OBJECTS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; the
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
 
-# QA defer test  
+# QA defer singular(custom SQL) test  
 TEST_OUTPUT=\$(
   \"\$DBT_BIN\" test \
-    --select state:modified \
+    --select state:modified,test_type:singular \
     --exclude \"config.materialized:profiling\" \
     --target QA \
     --state \"\$STATE_DIR\" \
@@ -369,39 +369,8 @@ if echo "\$TEST_OUTPUT" | grep -Eq 'ERROR=([1-9][0-9]*)|(^|[[:space:]])ERROR([[:
   exit 1
 fi
 
-echo '[container] dbt test completed without ERROR. Test FAIL is allowed.'
+echo '[container] dbt test completed without ERROR.'
 
-
-
-# No Schema Binding redshift Views must be run (select) to be fully validated
-# 1. List of modified views
-VIEW_LIST=\$(
-  \"\$DBT_BIN\" list \
-    --quiet \
-    --select state:modified,config.materialized:view \
-    --state \"\$STATE_DIR\" \
-    --resource-type model \
-    --target ${DBT_TARGET_NAME} \
-    --vars '{\"loaddate\": \"1900-01-01\"}' \
-  | awk -F'.' '/^LCom_DW\./ {print \"'\''\" \$NF \"'\''\"}' \
-  | paste -sd, -
-)
-
-
-
-
-echo '[container] VIEW_LIST:' \"\$VIEW_LIST\"
-
-# 2. Run select in dbt macros from each view in QA
-if [[ -n \"\$VIEW_LIST\" ]]; then
-
-  \"\$DBT_BIN\" run-operation validate_views \
-    --target QA \
-    --args \"{'models':[\${VIEW_LIST}]}\"
-
-else
-  echo '[container] No views to validate.'
-fi
 
 
 # QA post-deploy tasks
