@@ -7920,9 +7920,9 @@ select
     r.schema_name,
     r.table_name,
     r.total_rows,
-    r.max_fivetran_synced_date,
-    r.changed_on_max_fivetran_synced_date,
-    r.max_created_date,
+    r.max_fivetran_synced_date AT TIME ZONE 'America/Los_Angeles' as max_fivetran_synced_date,
+    r.changed_on_max_fivetran_synced_date ,
+    r.max_created_date AT TIME ZONE 'America/Los_Angeles' as max_created_date,
     r.changed_on_max_created_date,
     case
         when us.table_name is not null then 'Y'
