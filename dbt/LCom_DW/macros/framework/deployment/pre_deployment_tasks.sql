@@ -10,6 +10,7 @@
  {% set target_db = (target.database | string) %}
  {% if target_db | upper == 'QA' %}
 
+   create table qa.revenue.dim_opportunity_line as select * from dw.revenue.dim_opportunity_line;
    create table qa.revenue.dim_opportunity_line_history as select * from dw.revenue.dim_opportunity_line_history;
 
  {% endif %}
