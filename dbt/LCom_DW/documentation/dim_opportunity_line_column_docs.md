@@ -47,8 +47,27 @@ Netsuite SKU
 
 
 
-{% docs column_discount_applied %}
-Discount Applied
+{% docs column_additional_discount_amount %}
+Fixed additional discount amount entered by the salesperson. Recalculated from % if it was originally eneterd as %: list_price * sbqq_discount_c / 100.0
+{% enddocs %}
+
+
+{% docs column_additional_discount_rate %}
+Percentage additional discount entered by the salesperson. Recalculated from additional discount amount if it was originally eneterd as $: sbqq_additional_discount_amount_c / nullif(list_price, 0)
+{% enddocs %}
+
+
+{% docs column_additional_discount_type %}
+Indicates whether the additional discount was entered originally as an amount or percentage.
+{% enddocs %}
+
+{% docs column_total_discount_rate %}
+Total discount rate calculated by Salesforce after applying all applicable discount and pricing logic including additional_discount_rate.
+{% enddocs %}
+
+{% docs column_total_discount_amount %}
+Total discount amount calculated by Salesforce after applying all applicable discount and pricing logic including additional_discount_rate additional_discount_amount.
+
 {% enddocs %}
 
 

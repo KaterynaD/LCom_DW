@@ -1,5 +1,32 @@
 ---
 sources:
+  - name: fivetran_salesforce
+    description: "Raw Salesforce data managed by Fivetran. There are too many formulas in sbqq_quote_line_c. SQL text is larger then 65K and due to an issue in Redshift it cannot be processed as a view in fivetran_salesforce_quickstart schema"
+    database: rawdata
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    tables:
+
+      - name: sbqq_quote_line_c
+        columns:   
+        - name: Id
+        - name: sbqq_pricing_method_c
+        - name: sbqq_existing_c
+        - name: sbqq_carryover_line_c
+        - name: sbqq_quantity_c
+        - name: sbqq_prior_quantity_c
+        - name: sbqq_upgraded_quantity_c
+        - name: sbqq_allow_asset_refund_c
+        - name: sbqq_subscription_pricing_c
+        - name: sbqq_bundled_c
+        - name: sbqq_prorated_list_price_c
+        - name: sbqq_customer_price_c
+        - name: sbqq_discount_schedule_type_c
+        - name: sbqq_additional_discount_amount_c
+        - name: sbqq_discount_c
+
   - name: fivetran_salesforce_quickstart
     description: "Source for Salesforce data managed by Fivetran. Fivetran loads data in rawdata.fivetran_salesforce schema and pre-process using own dbt project in rawdata.fivetran_salesforce_quickstart schema. The data with formula based columns are in the views in rawdata and marked as deleted records are not available.fivetran_salesforce_quickstart schema"
     database: rawdata

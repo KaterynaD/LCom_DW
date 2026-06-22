@@ -98,11 +98,40 @@ models:
     description: "{{ doc('column_netsuite_sku') }}"
     constraints:
     - type: not_null
-  - name: discount_applied
-    data_type: VARCHAR(25)
-    description: "{{ doc('column_discount_applied') }}"
+
+  - name: additional_discount_amount
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_additional_discount_amount') }}"
     constraints:
     - type: not_null
+
+  - name: additional_discount_rate
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_additional_discount_rate') }}"
+    constraints:
+    - type: not_null
+
+  - name: additional_discount_type
+    data_type: VARCHAR(20)
+    description: "{{ doc('column_additional_discount_type') }}"
+    constraints:
+    - type: not_null
+
+
+  - name: total_discount_rate
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_total_discount_rate') }}"
+    constraints:
+    - type: not_null
+
+  - name: total_discount_amount
+    data_type: NUMERIC(35,17)
+    description: "{{ doc('column_total_discount_amount') }}"
+    constraints:
+    - type: not_null
+
+
+
   - name: list_price
     data_type: NUMERIC(35,17)
     description: "{{ doc('column_list_price') }}"

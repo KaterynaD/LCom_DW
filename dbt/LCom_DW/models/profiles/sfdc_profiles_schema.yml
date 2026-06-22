@@ -639,3 +639,139 @@ models:
   - name: loaddate
     description: Timestamp when the profile row was inserted.
     data_type: TIMESTAMP WITHOUT TIME ZONE
+- name: sfdc_sbqq_quote_c_profile
+  description: Generates a lightweight profile for the Salesforce SBQQ_Quote_c table. This model is part of the SFDC drift audit system
+    and is used to monitor changes in the table structure . The dbt model MUST be run with sfdc target
+    (rawdata database).
+  columns:
+  - name: profile_column_id
+    description: Unique ID of the profiled column within the profiling framework.
+    data_type: VARCHAR(32)
+  - name: profile_name
+    description: Name of the profile run (e.g., Current, Base).
+    data_type: VARCHAR(5000)
+  - name: profile_limited_to_where_clause
+    description: Optional WHERE clause applied during profiling to limit rows.
+    data_type: VARCHAR(4000)
+  - name: profile_limited_to_rows
+    description: Optional row limit applied to the profiling query.
+    data_type: INTEGER
+  - name: database_name
+    description: Source database name of the column.
+    data_type: VARCHAR(128)
+  - name: schema_name
+    description: Source schema name of the column.
+    data_type: VARCHAR(128)
+  - name: table_name
+    description: Source table name of the column.
+    data_type: VARCHAR(128)
+  - name: column_name
+    description: Column name being profiled.
+    data_type: VARCHAR(128)
+  - name: ordinal_position
+    description: Column position within the table.
+    data_type: INTEGER
+  - name: data_type
+    description: Original Redshift data type.
+    data_type: VARCHAR(128)
+  - name: length_or_precision
+    description: Length, precision, or scale information extracted from metadata.
+    data_type: VARCHAR(25)
+  - name: is_nullable
+    description: Whether the column allows NULLs.
+    data_type: VARCHAR(128)
+  - name: column_default
+    description: Default value defined for the column, if any.
+    data_type: VARCHAR(4000)
+  - name: data_type_category
+    description: Normalized category (numeric, varchar, date).
+    data_type: VARCHAR(10)
+  - name: total_rows
+    description: Total number of rows analyzed.
+    data_type: INTEGER
+  - name: cnt_nulls
+    description: Number of NULL values.
+    data_type: INTEGER
+  - name: pct_nulls
+    description: Percentage of NULLs.
+    data_type: NUMERIC(38,10)
+  - name: cnt_uniqs
+    description: Number of distinct values.
+    data_type: INTEGER
+  - name: pct_uniqs
+    description: Percent of unique values (distinct/total).
+    data_type: NUMERIC(38,10)
+  - name: remarks
+    description: Column`s comment in the database
+    data_type: VARCHAR(256)
+  - name: loaddate
+    description: Timestamp when the profile row was inserted.
+    data_type: TIMESTAMP WITHOUT TIME ZONE
+- name: sfdc_sbqq_quote_line_c_profile
+  description: Generates a lightweight profile for the Salesforce SBQQ_Quote_Line_c table. This model is part of the SFDC drift audit system
+    and is used to monitor changes in the table structure . The dbt model MUST be run with sfdc target
+    (rawdata database).
+  columns:
+  - name: profile_column_id
+    description: Unique ID of the profiled column within the profiling framework.
+    data_type: VARCHAR(32)
+  - name: profile_name
+    description: Name of the profile run (e.g., Current, Base).
+    data_type: VARCHAR(5000)
+  - name: profile_limited_to_where_clause
+    description: Optional WHERE clause applied during profiling to limit rows.
+    data_type: VARCHAR(4000)
+  - name: profile_limited_to_rows
+    description: Optional row limit applied to the profiling query.
+    data_type: INTEGER
+  - name: database_name
+    description: Source database name of the column.
+    data_type: VARCHAR(128)
+  - name: schema_name
+    description: Source schema name of the column.
+    data_type: VARCHAR(128)
+  - name: table_name
+    description: Source table name of the column.
+    data_type: VARCHAR(128)
+  - name: column_name
+    description: Column name being profiled.
+    data_type: VARCHAR(128)
+  - name: ordinal_position
+    description: Column position within the table.
+    data_type: INTEGER
+  - name: data_type
+    description: Original Redshift data type.
+    data_type: VARCHAR(128)
+  - name: length_or_precision
+    description: Length, precision, or scale information extracted from metadata.
+    data_type: VARCHAR(25)
+  - name: is_nullable
+    description: Whether the column allows NULLs.
+    data_type: VARCHAR(128)
+  - name: column_default
+    description: Default value defined for the column, if any.
+    data_type: VARCHAR(4000)
+  - name: data_type_category
+    description: Normalized category (numeric, varchar, date).
+    data_type: VARCHAR(10)
+  - name: total_rows
+    description: Total number of rows analyzed.
+    data_type: INTEGER
+  - name: cnt_nulls
+    description: Number of NULL values.
+    data_type: INTEGER
+  - name: pct_nulls
+    description: Percentage of NULLs.
+    data_type: NUMERIC(38,10)
+  - name: cnt_uniqs
+    description: Number of distinct values.
+    data_type: INTEGER
+  - name: pct_uniqs
+    description: Percent of unique values (distinct/total).
+    data_type: NUMERIC(38,10)
+  - name: remarks
+    description: Column`s comment in the database
+    data_type: VARCHAR(256)
+  - name: loaddate
+    description: Timestamp when the profile row was inserted.
+    data_type: TIMESTAMP WITHOUT TIME ZONE    

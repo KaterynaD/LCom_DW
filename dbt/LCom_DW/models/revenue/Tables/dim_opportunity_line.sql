@@ -15,7 +15,7 @@ with rawdata as (select
         alias='sfdc_opp_line_item',
         used_columns=[ 
 			'combine_new_biz_arr_c','combine_renewal_arrs_c','combine_upsell_arrs_c',
-'created_date','discount_applied_c',
+'created_date',
 'end_date_c','id',
 'last_modified_date','list_price','name',
 'net_price_display_c','net_unit_price_c','netsuite_sku_c',
@@ -36,11 +36,42 @@ select
 isnull(ol.combine_new_biz_arr_c, {{ var("default_numeric") }}) as combine_new_biz_arr	,
 isnull(ol.combine_renewal_arrs_c, {{ var("default_numeric") }}) as combine_renewal_arrs	,
 isnull(ol.combine_upsell_arrs_c, {{ var("default_numeric") }}) as combine_upsell_arrs	,
-isnull(ol.created_date	 AT TIME ZONE 'PST'	,	 '{{ var("default_date") }}'  ) as created_date	,
-isnull(ol.discount_applied_c,  '{{ var("default_varchar") }}'  ) as discount_applied	,
+isnull(ol.created_date	 AT TIME ZONE 'America/Los_Angeles'	,	 '{{ var("default_date") }}'  ) as created_date	,
+/*--------------------------------------------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------  Discounts  ----------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------------------------------*/
+case
+    when ql.sbqq_additional_discount_amount_c is not null
+    then ql.sbqq_additional_discount_amount_c
+    when ql.sbqq_discount_c is not null
+    then ol.list_price * ql.sbqq_discount_c / 100.0
+	else 
+	 {{ var("default_numeric") }}
+end as additional_discount_amount,
+case
+    when ql.sbqq_discount_c is not null
+    then ql.sbqq_discount_c / 100.0
+    when ql.sbqq_additional_discount_amount_c is not null
+         and nullif(ol.list_price, 0) is not null
+    then ql.sbqq_additional_discount_amount_c / nullif(ol.list_price, 0)
+	else 
+	 {{ var("default_numeric") }}	
+end as additional_discount_rate,
+case
+    when ql.sbqq_additional_discount_amount_c is not null
+    then 'AMOUNT'
+    when ql.sbqq_discount_c is not null
+    then 'PERCENT'
+	else 
+	 '{{ var("default_varchar") }}'
+end as additional_discount_type,
+/*--------------------------------------------------------------------------------------------------------------------------------------*/
+isnull(ql.sbqq__totaldiscountrate_c, {{ var("default_numeric") }}) as total_discount_rate ,
+isnull(ql.sbqq__totaldiscountamount_c, {{ var("default_numeric") }}) as total_discount_amount ,
+/*--------------------------------------------------------------------------------------------------------------------------------------*/
 isnull(ol.end_date_c,  '{{ var("default_date") }}'  ) as end_date	,
 isnull(ol.id,  '{{ var("default_ID") }}'  ) as opportunity_line_id	,
-isnull(ol.last_modified_date	 AT TIME ZONE 'PST'	,	 '{{ var("default_date") }}'  ) as last_modified_date	,
+isnull(ol.last_modified_date	 AT TIME ZONE 'America/Los_Angeles'	,	 '{{ var("default_date") }}'  ) as last_modified_date	,
 isnull(ol.list_price, {{ var("default_numeric") }}) as list_price	,
 isnull(ol.name,  '{{ var("default_varchar") }}'  ) as name	,
 isnull(ol.net_price_display_c, {{ var("default_numeric") }}) as net_price_display	,
@@ -72,6 +103,8 @@ join {{ ref('fact_opportunity') }} as o
 on ol.opportunity_id = o.opportunity_id
 join {{ ref("dim_sfdc_product") }} as p
 on ol.product_2_id = p.sfdc_product_id
+left outer join {{ ref('stg_sbqq_quote_line') }} ql
+on ol.sbqq_quote_line_c = ql.id
 where ol.is_deleted=False
 )
 select
@@ -90,7 +123,11 @@ select
 	,combine_upsell_arrs::NUMERIC(37,17)
 	,name::VARCHAR(1200)
 	,netsuite_sku::VARCHAR(90)
-	,discount_applied::VARCHAR(25)
+	,additional_discount_amount::NUMERIC(35,17)
+	,additional_discount_rate::NUMERIC(35,17)
+	,additional_discount_type::VARCHAR(20)
+	,total_discount_rate::NUMERIC(35,17)
+	,total_discount_amount ::NUMERIC(35,17)
 	,list_price::NUMERIC(35,17)
 	,net_price_display::NUMERIC(35,17)
 	,net_unit_price::NUMERIC(35,17)
@@ -126,7 +163,11 @@ select
 {{ var("default_numeric") }} as combine_upsell_arrs	,
 '{{ var("default_varchar") }}' as name	,
 '{{ var("default_varchar") }}' as netsuite_sku	,
-'{{ var("default_varchar") }}' as discount_applied	,
+{{ var("default_numeric") }} as additional_discount_amount	,
+{{ var("default_numeric") }} as additional_discount_rate	,
+'{{ var("default_varchar") }}' as additional_discount_type	,
+{{ var("default_numeric") }} as total_discount_rate	,
+{{ var("default_numeric") }} as total_discount_amount	,
 {{ var("default_numeric") }} as list_price	,
 {{ var("default_numeric") }} as net_price_display	,
 {{ var("default_numeric") }} as net_unit_price	,

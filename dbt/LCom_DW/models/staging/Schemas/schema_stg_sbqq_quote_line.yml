@@ -1,0 +1,23 @@
+version: 2
+models:
+- name: stg_sbqq_quote_line
+  description: Staging model for sbqq quote lines. sbqq_quote_line Salesforce object has too many formulas and the resulting SQL is gretaer then 65K. Due to Redshift bug it is not possible to save 65K in super column in fivetran model table. Reproducing required formula columns in this staging view based on Salesforce formulas.
+  config:
+    contract:
+      enforced: false
+    tags:
+      - staging
+      - revenue
+  columns:
+    - name: id
+      description: SBQQ Quote Line Unique ID, PK
+    - name: sbqq_effective_quantity_c
+      description: Effective quantity used in computing totals. Same as quantity unless the product is block priced, covered by "Slab" discount schedule, or an existing subscription.
+    - name: sbqq__totaldiscountamount_c
+      description: Total Discount (Amt) Total discount amount for this line item including volume discount, contracted discount, and additional discount.
+    - name: sbqq__totaldiscountrate_c
+      description: Total Discount (% ) Total discount for this line item including volume discount, contracted discount, and additional discount.
+    - name: sbqq_additional_discount_amount_c
+      description: Additional Disc., Additional customer discount extended on this line item in the form of an absolute amount. Accept end-user data entry
+    - name: sbqq_discount_c
+      description: Additional Disc. (%), Total amount of discount applied to Tiered Services, Required for Tiered Services Discount Approval Process. Denotes the total amount of quote discount that has been applied to products in the Tiered. Accept end-user data entry
