@@ -6,10 +6,13 @@
         incremental_strategy='delete+insert',
         on_schema_change='append_new_columns',
         dist='account_id',
-        sort='mon_year'
+        sort='mon_year',
+        post_hook=['{{ update_history_table_changed_uk("revenue", "fact_arr") }}']        
         
         )
 }}
+
+-- depends_on: {{ ref('dim_account') }}
 
 with final_data as (
 select
