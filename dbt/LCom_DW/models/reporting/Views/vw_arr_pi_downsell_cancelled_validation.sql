@@ -13,7 +13,7 @@ sum(case when dol.business_type_opty_product ilike '%upsell%' then 1 else 0 end)
 from {{ ref("fact_opportunity") }} o
 join {{ ref("fact_opportunity") }} ro
 on o.renewal_opportunity_id = ro.opportunity_id
-join revenue.dim_opportunity_line dol 
+join {{ ref("dim_opportunity_line") }} dol
 on o.opportunity_id = dol.opportunity_id
 group by ro.opportunity_id
 having count(distinct o.opportunity_id)>1)
