@@ -37,7 +37,9 @@ sources:
       schema: false
       identifier: false
     tables:
-      - name: fact_opportunity_history      
+      - name: fact_opportunity_history   
+      - name: fact_booking
+      - name: fact_arr
 
   - name: audit
     description: "Audit and logs tables for tracking dbt runs and changes"
