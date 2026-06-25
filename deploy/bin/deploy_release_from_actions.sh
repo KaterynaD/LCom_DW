@@ -338,25 +338,29 @@ if [[ -n \"\$MODIFIED_OBJECTS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; the
 
 
   
-# QA empty and defer run  
+
+# QA empty and defer run modified and upstream dependence models
 \"\$DBT_BIN\" run \
-  --select state:modified state:modified+,config.materialized:view \
-  --exclude \"config.materialized:profiling deployment_pre_tasks deployment_post_tasks\" \
+  --select state:modified+ \
+  --exclude \"path:models/profiles tag:no_ci_cd\" \
   --empty \
   --target QA \
   --state \"\$STATE_DIR\" \
   --defer \
+  --fail-fast \
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
 
+  
 # QA defer singular(custom SQL) test  
 TEST_OUTPUT=\$(
   \"\$DBT_BIN\" test \
-    --select state:modified,test_type:singular \
-    --exclude \"config.materialized:profiling\" \
+    --select state:modified+,test_type:singular \
+    --exclude \"path:models/profiles tag:no_ci_cd\" \
     --target QA \
     --state \"\$STATE_DIR\" \
     --defer \
+    --fail-fast \
     --vars '{\"loaddate\": \"1900-01-01\"}' \
   2>&1 || true
 )
@@ -392,10 +396,10 @@ echo '[container] dbt test completed without ERROR.'
 
 
 
-# Deploying in Prod validated models
+# Deploying in Prod ONLY validated modified models
 \"\$DBT_BIN\" run \
   --select state:modified \
-  --exclude \"config.materialized:profiling deployment_pre_tasks deployment_post_tasks\" \
+  --exclude \"path:models/profiles tag:no_ci_cd\" \
   --target ${DBT_TARGET_NAME} \
   --state \"\$STATE_DIR\" \
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'

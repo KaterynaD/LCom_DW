@@ -186,17 +186,20 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
     - The QA database is cleaned of all schemas using drop_qa_schemas macros
     - QA environment (schemas) is created in QA database using set_QA_environment macros
     - deployment_pre_tasks model is run in QA target if pre_deployment_tasks macros was modified
-    - dbt run is performed in the QA target with `state:modified`, `--empty`, and `--defer` to test the SQL of modified models.
-    - Profiling materialization is not validated (it is very slow and need a specific target)    
-    - List of modified views is sent to validate_views macro and select SQL runs. This is required to validate No Schema Binding Redshift views. 
-    - Modified tests are run in QA. Only ERROR is validated. FAILED tests in QA is Ok
+    - dbt run is performed in the QA target with `state:modified+`, `--empty`, `--fail-fast` and `--defer` to test the SQL of modified models.
+    - Models in path:models/profiles are excluded: profiles only work in a specific target
+    - Models with tag:no_ci_cd are excluded 
+    - Redshift NO BINDING views are validated in dbt post hook when a corresponding dbt model is run
+    - Modified SINGULAR tests are run in QA. Only ERROR is validated. FAILED tests in QA is Ok
     - deployment_post_tasks model is run in QA target if post_deployment_tasks macros was modified
 
 #### Deployment
 
     - deployment_pre_tasks model is run in Prod target if pre_deployment_tasks macros was modified
-    - dbt run is performed in Prod target with `state:modified` to deploy modified models.
-    - Profiling materialization is not validated (it is very slow and need a specific target)
+    - dbt run is performed in Prod target with `state:modified` to deploy only modified and validated models.
+    - Models in path:models/profiles are excluded: profiles only work in a specific target
+    - Models with tag:no_ci_cd are excluded
+    - Redshift NO BINDING views are validated in dbt post hook when a corresponding dbt model is run    
     - deployment_post_tasks model is run in Prod target if post_deployment_tasks macros was modified
 
 - Documentation and column-level lineage are generated:
