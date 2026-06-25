@@ -13,7 +13,15 @@ with month_params as (
         to_char(dateadd(month, -23, getdate()), 'yyyymm')::int as previous_window_start,
         to_char(dateadd(month, -24, getdate()), 'yyyymm')::int as previous_base_mon
 ),
-
+opportunities_issues as (
+select 
+a.opportunity_id,
+listagg(i.issue, ', ') WITHIN GROUP (ORDER BY i.issue) AS  issues
+from {{ ref('dim_arr_audit') }} a
+join {{ ref('dim_arr_issue') }} i
+on a.issue_id = i.issue_id
+group by a.opportunity_id
+),
 opportunities_data as (
     /*P.I. and Reductions are at the opportunity level */
     select 
@@ -25,9 +33,13 @@ opportunities_data as (
         sum(fa.arr_amount) as arr_amount,
         max(fa.loaddate) as loaddate
     from {{ ref('fact_arr') }} fa
+    left outer join opportunities_issues i
+    on fa.opportunity_id = i.opportunity_id
     cross join month_params mp
     where getdate() between fa.arr_activation_date and fa.arr_deactivation_date
       and fa.mon_year between mp.previous_base_mon and mp.current_mon
+      and isnull(i.issues,'Valid') not ilike '%negative opp%'
+      and isnull(i.issues,'Valid') not ilike '%replacement opp%'      
     group by
         fa.arr_type, 
         fa.mon_year, 

@@ -5,126 +5,123 @@
                    ]
 )
  }}
+ 
+WITH month_context AS (
+    SELECT 'actual' AS period, m.*
+    FROM {{ ref('dim_month') }} m
+    WHERE TRUNC(GETDATE()) BETWEEN m.mon_firstday AND m.mon_lastday
 
-with dim_month as
- (
-select FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
-from {{ ref("dim_month") }}
-where trunc(GetDate()) between Mon_FirstDay and Mon_LastDay
-)
-,dim_month_prev as
- (
-select FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year
-from {{ ref("dim_month") }}
-where date_add('year', -1, trunc(GetDate())) between Mon_FirstDay and Mon_LastDay
-)
-,contract_based_active_data as (
-select count(distinct customer_id) cnt_customers
-from {{ ref("fact_customer") }} s
-join dim_month m
-on s.Mon_Year = m.Mon_Year
-where record_type='Contract Active'
-and arr_type='Preliminary'
-)
-,contract_based_active_data_prev as (
-select count(distinct customer_id) cnt_customers
-from {{ ref("fact_customer") }} s
-join dim_month_prev m
-on s.Mon_Year = m.Mon_Year
-where record_type='Contract Active'
-and arr_type='Preliminary'
-)
-,net_active_data as (
-select count(distinct customer_id) cnt_customers
-from {{ ref("fact_customer") }} s
-join dim_month m
-on s.Mon_Year = m.Mon_Year
-where record_type='Net Active'
-and arr_type='Preliminary'
-)
-,net_active_data_prev as (
-select count(distinct customer_id) cnt_customers
-from {{ ref("fact_customer") }} s
-join dim_month_prev m
-on s.Mon_Year = m.Mon_Year
-where record_type='Net Active'
-and arr_type='Preliminary'
-)
-,total_active_data as (
-select count(distinct customer_id) cnt_customers
-from {{ ref("fact_customer") }} s
-join dim_month m
-on s.Mon_Year = m.Mon_Year
-where record_type='Total Active'
-and arr_type='Preliminary'
-)
-,total_active_data_prev as (
-select count(distinct customer_id) cnt_customers
-from {{ ref("fact_customer") }} s
-join dim_month_prev m
-on s.Mon_LastDay = m.Mon_LastDay
-where record_type='Total Active'    
-and arr_type='Preliminary'
-)
-,datedata as ( select max(fcms.loaddate) last_updated 
-from {{ ref("fact_customer") }} fcms
-where arr_type='Preliminary'
-)
-,vw_customer_scorecard as (
-select 
-dim_month.FiscalYear,
-contract_based_active_data.cnt_customers contract_based_active,
-net_active_data.cnt_customers net_active, 
-total_active_data.cnt_customers total_active,
-datedata.last_updated
-from net_active_data
-join total_active_data
-on 1=1
-join contract_based_active_data
-on 1=1
-join datedata
-on 1=1
-join dim_month
-on 1=1
-)
-,vw_customer_scorecard_prev as (select 
-dim_month_prev.FiscalYear,
-contract_based_active_data_prev.cnt_customers contract_based_active,
-net_active_data_prev.cnt_customers net_active, 
-total_active_data_prev.cnt_customers total_active,
-Mon_LastDay last_updated
-from net_active_data_prev
-join total_active_data_prev
-on 1=1
-join contract_based_active_data_prev
-on 1=1
-join dim_month_prev
-on 1=1
-)
-select 
-'Actual' as category,
-contract_based_active,
-net_active, 
-total_active,
-FiscalYear,
-last_updated
-from vw_customer_scorecard
-union all
-select 
-'Previous' as category,
-contract_based_active,
-net_active, 
-total_active,
-FiscalYear,
-last_updated
-from vw_customer_scorecard_prev
-union all
-select 
-'Target' as category,
-0 contract_based_active,
-0 net_active, 
-0 total_active,
-'N/A' FiscalYear,
-cast('1900-01-01' as date) last_updated
+    UNION ALL
 
+    SELECT 'previous' AS period, m.*
+    FROM {{ ref('dim_month') }} m
+    WHERE DATE_ADD('year', -1, TRUNC(GETDATE())) BETWEEN m.mon_firstday AND m.mon_lastday
 
+    UNION ALL
+
+    SELECT 'previous_previous' AS period, m.*
+    FROM {{ ref('dim_month') }} m
+    WHERE DATE_ADD('year', -2, TRUNC(GETDATE())) BETWEEN m.mon_firstday AND m.mon_lastday
+),
+
+customer_counts AS (
+    SELECT
+        m.period,
+        f.record_type,
+        COUNT(DISTINCT f.customer_id) AS cnt_customers
+    FROM {{ ref('fact_customer') }} f
+    JOIN month_context m
+        ON f.mon_year = m.mon_year
+    WHERE f.arr_type = 'Preliminary'
+      AND f.record_type IN (
+          'Contract Active',
+          'Net Active',
+          'New',
+          'Returning',
+          'Total Active'
+      )
+    GROUP BY
+        m.period,
+        f.record_type
+),
+
+scorecard AS (
+    SELECT
+        m.period,
+        m.fiscalyear,
+        m.mon_lastday,
+
+        COALESCE(MAX(CASE WHEN c.record_type = 'Contract Active' THEN c.cnt_customers END), 0) AS contract_based_active,
+        COALESCE(MAX(CASE WHEN c.record_type = 'Net Active'       THEN c.cnt_customers END), 0) AS net_active,
+        COALESCE(MAX(CASE WHEN c.record_type = 'Total Active'     THEN c.cnt_customers END), 0) AS total_active,
+        COALESCE(MAX(CASE WHEN c.record_type = 'New'              THEN c.cnt_customers END), 0) AS new_customers,
+        COALESCE(MAX(CASE WHEN c.record_type = 'Returning'        THEN c.cnt_customers END), 0) AS returning_customers
+    FROM month_context m
+    LEFT JOIN customer_counts c
+        ON m.period = c.period
+    WHERE m.period IN ('actual', 'previous')
+    GROUP BY
+        m.period,
+        m.fiscalyear,
+        m.mon_lastday
+),
+
+previous_previous_net_active AS (
+    SELECT COALESCE(cnt_customers, 0) AS net_active
+    FROM customer_counts
+    WHERE period = 'previous_previous'
+      AND record_type = 'Net Active'
+),
+
+last_updated AS (
+    SELECT MAX(loaddate) AS last_updated
+    FROM {{ ref('fact_customer') }}
+    WHERE arr_type = 'Preliminary'
+)
+
+SELECT
+    'Actual' AS category,
+    actual.contract_based_active,
+    actual.net_active,
+    actual.total_active,
+    (
+        actual.net_active
+        - actual.new_customers
+        - actual.returning_customers
+    )::FLOAT / NULLIF(previous.net_active, 0) AS retention,
+    actual.fiscalyear,
+    last_updated.last_updated
+FROM scorecard actual
+JOIN scorecard previous
+    ON previous.period = 'previous'
+CROSS JOIN last_updated
+WHERE actual.period = 'actual'
+
+UNION ALL
+
+SELECT
+    'Previous' AS category,
+    previous.contract_based_active,
+    previous.net_active,
+    previous.total_active,
+    (
+        previous.net_active
+        - previous.new_customers
+        - previous.returning_customers
+    )::FLOAT / NULLIF(previous_previous.net_active, 0) AS retention,
+    previous.fiscalyear,
+    previous.mon_lastday AS last_updated
+FROM scorecard previous
+CROSS JOIN previous_previous_net_active previous_previous
+WHERE previous.period = 'previous'
+
+UNION ALL
+
+SELECT
+    'Target' AS category,
+    0 AS contract_based_active,
+    0 AS net_active,
+    0 AS total_active,
+    0 AS retention,
+    'N/A' AS fiscalyear,
+    CAST('1900-01-01' AS DATE) AS last_updated

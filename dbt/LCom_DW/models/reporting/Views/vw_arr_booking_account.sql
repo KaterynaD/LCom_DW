@@ -6,41 +6,62 @@
 )
  }}
  
-with data as (
+with opportunities_issues as (
 select 
-mon_year,
-mon_lastday,
-fiscalyear,
-fiscalyear_mon ,
-sfdc_account_id as sfdc_account_id,
-record_type,
-sum(amount) as amount
-from {{ ref("vw_fact_revenue_monthly_snapshots") }}
-where record_type!='Target'
-and include_flg=True
+a.opportunity_id,
+listagg(i.issue, ', ') WITHIN GROUP (ORDER BY i.issue) AS  issues
+from {{ ref('dim_arr_audit') }} a
+join {{ ref('dim_arr_issue') }} i
+on a.issue_id = i.issue_id
+group by a.opportunity_id
+),
+data as (
+select 
+f.mon_year,
+f.mon_lastday,
+f.fiscalyear,
+f.fiscalyear_mon ,
+f.account_id,
+a.sfdc_account_id,
+'ARR' record_type,
+sum(f.arr_amount) as amount
+from {{ ref("fact_arr") }} f
+left outer join opportunities_issues i
+on f.opportunity_id = i.opportunity_id
+join {{ ref("dim_account") }} a
+on f.account_id = a.account_id
+where  f.arr_type = 'Preliminary'
+and f.record_type = 'ARR'
+and getdate() between f.arr_activation_date and f.arr_deactivation_date
+      and isnull(i.issues,'Valid') not ilike '%negative opp%'
+      and isnull(i.issues,'Valid') not ilike '%replacement opp%'  
 group by 
-mon_year,
-mon_lastday,
-fiscalyear,
-fiscalyear_mon ,
-sfdc_account_id,
-record_type
-)
-,mapping as (
-select account_id,  sfdc_account_id from {{ ref("dim_account") }} where sfdc_account_id!='Unknown')
-,final_data as (
+f.mon_year,
+f.mon_lastday,
+f.fiscalyear,
+f.fiscalyear_mon ,
+f.account_id,
+a.sfdc_account_id
+union all
 select 
-mon_year,
-mon_lastday,
-fiscalyear,
-fiscalyear_mon ,
-a.account_id,
-data.sfdc_account_id,
-record_type,
-amount
-from data
-join mapping a
-on data.sfdc_account_id = a.sfdc_account_id
+f.mon_year,
+f.mon_lastday,
+f.fiscalyear,
+f.fiscalyear_mon ,
+f.account_id,
+a.sfdc_account_id,
+'Booking' record_type,
+sum(f.total_price) as amount
+from {{ ref("fact_booking") }} f
+join {{ ref("dim_account") }} a
+on f.account_id = a.account_id
+group by 
+f.mon_year,
+f.mon_lastday,
+f.fiscalyear,
+f.fiscalyear_mon ,
+f.account_id,
+a.sfdc_account_id
 )
 select *
-from final_data
+from data
