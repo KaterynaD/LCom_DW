@@ -1,14 +1,6 @@
 {% macro create_lc_load_launches_weekly_snapshots() %}
 
-{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
-
- {% if flags.WHICH in ('run','build') %}
-  {% set custom_schema = model.config.schema | default(target.schema, true) %}
- {% else %}
-  {% set custom_schema = target.schema %}
- {% endif %}
-
- {{ log('Creating lc_load_launches_weekly_snapshots stored procedure in schema ' ~ custom_schema, info=True) }}
+ {% set custom_schema = deployment_schema() %}
  
  {% set create_sp_operation %}
 
@@ -211,9 +203,8 @@ $$
 
  {% endset %}
 
-{% do run_query(create_sp_operation) %}
 
-{% endif %}
+{{ run_DDL('lc_load_launches_weekly_snapshots', create_sp_operation) }}
 
 
 {% endmacro %}

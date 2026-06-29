@@ -1,14 +1,7 @@
 {% macro create_fact_launches_weekly_snapshots_table() %}
 
-{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
+{% set custom_schema = deployment_schema() %}
 
- {% if flags.WHICH in ('run','build') %}
-  {% set custom_schema = model.config.schema | default(target.schema, true) %}
- {% else %}
-  {% set custom_schema = target.schema %}
- {% endif %}
-
-{{ log('Creating fact_launches_weekly_snapshots table in schema ' ~ custom_schema, info=True) }}
 
 {% set create_table_operation %}
 
@@ -55,8 +48,8 @@ COMMENT ON COLUMN {{target.database}}.{{custom_schema}}.fact_launches_weekly_sna
 
 {% endset %}
 
-{% do run_query(create_table_operation) %}
 
-{% endif %}
+{{ run_DDL('fact_launches_weekly_snapshots', create_table_operation) }}
+
 
 {% endmacro %} 

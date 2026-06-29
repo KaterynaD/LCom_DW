@@ -1,14 +1,6 @@
 {% macro create_stg_opportunities_chain_of_renewals() %}
 
-{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
-
- {% if flags.WHICH in ('run','build') %}
-  {% set custom_schema = model.config.schema | default(target.schema, true) %}
- {% else %}
-  {% set custom_schema = target.schema %}
- {% endif %}
-
-{{ log('Creating stg_opportunities_chain_of_renewals table in schema ' ~ custom_schema, info=True) }}
+ {% set custom_schema = deployment_schema() %}
 
  {% set create_table_operation %}
 
@@ -33,8 +25,8 @@ COMMENT ON TABLE {{target.database}}.{{custom_schema}}.stg_opportunities_chain_o
 
 {% endset %}
 
-{% do run_query(create_table_operation) %}
+{{ run_DDL('stg_opportunities_chain_of_renewals', create_table_operation) }}
 
- {% endif %}
+
 
 {% endmacro %} 

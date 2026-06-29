@@ -1,14 +1,6 @@
 {% macro create_common_dim_calendar_table() %}
 
-{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
-
- {% if flags.WHICH in ('run','build') %}
-  {% set custom_schema = model.config.schema | default(target.schema, true) %}
- {% else %}
-  {% set custom_schema = target.schema %}
- {% endif %}
-
-{{ log('Creating dim_calendar table in schema ' ~ custom_schema, info=True) }}
+{% set custom_schema = deployment_schema() %}
 
  {% set create_table_operation %}
 
@@ -54,8 +46,8 @@ COMMENT ON TABLE {{target.database}}.{{custom_schema}}.dim_calendar IS 'Calendar
 
 {% endset %}
 
-{% do run_query(create_table_operation) %}
 
-{% endif %}
+{{ run_DDL('dim_calendar', create_table_operation) }}
+
 
 {% endmacro %} 

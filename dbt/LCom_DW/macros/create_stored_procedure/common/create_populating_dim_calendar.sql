@@ -1,14 +1,6 @@
 {% macro create_populating_dim_calendar() %}
 
-{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
-
- {% if flags.WHICH in ('run','build') %}
-  {% set custom_schema = model.config.schema | default(target.schema, true) %}
- {% else %}
-  {% set custom_schema = target.schema %}
- {% endif %}
-
- {{ log('Creating populating_dim_calendar stored procedure in schema ' ~ custom_schema, info=True) }}
+ {% set custom_schema = deployment_schema() %}
  
  {% set create_sp_operation %}
 
@@ -174,8 +166,8 @@ $$
 ;
 {% endset %}
 
-{% do run_query(create_sp_operation) %}
+{{ run_DDL('populating_dim_calendar', create_sp_operation) }}
 
-{% endif %}
+
 
 {% endmacro %} 

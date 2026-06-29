@@ -1,14 +1,6 @@
 {% macro create_load_skillscheck_schoolyear_data() %}
 
-{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
-
- {% if flags.WHICH in ('run','build') %}
-  {% set custom_schema = model.config.schema | default(target.schema, true) %}
- {% else %}
-  {% set custom_schema = target.schema %}
- {% endif %}
-
- {{ log('Creating load_skillscheck_schoolyear_data stored procedure in schema ' ~ custom_schema, info=True) }}
+ {% set custom_schema = deployment_schema() %}
 
 
  {% set create_sp_operation %}
@@ -422,8 +414,6 @@ $$
 
 {% endset %}
 
-{% do run_query(create_sp_operation) %}
-
-{% endif %}
+{{ run_DDL('load_skillscheck_schoolyear_data', create_sp_operation) }}
 
 {% endmacro %} 
