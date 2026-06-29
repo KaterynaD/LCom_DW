@@ -58,7 +58,6 @@ select
 '{{ var("default_varchar") }}' as campaign_status,
 '{{ var("default_varchar") }}' as campaign_type,
 '{{ var("default_varchar") }}' as pipe_bucket
-from {{ ref('dual') }}
 )
 select
 campaign_id::VARCHAR(300)

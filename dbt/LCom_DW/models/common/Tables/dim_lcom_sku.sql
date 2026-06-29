@@ -50,7 +50,6 @@ select
 {{ var("default_boolean") }} as is_valid,
 '{{ var("default_date") }}' as auditcreatedate,
  '{{ var("default_date") }}' as auditupdatedate
- from {{ ref('dual') }}
 )
 select
  sku_id::VARCHAR(50) as sku_id

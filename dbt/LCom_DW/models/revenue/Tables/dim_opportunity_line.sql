@@ -185,4 +185,3 @@ select
  '{{ var("default_date") }}' as created_date	,
 '{{ var("default_date") }}' as last_modified_date,
 '{{ var("default_date") }}' as loaddate
-from {{ ref('dual') }}
