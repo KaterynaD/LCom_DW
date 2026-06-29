@@ -180,7 +180,8 @@ log "Current SHA: ${OLD_SHA:-<none>}"
 log "Fetching from remote in bare repo: $REPO_MIRROR_DIR"
 
 # Fetch the branch tip into the bare repo
-git --git-dir="$REPO_MIRROR_DIR" fetch --prune "$REMOTE_NAME" "$BRANCH" \
+git --git-dir="$REPO_MIRROR_DIR" fetch --prune "$REMOTE_NAME" \
+  "+refs/heads/${BRANCH}:refs/remotes/${REMOTE_NAME}/${BRANCH}" \
   || git --git-dir="$REPO_MIRROR_DIR" fetch --all --prune
 
 # Ensure NEW_SHA exists locally; if not, fetch it explicitly
