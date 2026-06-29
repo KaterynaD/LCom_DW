@@ -52,7 +52,6 @@ select
 '{{ var("default_date") }}' as last_login_date,
 '{{ var("default_date") }}' as created_date,
 '{{ var("default_date") }}' as last_modified_date 
-from {{ ref('dual') }}
 )
 select
 employee_id::VARCHAR(300),
