@@ -1,14 +1,6 @@
 {% macro create_fact_students_completions_monthly_snapshots_table() %}
 
-{% if execute and flags.WHICH in ('run','run-operation', 'build') and var("deploy_flag", False) %}
-
- {% if flags.WHICH in ('run','build') %}
-  {% set custom_schema = model.config.schema | default(target.schema, true) %}
- {% else %}
-  {% set custom_schema = target.schema %}
- {% endif %}
-
-{{ log('Creating fact_students_completions_monthly_snapshots table in schema ' ~ custom_schema, info=True) }}
+{% set custom_schema = deployment_schema() %}
 
 {% set create_table_operation %}
 
@@ -108,8 +100,6 @@ COMMENT ON COLUMN {{target.database}}.{{custom_schema}}.fact_students_completion
 
 {% endset %}
 
-{% do run_query(create_table_operation) %}
-
- {% endif %}
+{{ run_DDL('fact_students_completions_monthly_snapshots', create_table_operation) }}
 
 {% endmacro %} 
