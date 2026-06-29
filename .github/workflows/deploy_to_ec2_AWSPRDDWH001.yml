@@ -3,11 +3,12 @@ name: Deploy to EC2 AWSPRDDWH001
 on:
   push:
     branches:
-      - master
+      - qa
   workflow_dispatch:
-    
+
 env:
   DEPLOY_SCRIPT: /home/kdrogaieva/Prod/deploy/bin/deploy_release_from_actions.sh
+  PROMOTE_SCRIPT: /home/kdrogaieva/Prod/deploy/bin/promote_validated_qa_to_master.sh
 
 jobs:
   deploy:
@@ -17,14 +18,19 @@ jobs:
       - name: Show deployment context
         shell: bash
         run: |
-          echo "Deploy script : $DEPLOY_SCRIPT"
-          echo "Branch        : $GITHUB_REF_NAME"
-          echo "SHA           : $GITHUB_SHA"
+          echo "Deploy script  : $DEPLOY_SCRIPT"
+          echo "Promote script : $PROMOTE_SCRIPT"
+          echo "Branch         : $GITHUB_REF_NAME"
+          echo "SHA            : $GITHUB_SHA"
 
-      - name: Deploy
+      - name: Deploy and test QA
         shell: bash
         run: |
           "$DEPLOY_SCRIPT" \
             "$GITHUB_SHA" \
             "$GITHUB_REF_NAME"
 
+      - name: Promote validated QA to master
+        shell: bash
+        run: |
+          "$PROMOTE_SCRIPT"

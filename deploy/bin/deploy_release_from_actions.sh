@@ -24,7 +24,7 @@ fi
 ### ----------------------------
 ### Config
 ### ----------------------------
-REPO_MIRROR_DIR="${REPO_MIRROR_DIR:-/home/kdrogaieva/Prod/repo-mirror}"
+REPO_MIRROR_DIR="${REPO_MIRROR_DIR:-/home/kdrogaieva/Prod/repo-mirror.git}"
 RELEASES_DIR="${RELEASES_DIR:-/home/kdrogaieva/Prod/releases}"
 CURRENT_LINK="${RELEASES_DIR}/current"
 
@@ -96,8 +96,7 @@ cleanup_failed_release() {
     log "Cleaning up failed release artifacts for SHA: ${NEW_SHA}"
 
     if [[ -d "${wt_dir}" ]]; then
-      cd "$REPO_MIRROR_DIR" || true
-      git worktree remove --force "${wt_dir}" >/dev/null 2>&1 || true
+      git --git-dir="$REPO_MIRROR_DIR" worktree remove --force "${wt_dir}" >/dev/null 2>&1 || true
       rm -rf "${wt_dir}" || true
     fi
 
@@ -178,28 +177,28 @@ log "Current SHA: ${OLD_SHA:-<none>}"
 ### ----------------------------
 ### Fetch + verify SHA exists
 ### ----------------------------
-log "Fetching from remote in: $REPO_MIRROR_DIR"
-cd "$REPO_MIRROR_DIR"
+log "Fetching from remote in bare repo: $REPO_MIRROR_DIR"
 
-# Fetch the branch tip (fast, helps verification / logs)
-git fetch --prune "$REMOTE_NAME" "$BRANCH" || git fetch --all --prune
+# Fetch the branch tip into the bare repo
+git --git-dir="$REPO_MIRROR_DIR" fetch --prune "$REMOTE_NAME" "$BRANCH" \
+  || git --git-dir="$REPO_MIRROR_DIR" fetch --all --prune
 
 # Ensure NEW_SHA exists locally; if not, fetch it explicitly
-if ! git cat-file -e "${NEW_SHA}^{commit}" >/dev/null 2>&1; then
+if ! git --git-dir="$REPO_MIRROR_DIR" cat-file -e "${NEW_SHA}^{commit}" >/dev/null 2>&1; then
   log "SHA ${NEW_SHA} not found locally; fetching it explicitly..."
-  git fetch --prune "$REMOTE_NAME" "${NEW_SHA}" || true
+  git --git-dir="$REPO_MIRROR_DIR" fetch --prune "$REMOTE_NAME" "${NEW_SHA}" || true
 fi
 
 # Re-check after fetch attempt
-if ! git cat-file -e "${NEW_SHA}^{commit}" >/dev/null 2>&1; then
+if ! git --git-dir="$REPO_MIRROR_DIR" cat-file -e "${NEW_SHA}^{commit}" >/dev/null 2>&1; then
   die "SHA ${NEW_SHA} is not a valid commit in the mirror after fetch. Check workflow inputs / remote access."
 fi
 
-# Optional: validate SHA is reachable from the branch (can be strict or best-effort).
-# If your workflow always passes a SHA from that branch, keep this STRICT.
-if ! git merge-base --is-ancestor "${NEW_SHA}" "${REMOTE_BRANCH_REF}" >/dev/null 2>&1; then
-  die "SHA ${NEW_SHA} is not an ancestor of ${REMOTE_BRANCH_REF}. Refusing to deploy (protects against wrong-branch deploy)."
+# Validate SHA is reachable from the branch
+if ! git --git-dir="$REPO_MIRROR_DIR" merge-base --is-ancestor "${NEW_SHA}" "${REMOTE_BRANCH_REF}" >/dev/null 2>&1; then
+  die "SHA ${NEW_SHA} is not an ancestor of ${REMOTE_BRANCH_REF}. Refusing to deploy."
 fi
+
 
 # No-op if nothing new
 if [[ -n "${OLD_SHA}" && "${NEW_SHA}" == "${OLD_SHA}" ]]; then
@@ -227,12 +226,12 @@ mkdir -p "$RELEASE_DIR"
 
 if [[ -d "$WT_DIR/.git" || -d "$WT_DIR" ]]; then
   log "Worktree path already exists: $WT_DIR"
-  git worktree remove --force "$WT_DIR" >/dev/null 2>&1 || true
+  git --git-dir="$REPO_MIRROR_DIR" worktree remove --force "$WT_DIR" >/dev/null 2>&1 || true
   rm -rf "$WT_DIR" || true
 fi
 
 log "Adding git worktree: $WT_DIR"
-git worktree add "$WT_DIR" "$NEW_SHA"
+git --git-dir="$REPO_MIRROR_DIR" worktree add "$WT_DIR" "$NEW_SHA"
 
 log "Pointing current symlink: ${CURRENT_LINK} -> ${NEW_SHA}"
 ln -sfn "$NEW_SHA" "$CURRENT_LINK"
