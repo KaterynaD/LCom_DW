@@ -11,7 +11,7 @@
         )
 }}
 
---Depracate soon
+--Depracate soon: delete on 07-15-2026
 with dim_month as			
 (			
 select FiscalYear, FiscalYear_StartDate, FiscalYear_EndDate, FiscalYear_Mon, Mon_FirstDay, Mon_LastDay,Mon_Year			
