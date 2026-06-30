@@ -1,7 +1,7 @@
 version: 2
 models:
 - name: stg_sbqq_quote_line
-  description: Staging model for sbqq quote lines. sbqq_quote_line Salesforce object has too many formulas and the resulting SQL is gretaer then 65K. Due to Redshift bug it is not possible to save 65K in super column in fivetran model table. Reproducing required formula columns in this staging view based on Salesforce formulas.
+  description: Staging model for sbqq quote lines. sbqq_quote_line Salesforce object has too many formulas and the resulting SQL is gretaer then 65K. Due to Redshift bug it is not possible to save 65K in super column in fivetran model table. Reproducing required formula columns in this staging table based on Salesforce formulas. Late Binding view based on a table in different data base does not work in CI/CD because dbt creates view in QA database based on view in Prod based on view in rawdata.
   config:
     contract:
       enforced: false

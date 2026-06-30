@@ -1,7 +1,4 @@
-{{ config(materialized='view', bind=False,
-   post_hook = [
-                    '{{ validate_view() }}'
-                   ]) }}
+{{ config(materialized='table') }}
 
 with rawdata as (select
      {{ safe_select_list_from_profiles(
