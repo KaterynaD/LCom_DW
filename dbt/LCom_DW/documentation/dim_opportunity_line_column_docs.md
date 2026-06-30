@@ -63,10 +63,11 @@ Indicates whether the additional discount was entered originally as an amount or
 
 {% docs column_total_discount_rate %}
 Total discount rate calculated by Salesforce after applying all applicable discount and pricing logic including additional_discount_rate.
+There is no evidence Multi Year Discount at the opportunity level is included.
 {% enddocs %}
 
 {% docs column_total_discount_amount %}
-Total discount amount calculated by Salesforce after applying all applicable discount and pricing logic including additional_discount_rate additional_discount_amount.
+Total discount amount calculated by Salesforce after applying all applicable discount and pricing logic including additional_discount_rate additional_discount_amount. There is no evidence Multi Year Discount at the opportunity level is included.
 
 {% enddocs %}
 
