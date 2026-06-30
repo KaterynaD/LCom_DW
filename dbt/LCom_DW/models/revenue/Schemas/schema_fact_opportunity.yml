@@ -167,6 +167,14 @@ models:
     description: "{{ doc('column_downsell') }}"
     constraints:
     - type: not_null
+
+  - name: multi_year_discount_rate
+    data_type: numeric(7,2)
+    description: "{{ doc('column_multi_year_discount_rate') }}"
+    constraints:
+    - type: not_null
+
+
   - name: end_date
     data_type: date
     description: "{{ doc('column_end_date') }}"

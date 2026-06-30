@@ -73,7 +73,8 @@ from {{ source('fivetran_salesforce_quickstart', 'opportunity') }} sfdc_opportun
             'progressive_payment_date_2_c',
             'progressive_payment_date_3_c',
             'progressive_payment_date_4_c',
-            'progressive_payment_date_5_c'
+            'progressive_payment_date_5_c',
+            'Standard_Discount_c'
             ],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
@@ -111,6 +112,7 @@ select
     isnull(o.created_date AT TIME ZONE 'PST', '{{ var("default_date") }}') as created_date,
     isnull(o.description, '{{ var("default_varchar") }}') as description,
     isnull(o.disable_auto_renewal_opp_c, {{ var("default_boolean") }}) as disable_auto_renewal_opp,
+    isnull(q.Standard_Discount_c::float/100, {{ var("default_numeric") }}) as multi_year_discount_rate,
     isnull(o.downsell_c, {{ var("default_numeric") }}) as downsell,
     isnull(o.end_date_c, '{{ var("default_date") }}') as end_date,
     isnull(o.invoiced_date_c, '{{ var("default_date") }}') as invoiced_date,
@@ -220,6 +222,7 @@ select
     created_date::timestamp,
     description::varchar(max),
     disable_auto_renewal_opp::boolean,
+    multi_year_discount_rate::numeric(7,2),
     downsell::double precision,
     end_date::date,
     invoiced_date::date,

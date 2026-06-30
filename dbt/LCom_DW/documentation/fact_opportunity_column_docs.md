@@ -286,6 +286,20 @@ True Renewal ARR
 Downsell (Automatically derives downsell)
 {% enddocs %}
 
+{% docs column_multi_year_discount_rate %}
+Multi-Year Discount. It's visible to quote managers on their layout.
+There is no evidence that it's directly fed into total discount at the quote line / opportunity product line level.
+• Customers with a Paid-up-front contract receive: 
+	-- 10% discount when the subscription term is between 24 and 35 months. 
+	-- 15% discount when the subscription term is 36 months or longer. 
+• Customers with a Progressive contract receive: 
+	--5% discount when the subscription term is between 24 and 35 months. 
+	-- 10% discount when the subscription term is 36 months or longer. 
+• No discount is applied for: 
+	-- Subscription terms shorter than 24 months, or 
+Contract types other than Paid-up-front or Progressive.
+{% enddocs %}
+
 {% docs column_license_provisioned_date %}
 License Provisioned Date
 {% enddocs %}
