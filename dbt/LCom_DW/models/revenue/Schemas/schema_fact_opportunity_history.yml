@@ -335,3 +335,8 @@ models:
     description: "{{ doc('column_number_of_students') }}"
     constraints:
     - type: not_null
+  - name: multi_year_discount_rate
+    data_type: numeric(7,2)
+    description: "{{ doc('column_multi_year_discount_rate') }}"
+    constraints:
+    - type: not_null    
