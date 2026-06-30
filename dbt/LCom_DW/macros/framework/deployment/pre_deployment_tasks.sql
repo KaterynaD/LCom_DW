@@ -21,7 +21,7 @@ alter table revenue.fact_opportunity_history add column multi_year_discount_rate
 update revenue.fact_opportunity_history
 set
 multi_year_discount_rate = fo.multi_year_discount_rate
-from revenue.fact_opportunity fo
+from {{ ref('fact_opportunity') }} fo
 where fo.opportunity_id=revenue.fact_opportunity_history.opportunity_id;
 
 
