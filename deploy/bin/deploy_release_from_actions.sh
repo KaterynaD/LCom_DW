@@ -32,7 +32,6 @@ CURRENT_LINK="${RELEASES_DIR}/current"
 COMPOSE_DIR="/home/kdrogaieva/Prod/airflow_runtime"
 SERVICE_NAME="airflow-webserver"
 
-DBT_TARGET_NAME="Prod"
 
 LOG_DIR="${LOG_DIR:-/home/kdrogaieva/Prod/deploy/logs}"
 LOCK_DIR="${LOCK_DIR:-/home/kdrogaieva/Prod/deploy/locks}"
@@ -163,7 +162,7 @@ echo '[container] previous state dir:' \"\$STATE_DIR\"
 
 cd \"\$DBT_LCOM_DW_PROJECT_DIR\"
 
-\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
+\"\$DBT_BIN\" compile --target Prod --vars '{\"loaddate\": \"1900-01-01\"}'
 
 "
 
@@ -292,7 +291,7 @@ fi
 \"\$DBT_BIN\" deps
 
 # Compile project to test dbt changes
-\"\$DBT_BIN\" compile --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
+\"\$DBT_BIN\" compile --target Prod --vars '{\"loaddate\": \"1900-01-01\"}'
 
 # Run modified models in QA ONLY if we have a state manifest to compare against
 if [[ -f "\$STATE_DIR/manifest.json" ]]; then
@@ -305,7 +304,7 @@ MODIFIED_OBJECTS=\$(
     --select state:modified \
     --state \"\$STATE_DIR\" \
     --resource-type model test seed \
-    --target ${DBT_TARGET_NAME} \
+    --target Prod \
     --vars '{\"loaddate\": \"1900-01-01\"}' \
     || true
 )
@@ -389,7 +388,7 @@ echo '[container] dbt test completed without ERROR.'
 # Prod pre-deploy tasks
 \"\$DBT_BIN\" run \
   --select state:modified,deployment_pre_tasks \
-  --target ${DBT_TARGET_NAME} \
+  --target Prod \
   --state \"\$STATE_DIR\" \
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
@@ -400,7 +399,7 @@ echo '[container] dbt test completed without ERROR.'
 \"\$DBT_BIN\" run \
   --select state:modified \
   --exclude \"path:models/profiles tag:no_ci_cd\" \
-  --target ${DBT_TARGET_NAME} \
+  --target Prod \
   --state \"\$STATE_DIR\" \
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
@@ -409,7 +408,7 @@ echo '[container] dbt test completed without ERROR.'
 # Prod post-deploy tasks
 \"\$DBT_BIN\" run \
   --select state:modified,deployment_post_tasks \
-  --target ${DBT_TARGET_NAME} \
+  --target Prod \
   --state \"\$STATE_DIR\" \
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
 
@@ -423,7 +422,7 @@ else
 fi
 
 # Creating Documentation
-\"\$DBT_BIN\" docs generate --static --target ${DBT_TARGET_NAME} --vars '{\"loaddate\": \"1900-01-01\"}'
+\"\$DBT_BIN\" docs generate --static --target Prod --vars '{\"loaddate\": \"1900-01-01\"}'
 
 
 echo '[container] Running colibri...'
