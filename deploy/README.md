@@ -190,7 +190,7 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
     - Models in path:models/profiles are excluded: profiles only work in a specific target
     - Models with tag:no_ci_cd are excluded 
     - Redshift NO BINDING views are validated in dbt post hook when a corresponding dbt model is run
-    - Modified SINGULAR tests are run in QA. Only ERROR is validated. FAILED tests in QA is Ok
+    - Important: There is no way to run singular (most fragile) tests in QA to validate SQL (column change in a model without adjusting SQL test). When a singular test fails it returns "Error" even if SQL itself is correct. In QA it can fail because dry run (--empty flag is present) performs for CI/CD.
     - deployment_post_tasks model is run in QA target if post_deployment_tasks macros was modified
 
 #### Deployment
@@ -199,7 +199,8 @@ All release testing is orchestrated in `deploy_release_from_actions.sh` and incl
     - dbt run is performed in Prod target with `state:modified` to deploy only modified and validated models.
     - Models in path:models/profiles are excluded: profiles only work in a specific target
     - Models with tag:no_ci_cd are excluded
-    - Redshift NO BINDING views are validated in dbt post hook when a corresponding dbt model is run    
+    - Redshift NO BINDING views are validated in dbt post hook when a corresponding dbt model is run  
+    - All modified tests (state:modified+)  are run in Prod, including unit tests. If it fails because of an issue in test SQL, only test itself need to be fix and re-deploy. 
     - deployment_post_tasks model is run in Prod target if post_deployment_tasks macros was modified
 
 - Documentation and column-level lineage are generated:

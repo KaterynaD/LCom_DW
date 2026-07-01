@@ -352,27 +352,27 @@ if [[ -n \"\$MODIFIED_OBJECTS\" && \"${RUN_QA_STATE_TESTS}\" == \"true\" ]]; the
 
   
 # QA defer singular(custom SQL) test  
-TEST_OUTPUT=\$(
-  \"\$DBT_BIN\" test \
-    --select state:modified+,test_type:singular \
-    --exclude \"path:models/profiles tag:no_ci_cd\" \
-    --target QA \
-    --state \"\$STATE_DIR\" \
-    --defer \
-    --fail-fast \
-    --vars '{\"loaddate\": \"1900-01-01\"}' \
-  2>&1 || true
-)
+# TEST_OUTPUT=\$(
+#  \"\$DBT_BIN\" test \
+#    --select state:modified+,test_type:singular \
+#    --exclude \"path:models/profiles tag:no_ci_cd\" \
+#    --target QA \
+#    --state \"\$STATE_DIR\" \
+#    --defer \
+#    --fail-fast \
+#    --vars '{\"loaddate\": \"1900-01-01\"}' \
+#  2>&1 || true
+#)
 
-echo "\$TEST_OUTPUT"
+#echo "\$TEST_OUTPUT"
 
 
-if echo "\$TEST_OUTPUT" | grep -Eq 'ERROR=([1-9][0-9]*)|(^|[[:space:]])ERROR([[:space:]]|$)'; then
-  echo 'ERROR: dbt test returned ERROR -> FAIL CI/CD'
-  exit 1
-fi
+#if echo "\$TEST_OUTPUT" | grep -Eq 'ERROR=([1-9][0-9]*)|(^|[[:space:]])ERROR([[:space:]]|$)'; then
+#  echo 'ERROR: dbt test returned ERROR -> FAIL CI/CD'
+#  exit 1
+#fi
 
-echo '[container] dbt test completed without ERROR.'
+#echo '[container] dbt test completed without ERROR.'
 
 
 
@@ -411,6 +411,20 @@ echo '[container] dbt test completed without ERROR.'
   --target Prod \
   --state \"\$STATE_DIR\" \
   --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
+
+
+# Run tests in Prod - the only way for now. 
+\"\$DBT_BIN\" test \
+  --select state:modified+ \
+  --exclude \"path:models/profiles tag:no_ci_cd\" \
+  --target Prod \
+  --state \"\$STATE_DIR\" \
+  --vars '{\"loaddate\": \"1900-01-01\",\"deploy_flag\": True}'
+
+
+
+
+
 
 
 else
