@@ -13,7 +13,7 @@
 
 with data as (
 select
-Class_::varchar(500) as business_class,
+replace(replace(Class_::varchar(500), '> ', '>'), ' >', '>') as business_class,
 Primary_Sales_Rep_::varchar(500) as primary_sales_rep,
 Name_grouped_::varchar(500) as name,
 Bill_To_::varchar(500) as bill_to,
