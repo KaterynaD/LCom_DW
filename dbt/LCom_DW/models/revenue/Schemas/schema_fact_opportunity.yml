@@ -174,12 +174,27 @@ models:
     constraints:
     - type: not_null
 
+  - name: contract_type
+    data_type: varchar(20)
+    description: "{{ doc('column_contract_type') }}"
+    constraints:
+    - type: not_null
+
 
   - name: end_date
     data_type: date
     description: "{{ doc('column_end_date') }}"
     constraints:
     - type: not_null
+
+
+  - name: ecommerce_cart
+    data_type: varchar(20)
+    description: "{{ doc('column_ecommerce_cart') }}"
+    constraints:
+    - type: not_null
+
+
   - name: invoiced_date
     data_type: date
     description: "{{ doc('column_invoiced_date') }}"

@@ -325,4 +325,11 @@ ARR used as interim value when source opp ARR is not present due to no contract 
 {% enddocs %}
 
 
-Override_ARR
+{% docs column_ecommerce_cart %}
+It's populated from HubSpot deals. If fivetran_hubspot.deal.property_ecommerce_renewal is True then EComm Renewal or EComm
+EComm opportunities are created from HubSpot Deals and EComm Renewal opportunities are created in Salesforce but can be edited in HubSpot
+{% enddocs %}
+
+{% docs column_contract_type %}
+Contract Type is populated from primary quote: fivetran_salesforce_quickstart.SBQQ_quote_c.Contract_Type_c and can be Progressive orPaid-up-front
+{% enddocs %}

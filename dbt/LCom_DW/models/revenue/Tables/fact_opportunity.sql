@@ -74,7 +74,8 @@ from {{ source('fivetran_salesforce_quickstart', 'opportunity') }} sfdc_opportun
             'progressive_payment_date_3_c',
             'progressive_payment_date_4_c',
             'progressive_payment_date_5_c',
-            'Standard_Discount_c'
+            'Standard_Discount_c',
+            'Contract_Type_c'
             ],
         profile_src=('profiles','vw_sfdc_schema_audit'),
         base_profile='base',
@@ -113,9 +114,11 @@ select
     isnull(o.description, '{{ var("default_varchar") }}') as description,
     isnull(o.disable_auto_renewal_opp_c, {{ var("default_boolean") }}) as disable_auto_renewal_opp,
     isnull(q.Standard_Discount_c::float/100, {{ var("default_numeric") }}) as multi_year_discount_rate,
+    isnull(q.Contract_Type_c, '{{ var("default_varchar") }}') as contract_type,
     isnull(o.downsell_c, {{ var("default_numeric") }}) as downsell,
     isnull(o.end_date_c, '{{ var("default_date") }}') as end_date,
     isnull(o.invoiced_date_c, '{{ var("default_date") }}') as invoiced_date,
+    isnull(hd.deal_type, '{{ var("default_varchar") }}') as ecommerce_cart,
     isnull(o.last_modified_by_id, '{{ var("default_varchar") }}') as last_modified_by_id,
     isnull(o.last_modified_date AT TIME ZONE 'PST', '{{ var("default_date") }}') as last_modified_date,
     isnull(o.license_unenforced_c, {{ var("default_boolean") }}) as license_unenforced,
@@ -191,6 +194,8 @@ left outer join {{ source('fivetran_salesforce_quickstart', 'record_type') }} rt
 on o.record_type_id = rt.id
 left outer join staging_quote as q
 on o.sbqq_primary_quote_c = q.id
+left outer join {{ ref("hubspot_deal") }} as hd
+on o.id = hd.sfdc_opportunity_id
 where o.test_account_c = false
 )
 select
@@ -223,8 +228,10 @@ select
     description::varchar(max),
     disable_auto_renewal_opp::boolean,
     multi_year_discount_rate::numeric(7,2),
+    contract_type::varchar(20),
     downsell::double precision,
     end_date::date,
+    ecommerce_cart::varchar(20),
     invoiced_date::date,
     last_modified_by_id::varchar(30),
     last_modified_date::timestamp,
