@@ -32,7 +32,7 @@ isnull((d.property_invoiced_date_c AT TIME ZONE 'utc'), '{{ var("default_date") 
 isnull(d.property_salesforcelastsynctime AT TIME ZONE 'utc', '{{ var("default_date") }}')::timestamp as sfdc_last_synctime,
 isnull(d.property_ecommerce_renewal,'{{ var("default_boolean") }}')::boolean as ecomm_renewal,
 isnull(replace(property_ecommerce_invoice_link_sync , 'https://info.learning.com/cart/', ''),'{{ var("default_varchar") }}')::varchar(300) invoice_link_id,
-'EComm'::varchar(5) deal_type,
+case when ecomm_renewal then 'EComm Renewal'::varchar(20) else 'EComm'::varchar(20) end as deal_type,
 '{{ var("loaddate") }}'::TIMESTAMP WITHOUT TIME ZONE as loaddate
 from {{ source('fivetran_hubspot', 'deal') }} d
 left outer join a
