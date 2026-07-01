@@ -86,7 +86,7 @@ models:
 
       - name: deal_type
         description: "EComm for now in all records"
-        data_type: varchar(5)
+        data_type: varchar(20)
         constraints:
           - type: not_null
 
