@@ -2,7 +2,7 @@
 
 ### Content notes
 
-- Schemas are marts per Business Area (Support, Revenue,Licensing etc)
+- Schemas are marts per Business Area (Marketing, Support, Revenue,Licensing etc)
 
 - Objects related to more then one business area are in Common.
 
