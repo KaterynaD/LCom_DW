@@ -37,7 +37,7 @@ left join {{ source("dbo","mv_teacher_account") }} as tch
     on
         fal.user_primary_teacher_id = tch.user_account_id 
         and fal.organization_district_id = tch.organization_district_id
-left join {{ ref("dim_learning_pathway") }} as lp
+left join {{ source("dbo","learning_pathway") }} as lp
     on fal.learning_pathway_id = lp.learning_pathway_id
 where current_date between cal.schoolyear_startdate and dateadd(year, 1, cal.schoolyear_enddate)
 group by
