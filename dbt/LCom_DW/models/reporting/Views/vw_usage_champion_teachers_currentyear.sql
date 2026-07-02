@@ -23,7 +23,7 @@ select
     coalesce(tch.first_name + ' ' + tch.last_name, lp.learning_pathway_name) as teacher_name,
     tch.email as teacher_email,
     case when fal.learning_pathway_id <> '00000000-0000-0000-0000-000000000000' then 'Pathway' else 'Teacher-Assigned' end as launched_from,
-    max(cast(fal.launch_datetime as DATE)) as last_launch_date,
+    max(cal.cal_date) as last_launch_date,
     count(distinct fal.assignment_launch_id) as num_launches,
     count(distinct fal.student_id) as num_users
 from {{ ref("fact_assignment_launch") }} as fal
