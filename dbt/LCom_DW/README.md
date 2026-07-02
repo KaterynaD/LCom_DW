@@ -2,7 +2,7 @@
 
 ### Content notes
 
-- Schemas are per Business Area (Support, Revenue,Licensing etc)
+- Schemas are marts per Business Area (Support, Revenue,Licensing etc)
 
 - Objects related to more then one business area are in Common.
 
@@ -11,21 +11,8 @@
 - Staging is used in some transformations.
 
 ### Set up - one time operations
-- Schemas should exist in the target DB, otherwise the project will create something with not-expected names.  See schemas.sql in project_setup_scripts folder.
+- Schemas should exist in the target DB, otherwise the project will create something with not-expected names.  See create_schemas macro in macros/create_schema folder.
 - audit.dbt_run_log is a not part of the transformation models and should be created outside of the project because every run of dbt need the table for logs. See audit_dbt_run_log.sql script in project_setup_scripts folder.
-
-- common.dim_calendar is not a part of the transformation models and can be created with create_common_dim_calendar_table macro:
-```
-dbt run-operation create_common_dim_calendar_table
-```
-- common.populating_dim_calendar stored procedure is used to populate common.dim_calendar
-```
-dbt run-operation create_populating_dim_calendar
-```
-- to populate common.dim_calendar run the stored procedure once
-```
-dbt run-operation run_populating_dim_calendar
-```
 
 ### Custom folders:
 - **documentation** is for *.md files with extended or templates object descriptions. There is also index.html with adjusted logo and title. This is a template dbt uses to generate documentations. It should re-place existing **index.html** in **".venv\Lib\site-packages\dbt\task\docs"** folder after a new environment created and dbt installed.
@@ -58,4 +45,12 @@ ALTER DEFAULT PRIVILEGES FOR user svcfivetran IN SCHEMA <for each used in dbt pt
 ```
 
 - The largest tables in the project (fact tables from LCom platform content, delivery and usage) were built when conformed dim_account did not exist and distributed by LCom platform organization id. An account, created in Salesforce, must change it's unique id in Dim_Account when a correspondeing organization created in LCom Platform Organization table to be properly distributed. It prevents from using incremental load in dbt because it requires a stable unique key. Most accounts are updated daily in Salesforce and incremental load does not improve performance anyway.
+
+## Development Guidelines
+
+- [Working with Late-Binding Views](WORKING_WITH_LATE_BINDING_VIEWS.md)
+- [Stored Procedures dbt Guidelines](STORED_PROCEDURES_DBT_GUIDELINES.md)
+- [Adding New Column Incremental Model](ADDING_NEW_COLUMN_INCREMENTAL_MODEL)
+- [Adding New Column SCD2 Model](ADDING_NEW_COLUMN_SCD2_MODEL)
+- TBD Singular tests as a view with core logic and very simple test SQL itself without column names 
 
