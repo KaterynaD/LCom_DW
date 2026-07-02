@@ -33,9 +33,9 @@ inner join {{ ref("dim_school") }} as sch
     on fal.organization_school_id = sch.school_id
 inner join {{ ref("dim_calendar") }} as cal
     on cast(fal.launch_datetime as DATE) = cal.cal_date
-left join {{ ref("dim_teacher") }} as tch
+left join {{ source("dbo","mv_teacher_account") }} as tch
     on
-        fal.user_primary_teacher_id = tch.teacher_id
+        fal.user_primary_teacher_id = tch.user_account_id 
         and fal.organization_district_id = tch.organization_district_id
 left join {{ ref("dim_learning_pathway") }} as lp
     on fal.learning_pathway_id = lp.learning_pathway_id
