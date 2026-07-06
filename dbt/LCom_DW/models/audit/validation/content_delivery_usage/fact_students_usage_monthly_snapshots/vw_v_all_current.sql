@@ -37,7 +37,7 @@ where o.is_demo=false
 and o.is_trial=false
 group by dt.SchoolYear
 )
-select schoolyear,unique_students, unique_students_launches from {{ ref("vw_usage_scorecard") }} vus 
+select schoolyear,unique_students, unique_students_launches from vw_usage_scorecard vus 
 except
 select distinct schoolyear, company_cnt_students , company_students_launches 
 from {{ ref("fact_students_usage_monthly_snapshots") }}
