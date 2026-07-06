@@ -22,10 +22,10 @@ This folder contains the **two GitHub Actions workflows** that orchestrate:
 ## `deploy_to_ec2_AWSPRDDWH001.yml`
 
 ### Purpose
-Deploy the repo to the EC2 host using the host’s release/deploy scripts (immutable releases + atomic `current` symlink switch).
+CI/CD dbt and airflow, deploy the repo to the EC2 host using the host’s release/deploy scripts (immutable releases + atomic `current` symlink switch), promotes validated changes from qa branch to master branch.
 
 ### When it runs
-- `push` to `master`
+- `push` to `qa`
 - Manual run (`workflow_dispatch`)
 
 ### What it does (high level)
@@ -33,6 +33,9 @@ Deploy the repo to the EC2 host using the host’s release/deploy scripts (immut
 - Passes deployment context (`GITHUB_SHA`, `GITHUB_REF_NAME`) to the host deploy entrypoint script
 
 ---
+
+
+
 
 ## `docs_publish.yml`
 

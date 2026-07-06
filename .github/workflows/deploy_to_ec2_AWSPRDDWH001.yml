@@ -21,12 +21,7 @@ jobs:
           echo "Deploy script  : $DEPLOY_SCRIPT"
           echo "Promote script : $PROMOTE_SCRIPT"
           echo "Branch         : $GITHUB_REF_NAME"
-          echo "SHA            : $GITHUB_SHA"
-
-      - name: Promote validated QA to master
-        shell: bash
-        run: |
-          "$PROMOTE_SCRIPT"          
+          echo "SHA            : $GITHUB_SHA"        
 
       - name: Deploy and test QA
         shell: bash
@@ -35,3 +30,7 @@ jobs:
             "$GITHUB_SHA" \
             "$GITHUB_REF_NAME"
 
+      - name: Promote validated QA to master
+        shell: bash
+        run: |
+          "$PROMOTE_SCRIPT"              
