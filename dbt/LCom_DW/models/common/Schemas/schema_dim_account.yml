@@ -533,11 +533,6 @@ models:
     description: "{{ doc('column_ishighschool') }}"
     constraints:
     - type: not_null
-  - name: SFDC_ultimate_parent_current_renewal_arr
-    data_type: numeric(38,10)
-    description: "{{ doc('column_SFDC_ultimate_parent_current_renewal_arr') }}"
-    constraints:
-    - type: not_null
   - name: loaddate
     data_type: timestamp
     description: "{{ doc('column_loaddate') }}"

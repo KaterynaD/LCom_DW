@@ -291,31 +291,43 @@ models:
     - not_null
   - name: SFDC_ultimate_parent_current_renewal_arr
     data_type: numeric(38,10)
-    description: "{{ doc('column_SFDC_ultimate_parent_current_renewal_arr') }}"
+    description: "Do not use. Always 0. This column is deprecated with ARR based on Active Renewals."
     constraints:
     - type: not_null
+    data_tests:
+      - not_null
   - name: sfdc_state_program_eligible
     data_type: boolean
     description: "{{ doc('column_sfdc_state_program_eligible') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - not_null
   - name: sfdc_county_name
     data_type: varchar(780)
     description: "{{ doc('column_sfdc_county_name') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - not_null
   - name: sfdc_customer_level
     data_type: varchar(765)
     description: "{{ doc('column_sfdc_customer_level') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - not_null
   - name: sfdc_customer_level_override
     data_type: varchar(765)
     description: "{{ doc('column_sfdc_customer_level_override') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - not_null
   - name: lcom_parent_organization_id
     data_type: varchar(300)
     description: "{{ doc('column_lcom_parent_organization_id') }}"
     constraints:
     - type: not_null
+    data_tests:
+      - not_null

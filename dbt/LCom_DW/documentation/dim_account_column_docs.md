@@ -1185,9 +1185,6 @@ District State Initiative from the parent(district) level. True if parent`s attr
 For State progam reports where HS need to be excluded - Indicates if the school is a high school only. No middle or elementary grades. Salesforce Account grade_levels = 'High School' or (grade_levels is null and k_12_enrollment>0 and k_8_enrollment=0). For the most recent orders we should have all schools in the table linked to a Salesforce account if they have an order
 {% enddocs %}
 
-{% docs column_SFDC_ultimate_parent_current_renewal_arr %}
-Aggregated current renewal ARR across all ultimate parent account child accounts.
-{% enddocs %}
 
 {% docs column_sfdc_district_easy_code_tam %}
 District EasyCode TAM (Total EasyCode TAM for a district based on sum of all children TAM values)

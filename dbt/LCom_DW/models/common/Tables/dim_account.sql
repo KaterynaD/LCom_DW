@@ -123,7 +123,6 @@ on sfdc_parent_account.owner_id= sfdc_user.id
     --
     lower(loc.lcom_platform_organization_id_c) lcom_organization_id,
     --
-    sfdc_ultimate_parent.sfdc_current_renewal_arr as sfdc_ultimate_parent_current_renewal_arr,
     sfdc_parent_account.name as parent_name_proper_case_c,
     sfdc_ultimate_parent_account.name as ultimate_parent_account_c,
     sfdc_ultimate_parent_account.billing_state as ultimate_parent_billing_state_c,
@@ -138,8 +137,6 @@ left outer join sch
 on sfdc_account.id=sch.parent_id
 left outer join {{ source('fivetran_salesforce_quickstart', 'account') }} dist
 on sfdc_account.parent_id=dist.id
-left outer join {{ ref("sfdc_ultimate_parent_accounts_data")}} sfdc_ultimate_parent
-on sfdc_ultimate_parent.sfdc_ultimate_parent_id = sfdc_account.id
 left outer join sfdc_parent_account
 on sfdc_account.parent_id = sfdc_parent_account.id
 left outer join sfdc_parent_account as sfdc_ultimate_parent_account
@@ -307,8 +304,7 @@ isnull(SFDC_data.district_state_initiative_school, {{ var("default_boolean") }})
 isnull(SFDC_data.state_initiative_district, {{ var("default_boolean") }}) as SFDC_state_initiative_district,
 isnull(SFDC_data.district_state_initiative_district, {{ var("default_boolean") }}) as SFDC_district_state_initiative_district,
 --Calculated
-case when (SFDC_data.grade_levels_c = 'High School' or (SFDC_data.grade_levels_c is null and  SFDC_data.k_12_enrollment_c>0 and SFDC_data.k_8_enrollment_c=0)) then True else False end as isHighSchool,
-isnull(sfdc_ultimate_parent_current_renewal_arr, {{ var("default_numeric") }}) as SFDC_ultimate_parent_current_renewal_arr
+case when (SFDC_data.grade_levels_c = 'High School' or (SFDC_data.grade_levels_c is null and  SFDC_data.k_12_enrollment_c>0 and SFDC_data.k_8_enrollment_c=0)) then True else False end as isHighSchool
 --
 FROM LCOM_data
 --
@@ -429,8 +425,7 @@ select
 {{ var("default_boolean") }} as SFDC_state_initiative_district,
 {{ var("default_boolean") }} as SFDC_district_state_initiative_district,
 --Calculated
-{{ var("default_boolean") }} as isHighSchool,
-{{ var("default_numeric") }} as SFDC_ultimate_parent_current_renewal_arr
+{{ var("default_boolean") }} as isHighSchool
 )
 select
     account_id::varchar(300),
@@ -535,7 +530,6 @@ select
     sfdc_state_initiative_district :: boolean,
     sfdc_district_state_initiative_district :: boolean,
     --Calculated
-    isHighSchool:: boolean,
-    SFDC_ultimate_parent_current_renewal_arr :: numeric(38,10),
-    '{{ var("loaddate") }}'::timestamp as loaddate
+    isHighSchool:: boolean
+    ,'{{ var("loaddate") }}'::timestamp as loaddate
 FROM data
