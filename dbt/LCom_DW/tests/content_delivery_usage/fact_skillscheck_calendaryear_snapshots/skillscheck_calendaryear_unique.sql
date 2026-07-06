@@ -1,11 +1,1 @@
--- Uniqueness test for the configured unique_key
--- Ensures no duplicate rows for the unique grain
-select
-  calendaryear,
-  organization_district_id,
-  user_account_id,
-  assessment_set_id,
-  count(*) as row_count
-from {{ ref('fact_skillscheck_calendaryear_snapshots') }}
-group by 1,2,3,4
-having count(*) > 1
+select * from {{ ref("vw_v_skillscheck_calendaryear_unique") }}

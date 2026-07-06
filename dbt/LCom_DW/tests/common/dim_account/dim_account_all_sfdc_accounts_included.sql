@@ -1,3 +1,1 @@
-select id from {{ source('fivetran_salesforce_quickstart', 'account') }}
-except
-select SFDC_account_id from {{ ref("dim_account") }}
+select * from {{ ref("vw_v_dim_account_all_sfdc_accounts_included") }}

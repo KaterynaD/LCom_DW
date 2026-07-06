@@ -1,0 +1,147 @@
+version: 2
+
+models:
+  - name: vw_v_fact_case_history_all_cases_in
+    description: Validated SQL for a singular test fact_case_history_all_cases_in
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_arr_validation_unknown_issues
+    description: Validated SQL for a singular test arr_validation_unknown_issues
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_arr_audit_unknown_issues
+    description: Validated SQL for a singular test arr_audit_unknown_issues
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_fact_opportunity_history_all_opportunities_in
+    description: Validated SQL for a singular test fact_opportunity_history_all_opportunities_in
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_fact_opportunity_all_opportunity_included
+    description: Validated SQL for a singular test fact_opportunity_all_opportunity_included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_fact_license_order_all_orders_included
+    description: Validated SQL for a singular test fact_license_order_all_orders._included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_license_order_school_all_schools_included
+    description: Validated SQL for a singular test dim_license_order_school_all_schools_included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_all_current
+    description: Validated SQL for a singular test all_current
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_unique
+    description: Validated SQL for a singular test unique
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_TechApps_for_Texas
+    description: Validated SQL for a singular test TechApps_for_Texas
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_EasyTech_without_Common_Sense_Education
+    description: Validated SQL for a singular test EasyTech_without_Common_Sense_Education
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_EasyTech_and_TechApps_for_Texas
+    description: Validated SQL for a singular test EasyTech_and_TechApps_for_Texas
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_EasyCode_and_EasyCode_Pillars
+    description: Validated SQL for a singular test EasyCode_and_EasyCode_Pillars
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_EasyCode_and_EasyCode_Foundations
+    description: Validated SQL for a singular test EasyCode_and_EasyCode_Foundations
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_sfdc_product_all_products_included
+    description: Validated SQL for a singular test dim_sfdc_product_all_products_included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_skillscheck_schoolyear_unique
+    description: Validated SQL for a singular test skillscheck_schoolyear_unique
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_skillscheck_schoolyear_row_count_sanity
+    description: Validated SQL for a singular test skillscheck_schoolyear_row_count_sanity
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_skillscheck_schoolyear_not_null_keys
+    description: Validated SQL for a singular test skillscheck_schoolyear_not_null_keys
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_lcom_suite_all_suites_included
+    description: Validated SQL for a singular test dim_lcom_suite_all_suites_included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_skillscheck_calendaryear_unique
+    description: Validated SQL for a singular test skillscheck_calendaryear_unique
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_skillscheck_calendaryear_row_count_sanity
+    description: Validated SQL for a singular test skillscheck_calendaryear_row_count_sanity
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_skillscheck_calendaryear_not_null_keys
+    description: Validated SQL for a singular test skillscheck_calendaryear_not_null_keys
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_lcom_sku_all_skus_included
+    description: Validated SQL for a singular test dim_lcom_sku_all_skus_included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_account_history_clean
+    description: Validated SQL for a singular test dim_account_history_clean
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_account_history_all_accounts
+    description: Validated SQL for a singular test dim_account_history_all_accounts
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_account_clean
+    description: Validated SQL for a singular test dim_account_clean
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_account_all_sfdc_accounts_included
+    description: Validated SQL for a singular test dim_account_all_sfdc_accounts_included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_dim_account_all_organizations_included
+    description: Validated SQL for a singular test dim_account_all_organizations_included
+    config:
+      tags: [singular_test]
+
+  - name: vw_v_true_vs_backdated_validation
+    description: Validated SQL for a singular test true_vs_backdated_validation
+    config:
+      tags: [singular_test]

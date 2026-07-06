@@ -1,4 +1,1 @@
-select *
-from {{ ref("vw_true_to_backdated_arr_validation") }}
-/*there is 1.5 - 8.5% difference with negative and replacment opportunities added in 2017/2018 FY*/
-where mon_year >= 202407 and pct_diff>1
+select * from {{ ref("vw_v_true_vs_backdated_validation") }}

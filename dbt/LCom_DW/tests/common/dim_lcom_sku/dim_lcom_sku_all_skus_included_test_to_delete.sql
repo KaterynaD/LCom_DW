@@ -1,1 +1,0 @@
-select * from {{ ref("vw_v_dim_lcom_sku_all_skus_included") }}

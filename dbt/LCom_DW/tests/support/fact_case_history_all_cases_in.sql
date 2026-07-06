@@ -1,3 +1,1 @@
-select case_id FROM {{ ref("fact_case") }}
-except
-select case_id FROM {{ ref("fact_case_history") }}
+select * from {{ ref("vw_v_fact_case_history_all_cases_in") }}

@@ -1,3 +1,1 @@
-select account_id FROM {{ ref("dim_account") }}
-except
-select account_id FROM {{ ref("dim_account_history") }}
+select * from {{ ref("vw_v_dim_account_history_all_accounts") }}

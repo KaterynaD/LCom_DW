@@ -1,3 +1,1 @@
-select opportunity_id FROM {{ ref("fact_opportunity") }}
-except
-select opportunity_id FROM {{ ref("fact_opportunity_history") }}
+select * from {{ ref("vw_v_fact_opportunity_history_all_opportunities_in") }}

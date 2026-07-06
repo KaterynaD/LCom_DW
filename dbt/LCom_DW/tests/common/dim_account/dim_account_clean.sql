@@ -1,6 +1,1 @@
-select 
-account_id
-from {{ ref("dim_account") }}
-where sfdc_account_id!='Unknown'
-group by account_id
-having count(distinct sfdc_account_id)>1
+select * from {{ ref("vw_v_dim_account_clean") }}

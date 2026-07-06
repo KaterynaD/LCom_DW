@@ -1,0 +1,1 @@
+select * from {{ ref("vw_v_fact_license_order_all_orders_included") }}
