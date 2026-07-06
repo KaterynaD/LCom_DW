@@ -1,3 +1,1 @@
-select lower(skuid) from {{ source("staging","sku") }} 
-except
-select sku_id from {{ ref("dim_lcom_sku") }}
+select * from {{ ref("vw_v_dim_lcom_sku_all_skus_included") }}
