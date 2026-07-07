@@ -49,8 +49,9 @@ ALTER DEFAULT PRIVILEGES FOR user svcfivetran IN SCHEMA <for each used in dbt pt
 ## Development Guidelines
 
 - [Working with Late-Binding Views](WORKING_WITH_LATE_BINDING_VIEWS.md)
-- [Stored Procedures dbt Guidelines](STORED_PROCEDURES_DBT_GUIDELINES.md)
-- [Adding New Column Incremental Model](ADDING_NEW_COLUMN_INCREMENTAL_MODEL)
-- [Adding New Column SCD2 Model](ADDING_NEW_COLUMN_SCD2_MODEL)
-- TBD Singular tests as a view with core logic and very simple test SQL itself without column names 
-
+- [Adding New Column Incremental Model](ADDING_NEW_COLUMN_INCREMENTAL_MODEL.md)
+- [History of data changes - Slowly Changing Dimension Type 2 (SCD2)](macros/dbt_scd2_plus/README.md):  [See dim_account_history as an example](models/common/Tables/dim_account_history.sql)
+- [Adding New Column SCD2 Model](ADDING_NEW_COLUMN_SCD2_MODEL.md)
+- [Removing Column from SCD2 Model](REMOVING_COLUMN_SCD2_MODEL.md)
+- [Stored Procedure Materialization](STORED_PROCEDURES_DBT_GUIDELINES.md): [See fact_launches_weekly_snapshots.sql as an example ](models/content_delivery_usage/Tables/Facts/fact_launches_weekly_snapshots.sql)
+- [Singular (Custom SQL) dbt Tests](SINGULAR_dbt_TESTS.md)

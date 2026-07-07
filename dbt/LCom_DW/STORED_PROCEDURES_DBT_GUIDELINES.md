@@ -12,7 +12,7 @@ A stored procedure-based model consists of three parts:
 
 1.  A macro that defines the target table DDL.
 2.  A macro that defines the stored procedure DDL.
-3.  A dbt model that executes the stored procedure.
+3.  A dbt model materialized as [sql_runner](macros/materializations/dbt_sql_runner_materialization.sql) that executes the stored procedure.
 
 The dbt model should remain small. The table definition and stored
 procedure definition belong in reusable macros.
