@@ -28,10 +28,10 @@ select
     count(distinct fal.user_account_id) as num_users
 from {{ source("dbo","fact_assignment_launch") }}  as fal
 inner join {{ ref("dim_district") }} as org
-    on fal.organization_district_id = org.lcom_district_id
+    on fal.organization_district_id = org.district_id
 inner join {{ ref("dim_school") }} as sch
     on
-        fal.organization_school_id = sch.lcom_school_id
+        fal.organization_school_id = sch.school_id
         and fal.organization_district_id = sch.lcom_district_id
 inner join {{ ref("dim_calendar") }} as cal
     on cast(fal.launch_datetime as DATE) = cal.cal_date
