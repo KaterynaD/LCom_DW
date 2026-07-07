@@ -116,18 +116,6 @@ select
 	,MAX(loaddate) as last_action_date
 from dw.content_delivery_usage.dim_learning_object
 
-
-
-union all
-
-select
-	'dw' as database_name
-	,'content_delivery_usage' as schema_name
-	,'fact_launches_monthly_snapshots' as table_name
-	,COUNT(*) as row_count
-	,MAX(greatest(cast(loaddate as date))) as last_action_date
-from dw.content_delivery_usage.fact_launches_monthly_snapshots
-
 union all
 
 select
@@ -343,26 +331,6 @@ select
 	,COUNT(*) as row_count
 	,MAX(loaddate) as last_action_date
 from dw.revenue.dim_opportunity_line_history
-
-union all
-
-select
-	'dw' as database_name
-	,'revenue' as schema_name
-	,'fact_paying_customers' as table_name
-	,COUNT(*) as row_count
-	,MAX(loaddate) as last_action_date
-from dw.revenue.fact_paying_customers
-
-union all
-
-select
-	'dw' as database_name
-	,'revenue' as schema_name
-	,'fact_revenue_monthly_snapshots' as table_name
-	,COUNT(*) as row_count
-	,MAX(loaddate) as last_action_date
-from dw.revenue.fact_revenue_monthly_snapshots
 
 union all
 
