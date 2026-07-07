@@ -39,37 +39,51 @@ models:
   - name: vw_v_all_current
     description: Validated SQL for a singular test all_current
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_unique
     description: Validated SQL for a singular test unique
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_TechApps_for_Texas
     description: Validated SQL for a singular test TechApps_for_Texas
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_EasyTech_without_Common_Sense_Education
     description: Validated SQL for a singular test EasyTech_without_Common_Sense_Education
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_EasyTech_and_TechApps_for_Texas
     description: Validated SQL for a singular test EasyTech_and_TechApps_for_Texas
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_EasyCode_and_EasyCode_Pillars
     description: Validated SQL for a singular test EasyCode_and_EasyCode_Pillars
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_EasyCode_and_EasyCode_Foundations
     description: Validated SQL for a singular test EasyCode_and_EasyCode_Foundations
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_dim_sfdc_product_all_products_included
     description: Validated SQL for a singular test dim_sfdc_product_all_products_included
@@ -79,17 +93,23 @@ models:
   - name: vw_v_skillscheck_schoolyear_unique
     description: Validated SQL for a singular test skillscheck_schoolyear_unique
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_skillscheck_schoolyear_row_count_sanity
     description: Validated SQL for a singular test skillscheck_schoolyear_row_count_sanity
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_skillscheck_schoolyear_not_null_keys
     description: Validated SQL for a singular test skillscheck_schoolyear_not_null_keys
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_dim_lcom_suite_all_suites_included
     description: Validated SQL for a singular test dim_lcom_suite_all_suites_included
@@ -99,17 +119,23 @@ models:
   - name: vw_v_skillscheck_calendaryear_unique
     description: Validated SQL for a singular test skillscheck_calendaryear_unique
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_skillscheck_calendaryear_row_count_sanity
     description: Validated SQL for a singular test skillscheck_calendaryear_row_count_sanity
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_skillscheck_calendaryear_not_null_keys
     description: Validated SQL for a singular test skillscheck_calendaryear_not_null_keys
     config:
-      tags: [singular_test]
+      tags:
+        - singular_test
+        - product_usage
 
   - name: vw_v_dim_lcom_sku_all_skus_included
     description: Validated SQL for a singular test dim_lcom_sku_all_skus_included
