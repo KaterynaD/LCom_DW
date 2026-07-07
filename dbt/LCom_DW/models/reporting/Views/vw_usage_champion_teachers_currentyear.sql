@@ -44,8 +44,8 @@ left join {{ source("dbo","learning_pathway") }} as lp
 where current_date between cal.schoolyear_startdate and dateadd(year, 1, cal.schoolyear_enddate)
 group by
     cal.schoolyear, org.lcom_country_code, org.lcom_state_province_key, org.lcom_state_province_name, org.sfdc_state_program_eligible, org.sfdc_state_initiative,
-    org.lcom_district_id, org.sfdc_district_name, org.lcom_district_name, org.lcom_demo, org.lcom_trial,
-    sch.lcom_school_id, sch.sfdc_school_name, sch.lcom_school_name,
+    org.lcom_district_id, coalesce(nullif(org.sfdc_district_name, 'Unknown'), org.lcom_district_name), org.lcom_demo, org.lcom_trial,
+    sch.lcom_school_id, coalesce(nullif(sch.sfdc_school_name, 'Unknown'), sch.lcom_school_name),
     fal.user_primary_teacher_id, coalesce(tch.first_name + ' ' + tch.last_name, lp.learning_pathway_name), tch.email,
     case when fal.learning_pathway_id <> '00000000-0000-0000-0000-000000000000' then 'Pathway' else 'Teacher-Assigned' end
 having coalesce(nullif(sch.sfdc_school_name, 'Unknown'), sch.lcom_school_name) <> 'Unknown'
