@@ -340,3 +340,9 @@ models:
     description: "{{ doc('column_multi_year_discount_rate') }}"
     constraints:
     - type: not_null    
+
+  - name: owner_id
+    data_type: varchar(300)
+    description: "{{ doc('column_owner_id') }}"
+    constraints:
+    - type: not_null    

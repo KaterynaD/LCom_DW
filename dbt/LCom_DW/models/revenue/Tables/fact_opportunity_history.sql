@@ -14,7 +14,7 @@
 'true_arr',
 'true_arr_formula','true_renewal_arr','last_modified_date',
 'invoiced_date','close_date','start_date','end_date','opp_record_type',
-'license_unenforced','disable_auto_renewal_opp','number_of_schools','number_of_students','multi_year_discount_rate'],
+'license_unenforced','disable_auto_renewal_opp','number_of_schools','number_of_students','multi_year_discount_rate','owner_id'],
 
    punch_thru_cols=['account_id'],
 
@@ -75,6 +75,7 @@ case when disable_auto_renewal_opp then 1 else 0 end as disable_auto_renewal_opp
 number_of_schools,
 number_of_students,
 multi_year_discount_rate,
+owner_id,
 last_modified_date 
 from {{ ref("fact_opportunity") }}
 {% if is_incremental() %}

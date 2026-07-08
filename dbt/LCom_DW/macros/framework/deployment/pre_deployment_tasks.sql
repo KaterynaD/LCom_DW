@@ -11,57 +11,59 @@
 
  {% if target_db | upper == 'QA' %}
 
-   create table qa.common.dim_account_history as select * from dw.common.dim_account_history limit 100;
+   create table qa.revenue.fact_opportunity_history as select * from dw.revenue.fact_opportunity_history limit 100;
+   create table qa.revenue.fact_opportunity as select * from dw.revenue.fact_opportunity limit 100;
 
  {% endif %} 
 					
-update common.dim_account_history
-set sfdc_ultimate_parent_current_renewal_arr=0;
+alter table revenue.fact_opportunity_history add column owner_id varchar(300) not null default '00000000-0000-0000-0000-000000000000';
 
+update revenue.fact_opportunity_history h
+set owner_id = fo.owner_id
+from revenue.fact_opportunity fo
+where fo.opportunity_id = h.opportunity_id;
 
-
-update common.dim_account_history
-set scd_hash = md5(coalesce(cast(lcom_organization_id as varchar ), '')
-         || '|' || coalesce(cast(lcom_trial as varchar ), '')
-         || '|' || coalesce(cast(lcom_demo as varchar ), '')
-         || '|' || coalesce(cast(lcom_country_name as varchar ), '')
-         || '|' || coalesce(cast(lcom_organization_name as varchar ), '')
-         || '|' || coalesce(cast(lcom_organization_type as varchar ), '')
-         || '|' || coalesce(cast(lcom_parent_organization_name as varchar ), '')
-         || '|' || coalesce(cast(lcom_state_province_code as varchar ), '')
-         || '|' || coalesce(cast(sfdc_parent_id as varchar ), '')
-         || '|' || coalesce(cast(SFDC_record_type as varchar ), '')
-         || '|' || coalesce(cast(sfdc_current_renewal_arr as varchar ), '')
-         || '|' || coalesce(cast(sfdc_state_initiative as varchar ), '')
-         || '|' || coalesce(cast(sfdc_state_initiative_school as varchar ), '')
-         || '|' || coalesce(cast(sfdc_state_eligible_or_initiative as varchar ), '')
-         || '|' || coalesce(cast(sfdc_state_eligible_or_initiative_school as varchar ), '')
-         || '|' || coalesce(cast(sfdc_owner_id as varchar ), '')
-         || '|' || coalesce(cast(sfdc_owner_name_text as varchar ), '')
-         || '|' || coalesce(cast(sfdc_billing_state as varchar ), '')
-         || '|' || coalesce(cast(sfdc_billing_state_code as varchar ), '')
-         || '|' || coalesce(cast(sfdc_grade_levels as varchar ), '')
-         || '|' || coalesce(cast(sfdc_k_12_enrollment as varchar ), '')
-         || '|' || coalesce(cast(sfdc_k_8_enrollment as varchar ), '')
-         || '|' || coalesce(cast(sfdc_name as varchar ), '')
-         || '|' || coalesce(cast(sfdc_parent_name as varchar ), '')
-         || '|' || coalesce(cast(sfdc_ultimate_account_owner as varchar ), '')
-         || '|' || coalesce(cast(sfdc_ultimate_parent_account as varchar ), '')
-         || '|' || coalesce(cast(sfdc_ultimate_parent_billing_state as varchar ), '')
-         || '|' || coalesce(cast(sfdc_ultimate_parent_id as varchar ), '')
-         || '|' || coalesce(cast(sfdc_urban_rural as varchar ), '')
-         || '|' || coalesce(cast(isHighSchool as varchar ), '')
-         || '|' || coalesce(cast(sfdc_ultimate_parent_current_renewal_arr as varchar ), '')
-         || '|' || coalesce(cast(sfdc_billing_country as varchar ), '')
-         || '|' || coalesce(cast(sfdc_billing_country_code as varchar ), '')
-         || '|' || coalesce(cast(sfdc_district_enrollment as varchar ), '')
-         || '|' || coalesce(cast(sfdc_school_enrollment as varchar ), '')
-         || '|' || coalesce(cast(sfdc_state_program_eligible as varchar ), '')
-         || '|' || coalesce(cast(sfdc_county_name as varchar ), '')
-         || '|' || coalesce(cast(sfdc_customer_level as varchar ), '')
-         || '|' || coalesce(cast(sfdc_customer_level_override as varchar ), '')
-         || '|' || coalesce(cast(lcom_parent_organization_id as varchar ), '')
-        );
+update revenue.fact_opportunity_history
+set scd_hash = md5(
+       coalesce(cast(stage_name as varchar), '')
+    || '|' || coalesce(cast(name as varchar), '')
+    || '|' || coalesce(cast(amount as varchar), '')
+    || '|' || coalesce(cast(amount_won as varchar), '')
+    || '|' || coalesce(cast(arr as varchar), '')
+    || '|' || coalesce(cast(arr_new_business as varchar), '')
+    || '|' || coalesce(cast(arr_renewal as varchar), '')
+    || '|' || coalesce(cast(arr_upsell as varchar), '')
+    || '|' || coalesce(cast(arr_won as varchar), '')
+    || '|' || coalesce(cast(combined_arr as varchar), '')
+    || '|' || coalesce(cast(downsell as varchar), '')
+    || '|' || coalesce(cast(multi_year_arr as varchar), '')
+    || '|' || coalesce(cast(new_biz_arr_trigger as varchar), '')
+    || '|' || coalesce(cast(nnarr as varchar), '')
+    || '|' || coalesce(cast(nrr_renewal as varchar), '')
+    || '|' || coalesce(cast(po_amount as varchar), '')
+    || '|' || coalesce(cast(price_increase_arr as varchar), '')
+    || '|' || coalesce(cast(probability as varchar), '')
+    || '|' || coalesce(cast(quote_list_amount as varchar), '')
+    || '|' || coalesce(cast(quote_total_discount as varchar), '')
+    || '|' || coalesce(cast(remaining_quota as varchar), '')
+    || '|' || coalesce(cast(renewable_revenue as varchar), '')
+    || '|' || coalesce(cast(total_arr_bookings as varchar), '')
+    || '|' || coalesce(cast(true_arr as varchar), '')
+    || '|' || coalesce(cast(true_arr_formula as varchar), '')
+    || '|' || coalesce(cast(true_renewal_arr as varchar), '')
+    || '|' || coalesce(cast(last_modified_date as varchar), '')
+    || '|' || coalesce(cast(invoiced_date as varchar), '')
+    || '|' || coalesce(cast(close_date as varchar), '')
+    || '|' || coalesce(cast(start_date as varchar), '')
+    || '|' || coalesce(cast(end_date as varchar), '')
+    || '|' || coalesce(cast(opp_record_type as varchar), '')
+    || '|' || coalesce(cast(license_unenforced as varchar), '')
+    || '|' || coalesce(cast(disable_auto_renewal_opp as varchar), '')
+    || '|' || coalesce(cast(number_of_schools as varchar), '')
+    || '|' || coalesce(cast(number_of_students as varchar), '')
+    || '|' || coalesce(cast(multi_year_discount_rate as varchar), '')
+    || '|' || coalesce(cast(owner_id as varchar), '')
+);
 
  {% endset %}
 

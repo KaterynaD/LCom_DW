@@ -250,7 +250,7 @@ select
     opp_record_type::varchar(20),
     opportunity_number::varchar(100),
     opportunity_score_id::varchar(30),
-    owner_id::varchar(30),
+    owner_id::varchar(300),
     Override_ARR::numeric(38,10),
     paid_date::date,
     payment_terms::varchar(780),
