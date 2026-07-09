@@ -328,8 +328,6 @@ sources:
         - name: contact_id
         - name: created_date
         - name: csat_response_c
-        - name: data_quality_description_c
-        - name: data_quality_score_c
         - name: description
         - name: is_closed
         - name: is_escalated

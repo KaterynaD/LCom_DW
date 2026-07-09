@@ -94,18 +94,6 @@ models:
         constraints:
           - type: not_null
 
-      - name: data_quality_description
-        data_type: varchar(1000)
-        description: Data Quality Description
-        constraints:
-          - type: not_null
-
-      - name: data_quality_score
-        data_type: integer
-        description: Data Quality Score
-        constraints:
-          - type: not_null
-
       - name: description
         data_type: varchar(max)
         description: Case Description

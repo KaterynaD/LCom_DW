@@ -15,8 +15,7 @@ with rawdata as (select
         used_columns=[ 
       'id','account_id','case_number','case_owner_email_c',
 'case_ready_to_survey_c','closed_date','confirmed_resolution_c','contact_id',
-'created_date','csat_response_c','data_quality_description_c',
-'data_quality_score_c','description',
+'created_date','csat_response_c','description',
 'is_closed','is_escalated','last_modified_date',
 'origin','owner_id','platform_name_c','priority',
 'status','subject',
@@ -42,8 +41,6 @@ isnull(stg.confirmed_resolution_c , {{ var("default_boolean") }}) as confirmed_r
 isnull(stg.contact_id , '{{ var("default_ID") }}') as contact_id	,
 isnull(stg.created_date	 AT TIME ZONE 'PST','{{ var("default_date") }}') as created_date	,
 isnull(stg.csat_response_c , '{{ var("default_varchar") }}') as csat_response	,
-isnull(stg.data_quality_description_c , '{{ var("default_varchar") }}') as data_quality_description	,
-isnull(stg.data_quality_score_c, {{ var("default_numeric") }}) as data_quality_score	,
 isnull(stg.description , '{{ var("default_varchar") }}') as description	,
 isnull(stg.is_closed, {{ var("default_boolean") }}) as is_closed	,
 isnull(stg.is_escalated, {{ var("default_boolean") }}) as is_escalated	,
@@ -80,8 +77,6 @@ select
  ,contact_id::VARCHAR(300)
  ,created_date::TIMESTAMP
  ,csat_response::VARCHAR(1000)
- ,data_quality_description::VARCHAR(1000)
- ,data_quality_score::INTEGER
  ,description::VARCHAR(max)
  ,is_closed::BOOLEAN
  ,is_escalated::BOOLEAN
