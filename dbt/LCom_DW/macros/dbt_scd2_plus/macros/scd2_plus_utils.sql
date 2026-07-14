@@ -164,6 +164,8 @@
 
 {% endmacro %}
 
+{-- ======================================================================================================================== --}
+
 {% macro scd2_plus_merge_sql(target, config, sql) %}
 
     {% set now = modules.datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") %}
@@ -307,6 +309,7 @@
      {{ c }} = data.{{ c }} ,
     {% endfor %}
     {{ scd_updatedate_col_name }} = cast('{{ loaddate }}' as timestamp)
+    ,scd_hash = data.scd_hash
     from {{ int_table_name }} data
     where {{ target }}.{{ unique_key }} = data.{{ unique_key }} and 
           {{ target }}.{{ scd_id_col_name }} = data.{{ scd_id_col_name }} and
@@ -391,4 +394,343 @@
 
     /* No need in intermediate data table anymore */
     drop table {{ int_table_name }};
+{% endmacro %}
+
+{-- ======================================================================================================================== --}
+
+{% macro is_scd2_update_run() %}
+
+    {% if not execute %}
+        {{ return(false) }}
+    {% endif %}
+
+    {% set target_relation = load_cached_relation(this) %}
+
+    {{ return(
+        target_relation is not none
+        and target_relation.type == 'table'
+        and not should_full_refresh()
+    ) }}
+
+{% endmacro %}
+
+{-- ======================================================================================================================== --}
+
+{% macro print_scd_hash(model_name) %}
+
+    {% set matching_nodes = [] %}
+    {% set graph_nodes = graph.get('nodes', {}) %}
+
+    {% for node in graph_nodes.values() %}
+
+        {% if node.get('resource_type') == 'model'
+              and node.get('name') == model_name %}
+
+            {% do matching_nodes.append(node) %}
+
+        {% endif %}
+
+    {% endfor %}
+
+    {% if matching_nodes | length == 0 %}
+
+        {{ exceptions.raise_compiler_error(
+            "Could not find model '" ~ model_name ~ "'."
+        ) }}
+
+    {% elif matching_nodes | length > 1 %}
+
+        {{ exceptions.raise_compiler_error(
+            "More than one model named '" ~ model_name
+            ~ "' was found. Add package_name support to the macro."
+        ) }}
+
+    {% endif %}
+
+    {% set model_node = matching_nodes[0] %}
+    {% set model_config = model_node.get('config', {}) %}
+    {% set check_cols = model_config.get('check_cols') %}
+
+    {% if not check_cols %}
+
+        {{ exceptions.raise_compiler_error(
+            "Model '" ~ model_name
+            ~ "' does not define check_cols."
+        ) }}
+
+    {% endif %}
+
+    {% set hash_sql = snapshot_hash_arguments(check_cols) %}
+
+    {% do print("") %}
+    {% do print("Model: " ~ model_name) %}
+    {% do print("check_cols: " ~ check_cols | join(", ")) %}
+    {% do print("") %}
+    {% do print(hash_sql) %}
+    {% do print("") %}
+
+    {{ return(hash_sql) }}
+
+{% endmacro %}
+
+{-- ======================================================================================================================== --}
+
+{% macro collapse_consecutive_scd_hash(
+    model_name,
+    unique_key,
+    scd_valid_from_col_name='from',
+    scd_valid_to_col_name='to',
+    scd_record_version_col_name='record_version'
+) %}
+
+    {%do log('Collapsing consecutive the same scd_hash rows for model: ' ~ model_name, info=true) %}
+
+    {% set model_relation = ref(model_name) %}
+    {% set schema_name = model_relation.schema %}
+    {% set cleanup_table = model_name ~ '_scd_cleanup' %}
+    {% set groups_table = model_name ~ '_scd_cleanup_groups' %}
+
+    {% set cleanup_sql %}
+
+
+
+        drop table if exists {{ schema_name }}.{{ cleanup_table }};
+        drop table if exists {{ groups_table }};
+
+        create  table {{ schema_name }}.{{ cleanup_table }}
+        (
+            like {{ model_relation }}
+        );
+
+        create temp table {{ groups_table }} as
+
+        with ordered_history as (
+            select
+                {{ unique_key }},
+                {{ scd_record_version_col_name }},
+                {{ scd_valid_from_col_name }},
+                {{ scd_valid_to_col_name }},
+                scd_hash,
+
+                lag(scd_hash) over (
+                    partition by {{ unique_key }}
+                    order by {{ scd_record_version_col_name }}
+                ) as previous_scd_hash
+
+            from {{ model_relation }}
+        ),
+
+        grouped_history as (
+            select
+                {{ unique_key }},
+                {{ scd_record_version_col_name }},
+                {{ scd_valid_from_col_name }},
+                {{ scd_valid_to_col_name }},
+                scd_hash,
+
+                sum(
+                    case
+                        when previous_scd_hash = scd_hash
+                          or (
+                              previous_scd_hash is null
+                              and scd_hash is null
+                          )
+                            then 0
+                        else 1
+                    end
+                ) over (
+                    partition by {{ unique_key }}
+                    order by {{ scd_record_version_col_name }}
+                    rows unbounded preceding
+                ) as scd_group
+
+            from ordered_history
+        ),
+
+        collapsed_groups as (
+            select
+                {{ unique_key }},
+                scd_group,
+
+                min({{ scd_record_version_col_name }})
+                    as source_record_version,
+
+                min({{ scd_valid_from_col_name }})
+                    as adjusted_valid_from,
+
+                max({{ scd_valid_to_col_name }})
+                    as adjusted_valid_to
+
+            from grouped_history
+
+            group by
+                {{ unique_key }},
+                scd_group
+        )
+
+        select
+            {{ unique_key }},
+            source_record_version,
+
+            row_number() over (
+                partition by {{ unique_key }}
+                order by adjusted_valid_from, scd_group
+            )::integer as adjusted_record_version,
+
+            adjusted_valid_from,
+            adjusted_valid_to
+
+        from collapsed_groups
+        ;
+
+        insert into {{ schema_name }}.{{ cleanup_table }}
+        select
+            source.*
+        from {{ model_relation }} as source
+        inner join {{ groups_table }} as groups
+            on source.{{ unique_key }} = groups.{{ unique_key }}
+           and source.{{ scd_record_version_col_name }}
+                = groups.source_record_version
+        ;
+
+        update {{ schema_name }}.{{ cleanup_table }}
+        set
+            {{ scd_record_version_col_name }}
+                = groups.adjusted_record_version,
+
+            {{ scd_valid_from_col_name }}
+                = groups.adjusted_valid_from,
+
+            {{ scd_valid_to_col_name }}
+                = groups.adjusted_valid_to
+
+        from {{ groups_table }} as groups
+
+        where {{ cleanup_table }}.{{ unique_key }}
+                = groups.{{ unique_key }}
+
+          and {{ cleanup_table }}.{{ scd_record_version_col_name }}
+                = groups.source_record_version
+        ;
+
+
+        drop table {{ model_relation }};
+
+        alter table {{ schema_name }}.{{ cleanup_table }} rename to {{model_name}};
+
+        drop table if exists {{ groups_table }};
+
+
+
+    {% endset %}
+
+
+
+    {% if execute %}  
+
+     {% do run_query(cleanup_sql) %}
+
+    {% endif %}
+
+    {%do log('Done: ' ~ model_name, info=true) %}
+
+{% endmacro %}
+
+{-- ======================================================================================================================== --}
+
+{% macro generate_not_null_rebuild_sql(model_name) %}
+
+    {%do log('Applying model contract Not Null constraint for model: ' ~ model_name, info=true) %}
+
+    {% set ns = namespace(model_node=none) %}
+
+    {% for node in graph.nodes.values() %}a
+        {% if node.resource_type == 'model' and node.name == model_name %}
+            {% set ns.model_node = node %}
+        {% endif %}
+    {% endfor %}
+
+    {% if ns.model_node is none %}
+        {{ exceptions.raise_compiler_error(
+            "Model '" ~ model_name ~ "' was not found."
+        ) }}
+    {% endif %}
+
+    {% set model_node = ns.model_node %}
+
+    {% set schema_name = model_node.schema %}
+    {% set table_name = model_node.alias %}
+    {% set new_table_name = table_name ~ '__new' %}
+    {% set backup_table_name = table_name ~ '__old' %}
+
+    {% set dist = model_node.config.get('dist') %}
+    {% set sort = model_node.config.get('sort') %}
+    {% set sort_type = model_node.config.get('sort_type', 'compound') %}
+
+    {% set physical_design_sql %}
+
+{% if dist %}
+    {% if dist | lower in ['all', 'even', 'auto'] %}
+diststyle {{ dist | lower }}
+    {% else %}
+distkey({{ dist }})
+    {% endif %}
+{% endif %}
+
+{% if sort %}
+    {% if sort is string %}
+{{ sort_type | lower }} sortkey({{ sort }})
+    {% else %}
+{{ sort_type | lower }} sortkey(
+        {{ sort | join(', ') }}
+)
+    {% endif %}
+{% endif %}
+
+    {% endset %}
+
+    {% set sql %}
+
+create table {{ schema_name }}.{{ new_table_name }}
+(
+{% for column_name, column in model_node.columns.items() %}
+    {{ column.name | default(column_name, true) }} {{ column.data_type }}{% if column.constraints is defined %}{% for constraint in column.constraints %}{% if constraint.type == 'not_null' %} not null{% endif %}{% endfor %}{% endif %}{% if not loop.last %},{% endif %}
+{% endfor %}
+)
+{{ physical_design_sql | trim }}
+;
+
+insert into {{ schema_name }}.{{ new_table_name }}
+(
+{% for column_name, column in model_node.columns.items() %}
+    {{ column.name | default(column_name, true) }}{% if not loop.last %},{% endif %}
+{% endfor %}
+)
+select
+{% for column_name, column in model_node.columns.items() %}
+    {{ column.name | default(column_name, true) }}{% if not loop.last %},{% endif %}
+{% endfor %}
+from {{ schema_name }}.{{ table_name }};
+
+alter table {{ schema_name }}.{{ table_name }}
+rename to {{ backup_table_name }};
+
+alter table {{ schema_name }}.{{ new_table_name }}
+rename to {{ table_name }};
+
+drop table {{ schema_name }}.{{ backup_table_name }};
+
+    {% endset %}
+
+    {-- do log(sql, info=true) --}
+    
+    {% if execute %}  
+      {% do run_query(sql) %}
+    {% endif %}
+   
+    {%do log('Done: ' ~ model_name, info=true) %}
+
+
+
+
 {% endmacro %}

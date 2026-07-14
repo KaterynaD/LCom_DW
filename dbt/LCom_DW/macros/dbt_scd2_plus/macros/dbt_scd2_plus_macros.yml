@@ -103,3 +103,95 @@ macros:
         type: string
         description: Column name that stores the end of the validity period.
 
+  - name: scd2_current_matches_source
+    description: |
+      Generic test that validates the current SCD2 record per business key against
+      the active source model by comparing computed `scd_hash` values.
+      It fails when a key is missing from either side or hashes do not match.
+    arguments:
+      - name: model
+        type: relation
+        description: SCD2 history model under test.
+      - name: source_model
+        type: string
+        description: Name of the source model (passed to `ref`) representing active rows.
+      - name: unique_key
+        type: string
+        description: Business key column used to join history and source.
+      - name: check_cols
+        type: list
+        description: Column list used to compute the source-side SCD hash.
+      - name: scd_valid_to_col_name
+        type: string
+        description: Valid-to column name used to identify current rows (defaults to `valid_to`).
+      - name: scd_valid_to_max_date
+        type: string
+        description: |
+          Optional max-date marker for current rows. When omitted, current rows are
+          detected as `valid_to is null`.
+
+  - name: no_consecutive_duplicate_scd_hash
+    description: |
+      Generic test that ensures adjacent history versions for a business key do not
+      have identical `scd_hash` values when ordered by record version.
+      Helps detect redundant consecutive SCD2 versions.
+    arguments:
+      - name: model
+        type: relation
+        description: SCD2 model to validate.
+      - name: unique_key
+        type: string
+        description: Business key column used to partition version history.
+      - name: record_version_col
+        type: string
+        description: Record version column used for ordering (defaults to `record_version`).
+
+  - name: is_scd2_update_run
+    description: |
+      Returns a boolean indicating whether the current `scd2_plus` execution should
+      run as an incremental update. It returns true only when:
+      - execution context is active (`execute`)
+      - the target relation already exists and is a table
+      - a full refresh is not requested
+
+  - name: print_scd_hash
+    description: |
+      Debug utility macro that prints and returns the compiled SCD hash SQL expression
+      for a model's `check_cols` configuration.
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the dbt model to inspect.
+
+  - name: collapse_consecutive_scd_hash
+    description: |
+      Maintenance macro that collapses consecutive SCD2 rows with the same `scd_hash`
+      for each business key, then rebuilds record versions and validity ranges.
+      Useful for cleaning up duplicate adjacent history versions.
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the SCD2 model table to clean up.
+      - name: unique_key
+        type: string
+        description: Business key column used to partition history.
+      - name: scd_valid_from_col_name
+        type: string
+        description: Valid-from column name (defaults to `from`).
+      - name: scd_valid_to_col_name
+        type: string
+        description: Valid-to column name (defaults to `to`).
+      - name: scd_record_version_col_name
+        type: string
+        description: Record version column name (defaults to `record_version`).
+
+  - name: generate_not_null_rebuild_sql
+    description: |
+      Utility macro that rebuilds a model table to enforce column-level `not_null`
+      constraints declared in the model contract. It creates a replacement table,
+      copies data, swaps table names, and drops the backup table.
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the model whose table should be rebuilt with constraints.
+
