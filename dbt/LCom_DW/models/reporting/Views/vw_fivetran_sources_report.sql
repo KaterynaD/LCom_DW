@@ -9,7 +9,7 @@ data_association_type as (
         'fivetran_hubspot' as schema_name,
         'association_type' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.association_type
 )
@@ -19,8 +19,8 @@ data_company as (
         'fivetran_hubspot' as schema_name,
         'company' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
-        max(property_createdate) as max_created_date
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
+        max(property_createdate)::date as max_created_date
     from rawdata.fivetran_hubspot.company
 )
 ,
@@ -29,7 +29,7 @@ data_company_company as (
         'fivetran_hubspot' as schema_name,
         'company_company' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.company_company
 )
@@ -39,8 +39,8 @@ data_contact_hubspot as (
         'fivetran_hubspot' as schema_name,
         'contact' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
-        max(property_createdate) as max_created_date
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
+        max(property_createdate)::date as max_created_date
     from rawdata.fivetran_hubspot.contact
 )
 ,
@@ -49,7 +49,7 @@ data_contact_company as (
         'fivetran_hubspot' as schema_name,
         'contact_company' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.contact_company
 )
@@ -59,7 +59,7 @@ data_deal as (
         'fivetran_hubspot' as schema_name,
         'deal' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(property_hs_createdate)::date as max_created_date
     from rawdata.fivetran_hubspot.deal
 )
@@ -69,7 +69,7 @@ data_deal_company as (
         'fivetran_hubspot' as schema_name,
         'deal_company' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.deal_company
 )
@@ -79,7 +79,7 @@ data_deal_contact as (
         'fivetran_hubspot' as schema_name,
         'deal_contact' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.deal_contact
 )
@@ -89,7 +89,7 @@ data_deal_pipeline as (
         'fivetran_hubspot' as schema_name,
         'deal_pipeline' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.deal_pipeline
 )
@@ -99,7 +99,7 @@ data_deal_pipeline_stage as (
         'fivetran_hubspot' as schema_name,
         'deal_pipeline_stage' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.deal_pipeline_stage
 )
@@ -109,7 +109,7 @@ data_deal_stage as (
         'fivetran_hubspot' as schema_name,
         'deal_stage' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.deal_stage
 )
@@ -119,7 +119,7 @@ data_invoice_hubspot as (
         'fivetran_hubspot' as schema_name,
         'invoice' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(property_hs_createdate)::date as max_created_date
     from rawdata.fivetran_hubspot.invoice
 )
@@ -129,7 +129,7 @@ data_invoice_company as (
         'fivetran_hubspot' as schema_name,
         'invoice_company' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.invoice_company
 )
@@ -139,7 +139,7 @@ data_invoice_contact as (
         'fivetran_hubspot' as schema_name,
         'invoice_contact' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.invoice_contact
 )
@@ -149,7 +149,7 @@ data_invoice_deal as (
         'fivetran_hubspot' as schema_name,
         'invoice_deal' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.invoice_deal
 )
@@ -159,7 +159,7 @@ data_invoice_line_item as (
         'fivetran_hubspot' as schema_name,
         'invoice_line_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.invoice_line_item
 )
@@ -169,8 +169,8 @@ data_line_item as (
         'fivetran_hubspot' as schema_name,
         'line_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
-        max(property_createdate) as max_created_date
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
+        max(property_createdate)::date as max_created_date
     from rawdata.fivetran_hubspot.line_item
 )
 ,
@@ -179,7 +179,7 @@ data_line_item_deal as (
         'fivetran_hubspot' as schema_name,
         'line_item_deal' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.line_item_deal
 )
@@ -189,7 +189,7 @@ data_payment_hubspot as (
         'fivetran_hubspot' as schema_name,
         'payment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(property_hs_createdate)::date as max_created_date
     from rawdata.fivetran_hubspot.payment
 )
@@ -199,7 +199,7 @@ data_payment_company as (
         'fivetran_hubspot' as schema_name,
         'payment_company' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.payment_company
 )
@@ -209,7 +209,7 @@ data_payment_contact as (
         'fivetran_hubspot' as schema_name,
         'payment_contact' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.payment_contact
 )
@@ -219,7 +219,7 @@ data_payment_deal as (
         'fivetran_hubspot' as schema_name,
         'payment_deal' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.payment_deal
 )
@@ -229,7 +229,7 @@ data_payment_invoice as (
         'fivetran_hubspot' as schema_name,
         'payment_invoice' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.payment_invoice
 )
@@ -239,7 +239,7 @@ data_payment_line_item as (
         'fivetran_hubspot' as schema_name,
         'payment_line_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_hubspot.payment_line_item
 )
@@ -249,8 +249,8 @@ data_product as (
         'fivetran_hubspot' as schema_name,
         'product' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
-        max(property_createdate) as max_created_date
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
+        max(property_createdate)::date as max_created_date
     from rawdata.fivetran_hubspot.product
 )
 ,
@@ -262,7 +262,7 @@ data_abn_experiment as (
         'fivetran_salesforce' as schema_name,
         'abn_experiment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.abn_experiment
 )
@@ -272,7 +272,7 @@ data_abn_experiment_cohort as (
         'fivetran_salesforce' as schema_name,
         'abn_experiment_cohort' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.abn_experiment_cohort
 )
@@ -282,7 +282,7 @@ data_abn_experiment_cohort_attr_val as (
         'fivetran_salesforce' as schema_name,
         'abn_experiment_cohort_attr_val' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.abn_experiment_cohort_attr_val
 )
@@ -292,7 +292,7 @@ data_abn_experiment_engmt_sgnl_mtrc as (
         'fivetran_salesforce' as schema_name,
         'abn_experiment_engmt_sgnl_mtrc' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.abn_experiment_engmt_sgnl_mtrc
 )
@@ -302,7 +302,7 @@ data_account as (
         'fivetran_salesforce' as schema_name,
         'account' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.account
 )
@@ -312,7 +312,7 @@ data_account_brand as (
         'fivetran_salesforce' as schema_name,
         'account_brand' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.account_brand
 )
@@ -322,7 +322,7 @@ data_account_relation_c as (
         'fivetran_salesforce' as schema_name,
         'account_relation_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.account_relation_c
 )
@@ -332,7 +332,7 @@ data_account_relation_history as (
         'fivetran_salesforce' as schema_name,
         'account_relation_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.account_relation_history
 )
@@ -342,7 +342,7 @@ data_activation_target as (
         'fivetran_salesforce' as schema_name,
         'activation_target' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_target
 )
@@ -352,7 +352,7 @@ data_activation_target_feed as (
         'fivetran_salesforce' as schema_name,
         'activation_target_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_target_feed
 )
@@ -362,7 +362,7 @@ data_activation_target_history as (
         'fivetran_salesforce' as schema_name,
         'activation_target_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_target_history
 )
@@ -372,7 +372,7 @@ data_activation_target_platform as (
         'fivetran_salesforce' as schema_name,
         'activation_target_platform' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_target_platform
 )
@@ -382,7 +382,7 @@ data_activation_target_platform_history as (
         'fivetran_salesforce' as schema_name,
         'activation_target_platform_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_target_platform_history
 )
@@ -392,7 +392,7 @@ data_activation_target_secure_ftp as (
         'fivetran_salesforce' as schema_name,
         'activation_target_secure_ftp' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_target_secure_ftp
 )
@@ -402,7 +402,7 @@ data_activation_trgt_int_org_access as (
         'fivetran_salesforce' as schema_name,
         'activation_trgt_int_org_access' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_trgt_int_org_access
 )
@@ -412,7 +412,7 @@ data_activation_trgt_int_org_access_feed as (
         'fivetran_salesforce' as schema_name,
         'activation_trgt_int_org_access_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_trgt_int_org_access_feed
 )
@@ -422,7 +422,7 @@ data_activation_trgt_int_org_access_history as (
         'fivetran_salesforce' as schema_name,
         'activation_trgt_int_org_access_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activation_trgt_int_org_access_history
 )
@@ -432,7 +432,7 @@ data_activity_roll_up_c as (
         'fivetran_salesforce' as schema_name,
         'activity_roll_up_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activity_roll_up_c
 )
@@ -442,7 +442,7 @@ data_activity_roll_up_history as (
         'fivetran_salesforce' as schema_name,
         'activity_roll_up_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.activity_roll_up_history
 )
@@ -452,7 +452,7 @@ data_actv_tgt_platform_field_value as (
         'fivetran_salesforce' as schema_name,
         'actv_tgt_platform_field_value' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.actv_tgt_platform_field_value
 )
@@ -462,7 +462,7 @@ data_actv_tgt_platform_field_value_history as (
         'fivetran_salesforce' as schema_name,
         'actv_tgt_platform_field_value_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.actv_tgt_platform_field_value_history
 )
@@ -472,7 +472,7 @@ data_agileed_connect_link_data_problem_report_c as (
         'fivetran_salesforce' as schema_name,
         'agileed_connect_link_data_problem_report_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.agileed_connect_link_data_problem_report_c
 )
@@ -482,7 +482,7 @@ data_agileed_fieldmapping_c as (
         'fivetran_salesforce' as schema_name,
         'agileed_fieldmapping_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.agileed_fieldmapping_c
 )
@@ -492,7 +492,7 @@ data_ai_job_run as (
         'fivetran_salesforce' as schema_name,
         'ai_job_run' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.ai_job_run
 )
@@ -502,7 +502,7 @@ data_alternative_payment_method as (
         'fivetran_salesforce' as schema_name,
         'alternative_payment_method' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.alternative_payment_method
 )
@@ -512,7 +512,7 @@ data_analytics_user_attr_func_tkn as (
         'fivetran_salesforce' as schema_name,
         'analytics_user_attr_func_tkn' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.analytics_user_attr_func_tkn
 )
@@ -522,7 +522,7 @@ data_apex_code_coverage_aggregate as (
         'fivetran_salesforce' as schema_name,
         'apex_code_coverage_aggregate' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.apex_code_coverage_aggregate
 )
@@ -532,7 +532,7 @@ data_app_usage_assignment as (
         'fivetran_salesforce' as schema_name,
         'app_usage_assignment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.app_usage_assignment
 )
@@ -542,7 +542,7 @@ data_async_operation_tracker as (
         'fivetran_salesforce' as schema_name,
         'async_operation_tracker' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.async_operation_tracker
 )
@@ -552,7 +552,7 @@ data_attribute_definition as (
         'fivetran_salesforce' as schema_name,
         'attribute_definition' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_definition
 )
@@ -562,7 +562,7 @@ data_attribute_definition_feed as (
         'fivetran_salesforce' as schema_name,
         'attribute_definition_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_definition_feed
 )
@@ -572,7 +572,7 @@ data_attribute_definition_history as (
         'fivetran_salesforce' as schema_name,
         'attribute_definition_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_definition_history
 )
@@ -582,7 +582,7 @@ data_attribute_picklist as (
         'fivetran_salesforce' as schema_name,
         'attribute_picklist' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_picklist
 )
@@ -592,7 +592,7 @@ data_attribute_picklist_feed as (
         'fivetran_salesforce' as schema_name,
         'attribute_picklist_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_picklist_feed
 )
@@ -602,7 +602,7 @@ data_attribute_picklist_history as (
         'fivetran_salesforce' as schema_name,
         'attribute_picklist_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_picklist_history
 )
@@ -612,7 +612,7 @@ data_attribute_picklist_value as (
         'fivetran_salesforce' as schema_name,
         'attribute_picklist_value' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_picklist_value
 )
@@ -622,7 +622,7 @@ data_attribute_picklist_value_feed as (
         'fivetran_salesforce' as schema_name,
         'attribute_picklist_value_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_picklist_value_feed
 )
@@ -632,7 +632,7 @@ data_attribute_picklist_value_history as (
         'fivetran_salesforce' as schema_name,
         'attribute_picklist_value_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.attribute_picklist_value_history
 )
@@ -642,7 +642,7 @@ data_automation_analytic_c as (
         'fivetran_salesforce' as schema_name,
         'automation_analytic_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.automation_analytic_c
 )
@@ -652,7 +652,7 @@ data_business_operations_request_c as (
         'fivetran_salesforce' as schema_name,
         'business_operations_request_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.business_operations_request_c
 )
@@ -662,7 +662,7 @@ data_business_operations_request_feed as (
         'fivetran_salesforce' as schema_name,
         'business_operations_request_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.business_operations_request_feed
 )
@@ -672,7 +672,7 @@ data_business_operations_request_history as (
         'fivetran_salesforce' as schema_name,
         'business_operations_request_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.business_operations_request_history
 )
@@ -682,7 +682,7 @@ data_business_ops_request_c as (
         'fivetran_salesforce' as schema_name,
         'business_ops_request_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.business_ops_request_c
 )
@@ -692,7 +692,7 @@ data_calc_affinity_engmt_sgnl as (
         'fivetran_salesforce' as schema_name,
         'calc_affinity_engmt_sgnl' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.calc_affinity_engmt_sgnl
 )
@@ -702,7 +702,7 @@ data_calculated_affinity as (
         'fivetran_salesforce' as schema_name,
         'calculated_affinity' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.calculated_affinity
 )
@@ -712,7 +712,7 @@ data_calculated_affinity_field as (
         'fivetran_salesforce' as schema_name,
         'calculated_affinity_field' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.calculated_affinity_field
 )
@@ -722,7 +722,7 @@ data_calculated_insight_range_bound as (
         'fivetran_salesforce' as schema_name,
         'calculated_insight_range_bound' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.calculated_insight_range_bound
 )
@@ -732,7 +732,7 @@ data_campaign as (
         'fivetran_salesforce' as schema_name,
         'campaign' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.campaign
 )
@@ -742,7 +742,7 @@ data_card_payment_method as (
         'fivetran_salesforce' as schema_name,
         'card_payment_method' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.card_payment_method
 )
@@ -752,7 +752,7 @@ data_case as (
         'fivetran_salesforce' as schema_name,
         'case' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.case
 )
@@ -762,7 +762,7 @@ data_case_comment as (
         'fivetran_salesforce' as schema_name,
         'case_comment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.case_comment
 )
@@ -772,7 +772,7 @@ data_case_rel_harmonized_content as (
         'fivetran_salesforce' as schema_name,
         'case_rel_harmonized_content' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.case_rel_harmonized_content
 )
@@ -782,7 +782,7 @@ data_case_related_issue as (
         'fivetran_salesforce' as schema_name,
         'case_related_issue' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.case_related_issue
 )
@@ -792,7 +792,7 @@ data_case_solution as (
         'fivetran_salesforce' as schema_name,
         'case_solution' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.case_solution
 )
@@ -802,7 +802,7 @@ data_chat_report_cr_bot_c as (
         'fivetran_salesforce' as schema_name,
         'chat_report_cr_bot_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.chat_report_cr_bot_c
 )
@@ -812,7 +812,7 @@ data_chat_report_cr_custom_label_c as (
         'fivetran_salesforce' as schema_name,
         'chat_report_cr_custom_label_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.chat_report_cr_custom_label_c
 )
@@ -822,7 +822,7 @@ data_chat_report_cr_flow_data_c as (
         'fivetran_salesforce' as schema_name,
         'chat_report_cr_flow_data_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.chat_report_cr_flow_data_c
 )
@@ -832,7 +832,7 @@ data_chat_report_cr_report_type_c as (
         'fivetran_salesforce' as schema_name,
         'chat_report_cr_report_type_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.chat_report_cr_report_type_c
 )
@@ -842,7 +842,7 @@ data_chat_report_cr_skill_based_routing_rule_c as (
         'fivetran_salesforce' as schema_name,
         'chat_report_cr_skill_based_routing_rule_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.chat_report_cr_skill_based_routing_rule_c
 )
@@ -852,7 +852,7 @@ data_codesters_codesters_license_c as (
         'fivetran_salesforce' as schema_name,
         'codesters_codesters_license_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.codesters_codesters_license_c
 )
@@ -862,7 +862,7 @@ data_codesters_codesters_member_c as (
         'fivetran_salesforce' as schema_name,
         'codesters_codesters_member_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.codesters_codesters_member_c
 )
@@ -872,7 +872,7 @@ data_codesters_codesters_organization_c as (
         'fivetran_salesforce' as schema_name,
         'codesters_codesters_organization_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.codesters_codesters_organization_c
 )
@@ -882,7 +882,7 @@ data_codesters_codesters_settings_c as (
         'fivetran_salesforce' as schema_name,
         'codesters_codesters_settings_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.codesters_codesters_settings_c
 )
@@ -892,7 +892,7 @@ data_codesters_opportunity_license_c as (
         'fivetran_salesforce' as schema_name,
         'codesters_opportunity_license_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.codesters_opportunity_license_c
 )
@@ -902,7 +902,7 @@ data_contact as (
         'fivetran_salesforce' as schema_name,
         'contact' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.contact
 )
@@ -912,7 +912,7 @@ data_contact_center_bulk_op as (
         'fivetran_salesforce' as schema_name,
         'contact_center_bulk_op' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.contact_center_bulk_op
 )
@@ -922,7 +922,7 @@ data_contact_history as (
         'fivetran_salesforce' as schema_name,
         'contact_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.contact_history
 )
@@ -932,7 +932,7 @@ data_contract as (
         'fivetran_salesforce' as schema_name,
         'contract' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.contract
 )
@@ -942,7 +942,7 @@ data_conversation_api_log as (
         'fivetran_salesforce' as schema_name,
         'conversation_api_log' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.conversation_api_log
 )
@@ -952,7 +952,7 @@ data_conversation_api_log_obj_sum as (
         'fivetran_salesforce' as schema_name,
         'conversation_api_log_obj_sum' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.conversation_api_log_obj_sum
 )
@@ -962,7 +962,7 @@ data_credit_memo as (
         'fivetran_salesforce' as schema_name,
         'credit_memo' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo
 )
@@ -972,7 +972,7 @@ data_credit_memo_feed as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_feed
 )
@@ -982,7 +982,7 @@ data_credit_memo_history as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_history
 )
@@ -992,7 +992,7 @@ data_credit_memo_inv_application as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_inv_application' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_inv_application
 )
@@ -1002,7 +1002,7 @@ data_credit_memo_inv_application_feed as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_inv_application_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_inv_application_feed
 )
@@ -1012,7 +1012,7 @@ data_credit_memo_inv_application_history as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_inv_application_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_inv_application_history
 )
@@ -1022,7 +1022,7 @@ data_credit_memo_line as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_line' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_line
 )
@@ -1032,7 +1032,7 @@ data_credit_memo_line_feed as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_line_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_line_feed
 )
@@ -1042,7 +1042,7 @@ data_credit_memo_line_history as (
         'fivetran_salesforce' as schema_name,
         'credit_memo_line_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.credit_memo_line_history
 )
@@ -1052,7 +1052,7 @@ data_dashboard_component_localization as (
         'fivetran_salesforce' as schema_name,
         'dashboard_component_localization' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.dashboard_component_localization
 )
@@ -1062,7 +1062,7 @@ data_dashboard_localization as (
         'fivetran_salesforce' as schema_name,
         'dashboard_localization' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.dashboard_localization
 )
@@ -1072,7 +1072,7 @@ data_data_assessment_field_metric as (
         'fivetran_salesforce' as schema_name,
         'data_assessment_field_metric' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_assessment_field_metric
 )
@@ -1082,7 +1082,7 @@ data_data_assessment_metric as (
         'fivetran_salesforce' as schema_name,
         'data_assessment_metric' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_assessment_metric
 )
@@ -1092,7 +1092,7 @@ data_data_assessment_value_metric as (
         'fivetran_salesforce' as schema_name,
         'data_assessment_value_metric' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_assessment_value_metric
 )
@@ -1102,7 +1102,7 @@ data_data_content_lens_source as (
         'fivetran_salesforce' as schema_name,
         'data_content_lens_source' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_content_lens_source
 )
@@ -1112,7 +1112,7 @@ data_data_content_lens_source_feed as (
         'fivetran_salesforce' as schema_name,
         'data_content_lens_source_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_content_lens_source_feed
 )
@@ -1122,7 +1122,7 @@ data_data_content_lens_source_history as (
         'fivetran_salesforce' as schema_name,
         'data_content_lens_source_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_content_lens_source_history
 )
@@ -1132,7 +1132,7 @@ data_data_harmonized_model_obj_ref as (
         'fivetran_salesforce' as schema_name,
         'data_harmonized_model_obj_ref' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_harmonized_model_obj_ref
 )
@@ -1142,7 +1142,7 @@ data_data_knowledge_space as (
         'fivetran_salesforce' as schema_name,
         'data_knowledge_space' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_knowledge_space
 )
@@ -1152,7 +1152,7 @@ data_data_knowledge_space_session as (
         'fivetran_salesforce' as schema_name,
         'data_knowledge_space_session' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_knowledge_space_session
 )
@@ -1162,7 +1162,7 @@ data_data_knowledge_src_file_ref as (
         'fivetran_salesforce' as schema_name,
         'data_knowledge_src_file_ref' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_knowledge_src_file_ref
 )
@@ -1172,7 +1172,7 @@ data_data_obj_secondary_index as (
         'fivetran_salesforce' as schema_name,
         'data_obj_secondary_index' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_obj_secondary_index
 )
@@ -1182,7 +1182,7 @@ data_data_obj_secondary_index_feed as (
         'fivetran_salesforce' as schema_name,
         'data_obj_secondary_index_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_obj_secondary_index_feed
 )
@@ -1192,7 +1192,7 @@ data_data_obj_secondary_index_history as (
         'fivetran_salesforce' as schema_name,
         'data_obj_secondary_index_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_obj_secondary_index_history
 )
@@ -1202,7 +1202,7 @@ data_data_quick_attribute as (
         'fivetran_salesforce' as schema_name,
         'data_quick_attribute' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_quick_attribute
 )
@@ -1212,7 +1212,7 @@ data_data_quick_attribute_feed as (
         'fivetran_salesforce' as schema_name,
         'data_quick_attribute_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_quick_attribute_feed
 )
@@ -1222,7 +1222,7 @@ data_data_quick_attribute_history as (
         'fivetran_salesforce' as schema_name,
         'data_quick_attribute_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_quick_attribute_history
 )
@@ -1232,7 +1232,7 @@ data_data_space as (
         'fivetran_salesforce' as schema_name,
         'data_space' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_space
 )
@@ -1242,7 +1242,7 @@ data_data_space_feed as (
         'fivetran_salesforce' as schema_name,
         'data_space_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_space_feed
 )
@@ -1252,7 +1252,7 @@ data_data_space_history as (
         'fivetran_salesforce' as schema_name,
         'data_space_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.data_space_history
 )
@@ -1262,7 +1262,7 @@ data_digital_wallet as (
         'fivetran_salesforce' as schema_name,
         'digital_wallet' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.digital_wallet
 )
@@ -1272,7 +1272,7 @@ data_doc_generation_query_result as (
         'fivetran_salesforce' as schema_name,
         'doc_generation_query_result' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.doc_generation_query_result
 )
@@ -1282,7 +1282,7 @@ data_doc_generation_query_result_feed as (
         'fivetran_salesforce' as schema_name,
         'doc_generation_query_result_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.doc_generation_query_result_feed
 )
@@ -1292,7 +1292,7 @@ data_doc_generation_query_result_history as (
         'fivetran_salesforce' as schema_name,
         'doc_generation_query_result_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.doc_generation_query_result_history
 )
@@ -1302,7 +1302,7 @@ data_document_generation_process as (
         'fivetran_salesforce' as schema_name,
         'document_generation_process' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.document_generation_process
 )
@@ -1312,7 +1312,7 @@ data_engagement_signal as (
         'fivetran_salesforce' as schema_name,
         'engagement_signal' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.engagement_signal
 )
@@ -1322,7 +1322,7 @@ data_engagement_signal_cmpnd_metric as (
         'fivetran_salesforce' as schema_name,
         'engagement_signal_cmpnd_metric' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.engagement_signal_cmpnd_metric
 )
@@ -1332,7 +1332,7 @@ data_engagement_signal_feed as (
         'fivetran_salesforce' as schema_name,
         'engagement_signal_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.engagement_signal_feed
 )
@@ -1342,7 +1342,7 @@ data_engagement_signal_history as (
         'fivetran_salesforce' as schema_name,
         'engagement_signal_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.engagement_signal_history
 )
@@ -1352,7 +1352,7 @@ data_engagement_signal_metric as (
         'fivetran_salesforce' as schema_name,
         'engagement_signal_metric' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.engagement_signal_metric
 )
@@ -1362,7 +1362,7 @@ data_entity_particle as (
         'fivetran_salesforce' as schema_name,
         'entity_particle' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.entity_particle
 )
@@ -1372,7 +1372,7 @@ data_epic_c as (
         'fivetran_salesforce' as schema_name,
         'epic_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.epic_c
 )
@@ -1382,7 +1382,7 @@ data_epic_feed as (
         'fivetran_salesforce' as schema_name,
         'epic_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.epic_feed
 )
@@ -1392,7 +1392,7 @@ data_epic_history as (
         'fivetran_salesforce' as schema_name,
         'epic_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.epic_history
 )
@@ -1402,7 +1402,7 @@ data_fivetran_api_call as (
         'fivetran_salesforce' as schema_name,
         'fivetran_api_call' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_api_call
 )
@@ -1412,7 +1412,7 @@ data_fivetran_dependent_picklist_relation as (
         'fivetran_salesforce' as schema_name,
         'fivetran_dependent_picklist_relation' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_dependent_picklist_relation
 )
@@ -1422,7 +1422,7 @@ data_fivetran_formula as (
         'fivetran_salesforce' as schema_name,
         'fivetran_formula' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_formula
 )
@@ -1432,7 +1432,7 @@ data_fivetran_formula_failure_reason as (
         'fivetran_salesforce' as schema_name,
         'fivetran_formula_failure_reason' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_formula_failure_reason
 )
@@ -1442,7 +1442,7 @@ data_fivetran_formula_model as (
         'fivetran_salesforce' as schema_name,
         'fivetran_formula_model' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_formula_model
 )
@@ -1452,7 +1452,7 @@ data_fivetran_picklist_field as (
         'fivetran_salesforce' as schema_name,
         'fivetran_picklist_field' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_picklist_field
 )
@@ -1462,7 +1462,7 @@ data_fivetran_picklist_field_value as (
         'fivetran_salesforce' as schema_name,
         'fivetran_picklist_field_value' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_picklist_field_value
 )
@@ -1472,7 +1472,7 @@ data_fivetran_query as (
         'fivetran_salesforce' as schema_name,
         'fivetran_query' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_query
 )
@@ -1482,7 +1482,7 @@ data_fivetran_rollup_summary as (
         'fivetran_salesforce' as schema_name,
         'fivetran_rollup_summary' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_rollup_summary
 )
@@ -1492,7 +1492,7 @@ data_fivetran_rollup_summary_filter as (
         'fivetran_salesforce' as schema_name,
         'fivetran_rollup_summary_filter' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.fivetran_rollup_summary_filter
 )
@@ -1502,7 +1502,7 @@ data_flow_personal_configuration_c as (
         'fivetran_salesforce' as schema_name,
         'flow_personal_configuration_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.flow_personal_configuration_c
 )
@@ -1512,7 +1512,7 @@ data_flow_table_view_definition_c as (
         'fivetran_salesforce' as schema_name,
         'flow_table_view_definition_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.flow_table_view_definition_c
 )
@@ -1522,7 +1522,7 @@ data_forecasting_submission as (
         'fivetran_salesforce' as schema_name,
         'forecasting_submission' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.forecasting_submission
 )
@@ -1532,7 +1532,7 @@ data_forecasting_submission_item as (
         'fivetran_salesforce' as schema_name,
         'forecasting_submission_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.forecasting_submission_item
 )
@@ -1542,7 +1542,7 @@ data_goal_assignment as (
         'fivetran_salesforce' as schema_name,
         'goal_assignment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.goal_assignment
 )
@@ -1552,7 +1552,7 @@ data_goal_assignment_feed as (
         'fivetran_salesforce' as schema_name,
         'goal_assignment_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.goal_assignment_feed
 )
@@ -1562,7 +1562,7 @@ data_goal_assignment_history as (
         'fivetran_salesforce' as schema_name,
         'goal_assignment_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.goal_assignment_history
 )
@@ -1572,7 +1572,7 @@ data_goal_assignment_recommendation as (
         'fivetran_salesforce' as schema_name,
         'goal_assignment_recommendation' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.goal_assignment_recommendation
 )
@@ -1582,7 +1582,7 @@ data_goal_definition as (
         'fivetran_salesforce' as schema_name,
         'goal_definition' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.goal_definition
 )
@@ -1592,7 +1592,7 @@ data_goal_definition_feed as (
         'fivetran_salesforce' as schema_name,
         'goal_definition_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.goal_definition_feed
 )
@@ -1602,7 +1602,7 @@ data_goal_definition_history as (
         'fivetran_salesforce' as schema_name,
         'goal_definition_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.goal_definition_history
 )
@@ -1612,7 +1612,7 @@ data_incp_incident_lv_fields_c as (
         'fivetran_salesforce' as schema_name,
         'incp_incident_lv_fields_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.incp_incident_lv_fields_c
 )
@@ -1622,7 +1622,7 @@ data_incp_time_zone_selection_c as (
         'fivetran_salesforce' as schema_name,
         'incp_time_zone_selection_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.incp_time_zone_selection_c
 )
@@ -1632,7 +1632,7 @@ data_invoice as (
         'fivetran_salesforce' as schema_name,
         'invoice' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.invoice
 )
@@ -1642,7 +1642,7 @@ data_invoice_feed as (
         'fivetran_salesforce' as schema_name,
         'invoice_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.invoice_feed
 )
@@ -1652,7 +1652,7 @@ data_invoice_history as (
         'fivetran_salesforce' as schema_name,
         'invoice_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.invoice_history
 )
@@ -1662,7 +1662,7 @@ data_invoice_line as (
         'fivetran_salesforce' as schema_name,
         'invoice_line' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.invoice_line
 )
@@ -1672,7 +1672,7 @@ data_invoice_line_feed as (
         'fivetran_salesforce' as schema_name,
         'invoice_line_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.invoice_line_feed
 )
@@ -1682,7 +1682,7 @@ data_invoice_line_history as (
         'fivetran_salesforce' as schema_name,
         'invoice_line_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.invoice_line_history
 )
@@ -1692,7 +1692,7 @@ data_lcom_account_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_account_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_account_c
 )
@@ -1702,7 +1702,7 @@ data_lcom_account_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_account_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_account_feed
 )
@@ -1712,7 +1712,7 @@ data_lcom_license_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_license_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_license_c
 )
@@ -1722,7 +1722,7 @@ data_lcom_license_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_license_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_license_feed
 )
@@ -1732,7 +1732,7 @@ data_lcom_license_site_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_license_site_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_license_site_c
 )
@@ -1742,7 +1742,7 @@ data_lcom_license_site_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_license_site_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_license_site_feed
 )
@@ -1752,7 +1752,7 @@ data_lcom_member_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_member_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_member_c
 )
@@ -1762,7 +1762,7 @@ data_lcom_member_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_member_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_member_feed
 )
@@ -1772,7 +1772,7 @@ data_lcom_opportunity_site_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_opportunity_site_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_opportunity_site_c
 )
@@ -1782,7 +1782,7 @@ data_lcom_opportunity_term_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_opportunity_term_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_opportunity_term_c
 )
@@ -1792,7 +1792,7 @@ data_lcom_opportunity_term_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_opportunity_term_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_opportunity_term_feed
 )
@@ -1802,7 +1802,7 @@ data_lcom_opportunity_term_history as (
         'fivetran_salesforce' as schema_name,
         'lcom_opportunity_term_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_opportunity_term_history
 )
@@ -1812,7 +1812,7 @@ data_lcom_order_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_order_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_order_c
 )
@@ -1822,7 +1822,7 @@ data_lcom_order_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_order_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_order_feed
 )
@@ -1832,7 +1832,7 @@ data_lcom_order_line_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_order_line_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_order_line_c
 )
@@ -1842,7 +1842,7 @@ data_lcom_order_line_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_order_line_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_order_line_feed
 )
@@ -1852,7 +1852,7 @@ data_lcom_order_modification_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_order_modification_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_order_modification_c
 )
@@ -1862,7 +1862,7 @@ data_lcom_order_modification_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_order_modification_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_order_modification_feed
 )
@@ -1872,7 +1872,7 @@ data_lcom_organization_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_organization_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_organization_c
 )
@@ -1882,7 +1882,7 @@ data_lcom_organization_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_organization_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_organization_feed
 )
@@ -1892,7 +1892,7 @@ data_lcom_suite_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_suite_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_suite_c
 )
@@ -1902,7 +1902,7 @@ data_lcom_suite_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_suite_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_suite_feed
 )
@@ -1912,7 +1912,7 @@ data_lcom_term_c as (
         'fivetran_salesforce' as schema_name,
         'lcom_term_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_term_c
 )
@@ -1922,7 +1922,7 @@ data_lcom_term_feed as (
         'fivetran_salesforce' as schema_name,
         'lcom_term_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lcom_term_feed
 )
@@ -1932,7 +1932,7 @@ data_lead as (
         'fivetran_salesforce' as schema_name,
         'lead' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lead
 )
@@ -1942,7 +1942,7 @@ data_lead_status_c as (
         'fivetran_salesforce' as schema_name,
         'lead_status_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.lead_status_c
 )
@@ -1952,7 +1952,7 @@ data_learning_com_c as (
         'fivetran_salesforce' as schema_name,
         'learning_com_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.learning_com_c
 )
@@ -1962,7 +1962,7 @@ data_learning_com_district_license_c as (
         'fivetran_salesforce' as schema_name,
         'learning_com_district_license_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.learning_com_district_license_c
 )
@@ -1972,7 +1972,7 @@ data_learning_com_district_license_history as (
         'fivetran_salesforce' as schema_name,
         'learning_com_district_license_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.learning_com_district_license_history
 )
@@ -1982,7 +1982,7 @@ data_learning_com_order_c as (
         'fivetran_salesforce' as schema_name,
         'learning_com_order_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.learning_com_order_c
 )
@@ -1992,7 +1992,7 @@ data_learning_com_school_license_c as (
         'fivetran_salesforce' as schema_name,
         'learning_com_school_license_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.learning_com_school_license_c
 )
@@ -2002,7 +2002,7 @@ data_learning_com_school_license_history as (
         'fivetran_salesforce' as schema_name,
         'learning_com_school_license_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.learning_com_school_license_history
 )
@@ -2012,7 +2012,7 @@ data_market_segment as (
         'fivetran_salesforce' as schema_name,
         'market_segment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.market_segment
 )
@@ -2022,7 +2022,7 @@ data_market_segment_activation as (
         'fivetran_salesforce' as schema_name,
         'market_segment_activation' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.market_segment_activation
 )
@@ -2032,7 +2032,7 @@ data_market_segment_activation_feed as (
         'fivetran_salesforce' as schema_name,
         'market_segment_activation_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.market_segment_activation_feed
 )
@@ -2042,7 +2042,7 @@ data_market_segment_activation_history as (
         'fivetran_salesforce' as schema_name,
         'market_segment_activation_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.market_segment_activation_history
 )
@@ -2052,7 +2052,7 @@ data_market_segment_feed as (
         'fivetran_salesforce' as schema_name,
         'market_segment_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.market_segment_feed
 )
@@ -2062,7 +2062,7 @@ data_market_segment_history as (
         'fivetran_salesforce' as schema_name,
         'market_segment_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.market_segment_history
 )
@@ -2072,7 +2072,7 @@ data_mkt_sgmnt_actvtn_aud_attribute as (
         'fivetran_salesforce' as schema_name,
         'mkt_sgmnt_actvtn_aud_attribute' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mkt_sgmnt_actvtn_aud_attribute
 )
@@ -2082,7 +2082,7 @@ data_mkt_sgmnt_actvtn_contact_point as (
         'fivetran_salesforce' as schema_name,
         'mkt_sgmnt_actvtn_contact_point' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mkt_sgmnt_actvtn_contact_point
 )
@@ -2092,7 +2092,7 @@ data_mkt_sgmt_actv_contact_pt_field as (
         'fivetran_salesforce' as schema_name,
         'mkt_sgmt_actv_contact_pt_field' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mkt_sgmt_actv_contact_pt_field
 )
@@ -2102,7 +2102,7 @@ data_mkt_sgmt_actv_contact_pt_src as (
         'fivetran_salesforce' as schema_name,
         'mkt_sgmt_actv_contact_pt_src' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mkt_sgmt_actv_contact_pt_src
 )
@@ -2112,7 +2112,7 @@ data_mkt_sgmt_actv_data_model_fld as (
         'fivetran_salesforce' as schema_name,
         'mkt_sgmt_actv_data_model_fld' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mkt_sgmt_actv_data_model_fld
 )
@@ -2122,7 +2122,7 @@ data_mkt_sgmt_actv_data_source as (
         'fivetran_salesforce' as schema_name,
         'mkt_sgmt_actv_data_source' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mkt_sgmt_actv_data_source
 )
@@ -2132,7 +2132,7 @@ data_ml_intent_utterance_suggestion as (
         'fivetran_salesforce' as schema_name,
         'ml_intent_utterance_suggestion' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.ml_intent_utterance_suggestion
 )
@@ -2142,7 +2142,7 @@ data_mlmodel as (
         'fivetran_salesforce' as schema_name,
         'mlmodel' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mlmodel
 )
@@ -2152,7 +2152,7 @@ data_mlmodel_factor as (
         'fivetran_salesforce' as schema_name,
         'mlmodel_factor' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mlmodel_factor
 )
@@ -2162,7 +2162,7 @@ data_mlmodel_factor_component as (
         'fivetran_salesforce' as schema_name,
         'mlmodel_factor_component' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mlmodel_factor_component
 )
@@ -2172,7 +2172,7 @@ data_mlmodel_metric as (
         'fivetran_salesforce' as schema_name,
         'mlmodel_metric' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.mlmodel_metric
 )
@@ -2182,7 +2182,7 @@ data_nps_survey_responses_c as (
         'fivetran_salesforce' as schema_name,
         'nps_survey_responses_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.nps_survey_responses_c
 )
@@ -2192,7 +2192,7 @@ data_object_from_email_accepted_fields_c as (
         'fivetran_salesforce' as schema_name,
         'object_from_email_accepted_fields_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.object_from_email_accepted_fields_c
 )
@@ -2202,7 +2202,7 @@ data_object_from_email_default_fields_c as (
         'fivetran_salesforce' as schema_name,
         'object_from_email_default_fields_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.object_from_email_default_fields_c
 )
@@ -2212,7 +2212,7 @@ data_object_milestone_pause_time as (
         'fivetran_salesforce' as schema_name,
         'object_milestone_pause_time' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.object_milestone_pause_time
 )
@@ -2222,7 +2222,7 @@ data_omni_component_error_log as (
         'fivetran_salesforce' as schema_name,
         'omni_component_error_log' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_component_error_log
 )
@@ -2232,7 +2232,7 @@ data_omni_component_error_log_feed as (
         'fivetran_salesforce' as schema_name,
         'omni_component_error_log_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_component_error_log_feed
 )
@@ -2242,7 +2242,7 @@ data_omni_data_pack as (
         'fivetran_salesforce' as schema_name,
         'omni_data_pack' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_data_pack
 )
@@ -2252,7 +2252,7 @@ data_omni_data_pack_feed as (
         'fivetran_salesforce' as schema_name,
         'omni_data_pack_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_data_pack_feed
 )
@@ -2262,7 +2262,7 @@ data_omni_data_transform as (
         'fivetran_salesforce' as schema_name,
         'omni_data_transform' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_data_transform
 )
@@ -2272,7 +2272,7 @@ data_omni_data_transform_item as (
         'fivetran_salesforce' as schema_name,
         'omni_data_transform_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_data_transform_item
 )
@@ -2282,7 +2282,7 @@ data_omni_esignature_template as (
         'fivetran_salesforce' as schema_name,
         'omni_esignature_template' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_esignature_template
 )
@@ -2292,7 +2292,7 @@ data_omni_global_auto_number as (
         'fivetran_salesforce' as schema_name,
         'omni_global_auto_number' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_global_auto_number
 )
@@ -2302,7 +2302,7 @@ data_omni_global_auto_number_feed as (
         'fivetran_salesforce' as schema_name,
         'omni_global_auto_number_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_global_auto_number_feed
 )
@@ -2312,7 +2312,7 @@ data_omni_process as (
         'fivetran_salesforce' as schema_name,
         'omni_process' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_process
 )
@@ -2322,7 +2322,7 @@ data_omni_process_compilation as (
         'fivetran_salesforce' as schema_name,
         'omni_process_compilation' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_process_compilation
 )
@@ -2332,7 +2332,7 @@ data_omni_process_element as (
         'fivetran_salesforce' as schema_name,
         'omni_process_element' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_process_element
 )
@@ -2342,7 +2342,7 @@ data_omni_process_feed as (
         'fivetran_salesforce' as schema_name,
         'omni_process_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_process_feed
 )
@@ -2352,7 +2352,7 @@ data_omni_process_transient_data as (
         'fivetran_salesforce' as schema_name,
         'omni_process_transient_data' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_process_transient_data
 )
@@ -2362,7 +2362,7 @@ data_omni_process_transient_data_feed as (
         'fivetran_salesforce' as schema_name,
         'omni_process_transient_data_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_process_transient_data_feed
 )
@@ -2372,7 +2372,7 @@ data_omni_script_saved_session as (
         'fivetran_salesforce' as schema_name,
         'omni_script_saved_session' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_script_saved_session
 )
@@ -2382,7 +2382,7 @@ data_omni_script_saved_session_feed as (
         'fivetran_salesforce' as schema_name,
         'omni_script_saved_session_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_script_saved_session_feed
 )
@@ -2392,7 +2392,7 @@ data_omni_ui_card as (
         'fivetran_salesforce' as schema_name,
         'omni_ui_card' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_ui_card
 )
@@ -2402,7 +2402,7 @@ data_omni_ui_card_feed as (
         'fivetran_salesforce' as schema_name,
         'omni_ui_card_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.omni_ui_card_feed
 )
@@ -2412,7 +2412,7 @@ data_operating_hours as (
         'fivetran_salesforce' as schema_name,
         'operating_hours' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.operating_hours
 )
@@ -2422,7 +2422,7 @@ data_operating_hours_feed as (
         'fivetran_salesforce' as schema_name,
         'operating_hours_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.operating_hours_feed
 )
@@ -2432,7 +2432,7 @@ data_operating_hours_history as (
         'fivetran_salesforce' as schema_name,
         'operating_hours_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.operating_hours_history
 )
@@ -2442,7 +2442,7 @@ data_operating_hours_holiday as (
         'fivetran_salesforce' as schema_name,
         'operating_hours_holiday' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.operating_hours_holiday
 )
@@ -2452,7 +2452,7 @@ data_operating_hours_holiday_feed as (
         'fivetran_salesforce' as schema_name,
         'operating_hours_holiday_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.operating_hours_holiday_feed
 )
@@ -2462,7 +2462,7 @@ data_operating_hours_holiday_history as (
         'fivetran_salesforce' as schema_name,
         'operating_hours_holiday_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.operating_hours_holiday_history
 )
@@ -2472,7 +2472,7 @@ data_opportunity as (
         'fivetran_salesforce' as schema_name,
         'opportunity' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.opportunity
 )
@@ -2482,7 +2482,7 @@ data_opportunity_line_item as (
         'fivetran_salesforce' as schema_name,
         'opportunity_line_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.opportunity_line_item
 )
@@ -2492,7 +2492,7 @@ data_order as (
         'fivetran_salesforce' as schema_name,
         'order' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.order
 )
@@ -2502,7 +2502,7 @@ data_order_detail_confirmation_c as (
         'fivetran_salesforce' as schema_name,
         'order_detail_confirmation_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.order_detail_confirmation_c
 )
@@ -2512,7 +2512,7 @@ data_order_detail_confirmation_history as (
         'fivetran_salesforce' as schema_name,
         'order_detail_confirmation_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.order_detail_confirmation_history
 )
@@ -2522,7 +2522,7 @@ data_order_item as (
         'fivetran_salesforce' as schema_name,
         'order_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.order_item
 )
@@ -2532,7 +2532,7 @@ data_organization as (
         'fivetran_salesforce' as schema_name,
         'organization' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.organization
 )
@@ -2542,7 +2542,7 @@ data_payment as (
         'fivetran_salesforce' as schema_name,
         'payment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment
 )
@@ -2552,7 +2552,7 @@ data_payment_auth_adjustment as (
         'fivetran_salesforce' as schema_name,
         'payment_auth_adjustment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment_auth_adjustment
 )
@@ -2562,7 +2562,7 @@ data_payment_authorization as (
         'fivetran_salesforce' as schema_name,
         'payment_authorization' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment_authorization
 )
@@ -2572,7 +2572,7 @@ data_payment_feed as (
         'fivetran_salesforce' as schema_name,
         'payment_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment_feed
 )
@@ -2582,7 +2582,7 @@ data_payment_gateway as (
         'fivetran_salesforce' as schema_name,
         'payment_gateway' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment_gateway
 )
@@ -2592,7 +2592,7 @@ data_payment_gateway_log as (
         'fivetran_salesforce' as schema_name,
         'payment_gateway_log' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment_gateway_log
 )
@@ -2602,7 +2602,7 @@ data_payment_group as (
         'fivetran_salesforce' as schema_name,
         'payment_group' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment_group
 )
@@ -2612,7 +2612,7 @@ data_payment_line_invoice as (
         'fivetran_salesforce' as schema_name,
         'payment_line_invoice' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.payment_line_invoice
 )
@@ -2622,7 +2622,7 @@ data_personalization_schema as (
         'fivetran_salesforce' as schema_name,
         'personalization_schema' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.personalization_schema
 )
@@ -2632,7 +2632,7 @@ data_pricebook_2 as (
         'fivetran_salesforce' as schema_name,
         'pricebook_2' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.pricebook_2
 )
@@ -2642,7 +2642,7 @@ data_pricebook_entry as (
         'fivetran_salesforce' as schema_name,
         'pricebook_entry' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.pricebook_entry
 )
@@ -2652,7 +2652,7 @@ data_product_2 as (
         'fivetran_salesforce' as schema_name,
         'product_2' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_2
 )
@@ -2662,7 +2662,7 @@ data_product_catalog as (
         'fivetran_salesforce' as schema_name,
         'product_catalog' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_catalog
 )
@@ -2672,7 +2672,7 @@ data_product_catalog_feed as (
         'fivetran_salesforce' as schema_name,
         'product_catalog_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_catalog_feed
 )
@@ -2682,7 +2682,7 @@ data_product_catalog_history as (
         'fivetran_salesforce' as schema_name,
         'product_catalog_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_catalog_history
 )
@@ -2692,7 +2692,7 @@ data_product_category as (
         'fivetran_salesforce' as schema_name,
         'product_category' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_category
 )
@@ -2702,7 +2702,7 @@ data_product_category_feed as (
         'fivetran_salesforce' as schema_name,
         'product_category_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_category_feed
 )
@@ -2712,7 +2712,7 @@ data_product_category_history as (
         'fivetran_salesforce' as schema_name,
         'product_category_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_category_history
 )
@@ -2722,7 +2722,7 @@ data_product_category_product as (
         'fivetran_salesforce' as schema_name,
         'product_category_product' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_category_product
 )
@@ -2732,7 +2732,7 @@ data_product_category_product_history as (
         'fivetran_salesforce' as schema_name,
         'product_category_product_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_category_product_history
 )
@@ -2742,7 +2742,7 @@ data_product_component_group as (
         'fivetran_salesforce' as schema_name,
         'product_component_group' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_component_group
 )
@@ -2752,7 +2752,7 @@ data_product_component_group_feed as (
         'fivetran_salesforce' as schema_name,
         'product_component_group_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_component_group_feed
 )
@@ -2762,7 +2762,7 @@ data_product_component_group_history as (
         'fivetran_salesforce' as schema_name,
         'product_component_group_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_component_group_history
 )
@@ -2772,7 +2772,7 @@ data_product_config_flow_assignment as (
         'fivetran_salesforce' as schema_name,
         'product_config_flow_assignment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_config_flow_assignment
 )
@@ -2782,7 +2782,7 @@ data_product_configuration_flow as (
         'fivetran_salesforce' as schema_name,
         'product_configuration_flow' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_configuration_flow
 )
@@ -2792,7 +2792,7 @@ data_product_configuration_flow_feed as (
         'fivetran_salesforce' as schema_name,
         'product_configuration_flow_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_configuration_flow_feed
 )
@@ -2802,7 +2802,7 @@ data_product_configuration_flow_history as (
         'fivetran_salesforce' as schema_name,
         'product_configuration_flow_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_configuration_flow_history
 )
@@ -2812,7 +2812,7 @@ data_product_related_component as (
         'fivetran_salesforce' as schema_name,
         'product_related_component' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_related_component
 )
@@ -2822,7 +2822,7 @@ data_product_relationship_type as (
         'fivetran_salesforce' as schema_name,
         'product_relationship_type' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_relationship_type
 )
@@ -2832,7 +2832,7 @@ data_product_selling_model as (
         'fivetran_salesforce' as schema_name,
         'product_selling_model' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_selling_model
 )
@@ -2842,7 +2842,7 @@ data_product_selling_model_feed as (
         'fivetran_salesforce' as schema_name,
         'product_selling_model_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_selling_model_feed
 )
@@ -2852,7 +2852,7 @@ data_product_selling_model_history as (
         'fivetran_salesforce' as schema_name,
         'product_selling_model_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_selling_model_history
 )
@@ -2862,7 +2862,7 @@ data_product_selling_model_option as (
         'fivetran_salesforce' as schema_name,
         'product_selling_model_option' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.product_selling_model_option
 )
@@ -2872,7 +2872,7 @@ data_profile as (
         'fivetran_salesforce' as schema_name,
         'profile' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.profile
 )
@@ -2882,7 +2882,7 @@ data_prompt_action as (
         'fivetran_salesforce' as schema_name,
         'prompt_action' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.prompt_action
 )
@@ -2892,7 +2892,7 @@ data_prompt_error as (
         'fivetran_salesforce' as schema_name,
         'prompt_error' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.prompt_error
 )
@@ -2902,7 +2902,7 @@ data_proration_policy as (
         'fivetran_salesforce' as schema_name,
         'proration_policy' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.proration_policy
 )
@@ -2912,7 +2912,7 @@ data_rcsfl_admin_setting_c as (
         'fivetran_salesforce' as schema_name,
         'rcsfl_admin_setting_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.rcsfl_admin_setting_c
 )
@@ -2922,7 +2922,7 @@ data_rcsfl_ai_notes_c as (
         'fivetran_salesforce' as schema_name,
         'rcsfl_ai_notes_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.rcsfl_ai_notes_c
 )
@@ -2932,7 +2932,7 @@ data_rcsfl_ring_central_webinar_token_c as (
         'fivetran_salesforce' as schema_name,
         'rcsfl_ring_central_webinar_token_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.rcsfl_ring_central_webinar_token_c
 )
@@ -2942,7 +2942,7 @@ data_record_type as (
         'fivetran_salesforce' as schema_name,
         'record_type' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.record_type
 )
@@ -2952,7 +2952,7 @@ data_refund as (
         'fivetran_salesforce' as schema_name,
         'refund' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.refund
 )
@@ -2962,7 +2962,7 @@ data_refund_line_payment as (
         'fivetran_salesforce' as schema_name,
         'refund_line_payment' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.refund_line_payment
 )
@@ -2972,7 +2972,7 @@ data_revenue_async_operation as (
         'fivetran_salesforce' as schema_name,
         'revenue_async_operation' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.revenue_async_operation
 )
@@ -2982,7 +2982,7 @@ data_revenue_transaction_error_log as (
         'fivetran_salesforce' as schema_name,
         'revenue_transaction_error_log' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.revenue_transaction_error_log
 )
@@ -2992,7 +2992,7 @@ data_sbqq_field_metadata_c as (
         'fivetran_salesforce' as schema_name,
         'sbqq_field_metadata_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sbqq_field_metadata_c
 )
@@ -3002,7 +3002,7 @@ data_sbqq_product_option_c as (
         'fivetran_salesforce' as schema_name,
         'sbqq_product_option_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sbqq_product_option_c
 )
@@ -3012,7 +3012,7 @@ data_sbqq_quote_c as (
         'fivetran_salesforce' as schema_name,
         'sbqq_quote_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sbqq_quote_c
 )
@@ -3022,7 +3022,7 @@ data_sbqq_quote_line_c as (
         'fivetran_salesforce' as schema_name,
         'sbqq_quote_line_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sbqq_quote_line_c
 )
@@ -3032,7 +3032,7 @@ data_sbqq_quote_line_group_c as (
         'fivetran_salesforce' as schema_name,
         'sbqq_quote_line_group_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sbqq_quote_line_group_c
 )
@@ -3042,7 +3042,7 @@ data_sender_email_address as (
         'fivetran_salesforce' as schema_name,
         'sender_email_address' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sender_email_address
 )
@@ -3052,7 +3052,7 @@ data_service_and_training_request_c as (
         'fivetran_salesforce' as schema_name,
         'service_and_training_request_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.service_and_training_request_c
 )
@@ -3062,7 +3062,7 @@ data_service_and_training_request_feed as (
         'fivetran_salesforce' as schema_name,
         'service_and_training_request_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.service_and_training_request_feed
 )
@@ -3072,7 +3072,7 @@ data_service_and_training_request_history as (
         'fivetran_salesforce' as schema_name,
         'service_and_training_request_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.service_and_training_request_history
 )
@@ -3082,7 +3082,7 @@ data_setup_assistant_step as (
         'fivetran_salesforce' as schema_name,
         'setup_assistant_step' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.setup_assistant_step
 )
@@ -3092,7 +3092,7 @@ data_sfdc_partner_sbscr_offer as (
         'fivetran_salesforce' as schema_name,
         'sfdc_partner_sbscr_offer' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sfdc_partner_sbscr_offer
 )
@@ -3102,7 +3102,7 @@ data_sfdc_partner_sbscr_offer_history as (
         'fivetran_salesforce' as schema_name,
         'sfdc_partner_sbscr_offer_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sfdc_partner_sbscr_offer_history
 )
@@ -3112,7 +3112,7 @@ data_sfdc_partner_sbscr_offer_item as (
         'fivetran_salesforce' as schema_name,
         'sfdc_partner_sbscr_offer_item' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.sfdc_partner_sbscr_offer_item
 )
@@ -3122,7 +3122,7 @@ data_slack_channel_related_record as (
         'fivetran_salesforce' as schema_name,
         'slack_channel_related_record' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.slack_channel_related_record
 )
@@ -3132,7 +3132,7 @@ data_state_profile_c as (
         'fivetran_salesforce' as schema_name,
         'state_profile_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.state_profile_c
 )
@@ -3142,7 +3142,7 @@ data_switches_c as (
         'fivetran_salesforce' as schema_name,
         'switches_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.switches_c
 )
@@ -3152,7 +3152,7 @@ data_team_c as (
         'fivetran_salesforce' as schema_name,
         'team_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.team_c
 )
@@ -3162,7 +3162,7 @@ data_team_feed as (
         'fivetran_salesforce' as schema_name,
         'team_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.team_feed
 )
@@ -3172,7 +3172,7 @@ data_team_history as (
         'fivetran_salesforce' as schema_name,
         'team_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.team_history
 )
@@ -3182,7 +3182,7 @@ data_team_member_c as (
         'fivetran_salesforce' as schema_name,
         'team_member_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.team_member_c
 )
@@ -3192,7 +3192,7 @@ data_team_member_feed as (
         'fivetran_salesforce' as schema_name,
         'team_member_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.team_member_feed
 )
@@ -3202,7 +3202,7 @@ data_team_member_history as (
         'fivetran_salesforce' as schema_name,
         'team_member_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.team_member_history
 )
@@ -3212,7 +3212,7 @@ data_time_slot as (
         'fivetran_salesforce' as schema_name,
         'time_slot' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.time_slot
 )
@@ -3222,7 +3222,7 @@ data_time_slot_history as (
         'fivetran_salesforce' as schema_name,
         'time_slot_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.time_slot_history
 )
@@ -3232,7 +3232,7 @@ data_training_session_c as (
         'fivetran_salesforce' as schema_name,
         'training_session_c' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.training_session_c
 )
@@ -3242,7 +3242,7 @@ data_training_session_feed as (
         'fivetran_salesforce' as schema_name,
         'training_session_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.training_session_feed
 )
@@ -3252,7 +3252,7 @@ data_unit_of_measure as (
         'fivetran_salesforce' as schema_name,
         'unit_of_measure' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.unit_of_measure
 )
@@ -3262,7 +3262,7 @@ data_unstructured_storage_space as (
         'fivetran_salesforce' as schema_name,
         'unstructured_storage_space' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.unstructured_storage_space
 )
@@ -3272,7 +3272,7 @@ data_user as (
         'fivetran_salesforce' as schema_name,
         'user' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.user
 )
@@ -3282,7 +3282,7 @@ data_user_history as (
         'fivetran_salesforce' as schema_name,
         'user_history' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.user_history
 )
@@ -3292,7 +3292,7 @@ data_user_prov_account as (
         'fivetran_salesforce' as schema_name,
         'user_prov_account' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.user_prov_account
 )
@@ -3302,7 +3302,7 @@ data_user_prov_account_staging as (
         'fivetran_salesforce' as schema_name,
         'user_prov_account_staging' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.user_prov_account_staging
 )
@@ -3312,7 +3312,7 @@ data_user_prov_mock_target as (
         'fivetran_salesforce' as schema_name,
         'user_prov_mock_target' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.user_prov_mock_target
 )
@@ -3322,7 +3322,7 @@ data_user_provisioning_log as (
         'fivetran_salesforce' as schema_name,
         'user_provisioning_log' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.user_provisioning_log
 )
@@ -3332,7 +3332,7 @@ data_user_provisioning_request as (
         'fivetran_salesforce' as schema_name,
         'user_provisioning_request' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.user_provisioning_request
 )
@@ -3342,7 +3342,7 @@ data_user_role as (
         'fivetran_salesforce' as schema_name,
         'user_role' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         null::date as max_created_date
     from rawdata.fivetran_salesforce.user_role
 )
@@ -3352,7 +3352,7 @@ data_video_call as (
         'fivetran_salesforce' as schema_name,
         'video_call' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.video_call
 )
@@ -3362,7 +3362,7 @@ data_video_call_feed as (
         'fivetran_salesforce' as schema_name,
         'video_call_feed' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.video_call_feed
 )
@@ -3372,7 +3372,7 @@ data_video_call_participant as (
         'fivetran_salesforce' as schema_name,
         'video_call_participant' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.video_call_participant
 )
@@ -3382,7 +3382,7 @@ data_video_call_recording as (
         'fivetran_salesforce' as schema_name,
         'video_call_recording' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.video_call_recording
 )
@@ -3392,7 +3392,7 @@ data_voice_call_recording as (
         'fivetran_salesforce' as schema_name,
         'voice_call_recording' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.voice_call_recording
 )
@@ -3402,7 +3402,7 @@ data_voice_chnl_interaction_event as (
         'fivetran_salesforce' as schema_name,
         'voice_chnl_interaction_event' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.voice_chnl_interaction_event
 )
@@ -3412,7 +3412,7 @@ data_voice_chnl_intrctn_dtl_event as (
         'fivetran_salesforce' as schema_name,
         'voice_chnl_intrctn_dtl_event' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.voice_chnl_intrctn_dtl_event
 )
@@ -3422,7 +3422,7 @@ data_web_link as (
         'fivetran_salesforce' as schema_name,
         'web_link' as table_name,
         count(1) as total_rows,
-        max(_fivetran_synced) as max_fivetran_synced_date,
+        max(_fivetran_synced)::date as max_fivetran_synced_date,
         max(created_date)::date as max_created_date
     from rawdata.fivetran_salesforce.web_link
 )
@@ -3473,7 +3473,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.association_type f
@@ -3486,7 +3486,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.property_createdate::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_hubspot.company f
@@ -3499,7 +3499,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.company_company f
@@ -3512,7 +3512,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.property_createdate::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_hubspot.contact f
@@ -3525,7 +3525,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.contact_company f
@@ -3538,7 +3538,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.property_hs_createdate::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_hubspot.deal f
@@ -3551,7 +3551,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.deal_company f
@@ -3564,7 +3564,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.deal_contact f
@@ -3577,7 +3577,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.deal_pipeline f
@@ -3590,7 +3590,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.deal_pipeline_stage f
@@ -3603,7 +3603,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.deal_stage f
@@ -3616,7 +3616,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.property_hs_createdate::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_hubspot.invoice f
@@ -3629,7 +3629,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.invoice_company f
@@ -3642,7 +3642,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.invoice_contact f
@@ -3655,7 +3655,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.invoice_deal f
@@ -3668,7 +3668,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.invoice_line_item f
@@ -3681,7 +3681,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.property_createdate::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_hubspot.line_item f
@@ -3694,7 +3694,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.line_item_deal f
@@ -3707,7 +3707,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.property_hs_createdate::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_hubspot.payment f
@@ -3720,7 +3720,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.payment_company f
@@ -3733,7 +3733,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.payment_contact f
@@ -3746,7 +3746,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.payment_deal f
@@ -3759,7 +3759,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.payment_invoice f
@@ -3772,7 +3772,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_hubspot.payment_line_item f
@@ -3785,7 +3785,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.property_createdate::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_hubspot.product f
@@ -3798,7 +3798,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.abn_experiment f
@@ -3811,7 +3811,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.abn_experiment_cohort f
@@ -3824,7 +3824,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.abn_experiment_cohort_attr_val f
@@ -3837,7 +3837,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.abn_experiment_engmt_sgnl_mtrc f
@@ -3850,7 +3850,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.account f
@@ -3863,7 +3863,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.account_brand f
@@ -3876,7 +3876,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.account_relation_c f
@@ -3889,7 +3889,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.account_relation_history f
@@ -3902,7 +3902,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_target f
@@ -3915,7 +3915,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_target_feed f
@@ -3928,7 +3928,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_target_history f
@@ -3941,7 +3941,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_target_platform f
@@ -3954,7 +3954,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_target_platform_history f
@@ -3967,7 +3967,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_target_secure_ftp f
@@ -3980,7 +3980,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_trgt_int_org_access f
@@ -3993,7 +3993,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_trgt_int_org_access_feed f
@@ -4006,7 +4006,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activation_trgt_int_org_access_history f
@@ -4019,7 +4019,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activity_roll_up_c f
@@ -4032,7 +4032,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.activity_roll_up_history f
@@ -4045,7 +4045,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.actv_tgt_platform_field_value f
@@ -4058,7 +4058,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.actv_tgt_platform_field_value_history f
@@ -4071,7 +4071,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.agileed_connect_link_data_problem_report_c f
@@ -4084,7 +4084,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.agileed_fieldmapping_c f
@@ -4097,7 +4097,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.ai_job_run f
@@ -4110,7 +4110,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.alternative_payment_method f
@@ -4123,7 +4123,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.analytics_user_attr_func_tkn f
@@ -4136,7 +4136,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.apex_code_coverage_aggregate f
@@ -4149,7 +4149,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.app_usage_assignment f
@@ -4162,7 +4162,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.async_operation_tracker f
@@ -4175,7 +4175,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_definition f
@@ -4188,7 +4188,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_definition_feed f
@@ -4201,7 +4201,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_definition_history f
@@ -4214,7 +4214,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_picklist f
@@ -4227,7 +4227,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_picklist_feed f
@@ -4240,7 +4240,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_picklist_history f
@@ -4253,7 +4253,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_picklist_value f
@@ -4266,7 +4266,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_picklist_value_feed f
@@ -4279,7 +4279,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.attribute_picklist_value_history f
@@ -4292,7 +4292,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.automation_analytic_c f
@@ -4305,7 +4305,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.business_operations_request_c f
@@ -4318,7 +4318,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.business_operations_request_feed f
@@ -4331,7 +4331,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.business_operations_request_history f
@@ -4344,7 +4344,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.business_ops_request_c f
@@ -4357,7 +4357,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.calc_affinity_engmt_sgnl f
@@ -4370,7 +4370,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.calculated_affinity f
@@ -4383,7 +4383,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.calculated_affinity_field f
@@ -4396,7 +4396,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.calculated_insight_range_bound f
@@ -4409,7 +4409,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.campaign f
@@ -4422,7 +4422,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.card_payment_method f
@@ -4435,7 +4435,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.case f
@@ -4448,7 +4448,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.case_comment f
@@ -4461,7 +4461,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.case_rel_harmonized_content f
@@ -4474,7 +4474,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.case_related_issue f
@@ -4487,7 +4487,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.case_solution f
@@ -4500,7 +4500,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.chat_report_cr_bot_c f
@@ -4513,7 +4513,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.chat_report_cr_custom_label_c f
@@ -4526,7 +4526,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.chat_report_cr_flow_data_c f
@@ -4539,7 +4539,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.chat_report_cr_report_type_c f
@@ -4552,7 +4552,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.chat_report_cr_skill_based_routing_rule_c f
@@ -4565,7 +4565,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.codesters_codesters_license_c f
@@ -4578,7 +4578,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.codesters_codesters_member_c f
@@ -4591,7 +4591,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.codesters_codesters_organization_c f
@@ -4604,7 +4604,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.codesters_codesters_settings_c f
@@ -4617,7 +4617,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.codesters_opportunity_license_c f
@@ -4630,7 +4630,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.contact f
@@ -4643,7 +4643,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.contact_center_bulk_op f
@@ -4656,7 +4656,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.contact_history f
@@ -4669,7 +4669,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.contract f
@@ -4682,7 +4682,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.conversation_api_log f
@@ -4695,7 +4695,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.conversation_api_log_obj_sum f
@@ -4708,7 +4708,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo f
@@ -4721,7 +4721,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_feed f
@@ -4734,7 +4734,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_history f
@@ -4747,7 +4747,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_inv_application f
@@ -4760,7 +4760,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_inv_application_feed f
@@ -4773,7 +4773,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_inv_application_history f
@@ -4786,7 +4786,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_line f
@@ -4799,7 +4799,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_line_feed f
@@ -4812,7 +4812,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.credit_memo_line_history f
@@ -4825,7 +4825,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.dashboard_component_localization f
@@ -4838,7 +4838,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.dashboard_localization f
@@ -4851,7 +4851,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_assessment_field_metric f
@@ -4864,7 +4864,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_assessment_metric f
@@ -4877,7 +4877,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_assessment_value_metric f
@@ -4890,7 +4890,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_content_lens_source f
@@ -4903,7 +4903,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_content_lens_source_feed f
@@ -4916,7 +4916,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_content_lens_source_history f
@@ -4929,7 +4929,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_harmonized_model_obj_ref f
@@ -4942,7 +4942,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_knowledge_space f
@@ -4955,7 +4955,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_knowledge_space_session f
@@ -4968,7 +4968,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_knowledge_src_file_ref f
@@ -4981,7 +4981,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_obj_secondary_index f
@@ -4994,7 +4994,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_obj_secondary_index_feed f
@@ -5007,7 +5007,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_obj_secondary_index_history f
@@ -5020,7 +5020,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_quick_attribute f
@@ -5033,7 +5033,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_quick_attribute_feed f
@@ -5046,7 +5046,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_quick_attribute_history f
@@ -5059,7 +5059,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_space f
@@ -5072,7 +5072,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_space_feed f
@@ -5085,7 +5085,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.data_space_history f
@@ -5098,7 +5098,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.digital_wallet f
@@ -5111,7 +5111,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.doc_generation_query_result f
@@ -5124,7 +5124,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.doc_generation_query_result_feed f
@@ -5137,7 +5137,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.doc_generation_query_result_history f
@@ -5150,7 +5150,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.document_generation_process f
@@ -5163,7 +5163,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.engagement_signal f
@@ -5176,7 +5176,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.engagement_signal_cmpnd_metric f
@@ -5189,7 +5189,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.engagement_signal_feed f
@@ -5202,7 +5202,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.engagement_signal_history f
@@ -5215,7 +5215,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.engagement_signal_metric f
@@ -5228,7 +5228,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.entity_particle f
@@ -5241,7 +5241,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.epic_c f
@@ -5254,7 +5254,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.epic_feed f
@@ -5267,7 +5267,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.epic_history f
@@ -5280,7 +5280,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_api_call f
@@ -5293,7 +5293,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_dependent_picklist_relation f
@@ -5306,7 +5306,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_formula f
@@ -5319,7 +5319,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_formula_failure_reason f
@@ -5332,7 +5332,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_formula_model f
@@ -5345,7 +5345,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_picklist_field f
@@ -5358,7 +5358,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_picklist_field_value f
@@ -5371,7 +5371,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_query f
@@ -5384,7 +5384,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_rollup_summary f
@@ -5397,7 +5397,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.fivetran_rollup_summary_filter f
@@ -5410,7 +5410,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.flow_personal_configuration_c f
@@ -5423,7 +5423,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.flow_table_view_definition_c f
@@ -5436,7 +5436,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.forecasting_submission f
@@ -5449,7 +5449,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.forecasting_submission_item f
@@ -5462,7 +5462,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.goal_assignment f
@@ -5475,7 +5475,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.goal_assignment_feed f
@@ -5488,7 +5488,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.goal_assignment_history f
@@ -5501,7 +5501,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.goal_assignment_recommendation f
@@ -5514,7 +5514,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.goal_definition f
@@ -5527,7 +5527,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.goal_definition_feed f
@@ -5540,7 +5540,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.goal_definition_history f
@@ -5553,7 +5553,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.incp_incident_lv_fields_c f
@@ -5566,7 +5566,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.incp_time_zone_selection_c f
@@ -5579,7 +5579,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.invoice f
@@ -5592,7 +5592,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.invoice_feed f
@@ -5605,7 +5605,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.invoice_history f
@@ -5618,7 +5618,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.invoice_line f
@@ -5631,7 +5631,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.invoice_line_feed f
@@ -5644,7 +5644,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.invoice_line_history f
@@ -5657,7 +5657,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_account_c f
@@ -5670,7 +5670,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_account_feed f
@@ -5683,7 +5683,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_license_c f
@@ -5696,7 +5696,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_license_feed f
@@ -5709,7 +5709,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_license_site_c f
@@ -5722,7 +5722,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_license_site_feed f
@@ -5735,7 +5735,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_member_c f
@@ -5748,7 +5748,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_member_feed f
@@ -5761,7 +5761,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_opportunity_site_c f
@@ -5774,7 +5774,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_opportunity_term_c f
@@ -5787,7 +5787,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_opportunity_term_feed f
@@ -5800,7 +5800,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_opportunity_term_history f
@@ -5813,7 +5813,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_order_c f
@@ -5826,7 +5826,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_order_feed f
@@ -5839,7 +5839,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_order_line_c f
@@ -5852,7 +5852,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_order_line_feed f
@@ -5865,7 +5865,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_order_modification_c f
@@ -5878,7 +5878,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_order_modification_feed f
@@ -5891,7 +5891,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_organization_c f
@@ -5904,7 +5904,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_organization_feed f
@@ -5917,7 +5917,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_suite_c f
@@ -5930,7 +5930,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_suite_feed f
@@ -5943,7 +5943,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_term_c f
@@ -5956,7 +5956,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lcom_term_feed f
@@ -5969,7 +5969,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lead f
@@ -5982,7 +5982,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.lead_status_c f
@@ -5995,7 +5995,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.learning_com_c f
@@ -6008,7 +6008,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.learning_com_district_license_c f
@@ -6021,7 +6021,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.learning_com_district_license_history f
@@ -6034,7 +6034,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.learning_com_order_c f
@@ -6047,7 +6047,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.learning_com_school_license_c f
@@ -6060,7 +6060,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.learning_com_school_license_history f
@@ -6073,7 +6073,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.market_segment f
@@ -6086,7 +6086,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.market_segment_activation f
@@ -6099,7 +6099,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.market_segment_activation_feed f
@@ -6112,7 +6112,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.market_segment_activation_history f
@@ -6125,7 +6125,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.market_segment_feed f
@@ -6138,7 +6138,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.market_segment_history f
@@ -6151,7 +6151,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mkt_sgmnt_actvtn_aud_attribute f
@@ -6164,7 +6164,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mkt_sgmnt_actvtn_contact_point f
@@ -6177,7 +6177,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mkt_sgmt_actv_contact_pt_field f
@@ -6190,7 +6190,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mkt_sgmt_actv_contact_pt_src f
@@ -6203,7 +6203,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mkt_sgmt_actv_data_model_fld f
@@ -6216,7 +6216,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mkt_sgmt_actv_data_source f
@@ -6229,7 +6229,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.ml_intent_utterance_suggestion f
@@ -6242,7 +6242,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mlmodel f
@@ -6255,7 +6255,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mlmodel_factor f
@@ -6268,7 +6268,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mlmodel_factor_component f
@@ -6281,7 +6281,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.mlmodel_metric f
@@ -6294,7 +6294,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.nps_survey_responses_c f
@@ -6307,7 +6307,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.object_from_email_accepted_fields_c f
@@ -6320,7 +6320,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.object_from_email_default_fields_c f
@@ -6333,7 +6333,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.object_milestone_pause_time f
@@ -6346,7 +6346,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_component_error_log f
@@ -6359,7 +6359,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_component_error_log_feed f
@@ -6372,7 +6372,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_data_pack f
@@ -6385,7 +6385,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_data_pack_feed f
@@ -6398,7 +6398,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_data_transform f
@@ -6411,7 +6411,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_data_transform_item f
@@ -6424,7 +6424,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_esignature_template f
@@ -6437,7 +6437,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_global_auto_number f
@@ -6450,7 +6450,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_global_auto_number_feed f
@@ -6463,7 +6463,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_process f
@@ -6476,7 +6476,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_process_compilation f
@@ -6489,7 +6489,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_process_element f
@@ -6502,7 +6502,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_process_feed f
@@ -6515,7 +6515,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_process_transient_data f
@@ -6528,7 +6528,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_process_transient_data_feed f
@@ -6541,7 +6541,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_script_saved_session f
@@ -6554,7 +6554,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_script_saved_session_feed f
@@ -6567,7 +6567,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_ui_card f
@@ -6580,7 +6580,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.omni_ui_card_feed f
@@ -6593,7 +6593,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.operating_hours f
@@ -6606,7 +6606,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.operating_hours_feed f
@@ -6619,7 +6619,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.operating_hours_history f
@@ -6632,7 +6632,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.operating_hours_holiday f
@@ -6645,7 +6645,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.operating_hours_holiday_feed f
@@ -6658,7 +6658,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.operating_hours_holiday_history f
@@ -6671,7 +6671,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.opportunity f
@@ -6684,7 +6684,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.opportunity_line_item f
@@ -6697,7 +6697,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.order f
@@ -6710,7 +6710,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.order_detail_confirmation_c f
@@ -6723,7 +6723,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.order_detail_confirmation_history f
@@ -6736,7 +6736,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.order_item f
@@ -6749,7 +6749,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.organization f
@@ -6762,7 +6762,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment f
@@ -6775,7 +6775,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment_auth_adjustment f
@@ -6788,7 +6788,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment_authorization f
@@ -6801,7 +6801,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment_feed f
@@ -6814,7 +6814,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment_gateway f
@@ -6827,7 +6827,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment_gateway_log f
@@ -6840,7 +6840,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment_group f
@@ -6853,7 +6853,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.payment_line_invoice f
@@ -6866,7 +6866,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.personalization_schema f
@@ -6879,7 +6879,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.pricebook_2 f
@@ -6892,7 +6892,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.pricebook_entry f
@@ -6905,7 +6905,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_2 f
@@ -6918,7 +6918,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_catalog f
@@ -6931,7 +6931,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_catalog_feed f
@@ -6944,7 +6944,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_catalog_history f
@@ -6957,7 +6957,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_category f
@@ -6970,7 +6970,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_category_feed f
@@ -6983,7 +6983,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_category_history f
@@ -6996,7 +6996,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_category_product f
@@ -7009,7 +7009,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_category_product_history f
@@ -7022,7 +7022,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_component_group f
@@ -7035,7 +7035,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_component_group_feed f
@@ -7048,7 +7048,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_component_group_history f
@@ -7061,7 +7061,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_config_flow_assignment f
@@ -7074,7 +7074,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_configuration_flow f
@@ -7087,7 +7087,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_configuration_flow_feed f
@@ -7100,7 +7100,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_configuration_flow_history f
@@ -7113,7 +7113,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_related_component f
@@ -7126,7 +7126,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_relationship_type f
@@ -7139,7 +7139,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_selling_model f
@@ -7152,7 +7152,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_selling_model_feed f
@@ -7165,7 +7165,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_selling_model_history f
@@ -7178,7 +7178,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.product_selling_model_option f
@@ -7191,7 +7191,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.profile f
@@ -7204,7 +7204,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.prompt_action f
@@ -7217,7 +7217,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.prompt_error f
@@ -7230,7 +7230,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.proration_policy f
@@ -7243,7 +7243,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.rcsfl_admin_setting_c f
@@ -7256,7 +7256,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.rcsfl_ai_notes_c f
@@ -7269,7 +7269,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.rcsfl_ring_central_webinar_token_c f
@@ -7282,7 +7282,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.record_type f
@@ -7295,7 +7295,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.refund f
@@ -7308,7 +7308,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.refund_line_payment f
@@ -7321,7 +7321,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.revenue_async_operation f
@@ -7334,7 +7334,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.revenue_transaction_error_log f
@@ -7347,7 +7347,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sbqq_field_metadata_c f
@@ -7360,7 +7360,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sbqq_product_option_c f
@@ -7373,7 +7373,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sbqq_quote_c f
@@ -7386,7 +7386,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sbqq_quote_line_c f
@@ -7399,7 +7399,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sbqq_quote_line_group_c f
@@ -7412,7 +7412,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sender_email_address f
@@ -7425,7 +7425,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.service_and_training_request_c f
@@ -7438,7 +7438,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.service_and_training_request_feed f
@@ -7451,7 +7451,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.service_and_training_request_history f
@@ -7464,7 +7464,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.setup_assistant_step f
@@ -7477,7 +7477,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sfdc_partner_sbscr_offer f
@@ -7490,7 +7490,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sfdc_partner_sbscr_offer_history f
@@ -7503,7 +7503,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.sfdc_partner_sbscr_offer_item f
@@ -7516,7 +7516,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.slack_channel_related_record f
@@ -7529,7 +7529,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.state_profile_c f
@@ -7542,7 +7542,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.switches_c f
@@ -7555,7 +7555,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.team_c f
@@ -7568,7 +7568,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.team_feed f
@@ -7581,7 +7581,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.team_history f
@@ -7594,7 +7594,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.team_member_c f
@@ -7607,7 +7607,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.team_member_feed f
@@ -7620,7 +7620,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.team_member_history f
@@ -7633,7 +7633,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.time_slot f
@@ -7646,7 +7646,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.time_slot_history f
@@ -7659,7 +7659,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.training_session_c f
@@ -7672,7 +7672,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.training_session_feed f
@@ -7685,7 +7685,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.unit_of_measure f
@@ -7698,7 +7698,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.unstructured_storage_space f
@@ -7711,7 +7711,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user f
@@ -7724,7 +7724,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user_history f
@@ -7737,7 +7737,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user_prov_account f
@@ -7750,7 +7750,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user_prov_account_staging f
@@ -7763,7 +7763,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user_prov_mock_target f
@@ -7776,7 +7776,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user_provisioning_log f
@@ -7789,7 +7789,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user_provisioning_request f
@@ -7802,7 +7802,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     null::integer as changed_on_max_created_date
 from rawdata.fivetran_salesforce.user_role f
@@ -7815,7 +7815,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.video_call f
@@ -7828,7 +7828,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.video_call_feed f
@@ -7841,7 +7841,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.video_call_participant f
@@ -7854,7 +7854,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.video_call_recording f
@@ -7867,7 +7867,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.voice_call_recording f
@@ -7880,7 +7880,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.voice_chnl_interaction_event f
@@ -7893,7 +7893,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.voice_chnl_intrctn_dtl_event f
@@ -7906,7 +7906,7 @@ select
     d.table_name,
     d.total_rows,
     d.max_fivetran_synced_date,
-    sum(case when f._fivetran_synced = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
+    sum(case when f._fivetran_synced::date = d.max_fivetran_synced_date then 1 else 0 end) as changed_on_max_fivetran_synced_date,
     d.max_created_date,
     sum(case when f.created_date::date = d.max_created_date then 1 else 0 end) as changed_on_max_created_date
 from rawdata.fivetran_salesforce.web_link f
