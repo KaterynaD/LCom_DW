@@ -9,10 +9,10 @@
 'arr_won','combined_arr','downsell',
 'multi_year_arr','new_biz_arr_trigger','nnarr','nrr_renewal',
 'po_amount','price_increase_arr',
-'probability','quote_list_amount','quote_total_discount','remaining_quota',
+'probability','quote_list_amount',
 'renewable_revenue','total_arr_bookings',
 'true_arr',
-'true_arr_formula','true_renewal_arr','last_modified_date',
+'true_arr_formula','true_renewal_arr',
 'invoiced_date','close_date','start_date','end_date','opp_record_type',
 'license_unenforced','disable_auto_renewal_opp','number_of_schools','number_of_students','multi_year_discount_rate','owner_id'],
 
@@ -37,47 +37,8 @@
 ) }}
 
 select 
-opportunity_id,
-name,
-stage_name,
-account_id,
-amount	,
-amount_won	,
-arr	,
-arr_new_business	,
-arr_renewal	,
-arr_upsell	,
-arr_won	,
-combined_arr	,
-downsell	,	
-multi_year_arr	,	
-new_biz_arr_trigger	,	
-nnarr	,	
-nrr_renewal	,		
-po_amount	,	
-price_increase_arr	,	
-probability	,	
-quote_list_amount	,
-0 quote_total_discount	,
-0 remaining_quota	,
-renewable_revenue	,
-total_arr_bookings	,
-true_arr	,
-true_arr_formula	,
-true_renewal_arr	,
-invoiced_date ,
-close_date ,
-start_date ,
-end_date ,
-opp_record_type ,
-case when license_unenforced then 1 else 0 end  as license_unenforced ,
-case when disable_auto_renewal_opp then 1 else 0 end as disable_auto_renewal_opp ,
-number_of_schools,
-number_of_students,
-multi_year_discount_rate,
-owner_id,
-last_modified_date 
-from {{ ref("fact_opportunity") }}
-{% if is_incremental() %}
- where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }} t)
+*
+from {{ ref("int_opportunity_history") }}
+{% if is_scd2_update_run() %}
+where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.{{  config.get("scd_valid_from_col_name")  }}),'1900-01-01') from {{ this }} t)
 {% endif %}

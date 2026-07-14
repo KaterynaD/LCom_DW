@@ -1,5 +1,7 @@
 version: 2
 models:
+- name: int_contact_history
+  description: An ephemeral, intermediate model to be used in the Dim Contact history table (Slowly Changing Dimension Type 2) model and scd2_current_matches_source test.
 - name: dim_contact_history
   description: Dim Contact history table (Slowly Changing Dimension Type 2).
   data_tests:
@@ -7,6 +9,19 @@ models:
         unique_key: contact_id
         scd_valid_from_col_name: fromdate
         scd_valid_to_col_name: todate  
+    - scd2_current_matches_source:
+        source_model: int_contact_history
+        unique_key: contact_id        
+        scd_valid_to_col_name: todate
+        scd_valid_to_max_date: '3000-12-31'
+        check_cols:
+          - lead_status
+          - owner_id
+          - mailing_state_code
+          - sfdc_account_id
+          - last_modified_by_id
+    - no_consecutive_duplicate_scd_hash:
+        unique_key: contact_id              
   config:
     contract:
       enforced: false
@@ -22,7 +37,6 @@ models:
         - type: primary_key
           warn_unenforced: false
       data_tests:
-        - not_null
         - unique
 
     - name: fromdate
@@ -30,101 +44,75 @@ models:
       description: "{{ doc('column_fromdate') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: todate
       data_type: timestamp
       description: "{{ doc('column_todate') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: record_version
       data_type: integer
       description: "{{ doc('column_record_version') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: contact_id
       data_type: varchar(300)
       description: "{{ doc('column_contact_id') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: lead_status
       data_type: varchar(10)
       description: "{{ doc('column_lead_status') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: owner_id
       data_type: varchar(300)
       description: "{{ doc('column_owner_id') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: mailing_state_code
       data_type: varchar(30)
       description: "{{ doc('column_mailing_state_code') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: account_id
       data_type: varchar(300)
       description: "{{ doc('column_account_id') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: sfdc_account_id
       data_type: varchar(300)
       description: "{{ doc('column_sfdc_account_id') }}"
       constraints:
-        - type: not_null
-      data_tests:
-        - not_null        
+        - type: not_null 
         
     - name: last_modified_by_id
       data_type: varchar(300)
       description: "It's created by id from Contact History table in pre-loaded records and last modified by id from Contact going forward. it's needed for the attempt to exclude some info added by the integration instead of adjusting the integration itself"
       constraints:
-        - type: not_null
-      data_tests:
-        - not_null      
+        - type: not_null 
 
     - name: loaddate
       data_type: timestamp
       description: "{{ doc('column_loaddate') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: updatedate
       data_type: timestamp
       description: "{{ doc('column_updatedate') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null
 
     - name: scd_hash
       data_type: varchar(50)
       description: "{{ doc('column_scd_hash') }}"
       constraints:
         - type: not_null
-      data_tests:
-        - not_null

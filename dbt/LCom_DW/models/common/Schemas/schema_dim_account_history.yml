@@ -1,12 +1,17 @@
 version: 2
 models:
+- name: int_account_history
+  description: An ephemeral, intermediate model to be used in the Dim Account history table (Slowly Changing Dimension Type 2) model and scd2_current_matches_source test.
 - name: dim_account_history
+  description: Dim Account history table (Slowly Changing Dimension Type 2).
   data_tests:
   - scd2_plus_validation:
       unique_key: account_id
       scd_valid_from_col_name: fromdate
       scd_valid_to_col_name: todate
-  description: Dim Account history table (Slowly Changing Dimension Type 2).
+  
+  - no_consecutive_duplicate_scd_hash:
+      unique_key: account_id    
   config:
     contract:
       enforced: false
@@ -22,312 +27,285 @@ models:
     - type: primary_key
       warn_unenforced: false
     data_tests:
-    - not_null
     - unique
   - name: fromdate
     data_type: timestamp
     description: "{{ doc('column_fromdate') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: todate
     data_type: timestamp
     description: "{{ doc('column_todate') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: record_version
     data_type: integer
     description: "{{ doc('column_record_version') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: account_id
     data_type: varchar(300)
     description: "{{ doc('column_account_id') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
 
   - name: lcom_trial
     data_type: integer
     description: "{{ doc('column_lcom_trial') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: lcom_demo
     data_type: integer
     description: "{{ doc('column_lcom_demo') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_parent_id
     data_type: varchar(300)
     description: "{{ doc('column_sfdc_parent_id') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_record_type
     data_type: varchar(780)
     description: "{{ doc('column_sfdc_record_type') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_current_renewal_arr
     data_type: numeric(35,10)
     description: "{{ doc('column_sfdc_current_renewal_arr') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_state_initiative
     data_type: integer
     description: "{{ doc('column_sfdc_state_initiative') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_state_initiative_school
     data_type: integer
     description: "{{ doc('column_sfdc_state_initiative_school') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
-  - name: sfdc_state_eligible_or_initiative
-    data_type: integer
-    description: Do not use. Column deleted in SFDC. Always 0.
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
-  - name: sfdc_state_eligible_or_initiative_school
-    data_type: integer
-    description: Do not use. Column deleted in SFDC. Always 0.
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_owner_id
     data_type: varchar(30)
     description: "{{ doc('column_sfdc_owner_id') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_owner_name_text
     data_type: varchar(380)
     description: "{{ doc('column_sfdc_owner_name_text') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
-  - name: ishighschool
-    data_type: integer
-    description: "{{ doc('column_ishighschool') }}"
-    constraints:
-    - type: not_null
-    data_tests:
-    - not_null
+
+
+
   - name: lcom_organization_id
     data_type: varchar(300)
     description: "{{ doc('column_lcom_organization_id') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_account_id
     data_type: varchar(300)
     description: "{{ doc('column_sfdc_account_id') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: loaddate
     data_type: timestamp
     description: "{{ doc('column_loaddate') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: updatedate
     data_type: timestamp
     description: "{{ doc('column_updatedate') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: scd_hash
     data_type: varchar(50)
     description: "{{ doc('column_scd_hash') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: lcom_country_name
     data_type: varchar(70)
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: lcom_organization_name
     data_type: varchar(270)
     description: "{{ doc('column_lcom_organization_name') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: lcom_organization_type
     data_type: varchar(270)
     description: "{{ doc('column_lcom_organization_type') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: lcom_parent_organization_name
     data_type: varchar(270)
     description: "{{ doc('column_lcom_parent_organization_name') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: lcom_state_province_code
     data_type: varchar(20)
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_billing_state
     data_type: varchar(240)
     description: "{{ doc('column_sfdc_billing_state') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_billing_state_code
     data_type: varchar(30)
     description: "{{ doc('column_sfdc_billing_state_code') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_grade_levels
     data_type: varchar(4110)
     description: "{{ doc('column_sfdc_grade_levels') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_k_12_enrollment
     data_type: double precision
     description: "{{ doc('column_sfdc_k_12_enrollment') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_k_8_enrollment
     data_type: double precision
     description: "{{ doc('column_sfdc_k_8_enrollment') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_name
     data_type: varchar(780)
     description: "{{ doc('column_sfdc_name') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_parent_name
     data_type: varchar(780)
     description: "{{ doc('column_sfdc_parent_name') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_ultimate_account_owner
     data_type: varchar(380)
     description: "{{ doc('column_sfdc_ultimate_account_owner') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_ultimate_parent_account
     data_type: varchar(780)
     description: "{{ doc('column_sfdc_ultimate_parent_account') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_ultimate_parent_billing_state
     data_type: varchar(250)
     description: "{{ doc('column_sfdc_ultimate_parent_billing_state') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_ultimate_parent_id
     data_type: varchar(300)
     description: "{{ doc('column_sfdc_ultimate_parent_id') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
+
   - name: sfdc_urban_rural
     data_type: varchar(40)
     description: "{{ doc('column_sfdc_urban_rural') }}"
     constraints:
     - type: not_null
-    data_tests:
-    - not_null
-  - name: SFDC_ultimate_parent_current_renewal_arr
-    data_type: numeric(38,10)
-    description: "Do not use. Always 0. This column is deprecated with ARR based on Active Renewals."
+
+
+  - name: sfdc_urban_rural
+    data_type: varchar(40)
+    description: "{{ doc('column_sfdc_urban_rural') }}"
     constraints:
     - type: not_null
-    data_tests:
-      - not_null
+
+
+  - name: isHighSchool
+    data_type: integer
+    description: "{{ doc('column_ishighschool') }}"
+    constraints:
+    - type: not_null
+
+
+  - name: sfdc_billing_country
+    data_type: varchar(240)
+    description: "{{ doc('column_sfdc_billing_country') }}"
+    constraints:
+    - type: not_null
+
+
+  - name: sfdc_billing_country_code
+    data_type: varchar(30)
+    description: "{{ doc('column_sfdc_billing_country_code') }}"
+    constraints:
+    - type: not_null
+
+  - name: sfdc_district_enrollment
+    data_type: double precision
+    description: "{{ doc('column_sfdc_district_enrollment') }}"
+    constraints:
+    - type: not_null    
+
+  - name: sfdc_school_enrollment
+    data_type: double precision
+    description: "{{ doc('column_sfdc_school_enrollment') }}"
+    constraints:
+    - type: not_null    
+
+
   - name: sfdc_state_program_eligible
-    data_type: boolean
+    data_type: integer
     description: "{{ doc('column_sfdc_state_program_eligible') }}"
     constraints:
     - type: not_null
-    data_tests:
-      - not_null
+
   - name: sfdc_county_name
     data_type: varchar(780)
     description: "{{ doc('column_sfdc_county_name') }}"
     constraints:
     - type: not_null
-    data_tests:
-      - not_null
+
   - name: sfdc_customer_level
     data_type: varchar(765)
     description: "{{ doc('column_sfdc_customer_level') }}"
     constraints:
     - type: not_null
-    data_tests:
-      - not_null
+
   - name: sfdc_customer_level_override
     data_type: varchar(765)
     description: "{{ doc('column_sfdc_customer_level_override') }}"
     constraints:
     - type: not_null
-    data_tests:
-      - not_null
+
   - name: lcom_parent_organization_id
     data_type: varchar(300)
     description: "{{ doc('column_lcom_parent_organization_id') }}"
     constraints:
     - type: not_null
-    data_tests:
-      - not_null

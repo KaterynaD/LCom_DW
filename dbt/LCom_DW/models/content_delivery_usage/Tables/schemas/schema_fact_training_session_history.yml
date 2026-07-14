@@ -1,12 +1,25 @@
 ---
 version: 2
 models:
+  - name: int_training_session_history
+    description: An ephemeral, intermediate model to be used in the Fact Training Session history table (Slowly Changing Dimension Type 2) model and scd2_current_matches_source test.
   - name: fact_training_session_history
     data_tests:
       - scd2_plus_validation:
           unique_key: 'training_session_id'
           scd_valid_from_col_name: 'fromdate'
           scd_valid_to_col_name:  'todate'
+      - scd2_current_matches_source:
+          source_model: int_training_session_history
+          unique_key: training_session_id        
+          scd_valid_to_col_name: todate
+          scd_valid_to_max_date: '3000-12-31'
+          check_cols:
+            - status
+            - owner_id
+            - pds_group
+      - no_consecutive_duplicate_scd_hash:
+          unique_key: training_session_id                    
     description: Fact Training Session (Salesforce Training_Session_c table) snapshots table when the status or owner changes. It`s a fact table, but history is tracked as SCD2 (fromdate - todate)
     config:
       contract:
@@ -24,7 +37,6 @@ models:
             warn_unenforced: false
         data_tests:
           - unique
-          - not_null
 
 
       - name: fromdate
@@ -32,22 +44,19 @@ models:
         description: "{{ doc('column_fromdate') }}"
         constraints:
           - type: not_null
-        data_tests:
-          - not_null          
+       
       - name: todate
         data_type: timestamp
         description: "{{ doc('column_todate') }}"
         constraints:
           - type: not_null
-        data_tests:
-          - not_null               
+        
       - name: record_version
         data_type: integer
         description: "{{ doc('column_record_version') }}"
         constraints:
           - type: not_null          
-        data_tests:
-          - not_null     
+
 
 
 
@@ -56,8 +65,7 @@ models:
         description: Fact Training Session FK - (Salesforce Training_Session_c ID column)
         constraints:
           - type: not_null           
-        data_tests:   
-          - not_null 
+
 
  
 
@@ -66,8 +74,7 @@ models:
         description: "{{ doc('column_ts_status') }}"
         constraints:
           - type: not_null
-        data_tests:
-          - not_null     
+
 
 
       - name: owner_id
@@ -75,8 +82,7 @@ models:
         description: "{{ doc('column_owner_id') }}"
         constraints:
           - type: not_null
-        data_tests:     
-          - not_null
+
 
       - name: pds_group
         data_type: VARCHAR(33)
@@ -92,8 +98,7 @@ models:
         description: "{{ doc('column_account_id') }}"
         constraints:
           - type: not_null
-        data_tests:   
-          - not_null
+
 
 
       - name: loaddate

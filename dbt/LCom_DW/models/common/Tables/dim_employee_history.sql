@@ -28,14 +28,8 @@
 ) }}
 
 select 
-employee_id,
-name,
-user_role,
-case when is_active then 1 else 0 end as is_active,
-department,
-title,
-last_modified_date
-from {{ ref("dim_employee") }}
-{% if is_incremental() %}
- where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }} t)
+*
+from {{ ref("int_employee_history") }}
+{% if is_scd2_update_run() %}
+where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.{{  config.get("scd_valid_from_col_name")  }}),'1900-01-01') from {{ this }} t)
 {% endif %}

@@ -28,13 +28,8 @@
 ) }}
 
 select 
-training_session_id,
-account_id,
-status,
-owner_id,
-pds_group,
-last_modified_date 
-from {{ ref("fact_training_session") }}
-{% if is_incremental() %}
- where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }} t)
+*
+from {{ ref("int_training_session_history") }}
+{% if is_scd2_update_run() %}
+where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.{{  config.get("scd_valid_from_col_name")  }}),'1900-01-01') from {{ this }} t)
 {% endif %}

@@ -28,18 +28,8 @@
 
 
 select
-order_id,
-sku_id,
-organization_district_id,
-startdate,
-expirationdate,
-enforcedaterestrictions,
-netsuite_order_id,
-valid,
-SchoolCount, 
-StudentCount,
-auditupdatedate
-from {{ ref("fact_license_order") }}
-{% if is_incremental() %}
- where coalesce(auditupdatedate,'1900-01-01') >= (select coalesce(max(t.auditupdatedate),'1900-01-01') from {{ this }} t)
+*
+from {{ ref("int_license_order_history") }}
+{% if is_scd2_update_run() %}
+where coalesce(auditupdatedate,'1900-01-01') >= (select coalesce(max(t.{{  config.get("scd_valid_from_col_name")  }}),'1900-01-01') from {{ this }} t)
 {% endif %}

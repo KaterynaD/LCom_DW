@@ -5,7 +5,7 @@
    
    unique_key='case_id',
 
-   check_cols=['is_closed','is_escalated','closed_date','case_priority','owner_id','escalation_status','status'],
+   check_cols=['is_closed','is_escalated','closed_date','case_priority','owner_id','status'],
 
 
    punch_thru_cols=['account_id'],
@@ -30,17 +30,8 @@
 ) }}
 
 select 
-case_id,
-case when is_closed=True then 1 else 0 end as is_closed,
-case when is_escalated=True then 1 else 0 end as is_escalated,
-closed_date,
-case_priority,
-account_id,
-owner_id,
-'Not Used'::varchar escalation_status,
-status,
-last_modified_date 
-from {{ ref("fact_case") }}
-{% if is_incremental() %}
- where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.last_modified_date),'1900-01-01') from {{ this }} t)
+*
+from {{ ref("int_case_history") }}
+{% if is_scd2_update_run() %}
+where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.{{  config.get("scd_valid_from_col_name")  }}),'1900-01-01') from {{ this }} t)
 {% endif %}
