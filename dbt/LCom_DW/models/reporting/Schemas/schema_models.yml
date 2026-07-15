@@ -20,6 +20,13 @@ models:
       tags:
         - rep
 
+  - name: vw_gtm
+    description: View to use in GTM dashboard
+    config:
+      tags:
+        - rep
+
+
   - name: vw_dw_table_report
     description: Row counts and last action date for all tabless/views in DW database schemas. Direct table name instead of ref is used to eliminated lineage mess
     config:
