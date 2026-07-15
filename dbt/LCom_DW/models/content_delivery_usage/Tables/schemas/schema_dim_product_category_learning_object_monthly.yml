@@ -75,5 +75,3 @@ models:
         description: "Timestamp when the record was loaded."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null

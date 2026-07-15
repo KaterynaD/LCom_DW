@@ -31,48 +31,36 @@ models:
         description: "Calendar years in School Year like 2024/2025."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: schoolyear_mon
         data_type: integer
         description: "School Year Month number starting from August - 1, ending July - 12."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: mon_year
         data_type: integer
         description: "Calendar Year and Month in a form YYYYMM."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: mon_lastday
         data_type: date
         description: "Calendar Month Last day."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country
         data_type: varchar(60)
         description: "Defines Country level for country_cnt_students and country_students_launches."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_province_code
         data_type: varchar(20)
         description: "Defines State level for state_cnt_students and state_students_launches along with Country."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: organization_district_id
         data_type: varchar(300)
@@ -81,7 +69,6 @@ models:
           - type: not_null
           
         data_tests:
-          - not_null
           - relationships:
               to: ref('dim_account')
               field: account_id 
@@ -92,7 +79,6 @@ models:
         constraints:
           - type: not_null
         data_tests:
-          - not_null
           - relationships:
               to: ref('dim_account')
               field: account_id 
@@ -102,183 +88,137 @@ models:
         description: "Pre-selected SKU and sequence groups and sub-groups."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: grade_level
         data_type: varchar(20)
         description: "Elementary-Middle-High. Unknown is for Students only where grade is unknown. Non-Students are not included."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: topic
         data_type: varchar(100)
         description: "All available topics."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_cnt_students
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per school."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_students_launches
         data_type: bigint
         description: "Unique Count of assignments launches from students per school."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_students
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per district. The same district-level number is repeated for each School."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_students_launches
         data_type: bigint
         description: "Unique Count of assignments launches from students per district. The same district-level number is repeated for each School."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_students
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per state. The same state-level number is repeated for each School and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_students_launches
         data_type: bigint
         description: "Unique Count of assignments launches from students per state. The same state-level number is repeated for each School and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_students
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per country. The same country-level number is repeated for each State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_students_launches
         data_type: bigint
         description: "Unique Count of assignments launches from students per country. The same country-level number is repeated for each State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_students
         data_type: bigint
         description: "Total Unique Count of Students launched an assignment at least once. The same Company (LCOM)-level number is repeated for each Country, State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_students_launches
         data_type: bigint
         description: "Total Unique Count of assignments launches from students. The same Company (LCOM)-level number is repeated for each Country, State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
       - name: school_cnt_students_month
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per school from the first to the last day of a month including."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_students_launches_month
         data_type: bigint
         description: "Unique Count of assignments launches from students per school."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_students_month
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per district from the first to the last day of a month including. The same district-level number is repeated for each School."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_students_launches_month
         data_type: bigint
         description: "Unique Count of assignments launches from students per district from the first to the last day of a month including. The same district-level number is repeated for each School."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_students_month
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per state from the first to the last day of a month including. The same state-level number is repeated for each School and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_students_launches_month
         data_type: bigint
         description: "Unique Count of assignments launches from students per state from the first to the last day of a month including. The same state-level number is repeated for each School and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_students_month
         data_type: bigint
         description: "Unique Count of Students launched an assignment at least once per country from the first to the last day of a month including. The same country-level number is repeated for each State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_students_launches_month
         data_type: bigint
         description: "Unique Count of assignments launches from students per country from the first to the last day of a month including. The same country-level number is repeated for each State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_students_month
         data_type: bigint
         description: "Total Unique Count of Students launched an assignment at least once from the first to the last day of a month including. The same Company (LCOM)-level number is repeated for each Country, State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_students_launches_month
         data_type: bigint
         description: "Total Unique Count of assignments launches from students from the first to the last day of a month including. The same Company (LCOM)-level number is repeated for each Country, State, School, and District."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
 
       - name: loaddate
@@ -286,5 +226,3 @@ models:
         description: "Timestamp when the record was created."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null

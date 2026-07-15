@@ -34,50 +34,37 @@ models:
         description: "Calendar Year and Month in the form YYYYMM."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: mon_lastday
         description: "Calendar month last day."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: schoolyear
         description: "Calendar years in the school year, e.g. 2024/2025."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: schoolyear_mon
         description: "School year month number: July = 1 … June = 12."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country
         description: "Defines country level for *_country_cnt_* metrics."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_province_code
         description: "Defines state level for *_state_cnt_* metrics, together with country."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: organization_district_id
         description: "Defines district level for *_district_cnt_* metrics with country and state."
         constraints:
           - type: not_null
         data_tests:
-          - not_null
           - relationships:
               to: ref('dim_account')
               field: account_id          
@@ -87,7 +74,6 @@ models:
         constraints:
           - type: not_null
         data_tests:
-          - not_null
           - relationships:
               to: ref('dim_account')
               field: account_id   
@@ -99,22 +85,16 @@ models:
           Unknown is only for students with unknown grade; non-students are excluded.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: topic
         description: "Learning topic grouping; includes individual topics and '(All)'."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null        
 
       - name: school_cnt_completions
         description: "Number of completion records (attempts, scored or not) at school level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_cnt_events
         description: >
@@ -122,43 +102,31 @@ models:
           the same student for the same learning object; may span school years in rare cases.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_cnt_student_completions
         description: "Number of distinct students with a completion (attempt, scored or not) at school level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_cnt_student_completions_cipa_digital_citizenship
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at school level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_cnt_student_completions_cipa_cyberbullying
         description: "Number of students meeting the CIPA cyberbullying requirement at school level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: school_cnt_student_completionsmeets_both_cipa
         description: "Number of students meeting both CIPA flags at school level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_completions
         description: "Number of completion records (attempts, scored or not) at district level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_events
         description: >
@@ -166,43 +134,31 @@ models:
           the same student for the same learning object; may span district school years in rare cases.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_student_completions
         description: "Number of distinct students with a completion (attempt, scored or not) at district level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_student_completions_cipa_digital_citizenship
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at district level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_student_completions_cipa_cyberbullying
         description: "Number of students meeting the CIPA cyberbullying requirement at district level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: district_cnt_student_completionsmeets_both_cipa
         description: "Number of students meeting both CIPA flags at district level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_completions
         description: "Number of completion records (attempts, scored or not) at state level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_events
         description: >
@@ -210,43 +166,31 @@ models:
           the same student for the same learning object; may span state school years in rare cases.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_student_completions
         description: "Number of distinct students with a completion (attempt, scored or not) at state level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_student_completions_cipa_digital_citizenship
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at state level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_student_completions_cipa_cyberbullying
         description: "Number of students meeting the CIPA cyberbullying requirement at state level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: state_cnt_student_completionsmeets_both_cipa
         description: "Number of students meeting both CIPA flags at state level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_completions
         description: "Number of completion records (attempts, scored or not) at country level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_events
         description: >
@@ -254,43 +198,31 @@ models:
           the same student for the same learning object; may span country school years in rare cases.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_student_completions
         description: "Number of distinct students with a completion (attempt, scored or not) at country level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_student_completions_cipa_digital_citizenship
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at country level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_student_completions_cipa_cyberbullying
         description: "Number of students meeting the CIPA cyberbullying requirement at country level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: country_cnt_student_completionsmeets_both_cipa
         description: "Number of students meeting both CIPA flags at country level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_completions
         description: "Number of completion records (attempts, scored or not) at company level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_events
         description: >
@@ -298,42 +230,30 @@ models:
           the same student for the same learning object; may span years in rare cases.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_student_completions
         description: "Number of distinct students with a completion (attempt, scored or not) at company level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_student_completions_cipa_digital_citizenship
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at company level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_student_completions_cipa_cyberbullying
         description: "Number of students meeting the CIPA cyberbullying requirement at company level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: company_cnt_student_completionsmeets_both_cipa
         description: "Number of students meeting both CIPA flags at company level."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: loaddate
         description: "Timestamp in PST when the record was created in this fact table."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
 

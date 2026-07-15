@@ -20,8 +20,6 @@ models:
         description: "Sunday"
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: organization_district_id
         data_type: varchar(255)
@@ -33,7 +31,6 @@ models:
           - type: not_null
 
         data_tests:
-          - not_null
           - relationships:
               enabled: false          
               to: ref('dim_account')
@@ -46,7 +43,6 @@ models:
           - type: not_null
 
         data_tests:
-          - not_null
           - relationships:
               enabled: false
               to: ref('dim_account')
@@ -59,8 +55,6 @@ models:
           current school year till WeekEnd.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: Launches_YTD
         data_type: integer
@@ -69,8 +63,6 @@ models:
           current school year till WeekEnd.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: DistinctItemsStudent_YTD
         data_type: integer
@@ -79,8 +71,6 @@ models:
           the current school year till WeekEnd, summarized at the school level.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: Active_Students_Week
         data_type: integer
@@ -88,8 +78,6 @@ models:
           Difference between current and previous week Active_Students_YTD.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: Launches_Week
         data_type: integer
@@ -97,8 +85,6 @@ models:
           Difference between current and previous week Launches_YTD.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: DistinctItemsStudent_Week
         data_type: integer
@@ -106,13 +92,9 @@ models:
           Difference between current and previous week DistinctItemsStudent_YTD.
         constraints:
           - type: not_null
-        data_tests:
-          - not_null
 
       - name: LoadDate
         data_type: timestamp
         description: "Timestamp when the record was loaded."
         constraints:
           - type: not_null
-        data_tests:
-          - not_null

@@ -25,8 +25,7 @@ models:
         description: SKU or Seq
         constraints:
           - type: not_null    
-        data_tests:
-          - not_null  
+
 
       - name: product_category
         data_type: varchar(150)
