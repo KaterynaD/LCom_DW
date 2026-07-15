@@ -734,3 +734,46 @@ drop table {{ schema_name }}.{{ backup_table_name }};
 
 
 {% endmacro %}
+
+{-- ======================================================================================================================== --}
+
+{% macro generate_primary_key_sql(model_name) %}
+
+    {%do log('Creating model contract Primary Key constraint for model: ' ~ model_name, info=true) %}
+
+    {% set model_node = graph.nodes.values()
+        | selectattr('resource_type', 'equalto', 'model')
+        | selectattr('name', 'equalto', model_name)
+        | first %}
+
+    {% if not model_node %}
+        {{ exceptions.raise_compiler_error("Model '" ~ model_name ~ "' not found.") }}
+    {% endif %}
+
+    {% set ns = namespace(pk_column=None) %}
+
+    {% for column_name, column in model_node.columns.items() %}
+        {% for constraint in column.get('constraints', []) %}
+            {% if constraint.get('type') == 'primary_key' %}
+                {% set ns.pk_column = column_name %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+    {% if ns.pk_column is none %}
+        {{ exceptions.raise_compiler_error("No primary_key constraint found for model '" ~ model_name ~ "'.") }}
+    {% endif %}
+
+    {% set sql %}
+alter table {{ ref(model_name) }} add primary key ({{ ns.pk_column }});
+    {% endset %}
+
+    {-- do log(sql, info=true) --}
+
+    {% if execute %}  
+      {% do run_query(sql) %}
+    {% endif %}
+
+ {%do log('Done: ' ~ model_name, info=true) %}
+
+{% endmacro %}
