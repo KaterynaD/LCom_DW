@@ -182,7 +182,7 @@ left outer join customer_account_since
 on data.account_id = customer_account_since.account_id
 )
 select
- close.mon_year mon_year
+close.mon_year mon_year
 ,close.mon_lastday mon_lastday
 ,close.fiscalyear fiscalyear
 ,close.fiscalyear_mon fiscalyear_mon
@@ -275,7 +275,6 @@ join {{ ref("dim_employee") }} e
 on ds.opportunity_owner_id = e.employee_id
 join {{ ref("dim_employee") }} eh
 on foh.owner_id = eh.employee_id
-where 
-((ds.stage_name ilike '%won%' and ds.invoiced_date!='1900-01-01') or ds.stage_name ilike '%lost%')
-and ds.close_date <= current_date
+where  ds.close_date <= current_date
+and ((ds.stage_name ilike '%won%' and ds.invoiced_date!='1900-01-01') or ds.stage_name ilike '%lost%')
 
