@@ -2,7 +2,8 @@
     config(
         materialized='table',        
         sort='sfdc_product_id', 
-        dist='opportunity_id'                                                 
+        dist='opportunity_id',
+		sql_header = 'SET enable_numeric_rounding TO ON;'                    
          )
 }}
 
@@ -107,44 +108,44 @@ left outer join {{ ref('stg_sbqq_quote_line') }} ql
 on ol.sbqq_quote_line_c = ql.id
 where ol.is_deleted=False
 )
+,final_data as (
 select
-     opportunity_line_id::VARCHAR(300) 
-	,sfdc_product_id::VARCHAR(300)
-	,opportunity_id::VARCHAR(300) 
-	,start_date::DATE
-	,end_date::DATE
-	,subscription_term::NUMERIC(35,17)
-	,quantity::INTEGER
-	,total_price::NUMERIC(35,17)
-	,unit_price::NUMERIC(35,17)
-	,weighted_total_price::NUMERIC(35,17)
-	,combine_new_biz_arr::NUMERIC(36,17)
-	,combine_renewal_arrs::NUMERIC(37,17)
-	,combine_upsell_arrs::NUMERIC(37,17)
-	,name::VARCHAR(1200)
-	,netsuite_sku::VARCHAR(90)
-	,additional_discount_amount::NUMERIC(35,17)
-	,additional_discount_rate::NUMERIC(35,17)
-	,additional_discount_type::VARCHAR(20)
-	,total_discount_rate::NUMERIC(35,17)
-	,total_discount_amount ::NUMERIC(35,17)
-	,list_price::NUMERIC(35,17)
-	,net_price_display::NUMERIC(35,17)
-	,net_unit_price::NUMERIC(35,17)
-	,opp_probability::NUMERIC(35,17)
-	,opportunity_product_arr::NUMERIC(35,17)
-	,pricebook_entry_id::VARCHAR(18)
-	,pricebook_id::VARCHAR(18)
-	,pro_rate_adj_term::NUMERIC(35,17)
-	,record_type::VARCHAR(765)
-	,sfdc_product_code::VARCHAR(765)
-	,sfdc_product_description::VARCHAR(4000)
-	,sbqq_quote_line::VARCHAR(50)
-	,business_type_opty_product::VARCHAR(765)	
-    ,class::VARCHAR(765)
-	,created_date::TIMESTAMP WITHOUT TIME ZONE
-	,last_modified_date::TIMESTAMP WITHOUT TIME ZONE
-    ,'{{ var("loaddate") }}'::timestamp as loaddate
+     opportunity_line_id
+	,sfdc_product_id
+	,opportunity_id
+	,start_date
+	,end_date
+	,subscription_term
+	,quantity
+	,total_price
+	,unit_price
+	,weighted_total_price
+	,combine_new_biz_arr
+	,combine_renewal_arrs
+	,combine_upsell_arrs
+	,name
+	,netsuite_sku
+	,additional_discount_amount
+	,additional_discount_rate
+	,additional_discount_type
+	,total_discount_rate
+	,total_discount_amount
+	,list_price
+	,net_price_display
+	,net_unit_price
+	,opp_probability
+	,opportunity_product_arr
+	,pricebook_entry_id
+	,pricebook_id
+	,pro_rate_adj_term
+	,record_type
+	,sfdc_product_code
+	,sfdc_product_description
+	,sbqq_quote_line
+	,business_type_opty_product
+    ,class
+	,created_date
+	,last_modified_date
 from data
 union all
 select
@@ -183,5 +184,44 @@ select
 '{{ var("default_varchar") }}' as business_type_opty_product	,
 '{{ var("default_varchar") }}' as class	,
  '{{ var("default_date") }}' as created_date	,
-'{{ var("default_date") }}' as last_modified_date,
-'{{ var("default_date") }}' as loaddate
+'{{ var("default_date") }}' as last_modified_date
+)
+select
+     opportunity_line_id::VARCHAR(300) as opportunity_line_id
+	,sfdc_product_id::VARCHAR(300) as sfdc_product_id
+	,opportunity_id::VARCHAR(300) as opportunity_id
+	,start_date::DATE as start_date
+	,end_date::DATE as end_date
+	,round(subscription_term::numeric(38,10),2)::numeric(16,2) as subscription_term
+	,quantity::INTEGER as quantity
+	,round(total_price::numeric(38,10),2)::numeric(16,2) as total_price
+	,round(unit_price::numeric(38,10),2)::numeric(16,2) as unit_price
+	,round(weighted_total_price::numeric(38,10),2)::numeric(16,2) as weighted_total_price
+	,round(combine_new_biz_arr::numeric(38,10),2)::numeric(16,2) as combine_new_biz_arr
+	,round(combine_renewal_arrs::numeric(38,10),2)::numeric(16,2) as combine_renewal_arrs
+	,round(combine_upsell_arrs::numeric(38,10),2)::numeric(16,2) as combine_upsell_arrs
+	,name::VARCHAR(1200) as name
+	,netsuite_sku::VARCHAR(90) as netsuite_sku
+	,round(additional_discount_amount::numeric(38,10),2)::numeric(16,2) as additional_discount_amount
+	,round(additional_discount_rate::numeric(38,10),4)::numeric(16,4) as additional_discount_rate
+	,additional_discount_type::VARCHAR(20) as additional_discount_type
+	,round(total_discount_rate::numeric(38,10),4)::numeric(16,4) as total_discount_rate
+	,round(total_discount_amount::numeric(38,10),2)::numeric(16,2) as total_discount_amount
+	,round(list_price::numeric(38,10),2)::numeric(16,2) as list_price
+	,round(net_price_display::numeric(38,10),2)::numeric(16,2) as net_price_display
+	,round(net_unit_price::numeric(38,10),2)::numeric(16,2) as net_unit_price
+	,round(opp_probability::numeric(38,10),2)::numeric(16,2) as opp_probability
+	,round(opportunity_product_arr::numeric(38,10),2)::numeric(16,2) as opportunity_product_arr
+	,pricebook_entry_id::VARCHAR(18) as pricebook_entry_id
+	,pricebook_id::VARCHAR(18) as pricebook_id
+	,round(pro_rate_adj_term::numeric(38,10),2)::numeric(16,2) as pro_rate_adj_term
+	,record_type::VARCHAR(765) as record_type
+	,sfdc_product_code::VARCHAR(765) as sfdc_product_code
+	,sfdc_product_description::VARCHAR(4000) as sfdc_product_description
+	,sbqq_quote_line::VARCHAR(50) as sbqq_quote_line
+	,business_type_opty_product::VARCHAR(765) as business_type_opty_product
+    ,class::VARCHAR(765) as class
+	,created_date::TIMESTAMP WITHOUT TIME ZONE as created_date
+	,last_modified_date::TIMESTAMP WITHOUT TIME ZONE as last_modified_date
+    ,'{{ var("loaddate") }}'::timestamp as loaddate
+from final_data

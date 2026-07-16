@@ -150,77 +150,77 @@ models:
 
 
   - name: total_price
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_total_price') }}"
     constraints:
     - type: not_null
 
 
   - name: unit_price
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_unit_price') }}"
     constraints:
     - type: not_null
 
 
   - name: weighted_total_price
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_weighted_total_price') }}"
     constraints:
     - type: not_null
 
 
   - name: combine_new_biz_arr
-    data_type: NUMERIC(36,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_combine_new_biz_arr') }}"
     constraints:
     - type: not_null
 
 
   - name: combine_renewal_arrs
-    data_type: NUMERIC(37,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_combine_renewal_arrs') }}"
     constraints:
     - type: not_null
 
 
   - name: combine_upsell_arrs
-    data_type: NUMERIC(37,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_combine_upsell_arrs') }}"
     constraints:
     - type: not_null
 
 
   - name: list_price
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_list_price') }}"
     constraints:
     - type: not_null
 
 
   - name: net_price_display
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_net_price_display') }}"
     constraints:
     - type: not_null
 
 
   - name: net_unit_price
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_net_unit_price') }}"
     constraints:
     - type: not_null
 
 
   - name: opportunity_product_arr
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_opportunity_product_arr') }}"
     constraints:
     - type: not_null
 
 
   - name: pro_rate_adj_term
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_pro_rate_adj_term') }}"
     constraints:
     - type: not_null
@@ -268,14 +268,14 @@ models:
     - type: not_null
 
   - name: additional_discount_amount
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_additional_discount_amount') }}"
     constraints:
     - type: not_null
 
 
   - name: additional_discount_rate
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,4)
     description: "{{ doc('column_additional_discount_rate') }}"
     constraints:
     - type: not_null
@@ -290,14 +290,14 @@ models:
 
 
   - name: total_discount_rate
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,4)
     description: "{{ doc('column_total_discount_rate') }}"
     constraints:
     - type: not_null
 
 
   - name: total_discount_amount
-    data_type: NUMERIC(35,17)
+    data_type: NUMERIC(16,2)
     description: "{{ doc('column_total_discount_amount') }}"
     constraints:
     - type: not_null

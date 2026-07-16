@@ -14,6 +14,47 @@ models:
       scd_valid_to_col_name: todate
   - no_consecutive_duplicate_scd_hash:
       unique_key: opportunity_id  
+  - scd2_current_matches_source:
+      source_model: int_opportunity_history
+      unique_key: opportunity_id   
+      scd_valid_to_col_name: todate
+      scd_valid_to_max_date: '3000-12-31'
+      check_cols:
+        - stage_name
+        - name
+        - amount
+        - amount_won
+        - arr
+        - arr_new_business
+        - arr_renewal
+        - arr_upsell
+        - arr_won
+        - combined_arr
+        - downsell
+        - multi_year_arr
+        - new_biz_arr_trigger
+        - nnarr
+        - nrr_renewal
+        - po_amount
+        - price_increase_arr
+        - probability
+        - quote_list_amount
+        - renewable_revenue
+        - total_arr_bookings
+        - true_arr
+        - true_arr_formula
+        - true_renewal_arr
+        - invoiced_date
+        - close_date
+        - start_date
+        - end_date
+        - opp_record_type
+        - license_unenforced
+        - disable_auto_renewal_opp
+        - number_of_schools
+        - number_of_students
+        - multi_year_discount_rate
+        - owner_id
   config:
     contract:
       enforced: false
@@ -73,138 +114,138 @@ models:
     - type: not_null
 
   - name: amount
-    data_type: numeric(35,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_amount') }}"
     constraints:
     - type: not_null
 
   - name: amount_won
-    data_type: numeric(35,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_amount_won') }}"
     constraints:
     - type: not_null
 
   - name: arr
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_arr') }}"
     constraints:
     - type: not_null
 
   - name: arr_new_business
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_arr_new_business') }}"
     constraints:
     - type: not_null
 
   - name: arr_renewal
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_arr_renewal') }}"
     constraints:
     - type: not_null
 
   - name: arr_upsell
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_arr_upsell') }}"
     constraints:
     - type: not_null
 
   - name: arr_won
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_arr_won') }}"
     constraints:
     - type: not_null
 
   - name: combined_arr
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_combined_arr') }}"
     constraints:
     - type: not_null
 
   - name: downsell
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_downsell') }}"
     constraints:
     - type: not_null
 
   
   - name: multi_year_arr
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_multi_year_arr') }}"
     constraints:
     - type: not_null
     data_tests:
     - not_null
   - name: new_biz_arr_trigger
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_new_biz_arr_trigger') }}"
     constraints:
     - type: not_null
 
   - name: nnarr
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_nnarr') }}"
     constraints:
     - type: not_null
 
   - name: nrr_renewal
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_nrr_renewal') }}"
     constraints:
     - type: not_null
 
   
   - name: po_amount
-    data_type: numeric(35,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_po_amount') }}"
     constraints:
     - type: not_null
 
   - name: price_increase_arr
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_price_increase_arr') }}"
     constraints:
     - type: not_null
 
   - name: probability
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_probability') }}"
     constraints:
     - type: not_null
 
   - name: quote_list_amount
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_quote_list_amount') }}"
     constraints:
     - type: not_null
 
   - name: renewable_revenue
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_renewable_revenue') }}"
     constraints:
     - type: not_null
 
   
   - name: total_arr_bookings
-    data_type: numeric(38,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_total_arr_bookings') }}"
     constraints:
     - type: not_null
 
   
   - name: true_arr
-    data_type: numeric(35,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_true_arr') }}"
     constraints:
     - type: not_null
 
   - name: true_arr_formula
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_true_arr_formula') }}"
     constraints:
     - type: not_null
 
   - name: true_renewal_arr
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_true_renewal_arr') }}"
     constraints:
     - type: not_null
@@ -270,18 +311,18 @@ models:
     - type: not_null	
 
   - name: number_of_schools
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_number_of_schools') }}"
     constraints:
     - type: not_null
 
   - name: number_of_students
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_number_of_students') }}"
     constraints:
     - type: not_null
   - name: multi_year_discount_rate
-    data_type: numeric(7,2)
+    data_type: numeric(16,4)
     description: "{{ doc('column_multi_year_discount_rate') }}"
     constraints:
     - type: not_null    

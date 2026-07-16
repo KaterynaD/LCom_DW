@@ -12,6 +12,51 @@ models:
   
   - no_consecutive_duplicate_scd_hash:
       unique_key: account_id    
+
+  - scd2_current_matches_source:
+      source_model: int_account_history
+      unique_key: account_id        
+      scd_valid_to_col_name: todate
+      scd_valid_to_max_date: '3000-12-31'
+      check_cols:
+        - lcom_organization_id
+        - lcom_trial
+        - lcom_demo
+        - lcom_country_name
+        - lcom_organization_name
+        - lcom_organization_type
+        - lcom_parent_organization_name
+        - lcom_state_province_code
+        - sfdc_parent_id
+        - sfdc_record_type
+        - sfdc_current_renewal_arr
+        - sfdc_state_initiative
+        - sfdc_state_initiative_school
+        - sfdc_owner_id
+        - sfdc_owner_name_text
+        - sfdc_billing_state
+        - sfdc_billing_state_code
+        - sfdc_grade_levels
+        - sfdc_k_12_enrollment
+        - sfdc_k_8_enrollment
+        - sfdc_name
+        - sfdc_parent_name
+        - sfdc_ultimate_account_owner
+        - sfdc_ultimate_parent_account
+        - sfdc_ultimate_parent_billing_state
+        - sfdc_ultimate_parent_id
+        - sfdc_urban_rural
+        - ishighschool
+        - sfdc_billing_country
+        - sfdc_billing_country_code
+        - sfdc_district_enrollment
+        - sfdc_school_enrollment
+        - sfdc_state_program_eligible
+        - sfdc_county_name
+        - sfdc_customer_level
+        - sfdc_customer_level_override
+        - lcom_parent_organization_id
+
   config:
     contract:
       enforced: false
@@ -78,7 +123,7 @@ models:
     - type: not_null
 
   - name: sfdc_current_renewal_arr
-    data_type: numeric(35,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_sfdc_current_renewal_arr') }}"
     constraints:
     - type: not_null
@@ -186,13 +231,13 @@ models:
     - type: not_null
 
   - name: sfdc_k_12_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_k_12_enrollment') }}"
     constraints:
     - type: not_null
 
   - name: sfdc_k_8_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_k_8_enrollment') }}"
     constraints:
     - type: not_null
@@ -268,13 +313,13 @@ models:
     - type: not_null
 
   - name: sfdc_district_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_district_enrollment') }}"
     constraints:
     - type: not_null    
 
   - name: sfdc_school_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_school_enrollment') }}"
     constraints:
     - type: not_null    

@@ -72,6 +72,4 @@
 select
 *
 from {{ ref("int_account_history") }}
-{% if is_scd2_update_run() %}
-where last_modified_date >= (select coalesce(max(t.{{  config.get("scd_valid_from_col_name")  }}),'1900-01-01') from {{ this }} t)
-{% endif %}
+-- incremental load can not be applied easily due to the calculated columns from other then Account Source 
