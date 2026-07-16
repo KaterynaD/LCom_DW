@@ -250,13 +250,6 @@ Combination of Salesforce Customer Level (Strategic level of customer.  Integrat
 Customer Level Override is used to allow CSMs to override the automation from the Customer Level Flow
 {% enddocs %}
 
-{% docs column_sfdc_data_quality_description %}
-Data Quality Description
-{% enddocs %}
-
-{% docs column_sfdc_data_quality_score %}
-Data Quality Score
-{% enddocs %}
 
 {% docs column_sfdc_de_identified_district %}
 DeIdentified District?

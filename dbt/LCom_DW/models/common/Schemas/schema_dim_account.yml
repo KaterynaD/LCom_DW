@@ -191,7 +191,7 @@ models:
     constraints:
     - type: not_null
   - name: sfdc_current_renewal_arr
-    data_type: numeric(35,10)
+    data_type: numeric(16,2)
     description: "{{ doc('column_sfdc_current_renewal_arr') }}"
     constraints:
     - type: not_null
@@ -215,16 +215,6 @@ models:
     description: "{{ doc('column_sfdc_grade_levels') }}"
     constraints:
     - type: not_null    
-  - name: sfdc_data_quality_description
-    data_type: varchar(70)
-    description: "{{ doc('column_sfdc_data_quality_description') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_data_quality_score
-    data_type: integer
-    description: "{{ doc('column_sfdc_data_quality_score') }}"
-    constraints:
-    - type: not_null
   - name: sfdc_de_identified_district
     data_type: boolean
     description: "{{ doc('column_sfdc_de_identified_district') }}"
@@ -241,32 +231,32 @@ models:
     constraints:
     - type: not_null    
   - name: sfdc_district_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_district_enrollment') }}"
     constraints:
     - type: not_null
   - name: sfdc_k_12_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_k_12_enrollment') }}"
     constraints:
     - type: not_null
   - name: sfdc_k_5_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_k_5_enrollment') }}"
     constraints:
     - type: not_null
   - name: sfdc_k_8_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_k_8_enrollment') }}"
     constraints:
     - type: not_null
   - name: sfdc_kindergarten_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_kindergarten_enrollment') }}"
     constraints:
     - type: not_null
   - name: sfdc_pre_k_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_pre_k_enrollment') }}"
     constraints:
     - type: not_null
@@ -360,7 +350,7 @@ models:
     constraints:
     - type: not_null
   - name: sfdc_school_enrollment
-    data_type: double precision
+    data_type: integer
     description: "{{ doc('column_sfdc_school_enrollment') }}"
     constraints:
     - type: not_null
@@ -435,37 +425,37 @@ models:
     constraints:
     - type: not_null
   - name: sfdc_pct_asian
-    data_type: double precision
+    data_type: numeric(16,4)
     description: "{{ doc('column_sfdc_pct_asian') }}"
     constraints:
     - type: not_null
   - name: sfdc_pct_afro_amer
-    data_type: double precision
+    data_type: numeric(16,4)
     description: "{{ doc('column_sfdc_pct_afro_amer') }}"
     constraints:
     - type: not_null
   - name: sfdc_pct_white
-    data_type: double precision
+    data_type: numeric(16,4)
     description: "{{ doc('column_sfdc_pct_white') }}"
     constraints:
     - type: not_null
   - name: sfdc_pct_hisp
-    data_type: double precision
+    data_type: numeric(16,4)
     description: "{{ doc('column_sfdc_pct_hisp') }}"
     constraints:
     - type: not_null
   - name: sfdc_pct_multi_racial
-    data_type: double precision
+    data_type: numeric(16,4)
     description: "{{ doc('column_sfdc_pct_multi_racial') }}"
     constraints:
     - type: not_null
   - name: sfdc_pct_native
-    data_type: double precision
+    data_type: numeric(16,4)
     description: "{{ doc('column_sfdc_pct_native') }}"
     constraints:
     - type: not_null
   - name: sfdc_pct_pacific
-    data_type: double precision
+    data_type: numeric(16,4)
     description: "{{ doc('column_sfdc_pct_pacific') }}"
     constraints:
     - type: not_null
@@ -473,22 +463,22 @@ models:
 
 
   - name: sfdc_district_easy_code_tam
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_sfdc_district_easy_code_tam') }}"
     constraints:
     - type: not_null  
   - name: sfdc_district_easy_tech_tam
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_sfdc_district_easy_tech_tam') }}"
     constraints:
     - type: not_null
   - name: sfdc_district_total_tam
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_sfdc_district_total_tam') }}"
     constraints:
     - type: not_null
   - name: sfdc_district_expansion_potential
-    data_type: double precision
+    data_type: numeric(16,2)
     description: "{{ doc('column_sfdc_district_expansion_potential') }}"
     constraints:
     - type: not_null
