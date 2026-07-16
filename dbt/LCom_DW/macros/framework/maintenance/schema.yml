@@ -1,0 +1,24 @@
+version: 2
+
+macros:
+  - name: generate_not_null_rebuild_sql
+    description: |
+      Utility macro that rebuilds (by default just generates SQL or runs it if --vars '{dry_run: False}' set in run-operation) 
+      a model table to enforce column-level `not_null`
+      constraints declared in the model contract. It creates a replacement table,
+      copies data, swaps table names, and drops the backup table. 
+      It's useful for custom materialized models where contract is not enabled. 
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the model whose table should be rebuilt with constraints.
+
+  - name: generate_primary_key_sql
+    description: |
+      Utility macro that creates (by default just generates SQL or runs it if --vars '{dry_run: False}' set in run-operation) 
+      a primary key constraint on a model table based on the `primary_key` column constraint in a model dbt schema.  
+      It's useful for custom materialized models where contract is not enabled.
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the model whose table should have PK constraint.        

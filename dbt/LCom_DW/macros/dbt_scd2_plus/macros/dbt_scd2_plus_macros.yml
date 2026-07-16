@@ -185,13 +185,5 @@ macros:
         type: string
         description: Record version column name (defaults to `record_version`).
 
-  - name: generate_not_null_rebuild_sql
-    description: |
-      Utility macro that rebuilds a model table to enforce column-level `not_null`
-      constraints declared in the model contract. It creates a replacement table,
-      copies data, swaps table names, and drops the backup table.
-    arguments:
-      - name: model_name
-        type: string
-        description: Name of the model whose table should be rebuilt with constraints.
+
 
