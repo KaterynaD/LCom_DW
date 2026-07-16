@@ -10,4 +10,4 @@
 -- depends_on: {{ ref('stg_valid_opportunities') }} 
 -- depends_on: {{ ref('fact_opportunity') }}
 
-call {{ target.database }}.{{ schema }}.processing_opportunities_chain_of_renewals_v2(cast('{{ var("loaddate") }}' as timestamp));
+call {{ target.database }}.{{ schema }}.processing_opportunities_chain_of_renewals(cast('{{ var("loaddate") }}' as timestamp));

@@ -3,7 +3,7 @@ version: 2
 models:
   - name: stg_opportunities_chain_of_renewals
     description: >
-      Staging table to keep opportunities chain of renewals IDs starting from the first (usually New or Upsell) using recursive query in staging.processing_opportunities_chain_of_renewals_v2
+      Staging table to keep opportunities chain of renewals IDs starting from the first (usually New or Upsell) using recursive query in staging.processing_opportunities_chain_of_renewals
       It's used to validate ARR.
     config:
       contract:
