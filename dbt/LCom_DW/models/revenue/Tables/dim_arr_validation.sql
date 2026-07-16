@@ -14,7 +14,7 @@ socr.parent_opportunities,
 r.opportunity_id,
 r.arr_amount amount
 from {{ ref("int_current_arr") }} r
-join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
+join {{ ref("stg_opportunities_chain_of_renewals") }} socr
 on r.opportunity_id = socr.opportunity_id
 )
 ,calculated as (
@@ -24,7 +24,7 @@ r.opportunity_id,
 socr.parent_opportunities,
 sum(r.arr_amount) amount
 from {{ ref("fact_arr") }} r
-join {{ ref("stg_opportunities_chain_of_renewals_v2") }}    socr
+join {{ ref("stg_opportunities_chain_of_renewals") }}    socr
 on r.opportunity_id = socr.opportunity_id
 where r.record_type='ARR'
 and to_char(GetDate(),'yyyymm')::int = r.mon_year
@@ -196,7 +196,7 @@ r.opportunity_id,
 i.issue,
 socr.parent_opportunities
 from {{ ref("dim_arr_audit") }} r
-join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
+join {{ ref("stg_opportunities_chain_of_renewals") }} socr
 on r.opportunity_id = socr.opportunity_id
 join {{ ref('dim_arr_issue') }} i
 on r.issue_id =i.issue_id
@@ -212,7 +212,7 @@ case when a.opportunity_id is null then 'No' else 'Yes' end::varchar(3) as known
 listagg(isnull(a.issue,'Unknown')::varchar(100) ,'; ')  as known_issue_description,
 '{{ var("loaddate") }}'::timestamp as loaddate	
 from final_data v
-join {{ ref("stg_opportunities_chain_of_renewals_v2") }} socr
+join {{ ref("stg_opportunities_chain_of_renewals") }} socr
 on v.opportunity_id = socr.opportunity_id
 left join audit as a
     on 

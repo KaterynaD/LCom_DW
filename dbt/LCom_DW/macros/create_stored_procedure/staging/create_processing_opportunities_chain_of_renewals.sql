@@ -1,11 +1,11 @@
-{% macro create_processing_opportunities_chain_of_renewals_v2() %}
+{% macro create_processing_opportunities_chain_of_renewals() %}
 
  {% set custom_schema = deployment_schema() %}
  
  {% set create_sp_operation %}
 
 
-CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.processing_opportunities_chain_of_renewals_v2(ploaddate timestamp)
+CREATE OR REPLACE PROCEDURE {{target.database}}.{{custom_schema}}.processing_opportunities_chain_of_renewals(ploaddate timestamp)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -89,9 +89,9 @@ END LOOP;
 
 drop table if exists temp_opportunities_ids;
 
-truncate table {{target.database}}.{{custom_schema}}.stg_opportunities_chain_of_renewals_v2;
+truncate table {{target.database}}.{{custom_schema}}.stg_opportunities_chain_of_renewals;
 
-insert into {{target.database}}.{{custom_schema}}.stg_opportunities_chain_of_renewals_v2
+insert into {{target.database}}.{{custom_schema}}.stg_opportunities_chain_of_renewals
 select distinct * from temp_opportunities_chain_of_renewals ;
 
 drop table if exists temp_opportunities_chain_of_renewals;
@@ -105,6 +105,6 @@ $$
 
 {% endset %}
 
-{{ run_DDL('processing_opportunities_chain_of_renewals_v2', create_sp_operation) }}
+{{ run_DDL('processing_opportunities_chain_of_renewals', create_sp_operation) }}
 
 {% endmacro %} 

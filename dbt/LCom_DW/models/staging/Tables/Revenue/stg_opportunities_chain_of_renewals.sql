@@ -2,8 +2,8 @@
 {{ config(
    materialized='sql_runner',
    pre_hook = [
-                    '{{ create_stg_opportunities_chain_of_renewals_v2() }}', 
-                    '{{ create_processing_opportunities_chain_of_renewals_v2() }}'
+                    '{{ create_stg_opportunities_chain_of_renewals() }}', 
+                    '{{ create_processing_opportunities_chain_of_renewals() }}'
                    ]
 ) }}
 
