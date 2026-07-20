@@ -21,13 +21,12 @@ f.sfdc_product_id,
 c.account_id as customer_id,
 bucket, --bucket is needed to exclude true 0 ARR, non-paying customers only
 sum(f.arr_amount) arr_amount
-from {{ref("fact_arr")}} f
+from {{ref("vw_fact_arr")}} f
 join {{ref("dim_account")}} a
 on f.account_id = a.account_id
 join {{ref("dim_account")}} c
 on a.sfdc_ultimate_parent_id = c.sfdc_account_id
-where current_date between f.arr_activation_date and f.arr_deactivation_date
-and record_type='ARR'
+where  record_type='ARR'
 group by all
 having sum(f.arr_amount)!=0
 ),
