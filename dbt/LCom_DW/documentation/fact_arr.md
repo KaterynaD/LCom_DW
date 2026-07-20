@@ -145,8 +145,6 @@ Prepares the common ARR input set for downstream ARR logic:
 - Enriches records with opportunity, account, product, renewal, and valid parent context
 - Excludes records not intended for ARR processing
 - Removes records that should not enter ARR logic, including:
-  - Negative opportunities  
-  - Replacement opportunities  
   - `wire transfer` product  
 - Computes `max_parent_end_date` across all ARR valid parents  
 → Serves as the shared preparation layer before ARR-type-specific movement logic is applied

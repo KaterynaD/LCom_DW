@@ -50,7 +50,6 @@ join {{ ref("dim_account") }} a
 on a.account_id = fo.account_id
 /*assuming renewal is for the same account as a parent. It is not true, but at least they should be in the same state*/
 where dsp.sfdc_product_name not ilike '%wire transfer%'
---and not(fo.name ilike '%NEGATIVE OPP%' or fo.name ilike '%REPLACEMENT OPP%')
 )
 /*valid for ARR parent opportunities info*/
 ,parents_info as (
