@@ -7,7 +7,7 @@ development and CI/CD.
 
 ## Decision: 
 
-In the Learning.com DW project, late-binding views are intended primarily for reporting and presentation-layer models. Intermediate models should be materialized as tables or materialized views unless there is a documented reason to do otherwise.
+In the Learning.com DW project, late-binding views are intended primarily for reporting and presentation-layer models. If an intermediate model is materialized as a late binding view, make sure it does not depend on an object in an other database (source in rawdata or content_delivery_usage database).
 
 ## Why Late-Binding Views?
 
@@ -63,16 +63,11 @@ Be aware of an important Redshift limitation:
 
 A late-binding view in QA database **cannot** reference a
 deferred late-binding view in DW database when that view itself
-depends on objects in a third (rawdata) database.
+depends on objects in a third (rawdata or content_delivery_usage) database.
 
 This is a Redshift limitation, not a dbt limitation.
 
-When this situation occurs, materialize the upstream model as either:
-
--   A **table**, or
--   A **materialized view**,
-
-instead of a late-binding view.
+When this situation occurs, materialize the odel as either as a **table** instead of a late-binding view.
 
 ## Design Recommendation
 
@@ -82,24 +77,12 @@ endpoints**, not intermediate models in a data pipeline.
 Avoid building downstream dbt models that depend on late-binding views
 whenever possible. Instead:
 
--   Use **tables** or **materialized views** for intermediate
+-   Use **tables** for intermediate
     transformations.
+-   If you use a late-binding view as an intermediate model, make sure it does not depend on an object in an other database (rawdata or     content_delivery_usage source)
 -   Reserve late-binding views for exposing curated data to BI tools and
     end users.
 -   Keep late-binding views near the end of the dependency graph.
 
 This approach minimizes runtime dependency issues, avoids Slim CI/CD
 limitations, and makes deployments significantly more reliable.
-
-## Summary
-
--   Prefer **tables** or **materialized views** for reusable upstream
-    models.
--   Use late-binding views primarily as reporting or presentation-layer
-    objects.
--   Always configure `bind=False` together with the `validate_view()`
-    post-hook.
--   Never assume a successfully created late-binding view is valid until
-    it has been queried.
--   Consider late-binding views as **pipeline endpoints, not pipeline
-    building blocks**.
