@@ -97,7 +97,10 @@ join {{ ref("dim_employee") }} e
 on ds.opportunity_owner_id = e.employee_id
 join {{ ref("dim_employee") }} eh
 on foh.owner_id = eh.employee_id
-where  is_negative_or_replacement = 'No'
+where  
+/*clean set of deals: closed Won and invoiced or Lost
+exclude negative or replacement opportunities */
+is_negative_or_replacement = 'No'
 and ds.close_date <= current_date
 and ((ds.stage_name ilike '%won%' and ds.invoiced_date!='1900-01-01') or ds.stage_name ilike '%lost%')
 
