@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: vw_fact_arr
+    description: >
+
+      The view applies standard filters to ARR data in fact_arr: 
+      - how arr looks like today (current_date between arr_activation_date and arr_deactivation_date)
+      - excluding negative and replacement opportunities
+
+      The view is needed to exclude the same filters in the most downstream models.
+
+      ARR validation models have their own specific logic and do not use this view.
+
+      ARR Reporting view (vw_arr_booking_monthly) initially was developed to provide ARR amounts at any point of time and 
+      the first filter is applied dynamically in Tableau, probably hidden.
+      The second filter is also dynamic in Tableau and allows to estimate impact of negative and replacement opportunities.
+
+      The model does not depend on data in an other database so it can be implemented as a late binding view. 
+      Should be safe in CI/CD.
+      
+
+
+    config:
+      tags:
+        - revenue
+        - arr
