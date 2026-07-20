@@ -1,0 +1,103 @@
+version: 2
+
+models:
+  - name: vw_deal
+    description: >-
+      This view combines opportunity, opportunity line, and account data for deal-level sales analysis.
+
+
+      The view contains one row for each distinct combination of opportunity, product, business-type bucket, price, and discount attributes. Opportunity line items with identical attributes are aggregated into the same row: quantity is summed and the corresponding Opportunity Line Item IDs are stored as a comma-separated list.
+
+
+      Only opportunities with matching opportunity line and account records are included.
+
+
+      Revenue is classified using the opportunity product business-type bucket:
+
+
+      * `arr` contains total price associated with configured New Business, Renewal, Reseller, and Upsell ARR or Biz Dev buckets.
+
+      * `nrr` contains total price associated with all other business-type buckets.
+
+
+      The view also  identifies Letter of Intent opportunities when the opportunity name contains `LOI`, negative or replacement opportunity when the opportunity name contains `NEGATIVE OPP` or `REPLACEMENT OPP`, and exposes ecommerce, contract, ownership, pricing, quantity, and discount attributes for deal reporting and analysis.
+
+    config:
+      tags:
+        - revenue
+        - arr
+    columns:
+      - name: created_date
+        description: "{{ doc('column_created_date') }}"
+      - name: close_date
+        description: "{{ doc('column_close_date') }}"
+      - name: start_date
+        description: "{{ doc('column_start_date') }}"
+      - name: end_date
+        description: "{{ doc('column_end_date') }}"
+      - name: subscription_term
+        description: "{{ doc('column_subscription_term') }}"
+
+
+      - name: is_multiyear
+        description: Indicates whether the subscription term is multiyear (24 months or more).
+      - name: is_shortterm
+        description: Indicates whether the subscription term is short-term (less than 12 months).
+
+
+      - name: contract_type
+        description: "{{ doc('column_contract_type') }}"
+      - name: invoiced_date
+        description: "{{ doc('column_invoiced_date') }}"
+      - name: stage_name
+        description: "{{ doc('column_stage_name') }}"
+      - name: opp_record_type
+        description: "{{ doc('column_opp_record_type') }}"
+      - name: opportunity_id
+        description: "{{ doc('column_opportunity_id') }}"
+      - name: opportunity_name
+        description: "{{ doc('column_opportnity_name') }}"
+      - name: opportunity_number
+        description: "{{ doc('column_opportunity_number') }}"
+      - name: opportunity_owner_id
+        description: "{{ doc('column_owner_id') }}"
+      - name: account_id
+        description: "{{ doc('column_account_id') }}"
+      - name: multi_year_discount_rate
+        description: "{{ doc('column_multi_year_discount_rate') }}"
+
+      - name: is_LOI
+        description: Indicates Letter Of Intent opportunity if the opportunity name contains "LOI".
+
+      - name: is_negative_or_replacement
+        description: Indicates whether correctional opportunity if the opportunity name contains "NEGATIVE OPP" or "REPLACEMENT OPP".
+
+
+      - name: EComm
+        description: "{{ doc('column_ecommerce_cart') }}"
+      - name: opportunity_line_id
+        description: Comma-separated list of Opportunity Line Item IDs included in the aggregated deal row.
+      - name: sfdc_product_id
+        description: "{{ doc('column_sfdc_product_id') }}"
+      - name: bucket
+        description: "{{ doc('column_business_type_opty_product') }}"
+      - name: nrr
+        description: Total price for opportunity lines whose business type is not classified as ARR.
+      - name: arr
+        description: Total price for opportunity lines whose business type is classified as New Business, Renewal, or Upsell ARR.
+      - name: total_price
+        description: "{{ doc('column_total_price') }}"
+      - name: list_price
+        description: "{{ doc('column_list_price') }}"
+      - name: quantity
+        description: "{{ doc('column_quantity') }}"
+      - name: additional_discount_amount
+        description: "{{ doc('column_additional_discount_amount') }}"
+      - name: additional_discount_rate
+        description: "{{ doc('column_additional_discount_rate') }}"
+      - name: additional_discount_type
+        description: "{{ doc('column_additional_discount_type') }}"
+      - name: total_discount_amount
+        description: "{{ doc('column_total_discount_amount') }}"
+      - name: total_discount_rate
+        description: "{{ doc('column_total_discount_rate') }}"
