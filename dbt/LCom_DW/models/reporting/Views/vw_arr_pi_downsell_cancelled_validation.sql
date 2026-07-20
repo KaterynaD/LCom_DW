@@ -27,7 +27,7 @@ sum(r.arr_amount) arr_amount
 from {{ ref("fact_arr") }} r
 where
 bucket in ('Placeholder for Price Increase or Downsell: ARR', 'Placeholder for Price Increase or Downsell: Biz Dev', 'Cancellation: Biz Dev', 'Cancellation: ARR')
-and GetDate() between arr_activation_date and arr_deactivation_date
+and current_date between arr_activation_date and arr_deactivation_date
 and record_type!='ARR'
 group by all
 )
