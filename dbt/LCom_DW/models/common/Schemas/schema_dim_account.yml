@@ -523,6 +523,11 @@ models:
     description: "{{ doc('column_ishighschool') }}"
     constraints:
     - type: not_null
+  - name: account_first_invoice_date
+    data_type: date
+    description: "{{ doc('column_account_first_invoice_date') }}"
+    constraints:
+    - type: not_null
   - name: loaddate
     data_type: timestamp
     description: "{{ doc('column_loaddate') }}"

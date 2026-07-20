@@ -1200,3 +1200,6 @@ Number of students eligible for free lunch
 {% docs column_sfdc_reduced_lunch_students %}
 Free/Reduced Lunch % (% of Free + Reduced Lunch Students based on School Enrollment)
 {% enddocs %}
+{% docs column_account_first_invoice_date %}
+First not blank invoice date from Salesforce Won opportunities for this account. Can be used to calculate tenure
+{% enddocs %}

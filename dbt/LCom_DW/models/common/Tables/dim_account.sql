@@ -11,7 +11,17 @@
 
 
 
-with sch as (
+with 
+customer_since as (
+select
+account_id,
+min(invoiced_date_c)::date invoiced_date
+from {{ source('fivetran_salesforce_quickstart', 'opportunity') }}
+where stage_name ilike '%won%'
+and invoiced_date_c is not null
+group by account_id
+)
+,sch as (
 select
     parent_id,
     BOOL_OR(state_initiative_c) as school_state_initiative_c,
@@ -125,22 +135,32 @@ on sfdc_parent_account.owner_id= sfdc_user.id
     sfdc_parent_account.name as parent_name_proper_case_c,
     sfdc_ultimate_parent_account.name as ultimate_parent_account_c,
     sfdc_ultimate_parent_account.billing_state as ultimate_parent_billing_state_c,
-    sfdc_ultimate_parent_account.owner_name ultimate_account_owner_c
+    sfdc_ultimate_parent_account.owner_name ultimate_account_owner_c,
+    --
+    customer_since.invoiced_date as account_first_invoice_date
     --
 FROM {{ source('fivetran_salesforce_quickstart', 'account') }} sfdc_account
+--
 left outer join {{ source('fivetran_salesforce_quickstart', 'user') }} sfdc_user
 on sfdc_account.owner_id= sfdc_user.id
+--
 left outer join {{ source('fivetran_salesforce_quickstart', 'lcom_organization_c') }} loc
 on sfdc_account.lcom_organization_c = loc.id
+--
 left outer join sch 
 on sfdc_account.id=sch.parent_id
+--
 left outer join {{ source('fivetran_salesforce_quickstart', 'account') }} dist
 on sfdc_account.parent_id=dist.id
+--
 left outer join sfdc_parent_account
 on sfdc_account.parent_id = sfdc_parent_account.id
+--
 left outer join sfdc_parent_account as sfdc_ultimate_parent_account
 on sfdc_account.ultimate_parent_id_c = sfdc_ultimate_parent_account.id
-
+--
+left outer join customer_since
+on sfdc_account.id = customer_since.account_id
 )
 , LCOM_data as (
   select 
@@ -179,7 +199,6 @@ on c.country_code=o.country_code
 -- mapping to Salesforce Accounts
 left outer join {{ ref("lcom_sfdc_account_mapping") }} m
 on o.organization_id=m.organization_id
-
 )
 
 , data as (
@@ -303,6 +322,8 @@ isnull(SFDC_data.district_state_initiative_district, {{ var("default_boolean") }
 --Calculated
 case when (SFDC_data.grade_levels_c = 'High School' or (SFDC_data.grade_levels_c is null and  SFDC_data.k_12_enrollment_c>0 and SFDC_data.k_8_enrollment_c=0)) then True else False end as isHighSchool
 --
+,isnull(account_first_invoice_date,  '{{ var("default_date") }}') as account_first_invoice_date
+--
 FROM LCOM_data
 --
 full outer join SFDC_data
@@ -421,6 +442,7 @@ select
 {{ var("default_boolean") }} as SFDC_district_state_initiative_district,
 --Calculated
 {{ var("default_boolean") }} as isHighSchool
+,'{{ var("default_date") }}' as account_first_invoice_date
 )
 select
     account_id::varchar(300),
@@ -523,6 +545,7 @@ select
     sfdc_state_initiative_district :: boolean,
     sfdc_district_state_initiative_district :: boolean,
     --Calculated
-    isHighSchool:: boolean
-    ,'{{ var("loaddate") }}'::timestamp as loaddate
+    isHighSchool:: boolean,
+    account_first_invoice_date::date,
+    '{{ var("loaddate") }}'::timestamp as loaddate
 FROM data
