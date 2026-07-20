@@ -16,11 +16,10 @@ group by mon_year
 ,true_arr as (
 select 
 mon_year,
-sum(arr_amount) true_arr_amount
+sum(case when current_date between arr_activation_date and arr_deactivation_date then arr_amount else 0 end) true_arr_amount
 from {{ ref("fact_arr") }}
 where arr_type='True'
 and record_type='ARR'
-and GetDate() between arr_activation_date and arr_deactivation_date
 group by mon_year
 )
 select

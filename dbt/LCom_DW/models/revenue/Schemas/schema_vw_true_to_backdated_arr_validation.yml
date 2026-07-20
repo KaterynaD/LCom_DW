@@ -10,6 +10,9 @@ models:
       when evaluated at month-end. A small difference is expected, primarily due to contracts
       with incorrect or inconsistent start and end dates.
 
+      The model does not depend on data in an other database so it can be implemented as a late binding view. 
+      Should be safe in CI/CD.
+
 
     config:
       tags:
