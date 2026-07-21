@@ -9,6 +9,11 @@
     {{ log("Validating model: " ~ model_name, info=True) }}
 
         {% set sql %}
+            -- Set a statement timeout to prevent long-running validation late binding views queries
+            -- There is an intermitten Redshift issue when a view works in dev and QA but validation stuck in DW (Prod)
+            
+            set statement_timeout = 600000;
+
             select *
             from {{ model_database }}.{{ model_schema }}.{{ model_name }}
             limit 1
