@@ -76,7 +76,41 @@ Recommended data types are:
 - `numeric(16,2)` for currency values
 - `numeric(16,4)` for rates and percentages
 
-Avoid using high precision types such as `numeric(38,10)`, `double precision` or `float8` directly in `check_cols`. Cast or round them first in the intermediate model if they are not rounded in the base source or model.
+Avoid using high precision types such as `numeric(38,10)`, `double precision` or `float8` directly in `check_cols`. 
+
+Currency and rates data types should be normilized (round and cast) in the underlying , base models: dim_account, dim_opportunity_line and fact_opportunity or in the intermediate model for the history table.
+
+
+### Important
+
+`ROUND` in Redshift does no round numerical values by default. You need to run `SET enable_numeric_rounding TO ON;` to enable it.
+
+Example of normalizing numerical data types in a base dbt model:
+
+```sql
+{{
+    config(
+
+        materialized='table',        
+        dist='account_id', 
+        sort='account_id',
+        post_hook=['{{ update_DIM_ACCOUNT_HISTORY_changed_UK() }}'],        
+		    sql_header = 'SET enable_numeric_rounding TO ON;'                          
+        )
+}}  
+
+
+...
+
+round(sfdc_current_renewal_arr::numeric(38,10), 2) :: numeric(16,2) as sfdc_current_renewal_arr,
+
+...
+
+```
+
+
+
+
 ---
 
 ## dbt schema
