@@ -1,6 +1,6 @@
 models:
   - name: vw_usage_scorcard_wow_yoy
-    description: "Aggregates student assignment launch data to provide week-over-week and year-over-year usage metrics, including unique students, launches, and latest launch times for analysis of engagement trends  for comparisons across the same periods."
+    description: "Aggregates student assignment launch data to provide rolling 7 days and year-over-year usage metrics, including unique students, launches, and latest launch times for analysis of engagement trends  for comparisons across the same periods.Do not compare the data to wekly snapshots (content_delivery_usage.fact_launches_weekly_snapshots and Week over Week Usage Tableau dashboard). They will match only when rolling 7 days ends on the week end date (Sunday)"
     columns:
       - name: date_range
         description: "Date range for the school year period, formatted as MM/DD/YY - MM/DD/YY."
