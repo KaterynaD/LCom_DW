@@ -187,7 +187,7 @@ end
 ) as sum_studentcount,															
 sum(															
 case															
-when next_order_start_in_same_month = 0 and (enforcedaterestrictions = 'y' or (enforcedaterestrictions = 'n' and expirationdate>=mon_lastday)) then studentcount															
+when next_order_start_in_same_month = 0 and (enforcedaterestrictions = 'y' or (enforcedaterestrictions = 'n' and expirationdate>=trunc(GetDate()))) then studentcount
 else 0															
 end															
 ) as sum_studentcount_restricted,															
@@ -206,7 +206,7 @@ end
 sum(															
 case															
 when next_order_start_in_same_month = 0															
-and (enforcedaterestrictions = 'y' or (enforcedaterestrictions = 'n' and expirationdate>=mon_lastday))															
+and (enforcedaterestrictions = 'y' or (enforcedaterestrictions = 'n' and expirationdate>=trunc(GetDate())))															
 and district_state in ('NC','MI','SC','WV','GA')															
 and skuname ilike '%easy%tech%'															
 and num_highschools != num_schools then studentcount															
