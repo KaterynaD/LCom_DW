@@ -11,8 +11,6 @@ seeds:
       But it's based on IDs and too complex to maintain as a query. A spreadsheet (seed file) is used to maintain the product categories dimension.
     config:
       schema: staging
-      contract:
-        enforced: true
       tags: 
         - dim
 
@@ -62,7 +60,7 @@ seeds:
 
       - name: loaddate
         data_type: timestamp
-        description: Timestamp when the record was configured in the filr.
+        description: Timestamp when the record was configured in the file.
         constraints:
           - type: not_null                         
          

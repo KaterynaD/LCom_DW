@@ -1,91 +1,200 @@
 product_type,product_category,product_name,product_id,fromdate,todate,loaddate
-sku,Assessments,Digital Literacy Assessments,7ff89407-6fb0-4943-9cac-ac63e35df034,1/1/1900,12/31/3000,8/18/2025
-seq,Common Sense Education,Common Sense Education,8770bc86-37d4-4130-af72-5b3dd17b15d8,1/1/1900,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 7,528f1886-c0a7-411c-b9bd-e89d861706c0,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 6,f2d32ed6-91e6-4ba9-a948-829f8b469384,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 5,0f746c59-abee-4b99-8da0-90b878cebfc9,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 4,fe2ef82b-f3a5-442d-b680-44158a607ed8,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 8,256464a4-ecda-4987-8e1e-0c66104ae1f3,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 1,e99803d0-71f8-40f7-ad34-0757e5e74084,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 3,8a4a79f9-017f-4fda-9db9-9f53d5b7eab5,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level K,7782c7d0-1d97-4fcf-859e-63d10d03d4f3,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 2,73823267-9341-4b16-8950-8587ace24559,1/1/1900,8/1/2024,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 7,8de9f08d-3a91-4fcb-9f4a-1f35135b4ee2,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 6,e5dc9286-66e2-4523-8cd3-b41045556526,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 5,92bccffd-26e8-484b-ad59-64d28e552005,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 4,a9549f6a-676a-41b5-8233-257be2ff7d2e,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 8,f4d8ae42-e579-4246-8565-9a91d7d19197,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 1,21325e7d-91da-46f3-9f4e-943091c9b292,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 3,f662b84d-be28-409c-951d-abae8b368f04,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level K,bc784e95-3cd4-431a-90c0-6ab201eccb4c,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 2,ddc90364-ee8c-4c82-9ee9-08262e30817f,8/1/2024,7/10/2025,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level K,0604a128-099a-46b1-87f2-dd2fc940dba7,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 1,3b70460f-8354-48d3-83e2-89205ed740f3,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 2,c19e54ab-87c4-42f8-a3b5-80cf1df30eb2,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 3,b6d50951-9034-4c03-a5e3-2424be529fe2,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 4,6e41eaae-ee14-4f63-bd68-e8701a026292,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 5,21309cbb-8448-4c09-92e5-d26c67344f4d,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 6,b924b9f8-986b-427b-9ad7-430eea6b1f20,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 7,a51cf045-10bf-428d-ba2c-e4f9af214dcd,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Readiness,Digital Readiness Pathway - Level 8,9651ed8d-549d-459d-8d87-b8ad239242ea,7/10/2025,12/31/3000,8/18/2025
-seq,Digital Safety Foundation,Digital Safety Foundation,07069c59-c921-4dd8-8914-bd00027d68dd,1/1/1900,8/1/2025,8/18/2025
-sku,EasyCode,EasyCode Pillars: Python Suite,359c7fcc-f048-4502-91fb-756f79e2ef39,1/1/1900,12/31/3000,8/18/2025
-sku,EasyCode,EasyCode Foundations Suite + Python,78280278-838d-4886-ad55-969cf7eb8410,1/1/1900,12/31/3000,8/18/2025
-sku,EasyCode Foundations,EasyCode Foundations Suite + Python,78280278-838d-4886-ad55-969cf7eb8410,1/1/1900,12/31/3000,8/18/2025
-sku,EasyCode Pillars,EasyCode Pillars: Python Suite,359c7fcc-f048-4502-91fb-756f79e2ef39,1/1/1900,12/31/3000,8/18/2025
-sku,EasyTech, EasyTech,4801cdad-c7d2-4312-8ae9-3138629abe21,1/1/1900,8/1/2024,8/18/2025
-sku,EasyTech, EasyTech Curriculum,034d0380-d1a7-4fc2-8c5d-634bef7170d2,8/1/2024,12/31/3000,8/18/2025
-sku,EasyTech & TechApps for Texas, EasyTech Texas Edition,67d69942-9f60-4203-a793-0fe7da6d8567,1/1/1900,8/1/2024,8/18/2025
-sku,EasyTech & TechApps for Texas, EasyTech,4801cdad-c7d2-4312-8ae9-3138629abe21,1/1/1900,8/1/2024,8/18/2025
-sku,EasyTech & TechApps for Texas,  TechApps for Texas,087a6038-716e-439f-9795-a7f5371c5d6b,8/1/2024,12/31/3000,8/18/2025
-sku,EasyTech & TechApps for Texas, EasyTech Curriculum,034d0380-d1a7-4fc2-8c5d-634bef7170d2,8/1/2024,12/31/3000,8/18/2025
-seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path,99783770-5cbb-49b9-bfad-6e71e0b27360,1/1/1900,12/31/3000,8/18/2025
-seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path,97885f61-caae-4824-8cbc-c9efc49a8f09,1/1/1900,12/31/3000,8/18/2025
-sku,Keyboarding & Word Processing,EasyTech Keyboarding & Word Processing,e0829418-578f-4fcb-b066-4c8202dc8932,1/1/1900,12/31/3000,8/18/2025
-sku,Online Safety & Digital Citizenship,Online Safety & Digital Citizenship,e2faa5e0-68c6-44be-b82b-c523be5b3567,1/1/1900,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 10th Grade 2023-2024,497d7485-93a1-4238-ab75-a7e024f67af8,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest PreKindergarten 2023-2024,7fe16eca-3f84-4e37-b900-4cdcd05a7357,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 1st Grade 2023-2024,523c106a-bd29-488f-9e52-a42494038627,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 5th Grade 2023-2024,d282310b-8392-46b6-8240-6c855f20f911,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 12th Grade 2023-2024,1f3c8048-30da-4d4c-b996-1825ff9603d6,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 2nd Grade 2023-2024,27730742-9c24-40d6-b2eb-8788c146e5b1,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 8th Grade 2023-2024,17147093-785e-4918-8289-cf91005f88b8,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 3rd Grade 2023-2024,25388335-6342-458b-a200-8855968abcf4,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 6th Grade 2023-2024,77c2bf2e-a826-4523-a532-6c7dea239bd3,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 9th Grade 2023-2024,fc4d9903-a60d-40f2-a2fa-ba0c832a3515,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 7th Grade 2023-2024,4bcc72f2-f233-477d-b630-51c0f4ea22b9,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 4th Grade 2023-2024,084c791a-e6da-40c5-9527-2818e06fa13a,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 11th Grade 2023-2024,ab121680-228d-4b85-bf54-eecc3758fa6e,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest Kindergarten 2023-2024,dfd0ea6d-95a2-4174-8f5c-f0e2e933c5d6,1/1/1900,8/1/2024,8/18/2025
-seq,Tech Quest,Tech Quest 10th Grade 2024-2025,c2c04248-821c-4f31-9689-542374447e29,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest PreKindergarten 2024-2025,6f60811c-d1ed-4598-a371-df1904ca3d3d,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 1st Grade 2024-2025,c7ef120f-b58b-4df7-8132-72d75582929a,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 5th Grade 2024-2025,c718fcde-1637-4e9e-9c46-bd63947db92c,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 12th Grade 2024-2025,a0fea561-eff1-4913-b049-1c34bec40a78,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 2nd Grade 2024-2025,974ff8fd-1c2f-49b9-b1a9-afec723d642d,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 8th Grade 2024-2025,a26f1f74-8d96-4c0c-ad28-11719434e5a6,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 3rd Grade 2024-2025,9d60cfe8-c9ee-41fa-b075-0df76d947f7d,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 6th Grade 2024-2025,105cc054-c8b0-44bf-8c4e-dcd6f33d9a04,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 9th Grade 2024-2025,c46433f0-db3b-4a3a-a440-35c6b879909f,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 7th Grade 2024-2025,5f9c3fc4-3813-413b-b7fc-e0ce0dc8a8c0,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 4th Grade 2024-2025,5b89a940-6ff7-4eab-8567-d23f52ca70e0,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest 11th Grade 2024-2025,b9ac1900-478f-4d93-aa8d-e9413b28c237,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest Kindergarten 2024-2025,628f2db9-3567-4a21-a36a-e7712e702cb2,8/1/2024,7/10/2025,8/18/2025
-seq,Tech Quest,Tech Quest PreKindergarten 2025-2026,c7060352-61bb-4fab-ab42-8afcd5bb2db4,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest Kindergarten 2025-2026,e50db5d5-0334-4d43-a3cf-897185f8a661,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 1st Grade 2025-2026,9a2fa676-9864-4c63-bc55-709156b83e86,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 2nd Grade 2025-2026,42945039-8037-4614-bf2f-aa22e9fd5c5a,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 3rd Grade 2025-2026,542ca906-e436-4022-aea3-52773ee517af,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 4th Grade 2025-2026,6eaf234e-327a-42e1-8879-e11b916a2929,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 5th Grade 2025-2026,7db902ed-ef58-445d-bc83-1acb934b07e8,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 6th Grade 2025-2026,b3afe0a9-4975-488c-8a42-dcd3ee6fd9f4,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 7th Grade 2025-2026,21b11e64-1643-42b7-9fe4-f14b3baadfb6,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 8th Grade 2025-2026,c6efd2c3-5d8c-4cf1-8175-397c5e61d9db,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 9th Grade 2025-2026,aa303652-4764-4c26-a81d-8eb39b8460fc,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 10th Grade 2025-2026,a3925374-ba54-4457-87f3-62c02d1fca8c,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 11th Grade 2025-2026,cfd4c60d-b25e-4757-9c08-ca7cbecfde56,7/10/2025,12/31/3000,8/18/2025
-seq,Tech Quest,Tech Quest 12th Grade 2025-2026,44f6e5f5-e528-456b-88ca-07f1c39547b5,7/10/2025,12/31/3000,8/18/2025
-sku,TechApps for Texas, EasyTech Texas Edition,67d69942-9f60-4203-a793-0fe7da6d8567,1/1/1900,8/1/2024,8/18/2025
-sku,TechApps for Texas,  TechApps for Texas,087a6038-716e-439f-9795-a7f5371c5d6b,8/1/2024,12/31/3000,8/18/2025
-seq,Texas Blended Learning Path,Texas Blended Learning Path,70e148b7-6a6d-43c1-a447-c18f0fcea077,1/1/1900,12/31/3000,8/18/2025
-seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path,d05d27cc-74c9-44b1-86f7-5d90b9661386,1/1/1900,12/31/3000,8/18/2025
+sku,AI Literacy,AI Literacy,0f2a1b73-eb01-49a4-bed9-ba96591c5396,7/1/2026,12/31/3000,8/10/2026
+sku,AI Literacy (Limited),AI Literacy (Limited),68b273b5-a8e4-44c8-b596-31d1733361f4,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - PreKindergarten,db8b6d29-e05b-4737-94a1-9c558e4ae0f6,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - Kindergarten,b48c6c80-31e3-44f7-b6a0-e8401693f4ac,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 1st Grade,bffcadd8-8595-4b25-a595-dd29a66a2ca6,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 2nd Grade,2fb24712-1372-4eee-924c-0dc7ea57758d,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 3rd Grade,9f8c34c5-345a-4bdf-b25a-4d55dd927d3c,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 4th Grade,7a659659-d2f1-4b93-8b1e-0f6ec6fba9ae,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 5th Grade,be93b2fa-14bc-4c79-8a5b-db4e0c9a4e4c,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 6th Grade,3ab2d843-d935-4c4a-a546-a9b9a257f6dd,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 7th Grade,08d68550-d312-4125-922a-5b09dabf8999,7/1/2026,12/31/3000,8/10/2026
+seq,AI Literacy Student-Driven Learning Path,AI Literacy Student-Driven Learning Path - 8th Grade,1463943b-37b6-4dad-8a47-e4c1643be6e6,7/1/2026,12/31/3000,8/10/2026
+sku,Assessments,Digital Literacy Assessments,7ff89407-6fb0-4943-9cac-ac63e35df034,1/1/1900,12/31/3000,8/10/2026
+seq,Common Sense Education,Common Sense Education,8770bc86-37d4-4130-af72-5b3dd17b15d8,1/1/1900,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 7,528f1886-c0a7-411c-b9bd-e89d861706c0,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 6,f2d32ed6-91e6-4ba9-a948-829f8b469384,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 5,0f746c59-abee-4b99-8da0-90b878cebfc9,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 4,fe2ef82b-f3a5-442d-b680-44158a607ed8,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 8,256464a4-ecda-4987-8e1e-0c66104ae1f3,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 1,e99803d0-71f8-40f7-ad34-0757e5e74084,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 3,8a4a79f9-017f-4fda-9db9-9f53d5b7eab5,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level K,7782c7d0-1d97-4fcf-859e-63d10d03d4f3,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 2,73823267-9341-4b16-8950-8587ace24559,1/1/1900,8/1/2024,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 7,8de9f08d-3a91-4fcb-9f4a-1f35135b4ee2,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 6,e5dc9286-66e2-4523-8cd3-b41045556526,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 5,92bccffd-26e8-484b-ad59-64d28e552005,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 4,a9549f6a-676a-41b5-8233-257be2ff7d2e,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 8,f4d8ae42-e579-4246-8565-9a91d7d19197,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 1,21325e7d-91da-46f3-9f4e-943091c9b292,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 3,f662b84d-be28-409c-951d-abae8b368f04,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level K,bc784e95-3cd4-431a-90c0-6ab201eccb4c,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 2,ddc90364-ee8c-4c82-9ee9-08262e30817f,8/1/2024,7/10/2025,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level K,0604a128-099a-46b1-87f2-dd2fc940dba7,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 1,3b70460f-8354-48d3-83e2-89205ed740f3,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 2,c19e54ab-87c4-42f8-a3b5-80cf1df30eb2,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 3,b6d50951-9034-4c03-a5e3-2424be529fe2,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 4,6e41eaae-ee14-4f63-bd68-e8701a026292,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 5,21309cbb-8448-4c09-92e5-d26c67344f4d,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 6,b924b9f8-986b-427b-9ad7-430eea6b1f20,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 7,a51cf045-10bf-428d-ba2c-e4f9af214dcd,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 8,9651ed8d-549d-459d-8d87-b8ad239242ea,7/10/2025,7/9/2026,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level K,51c71034-b713-4d82-89c5-9db0f112435c,7/9/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 1,56799161-b48f-434d-b7e0-80ed3bb493df,7/10/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 2,adee0618-2b56-4ecc-88a8-a9ea390d3483,7/11/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 3,aea92340-314c-4949-ac41-3c08ad8f203f,7/12/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 4,bffe9d90-b6dd-453a-8783-ebc6f30d5ce5,7/13/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 5,20476c87-e2fd-4817-a737-3b10ac7d8101,7/14/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 6,de641fcb-8c8b-44d2-981f-ec1553d17b7b,7/15/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 7,2b7905ea-c45c-4bd4-8866-3936fd8cb677,7/16/2026,12/31/3000,8/10/2026
+seq,Digital Readiness,Digital Readiness Pathway - Level 8,edcdb137-e35f-4235-b199-3aeac41aef38,7/17/2026,12/31/3000,8/10/2026
+seq,Digital Safety Foundation,Digital Safety Foundation,07069c59-c921-4dd8-8914-bd00027d68dd,1/1/1900,8/1/2025,8/10/2026
+sku,EasyCode,EasyCode Pillars: Python Suite,359c7fcc-f048-4502-91fb-756f79e2ef39,1/1/1900,12/31/3000,8/10/2026
+sku,EasyCode,EasyCode Pillars Coding Fundamentals,462e4303-59cd-4db4-9a1d-7334981d5432,1/1/1900,8/6/2026,8/10/2026
+sku,EasyCode,EasyCode Foundations Suite + Python,78280278-838d-4886-ad55-969cf7eb8410,1/1/1900,12/31/3000,8/10/2026
+sku,EasyCode Foundations,EasyCode Foundations Suite + Python,78280278-838d-4886-ad55-969cf7eb8410,1/1/1900,12/31/3000,8/10/2026
+sku,EasyCode Pillars,EasyCode Pillars Coding Fundamentals,462e4303-59cd-4db4-9a1d-7334981d5432,1/1/1900,8/6/2026,8/10/2026
+sku,EasyCode Pillars,EasyCode Pillars: Python Suite,359c7fcc-f048-4502-91fb-756f79e2ef39,1/1/1900,12/31/3000,8/10/2026
+sku,EasyTech, EasyTech,4801cdad-c7d2-4312-8ae9-3138629abe21,1/1/1900,8/1/2024,8/10/2026
+sku,EasyTech, EasyTech Curriculum,034d0380-d1a7-4fc2-8c5d-634bef7170d2,8/1/2024,12/31/3000,8/10/2026
+sku,EasyTech & TechApps for Texas, EasyTech Texas Edition,67d69942-9f60-4203-a793-0fe7da6d8567,1/1/1900,8/1/2024,8/10/2026
+sku,EasyTech & TechApps for Texas, EasyTech,4801cdad-c7d2-4312-8ae9-3138629abe21,1/1/1900,8/1/2024,8/10/2026
+sku,EasyTech & TechApps for Texas,  TechApps for Texas,087a6038-716e-439f-9795-a7f5371c5d6b,8/1/2024,12/31/3000,8/10/2026
+sku,EasyTech & TechApps for Texas, EasyTech Curriculum,034d0380-d1a7-4fc2-8c5d-634bef7170d2,8/1/2024,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path,99783770-5cbb-49b9-bfad-6e71e0b27360,1/1/1900,7/1/2026,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Pre-Kindergarten,eaf92bf3-d057-4691-808f-7a333238424f,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Kindergarten,4d9735b7-905a-4c50-a934-5350a6d7ace3,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path First Grade,2db7a15b-1258-4398-ac07-ad995ba689c0,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Second Grade,98e8324b-2b4c-4b79-b9df-67f081ce42ee,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Third Grade,9e8d8017-3ac0-4a57-a3cb-65587685a724,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Fourth Grade,d100a14a-a3da-4bb5-bb1e-e77ece7dba54,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Fifth Grade,a4c38ba0-a177-4106-aacd-2c195bed4252,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Sixth Grade,8364f3ff-02f0-4662-9bea-553b32c97736,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Seventh Grade,9276b3b0-b040-4c13-b7f8-6a65e41430fb,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Eighth Grade,9ba873ef-350b-452f-8ed6-57fe376791c3,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Ninth Grade,d742ca14-909e-45d2-9fa6-d605b20e7cea,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Tenth Grade,b118364f-2831-4983-a3b7-493df097676c,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Eleventh Grade,c6d9aa44-34b1-4a6a-a419-d3a3193b4449,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Blended Learning Path,EasyTech Blended Learning Path Twelfth Grade,f4a319e3-5b6e-45f5-8f8d-da23c84e429b,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path,97885f61-caae-4824-8cbc-c9efc49a8f09,1/1/1900,7/1/2026,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Pre-Kindergarten,74d9dcc3-3d55-4f05-8a61-b52adf2466b4,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Kindergarten,5aecde38-ed2d-485d-9016-67c336f75525,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path First Grade,11775dea-5896-402e-b6eb-56c53d225a80,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Second Grade,db89eb5c-cffb-4a6a-b28c-789dd90cb17f,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Third Grade,02fbd5ee-a2d7-47c1-be7d-346f58396e69,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Fourth Grade,28751dca-4970-41c6-a6b1-039d244df014,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Fifth Grade,e5df3cbd-524d-42eb-a941-3da64fc7184d,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Sixth Grade,22f495b9-9e94-479a-a043-7c03b3da838f,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Seventh Grade,78c39567-1e8a-4bf6-8752-97ce95990493,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Eighth Grade,a2e5a3bd-8ebb-4ead-91c3-303ede24b209,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Ninth Grade,2ffc0cae-7934-4103-90b2-53b73716c5b4,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Tenth Grade,8923940f-043a-4856-aefc-915c0983d15f,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Eleventh Grade,872a651d-ebaf-4603-afb5-46bee283b630,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Student-Driven Learning Path,EasyTech Student-Driven Learning Path Twelfth Grade,5342ff7f-d060-4c70-9ec2-f649c9364195,7/1/2026,12/31/3000,8/10/2026
+sku,EasyTech+, EasyTech,4801cdad-c7d2-4312-8ae9-3138629abe21,1/1/1900,8/1/2024,8/10/2026
+sku,EasyTech+,EasyTech Keyboarding & Word Processing,e0829418-578f-4fcb-b066-4c8202dc8932,1/1/1900,12/31/3000,8/10/2026
+sku,EasyTech+, EasyTech Texas Edition,67d69942-9f60-4203-a793-0fe7da6d8567,1/1/1900,8/1/2024,8/10/2026
+sku,EasyTech+,Online Safety & Digital Citizenship,e2faa5e0-68c6-44be-b82b-c523be5b3567,1/1/1900,12/31/3000,8/10/2026
+sku,EasyTech+, EasyTech Curriculum,034d0380-d1a7-4fc2-8c5d-634bef7170d2,8/1/2024,12/31/3000,8/10/2026
+sku,EasyTech+,  TechApps for Texas,087a6038-716e-439f-9795-a7f5371c5d6b,8/1/2024,12/31/3000,8/10/2026
+sku,Keyboarding & Word Processing,EasyTech Keyboarding & Word Processing,e0829418-578f-4fcb-b066-4c8202dc8932,1/1/1900,12/31/3000,8/10/2026
+sku,Online Safety & Digital Citizenship,Online Safety & Digital Citizenship,e2faa5e0-68c6-44be-b82b-c523be5b3567,1/1/1900,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 10th Grade 2023-2024,497d7485-93a1-4238-ab75-a7e024f67af8,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest PreKindergarten 2023-2024,7fe16eca-3f84-4e37-b900-4cdcd05a7357,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 1st Grade 2023-2024,523c106a-bd29-488f-9e52-a42494038627,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 5th Grade 2023-2024,d282310b-8392-46b6-8240-6c855f20f911,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 12th Grade 2023-2024,1f3c8048-30da-4d4c-b996-1825ff9603d6,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 2nd Grade 2023-2024,27730742-9c24-40d6-b2eb-8788c146e5b1,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 8th Grade 2023-2024,17147093-785e-4918-8289-cf91005f88b8,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 3rd Grade 2023-2024,25388335-6342-458b-a200-8855968abcf4,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 6th Grade 2023-2024,77c2bf2e-a826-4523-a532-6c7dea239bd3,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 9th Grade 2023-2024,fc4d9903-a60d-40f2-a2fa-ba0c832a3515,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 7th Grade 2023-2024,4bcc72f2-f233-477d-b630-51c0f4ea22b9,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 4th Grade 2023-2024,084c791a-e6da-40c5-9527-2818e06fa13a,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 11th Grade 2023-2024,ab121680-228d-4b85-bf54-eecc3758fa6e,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest Kindergarten 2023-2024,dfd0ea6d-95a2-4174-8f5c-f0e2e933c5d6,1/1/1900,8/1/2024,8/10/2026
+seq,Tech Quest,Tech Quest 10th Grade 2024-2025,c2c04248-821c-4f31-9689-542374447e29,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest PreKindergarten 2024-2025,6f60811c-d1ed-4598-a371-df1904ca3d3d,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 1st Grade 2024-2025,c7ef120f-b58b-4df7-8132-72d75582929a,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 5th Grade 2024-2025,c718fcde-1637-4e9e-9c46-bd63947db92c,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 12th Grade 2024-2025,a0fea561-eff1-4913-b049-1c34bec40a78,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 2nd Grade 2024-2025,974ff8fd-1c2f-49b9-b1a9-afec723d642d,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 8th Grade 2024-2025,a26f1f74-8d96-4c0c-ad28-11719434e5a6,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 3rd Grade 2024-2025,9d60cfe8-c9ee-41fa-b075-0df76d947f7d,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 6th Grade 2024-2025,105cc054-c8b0-44bf-8c4e-dcd6f33d9a04,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 9th Grade 2024-2025,c46433f0-db3b-4a3a-a440-35c6b879909f,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 7th Grade 2024-2025,5f9c3fc4-3813-413b-b7fc-e0ce0dc8a8c0,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 4th Grade 2024-2025,5b89a940-6ff7-4eab-8567-d23f52ca70e0,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest 11th Grade 2024-2025,b9ac1900-478f-4d93-aa8d-e9413b28c237,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest Kindergarten 2024-2025,628f2db9-3567-4a21-a36a-e7712e702cb2,8/1/2024,7/10/2025,8/10/2026
+seq,Tech Quest,Tech Quest PreKindergarten 2025-2026,c7060352-61bb-4fab-ab42-8afcd5bb2db4,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest Kindergarten 2025-2026,e50db5d5-0334-4d43-a3cf-897185f8a661,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 1st Grade 2025-2026,9a2fa676-9864-4c63-bc55-709156b83e86,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 2nd Grade 2025-2026,42945039-8037-4614-bf2f-aa22e9fd5c5a,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 3rd Grade 2025-2026,542ca906-e436-4022-aea3-52773ee517af,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 4th Grade 2025-2026,6eaf234e-327a-42e1-8879-e11b916a2929,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 5th Grade 2025-2026,7db902ed-ef58-445d-bc83-1acb934b07e8,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 6th Grade 2025-2026,b3afe0a9-4975-488c-8a42-dcd3ee6fd9f4,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 7th Grade 2025-2026,21b11e64-1643-42b7-9fe4-f14b3baadfb6,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 8th Grade 2025-2026,c6efd2c3-5d8c-4cf1-8175-397c5e61d9db,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 9th Grade 2025-2026,aa303652-4764-4c26-a81d-8eb39b8460fc,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 10th Grade 2025-2026,a3925374-ba54-4457-87f3-62c02d1fca8c,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 11th Grade 2025-2026,cfd4c60d-b25e-4757-9c08-ca7cbecfde56,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest 12th Grade 2025-2026,44f6e5f5-e528-456b-88ca-07f1c39547b5,7/10/2025,7/9/2026,8/10/2026
+seq,Tech Quest,Tech Quest PreKindergarten 2026-2027,aac8f86e-ba08-45c8-a576-673dee267b69,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest Kindergarten 2026-2027,1327ea53-acf8-48d2-aacb-fc3cf648c1a9,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 1st Grade 2026-2027,e477128d-b706-4c4f-80c6-ba8faddeee2b,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 2nd Grade 2026-2027,5bcc4fa5-1715-4e40-99cc-528dc3c410fb,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 3rd Grade 2026-2027,543d020c-6c55-446c-a0a8-fc05674e1254,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 4th Grade 2026-2027,41c58b86-a349-42ed-882b-ca778c947f07,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 5th Grade 2026-2027,3470f56a-9840-4c4e-9364-a22884529742,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 6th Grade 2026-2027,af8a70b8-a1f0-49a9-8e3b-6b8c8592fe87,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 7th Grade 2026-2027,11a1da83-605b-4342-9c4c-c3d6cf0a28a0,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 8th Grade 2026-2027,76b364b1-05ef-453e-b70b-30be211b525c,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 9th Grade 2026-2027,8a319142-ddcc-493f-a231-d084848393d5,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 10th Grade 2026-2027,ebb14582-dd8a-479a-b2ce-9917ed497b16,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 11th Grade 2026-2027,363a8cff-fb61-4eaf-83b2-1da22a554e39,7/9/2026,12/31/3000,8/10/2026
+seq,Tech Quest,Tech Quest 12th Grade 2026-2027,540ea6e9-8513-4782-b2a8-fe970813e2c7,7/9/2026,12/31/3000,8/10/2026
+sku,TechApps for Texas, EasyTech Texas Edition,67d69942-9f60-4203-a793-0fe7da6d8567,1/1/1900,8/1/2024,8/10/2026
+sku,TechApps for Texas,  TechApps for Texas,087a6038-716e-439f-9795-a7f5371c5d6b,8/1/2024,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path,70e148b7-6a6d-43c1-a447-c18f0fcea077,1/1/1900,7/1/2026,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - PreKindergarten,207c7612-7d9b-4537-9e99-565d6a9d7fd9,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - Kindergarten,28b9b329-a857-402d-9c3b-6456ca88265e,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 1st Grade,6b6bbf6a-4d20-40e6-93e8-7f23010d4cf0,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 2nd Grade,fbd5612f-fa26-4ea5-9181-13ecf8c19e4f,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 3rd Grade,1b185260-8c8c-45db-a854-71a9c99601b3,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 4th Grade,0185e428-3cfc-4a27-b7a8-b545d37b1943,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 5th Grade,ce6418d5-245a-4a0a-920e-aeefd5f2235e,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 6th Grade,2240bf07-6313-4126-ba71-ba5bf63c9afe,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 7th Grade,31b45760-20e7-47fd-88d0-98348751c522,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Blended Learning Path,Texas Blended Learning Path - 8th Grade,b7282a88-b252-4f26-97e1-93f7c39f6ddd,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path,d05d27cc-74c9-44b1-86f7-5d90b9661386,1/1/1900,7/1/2026,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - PreKindergarten,419810ca-dd4e-46f3-8bdb-02395ba6199a,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - Kindergarten,f3335f99-180b-446c-8062-dc4eea05535a,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 1st Grade,b38f019d-5717-4dab-b099-dfb5af0938fc,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 2nd Grade,da8e0cf0-d609-44b6-8665-082060776587,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 3rd Grade,2098c8f5-20dd-4aa5-acc1-06595d5dfde5,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 4th Grade,1ff913cf-a042-40f3-99af-0d9644caddca,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 5th Grade,e022282d-993d-465e-b349-bc784ec7c76f,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 6th Grade,a9faaf22-99a5-4bae-a8e0-245490692ba8,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 7th Grade,c2003509-b750-411d-ab9e-ccb9b968ab85,7/1/2026,12/31/3000,8/10/2026
+seq,Texas Essentials Blended Learning Path,Texas Essentials Blended Learning Path - 8th Grade,233dd376-7ab8-4ee5-b52a-e437b09a6f7d,7/1/2026,12/31/3000,8/10/2026
+seq,EasyTech Florida Blended Learning Path,EasyTech Florida Blended Learning Path,5c50e644-8d64-420d-92ce-ae90a9843f7d,1/1/1900,12/31/3000,8/10/2026
+seq,EasyTech Florida Student-Driven Learning Path,EasyTech Florida Student-Driven Learning Path,8b507aee-9396-4f13-8553-cdfa754c9db6,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Kindergarten,289d3bf3-4abf-43a0-8479-df775ac5447a,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade First,c0c107e5-bfc7-4a07-be10-517bf593e428,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Second,210d8573-80ae-47db-af3d-7be1b58d65ba,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Third,83ae857f-24d2-4b19-8cc0-c3a7b75c5b4f,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Fourth,7f3d8833-3298-4a43-b1fa-067d2adc382e,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Fifth,7e541a4c-9667-4479-a2d2-a147f4ca2f19,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Sixth,f3560d4d-91d8-4aee-a1d4-0d1a8a8c9abc,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Seventh,84954ebf-caf8-4e40-a4be-48a3330cf8d4,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Eighth,688fd816-91b9-4303-8da4-e63a29d24ae7,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Ninth,bd548ed8-08d0-45a5-8e44-e6493a2df530,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Tenth,649d1278-568e-4147-b755-b81d3b21d377,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Eleventh,c5e01e83-e2ab-48b8-9141-c2d481eaa749,1/1/1900,12/31/3000,8/10/2026
+seq,Fontana Tech Quest,Fontana Tech Quest Grade Twelfth,1a8285a2-24bd-46b4-94ff-1d7dc33756db,1/1/1900,12/31/3000,8/10/2026
+seq,Safe into Summer,Safe into Summer Grades K-2,62054640-21b1-419a-beff-10fea1d71dcb,1/1/1900,12/31/3000,8/10/2026
+seq,Safe into Summer,Safe into Summer Grades 3-5,2617485a-7b18-4335-8723-ae15b5f9deb0,1/1/1900,12/31/3000,8/10/2026
+seq,Safe into Summer,Safe into Summer Grades 6-8,305a9bba-908e-49ce-b2b3-494e41907971,1/1/1900,12/31/3000,8/10/2026

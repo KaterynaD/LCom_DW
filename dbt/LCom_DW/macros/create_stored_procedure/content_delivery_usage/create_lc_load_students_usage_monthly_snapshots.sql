@@ -240,6 +240,56 @@ drop table if exists temp_product_categories_learning_objects;
 
 
 ----------------------------------------------------------
+--New 2026 Categories
+----------------------------------------------------------
+
+
+RAISE INFO 'Processing New 2026 Categories together...';
+drop table if exists temp_product_categories_learning_objects;
+create temporary table temp_product_categories_learning_objects as
+select distinct product_category, learning_object_id, fromdate,todate
+from {{ ref("dim_product_category_learning_object_monthly") }} dpclom
+where dpclom.mon_year=pmonth_year
+and product_category in (
+'AI Literacy','AI Literacy (Limited)','AI Literacy Student-Driven Learning Path',
+'EasyTech Florida Blended Learning Path',
+'EasyTech Florida Student-Driven Learning Path','EasyTech+','Fontana Tech Quest',
+'Safe into Summer');
+
+--drop table if exists temp_usage_data_for_snapshot;
+create temporary table temp_usage_data_for_snapshot as
+select
+distinct
+fal.SchoolYear,
+fal.SchoolYear_Mon,
+fal.Mon_Year,
+fal.Mon_FirstDay,
+fal.Mon_LastDay,
+fal.country,
+fal.state_province_code,
+fal.organization_district_id,
+fal.organization_school_id,
+dlslo.product_category,
+fal.grade_level,
+fal.Topic as Topic,
+--
+fal.user_account_id,
+--
+fal.assignment_launch_id ,
+--
+fal.launch_datetime
+from temp_base_data_for_snapshot fal
+join temp_product_categories_learning_objects dlslo
+on fal.learning_object_id=dlslo.learning_object_id;
+
+
+CALL content_delivery_usage.lc_load_students_usage_monthly_snapshots_levels(ploaddate);
+
+drop table if exists temp_usage_data_for_snapshot;
+drop table if exists temp_product_categories_learning_objects;
+
+
+----------------------------------------------------------
 --All together
 ----------------------------------------------------------
 RAISE INFO 'processing All together...';
