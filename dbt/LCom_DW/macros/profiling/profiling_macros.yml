@@ -7,13 +7,10 @@ macros:
       Adds a PK on profile_column_id, DISTSTYLE ALL, and SORTKEY on profile_name.
     arguments:
       - name: profiles_db
-        type: string
         description: Database to create/find the table in.
       - name: profiles_schema
-        type: string
         description: Schema to create/find the table in.
       - name: profiles_table
-        type: string
         description: Table name to create if missing (e.g. profiles).
 
   - name: create_profile
@@ -23,88 +20,82 @@ macros:
       writes results into the configured profiles table, and cleans up.
     arguments:
       - name: schema_name
-        type: string
         description: Schema of the table to profile.
         
       - name: table_name
-        type: string
         description: Table to profile.
+
+      - name: database_name
+        description: Source database name for the table to profile (defaults to target.database).
         
       - name: profile_name
-        type: string
         description: Optional explicit profile label. Defaults to db_schema_table plus where/limit suffixes.
         
       - name: profiles_db
-        type: string
         description: Database for the destination profiles table (defaults to target.database).
         
       - name: profiles_schema
-        type: string
         description: Schema for the destination profiles table (defaults to target.schema).
         
       - name: profiles_table
-        type: string
         description: Destination table name (defaults to 'profiles').
         
       - name: include_columns
-        type: list
         description: Columns to include (case-insensitive). Empty → all.
         
       - name: exclude_columns
-        type: list
         description: Columns to exclude (case-insensitive).
         
       - name: include_stats_numeric
-        type: list
         description: Numeric stats to compute (placeholder, min, max, avg, stddev_pop, cnt_neg, cnt_zero, cnt_pos).
         
       - name: exclude_stats_numeric
-        type: list
         description: Numeric stats to skip.
         
       - name: include_stats_varchar
-        type: list
         description: Varchar stats to compute (placeholder, min_length, max_length, avg_length, cnt_leading_ws, cnt_trailing_ws, cnt_empty_after_trim, cnt_lower, cnt_upper, cnt_mixed, cnt_cast_int, cnt_cast_decimal, cnt_cast_date, cnt_cast_timestamp).
         
       - name: exclude_stats_varchar
-        type: list
         description: Varchar stats to skip.
         
       - name: include_stats_datetime
-        type: list
         description: Datetime stats to compute (placeholder, min, max).
         
       - name: exclude_stats_datetime
-        type: list
         description: Datetime stats to skip.
         
       - name: num_outliers_columns
-        type: list
         description: Numeric columns to compute outlier metrics for.
+
+      - name: num_distribution_columns
+        description: Numeric columns to compute histogram/distribution metrics for.
         
       - name: vc_top3_columns
-        type: list
         description: Varchar columns to compute top-3 % and entropy for.
         
       - name: placeholders
-        type: dict
         description: Placeholder values per type (numeric, text, date).
         
       - name: where_clause
-        type: string
         description: Raw SQL condition without the WHERE keyword to restrict the dataset.
         
       - name: row_limit
-        type: integer
         description: Limit number of rows to profile.
         
       - name: max_columns_per_batch
-        type: integer
         description: Max column count per batch during processing (default 20).
+
+      - name: auto_for_top3_num_unq_val
+        description: Threshold used when vc_top3_columns='auto' to include columns by unique-value count.
         
       - name: loaddate
-        type: timestamp
         description: Timestamp to write to the profiles table (defaults to GETDATE()).
+
+      - name: invocated_from_materialization
+        description: Internal flag indicating invocation from materialization flow.
+
+      - name: SQL_to_Profile
+        description: Optional SQL text used to materialize an ad-hoc dataset for profiling.
         
 
 
@@ -115,66 +106,48 @@ macros:
       reshaped rows into the profiles table.
     arguments:
       - name: batches
-        type: list[(string,string)]
         description: Batches of (column_name, data_type_category) pairs.
         
       - name: temp_table_name
-        type: string
         description: Temporary table that holds the dataset under profile.
         
       - name: profiles_db
-        type: string
         
       - name: profiles_schema
-        type: string
         
       - name: profiles_table
-        type: string
+
+      - name: database_name
         
       - name: schema_name
-        type: string
         
       - name: table_name
-        type: string
         
       - name: profile_name
-        type: string
         
       - name: where_clause
-        type: string
         
       - name: row_limit
-        type: integer
         
       - name: include_stats_numeric
-        type: list
         
       - name: exclude_stats_numeric
-        type: list
         
       - name: include_stats_varchar
-        type: list
         
       - name: exclude_stats_varchar
-        type: list
         
       - name: include_stats_datetime
-        type: list
         
       - name: exclude_stats_datetime
-        type: list
         
       - name: placeholder_numeric
-        type: number
         
       - name: placeholder_text
-        type: string
         
       - name: placeholder_date
-        type: string
         
       - name: loaddate
-        type: timestamp
         
 
 
@@ -185,33 +158,24 @@ macros:
       and updates the profiles table with counts and % of outliers for configured columns.
     arguments:
       - name: num_outliers_columns
-        type: list
         description: Numeric columns to analyze for outliers.
         
       - name: columns_categories
-        type: list[(string,string)]
         description: All columns with their type categories (used to validate numeric-ness).
         
       - name: temp_table_name
-        type: string
         
       - name: profiles_db
-        type: string
         
       - name: profiles_schema
-        type: string
         
       - name: profiles_table
-        type: string
         
       - name: schema_name
-        type: string
         
       - name: table_name
-        type: string
         
       - name: profile_name
-        type: string
         
 
 
@@ -221,33 +185,26 @@ macros:
       and Shannon entropy (H) with normalized H to the profiles table.
     arguments:
       - name: vc_top3_columns
-        type: list
         description: Varchar columns to analyze.
         
       - name: columns_categories
-        type: list[(string,string)]
         description: All columns with their type categories (used to validate varchar type).
         
       - name: temp_table_name
-        type: string
         
       - name: profiles_db
-        type: string
         
       - name: profiles_schema
-        type: string
         
       - name: profiles_table
-        type: string
         
       - name: schema_name
-        type: string
         
       - name: table_name
-        type: string
         
       - name: profile_name
-        type: string
+
+      - name: auto_for_top3_num_unq_val
         
 
 
@@ -257,7 +214,6 @@ macros:
       suitable for use inside an IN (...) clause. Lowercases and escapes single quotes.
     arguments:
       - name: values
-        type: list
         
 
 
@@ -266,17 +222,15 @@ macros:
       Returns an agate table of (column_name, data_type_category) from svv_columns,
       applying optional include/exclude lists. Categories: numeric, varchar, date, other.
     arguments:
+      - name: database_name
+
       - name: schema_name
-        type: string
         
       - name: table_name
-        type: string
         
       - name: include_columns
-        type: list
         
       - name: exclude_columns
-        type: list
         
 
 
@@ -286,23 +240,19 @@ macros:
       optionally applying a WHERE clause and/or LIMIT.
     arguments:
       - name: temp_table_name
-        type: string
         
       - name: columns
-        type: list[(string,string)]
         description: Output from get_columns_categories (only first element is selected).
+
+      - name: database_name
         
       - name: schema_name
-        type: string
         
       - name: table_name
-        type: string
         
       - name: where_clause
-        type: string
         
       - name: row_limit
-        type: integer
         
 
 
@@ -311,7 +261,6 @@ macros:
       Drops a temporary table if it exists.
     arguments:
       - name: temp_table_name
-        type: string
         
 
 
@@ -320,21 +269,17 @@ macros:
       Deletes existing rows for a (database, schema, table, profile_name) from the profiles table.
     arguments:
       - name: profiles_db
-        type: string
         
       - name: profiles_schema
-        type: string
         
       - name: profiles_table
-        type: string
+
+      - name: database_name
         
       - name: schema_name
-        type: string
         
       - name: table_name
-        type: string
         
       - name: profile_name
-        type: string
         
 

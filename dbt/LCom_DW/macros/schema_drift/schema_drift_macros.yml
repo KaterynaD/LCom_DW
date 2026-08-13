@@ -25,14 +25,12 @@ macros:
           SQL alias used for the source relation in the model (e.g. 'sfdc_account' or 'stg_opportunity').
 
       - name: used_columns
-        type: list
         description: >
           Ordered list of column names (strings) explicitly used by the dbt model.
           Only these columns are checked for drift and rendered in the SELECT list.
           Example: ['id', 'name', 'created_date', 'custom_field_c']
 
       - name: profile_src
-        type: tuple[string,string]
         description: >
           dbt source (schema, table) that stores profiles.
           Default: ('profiles', 'sfdc_schema_audit')
@@ -73,14 +71,12 @@ macros:
           Name of the source table being evaluated (e.g. 'account', 'opportunity').
 
       - name: used_columns
-        type: list
         description: >
           Ordered list of column names (strings) referenced by the dbt model.
           Only these columns are considered for drift detection and replacement.
           Example: ['id', 'name', 'created_date', 'custom_field_c']
 
       - name: profile_src
-        type: tuple[string,string]
         description: >
           dbt source (schema, table) that stores profiles.
           Default: ('profiles', 'sfdc_schema_audit')

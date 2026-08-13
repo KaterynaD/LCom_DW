@@ -1,16 +1,6 @@
 version: 2
 
 macros:
-  - name: scd2_plus
-    description: |
-      Custom SCD Type 2 materialization that builds and maintains a history table using a
-      hash of the unique key and updated_at, with support for:
-      - Type II "check_cols" (changes create new versions)
-      - Type I "punch_thru_cols" (backfilled across all versions)
-      - "update_cols" (only maintained on the latest version)
-      It creates the table on first run and performs incremental SCD2 updates on subsequent runs.
-
-
   - name: scd2_plus_build_table_sql
     description: |
       Internal helper macro used by the `scd2_plus` materialization to transform the
@@ -23,7 +13,6 @@ macros:
       The same macro is used both for initial table creation and for incremental loads.
     arguments:
       - name: config
-        type: dict
         description: |
           Model configuration dictionary (read from `model['config']`). Must include:
           - unique_key (string expression)
@@ -48,7 +37,7 @@ macros:
           Compiled SELECT statement for the source (non-SCD) dataset, usually
           `model['compiled_code']`.
       - name: create_flg
-        type: boolean
+        type: bool
         description: |
           When true, applies `scd_valid_from_min_date` to the first record version
           (for initial table creation). When false, uses the raw valid_from value
@@ -67,10 +56,9 @@ macros:
       - applies Type I punch_thru_cols and update_cols across existing rows
     arguments:
       - name: target
-        type: Relation
+        type: relation
         description: Existing SCD2 target relation (the dimension table).
       - name: config
-        type: dict
         description: |
           Same configuration dictionary as in `scd2_plus_build_table_sql`, read from
           the model config (unique_key, updated_at, check_cols, and optional fields).
@@ -79,72 +67,6 @@ macros:
         description: |
           Compiled SELECT statement for the source (non-SCD) dataset, usually
           `model['compiled_code']`.
-
-  - name: scd2_plus_validation
-    description: |
-      Generic test that validates SCD2 validity ranges per unique key. It fails if:
-      - valid_from is greater than valid_to
-      - there are gaps or overlaps in the timeline, i.e. current valid_from does
-        not equal the previous row’s valid_to (for the same key), except for the
-        first row.
-    arguments:
-      - name: model
-        type: relation
-        description: SCD2 model to validate.
-      - name: unique_key
-        type: string
-        description: Column name that identifies the business key whose history is tracked.
-
-      - name: scd_valid_from_col_name
-        type: string
-        description: Column name that stores the start of the validity period.
-
-      - name: scd_valid_to_col_name
-        type: string
-        description: Column name that stores the end of the validity period.
-
-  - name: scd2_current_matches_source
-    description: |
-      Generic test that validates the current SCD2 record per business key against
-      the active source model by comparing computed `scd_hash` values.
-      It fails when a key is missing from either side or hashes do not match.
-    arguments:
-      - name: model
-        type: relation
-        description: SCD2 history model under test.
-      - name: source_model
-        type: string
-        description: Name of the source model (passed to `ref`) representing active rows.
-      - name: unique_key
-        type: string
-        description: Business key column used to join history and source.
-      - name: check_cols
-        type: list
-        description: Column list used to compute the source-side SCD hash.
-      - name: scd_valid_to_col_name
-        type: string
-        description: Valid-to column name used to identify current rows (defaults to `valid_to`).
-      - name: scd_valid_to_max_date
-        type: string
-        description: |
-          Optional max-date marker for current rows. When omitted, current rows are
-          detected as `valid_to is null`.
-
-  - name: no_consecutive_duplicate_scd_hash
-    description: |
-      Generic test that ensures adjacent history versions for a business key do not
-      have identical `scd_hash` values when ordered by record version.
-      Helps detect redundant consecutive SCD2 versions.
-    arguments:
-      - name: model
-        type: relation
-        description: SCD2 model to validate.
-      - name: unique_key
-        type: string
-        description: Business key column used to partition version history.
-      - name: record_version_col
-        type: string
-        description: Record version column used for ordering (defaults to `record_version`).
 
   - name: is_scd2_update_run
     description: |
