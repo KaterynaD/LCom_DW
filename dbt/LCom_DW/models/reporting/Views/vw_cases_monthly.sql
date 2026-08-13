@@ -26,6 +26,7 @@ select
     ,f.closed_date
     ,f.last_modified_date
     ,f.status current_status
+    ,fh.status
     ,f.is_escalated current_is_escalated
     ,fh.is_escalated 
     ,f.case_type
