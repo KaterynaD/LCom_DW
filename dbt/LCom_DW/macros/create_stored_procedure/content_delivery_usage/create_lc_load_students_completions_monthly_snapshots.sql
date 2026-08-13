@@ -78,7 +78,7 @@ columns_level ||
 ' COUNT(DISTINCT CASE WHEN meets_cyberbullying_cipa THEN user_account_id END) AS cnt_student_completions_cipa_cyberbullying, ' ||
 ' COUNT(DISTINCT CASE WHEN meets_both_cipa THEN user_account_id END) AS cnt_student_completionsmeets_both_cipa ' ||
 ' FROM temp_completions_data_for_snapshot ' ||
-' WHERE user_grade_level_code!=''Unknown'' ' ||
+' WHERE user_grade_level_code not in (''Non Students'', ''Unknown'') ' ||
 ' GROUP BY ' ||
 ' mon_year, ' ||
 ' mon_lastday, ' ||
@@ -88,6 +88,39 @@ columns_level ||
 ' grade_level, ' ||
 ' topic ' ||
 '), ' ||
+
+
+/* 1.6 Topics and All Students */
+'topics_all_students AS ( ' ||
+' SELECT ' ||
+' mon_year, ' ||
+' mon_lastday, ' ||
+' SchoolYear, ' ||
+' SchoolYear_mon, ' ||
+columns_level ||
+' ''All Students'' as grade_level, ' ||
+' topic, ' ||
+' COUNT(event_aggregate_id) AS cnt_completions, ' ||
+' COUNT(DISTINCT event_aggregate_id) AS cnt_events, ' ||
+' COUNT(DISTINCT user_account_id) AS cnt_student_completions, ' ||
+' COUNT(DISTINCT CASE WHEN meets_digital_citizenship_cipa THEN user_account_id END) AS cnt_student_completions_cipa_digital_citizenship, ' ||
+' COUNT(DISTINCT CASE WHEN meets_cyberbullying_cipa THEN user_account_id END) AS cnt_student_completions_cipa_cyberbullying, ' ||
+' COUNT(DISTINCT CASE WHEN meets_both_cipa THEN user_account_id END) AS cnt_student_completionsmeets_both_cipa ' ||
+' FROM temp_completions_data_for_snapshot ' ||
+' WHERE user_grade_level_code not in (''Non Students'', ''Unknown'') ' ||
+' GROUP BY ' ||
+' mon_year, ' ||
+' mon_lastday, ' ||
+' SchoolYear, ' ||
+' SchoolYear_mon, ' ||
+columns_level ||
+' topic ' ||
+'), ' ||
+
+
+
+
+
 
 /* 2. <All> Topics and Grades */
 'all_topics AS ( ' ||
@@ -136,7 +169,7 @@ columns_level ||
 ' COUNT(DISTINCT CASE WHEN meets_cyberbullying_cipa THEN user_account_id END) AS cnt_student_completions_cipa_cyberbullying, ' ||
 ' COUNT(DISTINCT CASE WHEN meets_both_cipa THEN user_account_id END) AS cnt_student_completionsmeets_both_cipa ' ||
 ' FROM temp_completions_data_for_snapshot data ' ||
-' WHERE user_grade_level_code!=''Unknown'' ' ||
+' WHERE user_grade_level_code not in (''Non Students'', ''Unknown'') ' ||
 ' GROUP BY ' ||
 ' mon_year, ' ||
 ' mon_lastday, ' ||
@@ -145,6 +178,35 @@ columns_level ||
 columns_level ||
 ' grade_level ' ||
 '), ' ||
+
+
+/* 2.1. <All> Topics and All Students */
+'all_topics_all_students AS ( ' ||
+' SELECT ' ||
+' mon_year, ' ||
+' mon_lastday, ' ||
+' SchoolYear, ' ||
+' SchoolYear_mon, ' ||
+columns_level ||
+' ''All Students'' as grade_level, ' ||
+' ''(All)'' AS topic, ' ||
+' COUNT(event_aggregate_id) AS cnt_completions, ' ||
+' COUNT(DISTINCT event_aggregate_id) AS cnt_events, ' ||
+' COUNT(DISTINCT user_account_id) AS cnt_student_completions, ' ||
+' COUNT(DISTINCT CASE WHEN meets_digital_citizenship_cipa THEN user_account_id END) AS cnt_student_completions_cipa_digital_citizenship, ' ||
+' COUNT(DISTINCT CASE WHEN meets_cyberbullying_cipa THEN user_account_id END) AS cnt_student_completions_cipa_cyberbullying, ' ||
+' COUNT(DISTINCT CASE WHEN meets_both_cipa THEN user_account_id END) AS cnt_student_completionsmeets_both_cipa ' ||
+' FROM temp_completions_data_for_snapshot data ' ||
+' WHERE user_grade_level_code not in (''Non Students'', ''Unknown'') ' ||
+' GROUP BY ' ||
+' mon_year, ' ||
+' mon_lastday, ' ||
+' SchoolYear, ' ||
+' SchoolYear_mon, ' ||
+columns_level ||
+' 1 ' || -- keeps syntax valid even if columns_level is empty
+'), ' ||
+
 
 /* 3. Topics and <All> Grade */
 'all_grades AS ( ' ||
@@ -200,11 +262,15 @@ columns_level ||
 
 'SELECT * FROM topics_grades ' ||
 'UNION ALL ' ||
+'SELECT * FROM topics_all_students ' ||
+'UNION ALL ' ||
 'SELECT * FROM topics_grade_levels ' ||
 'UNION ALL ' ||
 'SELECT * FROM all_topics ' ||
 'UNION ALL ' ||
 'SELECT * FROM all_topics_grade_levels ' ||
+'UNION ALL ' ||
+'SELECT * FROM all_topics_all_students ' ||
 'UNION ALL ' ||
 'SELECT * FROM all_grades ' ||
 'UNION ALL ' ||
@@ -264,7 +330,7 @@ fac.organization_district_id
 else
 isnull(SPLIT_PART(fac.organization_school_id, ',', 1),fac.organization_district_id)
 end as organization_school_id,
-isnull(fac.user_grade_level_code,'Unknown') as user_grade_level_code,
+case when st.user_account_id is null then 'Non Students' else isnull(fac.user_grade_level_code,'Unknown') end as user_grade_level_code,
 fac.user_account_id,
 dlo.topic,
 dlo.meets_digital_citizenship_cipa,
@@ -274,7 +340,7 @@ fac.score_datetime
 from {{ source('dbo', 'fact_assignment_completion') }} fac
 join {{ ref('dim_learning_object') }} dlo
 on fac.learning_object_id = dlo.learning_object_id
-join {{ source('dbo', 'mv_student_account') }} st
+left outer join {{ source('dbo', 'mv_student_account') }} st
 on fac.user_account_id=st.user_account_id and fac.organization_district_id=st.organization_district_id
 join {{ ref('dim_district') }} dist
 on fac.organization_district_id = dist.district_id

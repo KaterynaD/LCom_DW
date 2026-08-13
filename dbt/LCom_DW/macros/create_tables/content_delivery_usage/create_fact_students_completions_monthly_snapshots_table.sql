@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS {{target.database}}.{{custom_schema}}.fact_students_c
 ,state_province_code VARCHAR(20) NOT NULL ENCODE lzo
 ,organization_district_id VARCHAR(300) NOT NULL ENCODE lzo
 ,organization_school_id VARCHAR(300) NOT NULL ENCODE lzo
-,grade_level VARCHAR(10) NOT NULL ENCODE lzo
+,grade_level VARCHAR(20) NOT NULL ENCODE lzo
 ,topic VARCHAR(100) NOT NULL ENCODE lzo
 ,school_cnt_completions BIGINT NOT NULL ENCODE az64
 ,school_cnt_events BIGINT NOT NULL ENCODE az64
