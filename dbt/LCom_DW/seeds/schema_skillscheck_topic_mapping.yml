@@ -13,8 +13,6 @@ seeds:
         assessment_set_name_partial: varchar(50) not null
         level: varchar(10) not null
         topic_name: varchar(50) not null
-      contract:
-        enforced: true
       tags: 
         - dim
 
