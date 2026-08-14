@@ -118,7 +118,7 @@ SELECT
     END AS FiscalYear_Mon,
     (((DATE_PART(month, cal_date)::INTEGER - 7 + 12) % 12) / 3 + 1)::INTEGER AS FiscalQuarter,
     (DATE_PART(year, cal_date)::VARCHAR +'0'+ FiscalQuarter::VARCHAR)::INTEGER  AS FiscalQuarter_Year
-    ,False AS IsUSFederalHoliday  -- Can not use the Python UDF anymore TBD
+    ,common.f_lambda_usfederalholidaycalendar(cal_date) AS IsUSFederalHoliday  -- Can not use the Python UDF anymore TBD
 FROM  stg_calendar;
 
 drop table if exists stg_calendar;
