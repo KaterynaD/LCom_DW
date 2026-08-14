@@ -1,42 +1,147 @@
 {% docs table_dim_account %}
-Conformed DIM_ACCOUNT dimension. Account (districts and schools) data from all source systems.
+
 
 # DIM_ACCOUNT
 
-It's a conformed dimension and many systems contribute records in this table. 
+Conformed DIM_ACCOUNT dimension. Account (districts and schools) data from all source systems.
 
 ## Primary and Distribution Key
 
-![Accounts can be created in HubSpot, GainsightCloud or LCom Platform and imported/integrated between the systems or not.](/assets/accounts_created_in_different%20systems.png)
+![Accounts can be created in HubSpot, Salesforce, LCom Platform or any
+other source and imported/integrated between the systems or
+not.](assets/accounts_created_in_different%20systems.png)
 
+Accounts can be created in Salesforce, LCom Platform, HubSpot,
+Gainsight, or other source systems and may or may not be integrated
+between them.
 
+`DIM_ACCOUNT` is the **conformed account dimension**. It is designed to
+combine accounts from different source systems into a single record when
+a reliable relationship between them can be established.
 
-Accounts can be created in HubSpot, GainsightCloud or LCom Platform and imported/integrated between the systems or not. 
-DIM_ACCOUNT is design in a way to join in one record accounts from different systems if they are integrated and have not linked accounts by itself.
+![DIM_ACCOUNT is designed to join accounts from different systems into a
+single record when
+possible.](assets/dim_account_populated%20withaccounts_from-different_systems.png)
 
-![DIM_ACCOUNT is design in a way to join in one record accounts from different systems if they are integrated and have not linked accounts by itself.](/assets/dim_account_populated%20withaccounts_from-different_systems.png)
+### `account_id`
 
-There are existing large fact tables with usage data built based on LCom Organization Id as a distribution key. Practically, it is not possible to re-create the tables based on a surrogate key from newly created conformed DIM_ACCOUNT. 
+`account_id` is the **primary key and Redshift distribution key** of
+`DIM_ACCOUNT`.
 
-Most of the accounts in Salesforce are updated daily (probably there are no real changes in the object attributes, but last modified date is changed). Incremental load takes longer then full re-reload.
+The preferred identifier follows this hierarchy:
 
-That's why "Table" materialization was choosen for DIM_ACCOUNT (and some other Salesforce based fact tables). 
+``` text
+COALESCE(
+    LCom Organization ID,
+    Salesforce Account ID,
+    Gainsight Account ID,
+    HubSpot Account ID
+)
+```
 
-In this situation **Primary and Distribution Key in DIM_ACCOUNT is changed over the account life**. It is not a usual or best  case but works.
+Currently, `DIM_ACCOUNT` primarily integrates Salesforce Accounts and
+LCom Organizations.
 
-1. A new account is created in Salesforce and the PK (account_id) in DIM_ACCOUNT is **Salesforce Id**. 
-2. A correspondent Organization is created in LCom Platform.  The record will have **LCom Organization Id**  as the PK (account_Id) in DIM_ACCOUNT.
-3. If it's Salesforce_Id is blank or populated with a wrong/broken Salesforce ID we will have 2 separate records in DIM_ACCOUNT
-4. When a proper Salesforce Id is set in LCom Organization table, the 2 records are joined together and the PK is **LCom Organization Id**
+The LCom Organization ID has the highest priority because large
+historical usage fact tables already use it as their distribution key.
+Rebuilding and redistributing these tables around a newly introduced
+warehouse surrogate key would be prohibitively expensive compared with
+the relatively small Salesforce datasets.
 
-The idea is:
+As a result, `account_id` is intentionally **not an immutable surrogate
+key**. It represents the current preferred conformed account identifier
+and can change during the lifetime of an account.
 
-**coalesce(Lcom_Organization_Id, Salesforce.Account.Id,Gainsight.Account.Id, HubSpot.Account.Id)**
+For example:
 
-Practically, only Salesforce accounts and LCom Organizations are in DIM_ACCOUNT now.
+1.  A new account exists only in Salesforce →
+    `account_id = Salesforce Account ID`.
+2.  A corresponding LCom Organization is created → its
+    `account_id = LCom Organization ID`.
+3.  If the LCom Organization has no Salesforce ID, or the relationship
+    is incorrect, the two accounts remain as separate `DIM_ACCOUNT`
+    records.
+4.  When the correct Salesforce ID is assigned to the LCom Organization,
+    the records are consolidated and `account_id` becomes the **LCom
+    Organization ID**.
 
-- LCom Organization table fields are starts from "lcom_" prefix.
-- Salesforce Account object attributes are starts from "sfdc_" prefix.
+This is an intentional design trade-off: controlled changes to account
+keys in relatively small account datasets are preferred over rebuilding
+and redistributing very large historical usage datasets.
+
+### `sfdc_account_id`
+
+`DIM_ACCOUNT` also retains `sfdc_account_id` as the stable Salesforce
+account identifier.
+
+For correctly integrated accounts, `sfdc_account_id` is unique and can
+safely be used to join `DIM_ACCOUNT` with Salesforce-derived tables such
+as `FACT_OPPORTUNITY`.
+
+Known integration exceptions are explicitly identifiable:
+
+-   LCom Organizations not linked to Salesforce use
+    `sfdc_account_id = 'Unknown'`.
+-   LCom Organizations with an invalid or duplicate Salesforce
+    relationship use an `sfdc_account_id` with the `dup-` prefix.
+
+Salesforce-derived fact tables therefore generally retain both keys:
+
+-   `account_id` --- conformed account identifier and distribution key;
+    may contain either an LCom Organization ID or Salesforce Account ID.
+-   `sfdc_account_id` --- Salesforce Account ID used for reliable joins
+    between Salesforce-derived datasets.
+
+### Materialization
+
+`DIM_ACCOUNT` uses dbt **`table` materialization** rather than
+incremental materialization.
+
+Most Salesforce Accounts receive an updated modified timestamp daily,
+even when no meaningful account attributes have changed. As a result,
+incremental processing includes a large portion of the source and has
+proven slower than a full rebuild of this relatively small dimension.
+
+### Historical Key Changes
+
+Because `account_id` can change when account identity is resolved, it is
+configured as a `punch_thru_col` in most related historical models.
+Historical records are updated to the current conformed `account_id`.
+
+`DIM_ACCOUNT_HISTORY` requires additional reconciliation, implemented by
+the `DIM_ACCOUNT` post-hook:
+
+``` text
+update_DIM_ACCOUNT_HISTORY_changed_UK
+```
+
+Using `sfdc_account_id` as the stable Salesforce relationship, the
+post-hook:
+
+-   identifies historical records where `account_id` has changed;
+-   archives conflicting LCom-side history in
+    `DIM_ACCOUNT_HISTORY_DELETED`;
+-   removes conflicting history before consolidation;
+-   updates historical records to the current `DIM_ACCOUNT.account_id`;
+-   regenerates `account_hist_id` using the new `account_id` and
+    `fromdate`;
+-   removes history for Salesforce accounts no longer present in the
+    source.
+
+Records where `fromdate = todate` are removed by the companion cleanup
+logic.
+
+### Source Column Naming
+
+Source-specific attributes use prefixes to make their origin explicit:
+
+-   `lcom_` --- attributes originating from the LCom Organization data.
+-   `sfdc_` --- attributes originating from the Salesforce Account
+    object.
+
+Therefore, consumers should treat `account_id` as the **current
+conformed account key**, while `sfdc_account_id` should be used when a
+stable Salesforce-specific account relationship is required.
 
 ## Duplicates:
 
