@@ -48,6 +48,7 @@ ALTER DEFAULT PRIVILEGES FOR user svcfivetran IN SCHEMA <for each used in dbt pt
 
 ## Development Guidelines
 
+- [LCom DW Distribution Key Design](README_DISTRIBUTION_KEY.md)
 - [Working with Late-Binding Views](WORKING_WITH_LATE_BINDING_VIEWS.md)
 - [Adding New Column Incremental Model](ADDING_NEW_COLUMN_INCREMENTAL_MODEL.md)
 - [History of data changes - Slowly Changing Dimension Type 2 (SCD2)](README_SCD2_DESIGN_RECOMMENDATION.md); See also scd2_plus [Readme](macros/dbt_scd2_plus/README.md)  and [dim_account_history](models/common/Tables/dim_account_history.sql) as an example
@@ -55,3 +56,4 @@ ALTER DEFAULT PRIVILEGES FOR user svcfivetran IN SCHEMA <for each used in dbt pt
 - [Removing Column from SCD2 Model](REMOVING_COLUMN_SCD2_MODEL.md)
 - [Stored Procedure Materialization](STORED_PROCEDURES_DBT_GUIDELINES.md): [See fact_launches_weekly_snapshots.sql as an example ](models/content_delivery_usage/Tables/Facts/fact_launches_weekly_snapshots.sql)
 - [Singular (Custom SQL) dbt Tests](SINGULAR_dbt_TESTS.md)
+- [Load Date Design and Usage](README_LOADDATE.md)
