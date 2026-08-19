@@ -4,10 +4,12 @@ version: 2
 models:
   - name: fact_students_completions_monthly_snapshots
     description: >
-      Cumulative activity of completions  from the start of a school year (YTD) till end of month
+      Cumulative completion activity from the start of a school year (YTD) through the end of a month,
+      together with completion activity for the individual calendar month,
       aggregated at different levels: school, district, state, country, company,
-      grade_level (PK, K, 01, 02, elementary-middle-high), topic. Only students completions.
-      The lowest granularity of the table is: school-grade level-topic
+      product_category, grade_level (PK, K, 01, 02, elementary-middle-high), and topic.
+      Only student completions are included. The lowest granularity of the table is:
+      school-product category-grade level-topic
       (school_cnt_* measures).
       The other measures (starting district_, state_, country_ or company_) are repeated
       at the lowest level. This structure is chosen because the measures, generally
@@ -26,41 +28,49 @@ models:
           combination_of_columns:
             - mon_year
             - organization_school_id
+            - product_category
             - grade_level
-            - topic        
+            - topic
 
     columns:
       - name: mon_year
+        data_type: integer
         description: "Calendar Year and Month in the form YYYYMM."
         constraints:
           - type: not_null
 
       - name: mon_lastday
+        data_type: date
         description: "Calendar month last day."
         constraints:
           - type: not_null
 
       - name: schoolyear
+        data_type: varchar(10)
         description: "Calendar years in the school year, e.g. 2024/2025."
         constraints:
           - type: not_null
 
       - name: schoolyear_mon
+        data_type: integer
         description: "School year month number: July = 1 … June = 12."
         constraints:
           - type: not_null
 
       - name: country
+        data_type: varchar(70)
         description: "Defines country level for *_country_cnt_* metrics."
         constraints:
           - type: not_null
 
       - name: state_province_code
+        data_type: varchar(20)
         description: "Defines state level for *_state_cnt_* metrics, together with country."
         constraints:
           - type: not_null
 
       - name: organization_district_id
+        data_type: varchar(300)
         description: "Defines district level for *_district_cnt_* metrics with country and state."
         constraints:
           - type: not_null
@@ -70,6 +80,7 @@ models:
               field: account_id          
 
       - name: organization_school_id
+        data_type: varchar(300)
         description: "School-level identifier for *_school_cnt_* metrics; the lowest level in this table."
         constraints:
           - type: not_null
@@ -79,7 +90,14 @@ models:
               field: account_id   
         
 
+      - name: product_category
+        data_type: varchar(100)
+        description: "Pre-selected SKU and sequence groups and sub-groups; '(All)' represents all learning objects."
+        constraints:
+          - type: not_null
+
       - name: grade_level
+        data_type: varchar(20)
         description: >
           Grade-level grouping: (All), PK, K, 01, etc., or Elementary/Middle/High.
           Unknown is only for students with unknown grade; non-students are excluded.
@@ -87,16 +105,19 @@ models:
           - type: not_null
 
       - name: topic
+        data_type: varchar(100)
         description: "Learning topic grouping; includes individual topics and '(All)'."
         constraints:
           - type: not_null
 
       - name: school_cnt_completions
+        data_type: bigint
         description: "Number of completion records (attempts, scored or not) at school level."
         constraints:
           - type: not_null
 
       - name: school_cnt_events
+        data_type: bigint
         description: >
           Number of completion events at school level. Event = combination of attempts by
           the same student for the same learning object; may span school years in rare cases.
@@ -104,31 +125,37 @@ models:
           - type: not_null
 
       - name: school_cnt_student_completions
+        data_type: bigint
         description: "Number of distinct students with a completion (attempt, scored or not) at school level."
         constraints:
           - type: not_null
 
       - name: school_cnt_student_completions_cipa_digital_citizenship
+        data_type: bigint
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at school level."
         constraints:
           - type: not_null
 
       - name: school_cnt_student_completions_cipa_cyberbullying
+        data_type: bigint
         description: "Number of students meeting the CIPA cyberbullying requirement at school level."
         constraints:
           - type: not_null
 
       - name: school_cnt_student_completionsmeets_both_cipa
+        data_type: bigint
         description: "Number of students meeting both CIPA flags at school level."
         constraints:
           - type: not_null
 
       - name: district_cnt_completions
+        data_type: bigint
         description: "Number of completion records (attempts, scored or not) at district level."
         constraints:
           - type: not_null
 
       - name: district_cnt_events
+        data_type: bigint
         description: >
           Number of completion events at district level. Event = combination of attempts by
           the same student for the same learning object; may span district school years in rare cases.
@@ -136,31 +163,37 @@ models:
           - type: not_null
 
       - name: district_cnt_student_completions
+        data_type: bigint
         description: "Number of distinct students with a completion (attempt, scored or not) at district level."
         constraints:
           - type: not_null
 
       - name: district_cnt_student_completions_cipa_digital_citizenship
+        data_type: bigint
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at district level."
         constraints:
           - type: not_null
 
       - name: district_cnt_student_completions_cipa_cyberbullying
+        data_type: bigint
         description: "Number of students meeting the CIPA cyberbullying requirement at district level."
         constraints:
           - type: not_null
 
       - name: district_cnt_student_completionsmeets_both_cipa
+        data_type: bigint
         description: "Number of students meeting both CIPA flags at district level."
         constraints:
           - type: not_null
 
       - name: state_cnt_completions
+        data_type: bigint
         description: "Number of completion records (attempts, scored or not) at state level."
         constraints:
           - type: not_null
 
       - name: state_cnt_events
+        data_type: bigint
         description: >
           Number of completion events at state level. Event = combination of attempts by
           the same student for the same learning object; may span state school years in rare cases.
@@ -168,31 +201,37 @@ models:
           - type: not_null
 
       - name: state_cnt_student_completions
+        data_type: bigint
         description: "Number of distinct students with a completion (attempt, scored or not) at state level."
         constraints:
           - type: not_null
 
       - name: state_cnt_student_completions_cipa_digital_citizenship
+        data_type: bigint
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at state level."
         constraints:
           - type: not_null
 
       - name: state_cnt_student_completions_cipa_cyberbullying
+        data_type: bigint
         description: "Number of students meeting the CIPA cyberbullying requirement at state level."
         constraints:
           - type: not_null
 
       - name: state_cnt_student_completionsmeets_both_cipa
+        data_type: bigint
         description: "Number of students meeting both CIPA flags at state level."
         constraints:
           - type: not_null
 
       - name: country_cnt_completions
+        data_type: bigint
         description: "Number of completion records (attempts, scored or not) at country level."
         constraints:
           - type: not_null
 
       - name: country_cnt_events
+        data_type: bigint
         description: >
           Number of completion events at country level. Event = combination of attempts by
           the same student for the same learning object; may span country school years in rare cases.
@@ -200,31 +239,37 @@ models:
           - type: not_null
 
       - name: country_cnt_student_completions
+        data_type: bigint
         description: "Number of distinct students with a completion (attempt, scored or not) at country level."
         constraints:
           - type: not_null
 
       - name: country_cnt_student_completions_cipa_digital_citizenship
+        data_type: bigint
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at country level."
         constraints:
           - type: not_null
 
       - name: country_cnt_student_completions_cipa_cyberbullying
+        data_type: bigint
         description: "Number of students meeting the CIPA cyberbullying requirement at country level."
         constraints:
           - type: not_null
 
       - name: country_cnt_student_completionsmeets_both_cipa
+        data_type: bigint
         description: "Number of students meeting both CIPA flags at country level."
         constraints:
           - type: not_null
 
       - name: company_cnt_completions
+        data_type: bigint
         description: "Number of completion records (attempts, scored or not) at company level."
         constraints:
           - type: not_null
 
       - name: company_cnt_events
+        data_type: bigint
         description: >
           Number of completion events at company level. Event = combination of attempts by
           the same student for the same learning object; may span years in rare cases.
@@ -232,26 +277,211 @@ models:
           - type: not_null
 
       - name: company_cnt_student_completions
+        data_type: bigint
         description: "Number of distinct students with a completion (attempt, scored or not) at company level."
         constraints:
           - type: not_null
 
       - name: company_cnt_student_completions_cipa_digital_citizenship
+        data_type: bigint
         description: "Number of students meeting the CIPA digital-citizenship requirement via completions at company level."
         constraints:
           - type: not_null
 
       - name: company_cnt_student_completions_cipa_cyberbullying
+        data_type: bigint
         description: "Number of students meeting the CIPA cyberbullying requirement at company level."
         constraints:
           - type: not_null
 
       - name: company_cnt_student_completionsmeets_both_cipa
+        data_type: bigint
         description: "Number of students meeting both CIPA flags at company level."
         constraints:
           - type: not_null
 
+      - name: school_cnt_completions_month
+        data_type: bigint
+        description: "Number of completions (attempt rows) at school level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: school_cnt_events_month
+        data_type: bigint
+        description: "Number of distinct completion events at school level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: school_cnt_student_completions_month
+        data_type: bigint
+        description: "Number of distinct students with a completion at school level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: school_cnt_student_completions_cipa_digital_citizenship_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA digital-citizenship requirement at school level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: school_cnt_student_completions_cipa_cyberbullying_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA cyberbullying requirement at school level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: school_cnt_student_completionsmeets_both_cipa_month
+        data_type: bigint
+        description: "Number of distinct students meeting both CIPA requirements at school level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: district_cnt_completions_month
+        data_type: bigint
+        description: "Number of completions (attempt rows) at district level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: district_cnt_events_month
+        data_type: bigint
+        description: "Number of distinct completion events at district level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: district_cnt_student_completions_month
+        data_type: bigint
+        description: "Number of distinct students with a completion at district level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: district_cnt_student_completions_cipa_digital_citizenship_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA digital-citizenship requirement at district level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: district_cnt_student_completions_cipa_cyberbullying_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA cyberbullying requirement at district level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: district_cnt_student_completionsmeets_both_cipa_month
+        data_type: bigint
+        description: "Number of distinct students meeting both CIPA requirements at district level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: state_cnt_completions_month
+        data_type: bigint
+        description: "Number of completions (attempt rows) at state level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: state_cnt_events_month
+        data_type: bigint
+        description: "Number of distinct completion events at state level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: state_cnt_student_completions_month
+        data_type: bigint
+        description: "Number of distinct students with a completion at state level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: state_cnt_student_completions_cipa_digital_citizenship_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA digital-citizenship requirement at state level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: state_cnt_student_completions_cipa_cyberbullying_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA cyberbullying requirement at state level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: state_cnt_student_completionsmeets_both_cipa_month
+        data_type: bigint
+        description: "Number of distinct students meeting both CIPA requirements at state level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: country_cnt_completions_month
+        data_type: bigint
+        description: "Number of completions (attempt rows) at country level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: country_cnt_events_month
+        data_type: bigint
+        description: "Number of distinct completion events at country level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: country_cnt_student_completions_month
+        data_type: bigint
+        description: "Number of distinct students with a completion at country level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: country_cnt_student_completions_cipa_digital_citizenship_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA digital-citizenship requirement at country level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: country_cnt_student_completions_cipa_cyberbullying_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA cyberbullying requirement at country level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: country_cnt_student_completionsmeets_both_cipa_month
+        data_type: bigint
+        description: "Number of distinct students meeting both CIPA requirements at country level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: company_cnt_completions_month
+        data_type: bigint
+        description: "Number of completions (attempt rows) at company level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: company_cnt_events_month
+        data_type: bigint
+        description: "Number of distinct completion events at company level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: company_cnt_student_completions_month
+        data_type: bigint
+        description: "Number of distinct students with a completion at company level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: company_cnt_student_completions_cipa_digital_citizenship_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA digital-citizenship requirement at company level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: company_cnt_student_completions_cipa_cyberbullying_month
+        data_type: bigint
+        description: "Number of distinct students meeting the CIPA cyberbullying requirement at company level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
+      - name: company_cnt_student_completionsmeets_both_cipa_month
+        data_type: bigint
+        description: "Number of distinct students meeting both CIPA requirements at company level for the snapshot calendar month only."
+        constraints:
+          - type: not_null
+
       - name: loaddate
+        data_type: timestamp without time zone
         description: "Timestamp in PST when the record was created in this fact table."
         constraints:
           - type: not_null
