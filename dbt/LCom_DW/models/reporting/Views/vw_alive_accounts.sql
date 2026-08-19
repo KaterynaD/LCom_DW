@@ -109,7 +109,9 @@ else 'School' END as current_account_type,
 a.sfdc_customer_level as current_customer_level,
 a.sfdc_urban_rural as current_urban_rural,
 --
-a.LCOM_organization_type current_lcom_organization_type
+a.LCOM_organization_type current_lcom_organization_type,
+--
+a.account_first_invoice_date as account_first_invoice_date
 --
 from dim_month m
 join {{ ref("dim_account_history") }} ah
@@ -170,6 +172,9 @@ current_enrollment ,
 current_account_type ,
 current_customer_level,
 current_urban_rural ,
-current_lcom_organization_type
+current_lcom_organization_type,
+--
+account_first_invoice_date
+--
 from data
 
