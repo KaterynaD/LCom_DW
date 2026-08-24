@@ -32,6 +32,3 @@
 select 
 *
 from {{ ref("int_case_history") }}
-{% if is_scd2_update_run() %}
-where coalesce(last_modified_date,created_date,'1900-01-01') >= (select coalesce(max(t.{{  config.get("scd_valid_from_col_name")  }}),'1900-01-01') from {{ this }} t)
-{% endif %}
