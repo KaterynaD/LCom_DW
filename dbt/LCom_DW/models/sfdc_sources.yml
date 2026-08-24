@@ -322,12 +322,9 @@ sources:
         - name: account_id
         - name: case_number
         - name: case_owner_email_c
-        - name: case_ready_to_survey_c
         - name: closed_date
-        - name: confirmed_resolution_c
         - name: contact_id
         - name: created_date
-        - name: csat_response_c
         - name: description
         - name: is_closed
         - name: is_escalated
@@ -339,8 +336,6 @@ sources:
         - name: round_robin_id_c
         - name: status
         - name: subject
-        - name: survey_send_date_time_c
-        - name: thread_id_c
         - name: type
         - name: xcase_number_c
         - name: record_type_id
@@ -443,4 +438,4 @@ sources:
         - name: data_quality_description_c
         - name: data_quality_score_c
         - name: is_deleted
-      - name: contact_history  
+      - name: contact_history

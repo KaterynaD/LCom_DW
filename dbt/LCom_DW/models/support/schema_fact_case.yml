@@ -51,25 +51,11 @@ models:
         constraints:
           - type: not_null
 
-      - name: case_ready_to_survey
-        data_type: boolean
-        description: Case Ready to Survey
-        constraints:
-          - type: not_null
-
       - name: closed_date
         data_type: timestamp
         description: Date/Time Closed
         constraints:
           - type: not_null
-
-
-      - name: confirmed_resolution
-        data_type: boolean
-        description: Confirmed Resolution
-        constraints:
-          - type: not_null
-
 
       - name: contact_id
         data_type: varchar(300)
@@ -85,12 +71,6 @@ models:
       - name: created_date
         data_type: timestamp
         description: Created Date in PST timezone
-        constraints:
-          - type: not_null
-
-      - name: csat_response
-        data_type: varchar(1000)
-        description: CSAT Response
         constraints:
           - type: not_null
 
@@ -171,18 +151,6 @@ models:
       - name: subject
         data_type: varchar(1000)
         description: Case Subject
-        constraints:
-          - type: not_null
-
-      - name: survey_send_date_time
-        data_type: timestamp
-        description: Survey Send Date Time
-        constraints:
-          - type: not_null
-
-      - name: thread_id
-        data_type: varchar(300)
-        description: Thread ID
         constraints:
           - type: not_null
 
