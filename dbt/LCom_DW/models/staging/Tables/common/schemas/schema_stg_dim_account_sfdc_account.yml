@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: stg_dim_account_sfdc_account
+    description: >
+      Canonical schema-drift-safe Salesforce account projection used by
+      int_dim_account_sfdc to build dim_account and its account hierarchy attributes.
+    config:
+      tags:
+        - common
+        - staging
+    columns:
+      - name: id
+      - name: name
+      - name: alt_phone_c
+      - name: billing_country
+      - name: billing_country_code
+      - name: billing_state
+      - name: billing_state_code
+      - name: category_c
+      - name: churn_date_c
+      - name: churned_opportunity_id_c
+      - name: county_name_c
+      - name: created_by_id
+      - name: created_date
+      - name: current_renewal_arr_c
+      - name: customer_type_c
+      - name: customer_level_c
+      - name: tier_c
+      - name: customer_level_override_c
+      - name: de_identified_district_c
+      - name: description
+      - name: district_enrollment_c
+      - name: district_state_initiative_c
+      - name: grade_levels_c
+      - name: k_12_enrollment_c
+      - name: k_5_enrollment_c
+      - name: k_8_enrollment_c
+      - name: kindergarten_enrollment_c
+      - name: last_modified_by_id
+      - name: last_modified_date
+      - name: last_name_c
+      - name: lcom_account_c
+      - name: lcom_account_class_c
+      - name: lcom_account_count_c
+      - name: lcom_organization_c
+      - name: lcom_organization_count_c
+      - name: lcom_organization_has_parent_c
+      - name: name_with_lcom_organization_info_c
+      - name: owner_id
+      - name: parent_churned_c
+      - name: parent_id
+      - name: phone
+      - name: pre_k_enrollment_c
+      - name: record_type_c
+      - name: school_enrollment_c
+      - name: state_initiative_c
+      - name: state_program_eligible_c
+      - name: test_account_c
+      - name: ultimate_parent_id_c
+      - name: urban_rural_c
+      - name: technology_measure_c
+      - name: account_grade_c
+      - name: fiscal_title_i_school_yes_no_c
+      - name: title_iv_funding_21_st_century_grants_c
+      - name: title_iv_funding_student_support_c
+      - name: pct_asian_c
+      - name: pct_afro_amer_c
+      - name: pct_white_c
+      - name: pct_hisp_c
+      - name: pct_multi_racial_c
+      - name: pct_native_c
+      - name: pct_pacific_c
+      - name: district_easy_code_tam_c
+      - name: district_easy_tech_tam_c
+      - name: district_total_tam_c
+      - name: district_expansion_potential_c
+      - name: schools_in_district_c
+      - name: free_lunch_students_c
+      - name: reduced_lunch_student_c
+      - name: owner_name_text_c

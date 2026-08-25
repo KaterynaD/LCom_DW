@@ -523,9 +523,64 @@ models:
     description: "{{ doc('column_ishighschool') }}"
     constraints:
     - type: not_null
-  - name: account_first_invoice_date
+  - name: total_won_opportunities
+    data_type: integer
+    description: Total won and invoiced Salesforce opportunities associated with the account.
+    constraints:
+    - type: not_null
+  - name: total_open_opportunities
+    data_type: integer
+    description: Total Salesforce opportunities associated with the account that are neither won nor lost.
+    constraints:
+    - type: not_null
+  - name: latest_start_date
     data_type: date
-    description: "{{ doc('column_account_first_invoice_date') }}"
+    description: Latest start date among won and invoiced Salesforce opportunities associated with the account.
+    constraints:
+    - type: not_null
+  - name: latest_end_date
+    data_type: date
+    description: Latest end date among won and invoiced Salesforce opportunities associated with the account.
+    constraints:
+    - type: not_null
+  - name: latest_open_opportunities_modified_date
+    data_type: date
+    description: Latest modified date among open Salesforce opportunities associated with the account.
+    constraints:
+    - type: not_null
+  - name: first_invoiced_date
+    data_type: date
+    description: Earliest invoice date among won Salesforce opportunities associated with the account.
+    constraints:
+    - type: not_null
+  - name: total_training_sessions
+    data_type: integer
+    description: Total completed training sessions associated with the account.
+    constraints:
+    - type: not_null
+  - name: latest_training_session_on
+    data_type: date
+    description: Latest training-session end date associated with the account.
+    constraints:
+    - type: not_null
+  - name: total_cases
+    data_type: integer
+    description: Total Salesforce support cases associated with the account.
+    constraints:
+    - type: not_null
+  - name: currently_open_cases
+    data_type: integer
+    description: Total Salesforce support cases whose status is not Closed, Merged, or Resolved.
+    constraints:
+    - type: not_null
+  - name: latest_case_created_date
+    data_type: date
+    description: Latest creation date among Salesforce support cases associated with the account.
+    constraints:
+    - type: not_null
+  - name: latest_open_case_modified_date
+    data_type: date
+    description: Latest modified date among currently open Salesforce support cases associated with the account.
     constraints:
     - type: not_null
   - name: loaddate

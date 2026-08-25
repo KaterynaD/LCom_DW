@@ -11,197 +11,11 @@
 
 
 
-with 
-customer_since as (
-select
-account_id,
-min(invoiced_date_c)::date invoiced_date
-from {{ source('fivetran_salesforce_quickstart', 'opportunity') }}
-where stage_name ilike '%won%'
-and invoiced_date_c is not null
-group by account_id
-)
-,sch as (
-select
-    parent_id,
-    BOOL_OR(state_initiative_c) as school_state_initiative_c,
-    BOOL_OR(district_state_initiative_c) as school_district_state_initiative_c
-FROM {{ source('fivetran_salesforce_quickstart', 'account') }}
-where isnull(record_type_c,'{{ var("default_varchar") }}') != 'L'
-group by parent_id
-)
-, sfdc_parent_account as (
-  select 
-    --SFDC Account columns
-    {{ safe_select_list_from_profiles(
-        table_name='account',
-        alias='sfdc_parent_account',
-        used_columns=[          
-     'Id',
-     'name',
-     'billing_state'
-        ],
-        profile_src=('profiles','vw_sfdc_schema_audit'),
-        base_profile='base',
-        current_profile='current'
-    ) }}    
-     ,sfdc_user.name as owner_name
-FROM {{ source('fivetran_salesforce_quickstart', 'account') }} sfdc_parent_account
-left outer join {{ source('fivetran_salesforce_quickstart', 'user') }} sfdc_user
-on sfdc_parent_account.owner_id= sfdc_user.id
-)
-, sfdc_data as (
-  select 
-    --SFDC Account columns
-    {{ safe_select_list_from_profiles(
-        table_name='account',
-        alias='sfdc_account',
-        used_columns=[          
-    'Id',
-'name',
-'alt_phone_c',
-'billing_country',
-'billing_country_code',
-'billing_state',
-'billing_state_code',
-'category_c',
-'churn_date_c',
-'churned_opportunity_id_c',
-'county_name_c',
-'created_by_id',
-'created_date',
-'current_renewal_arr_c',
-'customer_type_c',
-'customer_level_c',
-'tier_c',
-'customer_level_override_c',
-'de_identified_district_c',
-'description',
-'district_enrollment_c',
-'district_state_initiative_c',
-'grade_levels_c',
-'k_12_enrollment_c',
-'k_5_enrollment_c',
-'k_8_enrollment_c',
-'kindergarten_enrollment_c',
-'last_modified_by_id',
-'last_modified_date',
-'last_name_c',
-'lcom_account_c',
-'lcom_account_class_c',
-'lcom_account_count_c',
-'lcom_organization_c',
-'lcom_organization_count_c',
-'lcom_organization_has_parent_c',
-'name_with_lcom_organization_info_c',
-'owner_id',
-'parent_churned_c',
-'parent_id',
-'phone',
-'pre_k_enrollment_c',
-'record_type_c',
-'school_enrollment_c',
-'state_initiative_c',
-'state_program_eligible_c',
-'test_account_c',
-'ultimate_parent_id_c',
-'urban_rural_c',
-'technology_measure_c','account_grade_c','fiscal_title_i_school_yes_no_c',
-'title_iv_funding_21_st_century_grants_c','title_iv_funding_student_support_c',
-'pct_asian_c', 'pct_afro_amer_c', 'pct_white_c', 'pct_hisp_c', 'pct_multi_racial_c',
- 'pct_native_c', 'pct_pacific_c',
- 'district_easy_code_tam_c',
-'district_easy_tech_tam_c',
-'district_total_tam_c',
-'district_expansion_potential_c',
-'schools_in_district_c',
-'free_lunch_students_c',
-'reduced_lunch_student_c'
-        ],
-        profile_src=('profiles','vw_sfdc_schema_audit'),
-        base_profile='base',
-        current_profile='current'
-    ) }}
-    ,sfdc_user.name as owner_name_text_c,
-    --School (some child accounts info)
-    sch.school_state_initiative_c as state_initiative_school,
-    sch.school_district_state_initiative_c as district_state_initiative_school,
-    --District (some parent account info)
-    dist.state_initiative_c as state_initiative_district,
-    dist.district_state_initiative_c as district_state_initiative_district,
-    --
-    lower(loc.lcom_platform_organization_id_c) lcom_organization_id,
-    --
-    sfdc_parent_account.name as parent_name_proper_case_c,
-    sfdc_ultimate_parent_account.name as ultimate_parent_account_c,
-    sfdc_ultimate_parent_account.billing_state as ultimate_parent_billing_state_c,
-    sfdc_ultimate_parent_account.owner_name ultimate_account_owner_c,
-    --
-    customer_since.invoiced_date as account_first_invoice_date
-    --
-FROM {{ source('fivetran_salesforce_quickstart', 'account') }} sfdc_account
---
-left outer join {{ source('fivetran_salesforce_quickstart', 'user') }} sfdc_user
-on sfdc_account.owner_id= sfdc_user.id
---
-left outer join {{ source('fivetran_salesforce_quickstart', 'lcom_organization_c') }} loc
-on sfdc_account.lcom_organization_c = loc.id
---
-left outer join sch 
-on sfdc_account.id=sch.parent_id
---
-left outer join {{ source('fivetran_salesforce_quickstart', 'account') }} dist
-on sfdc_account.parent_id=dist.id
---
-left outer join sfdc_parent_account
-on sfdc_account.parent_id = sfdc_parent_account.id
---
-left outer join sfdc_parent_account as sfdc_ultimate_parent_account
-on sfdc_account.ultimate_parent_id_c = sfdc_ultimate_parent_account.id
---
-left outer join customer_since
-on sfdc_account.id = customer_since.account_id
-)
-, LCOM_data as (
-  select 
-    --LCOM columns
-    o.organization_id,
-    o.organization_name,
-    o.organization_type,
-    case when len(o.parent_organization_id)<1 then null else o.parent_organization_id end as parent_organization_id,
-    p.organization_name  as parent_organization_name,
-    o.is_trial,
-    o.is_demo,
-    o.postal_code,
-    o.state_province_key,
-    sp.state_province_code,
-    sp.state_province_name,
-    o.country_code,
-    c.country_name,
-    c.alpha3_code,
-    c.numeric_code,
-    o.external_sis_id,
-    o.nces_id,
-    o.created_datetime,
-    o.modified_datetime,
-    o.deleted_datetime,
-    m.salesforce_id,
-    m.SFDC_Account_Id
-FROM {{ source("dbo","organization") }}  o
-left outer join {{ source("dbo","organization") }}  p
-on o.parent_organization_id = p.organization_id
---
-left outer join {{ source("dbo","state_province") }}  sp
-on sp.state_province_key=o.state_province_key
---
-left outer join {{ source("dbo","country") }}  c
-on c.country_code=o.country_code
--- mapping to Salesforce Accounts
-left outer join {{ ref("lcom_sfdc_account_mapping") }} m
-on o.organization_id=m.organization_id
-)
-
-, data as (
+with LCOM_data as (
+    select * from {{ ref('int_dim_account_lcom') }}
+), SFDC_data as (
+    select * from {{ ref('int_dim_account_sfdc') }}
+), data as (
 select
     coalesce(LCOM_data.organization_id, SFDC_data.Id) as account_id,
 --LCOM columns
@@ -322,7 +136,18 @@ isnull(SFDC_data.district_state_initiative_district, {{ var("default_boolean") }
 --Calculated
 case when (SFDC_data.grade_levels_c = 'High School' or (SFDC_data.grade_levels_c is null and  SFDC_data.k_12_enrollment_c>0 and SFDC_data.k_8_enrollment_c=0)) then True else False end as isHighSchool
 --
-,isnull(account_first_invoice_date,  '{{ var("default_date") }}') as account_first_invoice_date
+,isnull(SFDC_data.total_won_opportunities, {{ var("default_numeric") }}) as total_won_opportunities
+,isnull(SFDC_data.total_open_opportunities, {{ var("default_numeric") }}) as total_open_opportunities
+,isnull(SFDC_data.latest_start_date, '{{ var("default_date") }}') as latest_start_date
+,isnull(SFDC_data.latest_end_date, '{{ var("default_date") }}') as latest_end_date
+,isnull(SFDC_data.latest_open_opportunities_modified_date, '{{ var("default_date") }}') as latest_open_opportunities_modified_date
+,isnull(SFDC_data.first_invoiced_date, '{{ var("default_date") }}') as first_invoiced_date
+,isnull(SFDC_data.total_training_sessions, {{ var("default_numeric") }}) as total_training_sessions
+,isnull(SFDC_data.latest_training_session_on, '{{ var("default_date") }}') as latest_training_session_on
+,isnull(SFDC_data.total_cases, {{ var("default_numeric") }}) as total_cases
+,isnull(SFDC_data.currently_open_cases, {{ var("default_numeric") }}) as currently_open_cases
+,isnull(SFDC_data.latest_case_created_date, '{{ var("default_date") }}') as latest_case_created_date
+,isnull(SFDC_data.latest_open_case_modified_date, '{{ var("default_date") }}') as latest_open_case_modified_date
 --
 FROM LCOM_data
 --
@@ -442,7 +267,18 @@ select
 {{ var("default_boolean") }} as SFDC_district_state_initiative_district,
 --Calculated
 {{ var("default_boolean") }} as isHighSchool
-,'{{ var("default_date") }}' as account_first_invoice_date
+ ,{{ var("default_numeric") }} as total_won_opportunities
+ ,{{ var("default_numeric") }} as total_open_opportunities
+ ,'{{ var("default_date") }}' as latest_start_date
+ ,'{{ var("default_date") }}' as latest_end_date
+ ,'{{ var("default_date") }}' as latest_open_opportunities_modified_date
+ ,'{{ var("default_date") }}' as first_invoiced_date
+ ,{{ var("default_numeric") }} as total_training_sessions
+ ,'{{ var("default_date") }}' as latest_training_session_on
+ ,{{ var("default_numeric") }} as total_cases
+ ,{{ var("default_numeric") }} as currently_open_cases
+ ,'{{ var("default_date") }}' as latest_case_created_date
+ ,'{{ var("default_date") }}' as latest_open_case_modified_date
 )
 select
     account_id::varchar(300),
@@ -546,6 +382,17 @@ select
     sfdc_district_state_initiative_district :: boolean,
     --Calculated
     isHighSchool:: boolean,
-    account_first_invoice_date::date,
+    total_won_opportunities::integer,
+    total_open_opportunities::integer,
+    latest_start_date::date,
+    latest_end_date::date,
+    latest_open_opportunities_modified_date::date,
+    first_invoiced_date::date,
+    total_training_sessions::integer,
+    latest_training_session_on::date,
+    total_cases::integer,
+    currently_open_cases::integer,
+    latest_case_created_date::date,
+    latest_open_case_modified_date::date,
     '{{ var("loaddate") }}'::timestamp as loaddate
 FROM data

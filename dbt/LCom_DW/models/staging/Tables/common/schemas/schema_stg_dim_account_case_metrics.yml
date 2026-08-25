@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_dim_account_case_metrics
+    description: >
+      Account-level total and open support-case metrics sourced directly from Salesforce cases.
+      It is used by int_dim_account_sfdc to add support activity metrics to dim_account.
+    config:
+      tags:
+        - common
+        - staging
+    columns:
+      - name: account_id
+      - name: total_cases
+      - name: currently_open_cases
+      - name: latest_case_created_date
+      - name: latest_open_case_modified_date

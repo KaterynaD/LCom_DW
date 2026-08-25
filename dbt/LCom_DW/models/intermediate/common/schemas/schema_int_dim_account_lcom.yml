@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: int_dim_account_lcom
+    description: >
+      LCOM organization, parent organization, geography, and Salesforce mapping attributes
+      used as the LCOM input to dim_account.
+    config:
+      tags:
+        - common
+        - staging
+    columns:
+      - name: organization_id
+      - name: organization_name
+      - name: organization_type
+      - name: parent_organization_id
+      - name: parent_organization_name
+      - name: is_trial
+      - name: is_demo
+      - name: postal_code
+      - name: state_province_key
+      - name: state_province_code
+      - name: state_province_name
+      - name: country_code
+      - name: country_name
+      - name: alpha3_code
+      - name: numeric_code
+      - name: external_sis_id
+      - name: nces_id
+      - name: created_datetime
+      - name: modified_datetime
+      - name: deleted_datetime
+      - name: salesforce_id
+      - name: sfdc_account_id
