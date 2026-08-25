@@ -111,7 +111,7 @@ a.sfdc_urban_rural as current_urban_rural,
 --
 a.LCOM_organization_type current_lcom_organization_type,
 --
-a.account_first_invoice_date as account_first_invoice_date
+a.first_invoiced_date as first_invoiced_date
 --
 from dim_month m
 join {{ ref("dim_account_history") }} ah
@@ -174,7 +174,7 @@ current_customer_level,
 current_urban_rural ,
 current_lcom_organization_type,
 --
-account_first_invoice_date
+first_invoiced_date
 --
 from data
 

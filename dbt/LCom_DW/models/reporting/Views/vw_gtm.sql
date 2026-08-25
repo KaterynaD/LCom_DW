@@ -30,9 +30,9 @@ close.mon_year mon_year
 ,ds.is_LOI
 ,coalesce(nullif(ds.EComm,'Unknown'),'Not EComm') as EComm
 ,c.sfdc_account_id as customer_id
-,c.account_first_invoice_date as customer_since_date
+,c.first_invoiced_date as customer_since_date
 ,ds.account_id
-,a.account_first_invoice_date as account_customer_since_date
+,a.first_invoiced_date as account_customer_since_date
 ,ds.bucket
 ,ds.opportunity_line_id
 ,ds.sfdc_product_id
