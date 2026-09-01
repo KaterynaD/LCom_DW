@@ -1,0 +1,23 @@
+name: Notify Slack on new PR
+
+# Caller stub. Copy verbatim to `.github/workflows/slack-pr.yml` in a consumer
+# repo; nothing here is per-repo. The message format, the channel and the
+# on/off switch live in learningcom/github-actions-workflows.
+#
+# On/off is the org custom property `slack-pr-engineering-notifications`
+# (true/false, off unless set). Flipping it needs no change to this file:
+#   gh api -X PATCH repos/learningcom/<repo>/properties/values --input - <<< \
+#     '{"properties":[{"property_name":"slack-pr-engineering-notifications","value":"true"}]}'
+#
+# `Run workflow` on the Actions tab posts a labelled test message even while
+# the repo is switched off, to prove the wiring.
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+  workflow_dispatch:
+
+jobs:
+  notify:
+    uses: learningcom/github-actions-workflows/.github/workflows/slack-pr-notify.yml@v1
+    secrets: inherit
