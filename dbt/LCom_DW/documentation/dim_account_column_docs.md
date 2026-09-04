@@ -1203,3 +1203,186 @@ Free/Reduced Lunch % (% of Free + Reduced Lunch Students based on School Enrollm
 {% docs column_account_first_invoice_date %}
 First not blank invoice date from Salesforce Won opportunities for this account. Can be used to calculate tenure
 {% enddocs %}
+
+{% docs column_conformed_district_id %}
+Canonical `account_id` representing the district or intermediate parent in the conformed account hierarchy. LCom Platform hierarchy takes precedence when an LCom organization relationship is available: a school is assigned to its LCom parent organization, and an LCom district or root is assigned to itself. For Salesforce-only accounts, the Salesforce parent hierarchy is used. If the account itself represents the district or intermediate level, the value equals `account_id`.
+{% enddocs %}
+
+{% docs column_conformed_customer_id %}
+Canonical `account_id` representing the ultimate customer in the conformed account hierarchy. Salesforce hierarchy takes precedence when a Salesforce relationship is available: the account is assigned to the canonical account corresponding to its Salesforce Ultimate Parent Account. If no Salesforce customer relationship is available, the conformed district is used as the customer. If the account itself represents the ultimate customer, the value may equal both `conformed_district_id` and `account_id`.
+{% enddocs %}
+
+{% docs column_dim_account_owner_id %}
+Salesforce Account Owner identifier associated with the customer represented by `conformed_customer_id`.
+
+Analysis of the current account data in August 2026 showed that ownership is highly consistent across commercially relevant hierarchies. Among accounts with contracts, differences between the individual Account Owner and the Ultimate Parent Account Owner were extremely rare—approximately **0.2%** in the analyzed data. Therefore, the **Ultimate Parent Account Owner can practically serve as the conformed Customer Owner** for customer-level reporting, while the individual Account Owner should remain available when account-level ownership is required.
+{% enddocs %}
+
+{% docs column_dim_account_owner %}
+Salesforce Account Owner name associated with the customer represented by `conformed_customer_id`.
+
+Analysis of the current account data in August 2026 showed that ownership is highly consistent across commercially relevant hierarchies. Among accounts with contracts, differences between the individual Account Owner and the Ultimate Parent Account Owner were extremely rare—approximately **0.2%** in the analyzed data. Therefore, the **Ultimate Parent Account Owner can practically serve as the conformed Customer Owner** for customer-level reporting, while the individual Account Owner should remain available when account-level ownership is required.
+{% enddocs %}
+
+{% docs column_dim_account_name %}
+Account-level display name. Salesforce Account Name is used when available; otherwise the LCom organization name is used.
+{% enddocs %}
+
+{% docs column_dim_account_district_name %}
+Name of the district or intermediate parent represented by `conformed_district_id`. The value uses the same Salesforce Account Name with LCom organization name fallback as `name`.
+{% enddocs %}
+
+{% docs column_dim_account_customer_name %}
+Name of the ultimate customer represented by `conformed_customer_id`. The value uses the same Salesforce Account Name with LCom organization name fallback as `name`.
+{% enddocs %}
+
+{% docs column_dim_account_state_initiative %}
+District-level state taken from the account represented by `conformed_district_id`.  The value is true when either the Salesforce account or any rolled-up school is marked as a state initiative.
+{% enddocs %}
+
+{% docs column_dim_account_country %}
+Customer-level country taken from the account represented by `conformed_customer_id`. Salesforce Billing Country is used when available; otherwise the LCom country name is used. For United States Salesforce accounts, the value is `United States of America`;
+{% enddocs %}
+
+{% docs column_dim_account_state_code %}
+District-level state taken from the account represented by `conformed_district_id`.  LCom state/province code is used when Salesforce Billing State Code is unavailable.  
+{% enddocs %}
+
+{% docs column_dim_account_enrollment %}
+Account-level enrollment. Salesforce District Enrollment is used for district records; Salesforce School Enrollment is used for all other account record types.
+{% enddocs %}
+
+{% docs column_dim_account_county %}
+Account-level Salesforce county name.
+{% enddocs %}
+
+{% docs column_lcom_postal_code %}
+Postal code associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_state_province_key %}
+Key identifying the state or province associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_state_province_code %}
+Code identifying the state or province associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_state_province_name %}
+Name of the state or province associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_country_code %}
+Country code associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_country_name %}
+Country name associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_alpha3_code %}
+Three-character country code associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_numeric_code %}
+Numeric country code associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_external_sis_id %}
+External student information system identifier associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_nces_id %}
+National Center for Education Statistics identifier associated with the LCom organization.
+{% enddocs %}
+
+{% docs column_lcom_created_datetime %}
+Date and time when the LCom organization was created.
+{% enddocs %}
+
+{% docs column_lcom_modified_datetime %}
+Date and time when the LCom organization was last modified.
+{% enddocs %}
+
+{% docs column_lcom_deleted_datetime %}
+Date and time when the LCom organization was deleted, or the configured default date when it has not been deleted.
+{% enddocs %}
+
+
+
+{% docs column_has_product_usage %}
+Yes when the LCom organization appears as a school or district on at least one assignment launch; otherwise No.
+{% enddocs %}
+
+{% docs column_has_product_licenses %}
+Yes when the LCom organization appears as an owner or school on at least one product license; otherwise No.
+{% enddocs %}
+
+{% docs column_total_won_opportunities %}
+Total won and invoiced Salesforce opportunities associated with the account.
+{% enddocs %}
+
+{% docs column_total_open_opportunities %}
+Total Salesforce opportunities associated with the account that are neither won nor lost.
+{% enddocs %}
+
+{% docs column_latest_start_date %}
+Latest start date among won and invoiced Salesforce opportunities associated with the account.
+{% enddocs %}
+
+{% docs column_latest_end_date %}
+Latest end date among won and invoiced Salesforce opportunities associated with the account.
+{% enddocs %}
+
+{% docs column_latest_open_opportunities_modified_date %}
+Latest modified date among open Salesforce opportunities associated with the account.
+{% enddocs %}
+
+{% docs column_first_invoiced_date %}
+Earliest invoice date among won Salesforce opportunities associated with the account.
+{% enddocs %}
+
+{% docs column_total_won_deals %}
+Total won and invoiced Salesforce opportunities product line items associated with the account.
+{% enddocs %}
+
+{% docs column_total_won_state_program_deals %}
+Total won and invoiced Biz Dev (State Program Deal) Salesforce opportunities product line items associated with the account.
+{% enddocs %}
+
+{% docs column_total_training_sessions %}
+Total completed training sessions associated with the account.
+{% enddocs %}
+
+{% docs column_latest_training_session_on %}
+Latest training-session end date associated with the account.
+{% enddocs %}
+
+{% docs column_total_cases %}
+Total Salesforce support cases associated with the account.
+{% enddocs %}
+
+{% docs column_currently_open_cases %}
+Total Salesforce support cases whose status is not Closed, Merged, or Resolved.
+{% enddocs %}
+
+{% docs column_latest_case_created_date %}
+Latest creation date among Salesforce support cases associated with the account.
+{% enddocs %}
+
+{% docs column_latest_open_case_modified_date %}
+Latest modified date among currently open Salesforce support cases associated with the account.
+{% enddocs %}
+
+
+{% docs column_dim_account_account_type %}
+Account type based on SFDC Record Type or LCom Organization type. The type is manually assigned or derived from NSEC attributes. Account may play a role of a district, school or customer based on the usage, licensing configuration or Salesforce account hierarchy and it can be different from the type.
+{% enddocs %}
+
+{% docs column_dim_account_customer_level %}
+Customer-level sfdc_customer_level taken from the account represented by `conformed_customer_id`: Combination of Salesforce Customer Level (Strategic level of customer.  Integrations: Gainsight). and Salesforce Tier (Used in approval process, automation, and dynamic viewership.) when Customer Level is blank. 
+{% enddocs %}
+
+{% docs column_dim_account_urban_rural %}
+District-level sfdc_state_initiative taken from the account represented by `conformed_district_id`: Urban Rural 
+{% enddocs %}

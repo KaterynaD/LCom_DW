@@ -1,0 +1,129 @@
+version: 2
+
+models:
+  - name: dim_account_metrics
+    description: Extension of the dim_account model with pre-calculated basic metrics, mostly for filtering.
+    config:
+      contract:
+        enforced: true
+      tags:
+        - snapshot        
+    columns:
+      - name: account_id
+        data_type: varchar(300)
+        description: Primary and Distribution Key of DIM_ACCOUNT It's organization_id
+          (school or district) or Salesforce Id if not available in LCom Platform. The
+          PK in DIM_ACCOUNT is changed from Salesforce Account Id to LCOM Organization
+          Id when 2 entities are joined. DIM_ACCOUNT is re-created each time (Table materialization).
+          Account_Id represents the lowest available reporting level for the record.
+          It might be  a school, district, customer, or another organization level depending on the source data.
+          It serves as the lowest level of the standardized reporting hierarchy.
+        constraints:
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+          - type: foreign_key
+            to: ref('dim_account')
+            to_columns: [account_id]
+            warn_unenforced: false
+        data_tests:
+          - unique
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+
+      - name: total_won_opportunities
+        data_type: integer
+        description: "{{ doc('column_total_won_opportunities') }}"
+        constraints:
+          - type: not_null
+
+      - name: total_open_opportunities
+        data_type: integer
+        description: "{{ doc('column_total_open_opportunities') }}"
+        constraints:
+          - type: not_null
+
+      - name: latest_start_date
+        data_type: date
+        description: "{{ doc('column_latest_start_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: latest_end_date
+        data_type: date
+        description: "{{ doc('column_latest_end_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: latest_open_opportunities_modified_date
+        data_type: date
+        description: "{{ doc('column_latest_open_opportunities_modified_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: first_invoiced_date
+        data_type: date
+        description: "{{ doc('column_first_invoiced_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: total_won_deals
+        data_type: integer
+        description: "{{ doc('column_total_won_deals') }}"
+        constraints:
+          - type: not_null          
+
+      - name: total_won_state_program_deals
+        data_type: integer
+        description: "{{ doc('column_total_won_state_program_deals') }}"
+        constraints:
+          - type: not_null              
+
+      - name: total_training_sessions
+        data_type: integer
+        description: "{{ doc('column_total_training_sessions') }}"
+        constraints:
+          - type: not_null
+
+      - name: latest_training_session_on
+        data_type: date
+        description: "{{ doc('column_latest_training_session_on') }}"
+        constraints:
+          - type: not_null
+
+      - name: total_cases
+        data_type: integer
+        description: "{{ doc('column_total_cases') }}"
+        constraints:
+          - type: not_null
+
+      - name: currently_open_cases
+        data_type: integer
+        description: "{{ doc('column_currently_open_cases') }}"
+        constraints:
+          - type: not_null
+
+      - name: latest_open_case_modified_date
+        data_type: date
+        description: "{{ doc('column_latest_open_case_modified_date') }}"
+        constraints:
+          - type: not_null
+
+      - name: latest_case_created_date
+        data_type: date
+        description: "{{ doc('column_latest_case_created_date') }}"
+        constraints:
+          - type: not_null          
+
+      - name: has_product_licenses
+        data_type: boolean
+        description: "{{ doc('column_has_product_licenses') }}"
+        constraints:
+          - type: not_null
+
+      - name: has_product_usage
+        data_type: boolean
+        description: "{{ doc('column_has_product_usage') }}"
+        constraints:
+          - type: not_null

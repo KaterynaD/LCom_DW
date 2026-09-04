@@ -9,15 +9,6 @@ with dim_month as --Thread to calculate monthly metrics
 from {{ ref("dim_month") }} c
 where mon_year between 202207 and to_char(GetDate(),'yyyymm')
 )
-,alive_accounts as (
-select distinct account_id from {{ ref("fact_opportunity") }} 
-union
-select distinct organization_district_id from {{ ref("vw_fact_license_order") }}
-union
-select distinct organization_school_id from {{ ref("dim_license_order_school") }}
-union
-select distinct organization_school_id from {{ ref("fact_students_usage_monthly_snapshots") }} 
-)
 --
 ,data as (
 select
@@ -111,17 +102,29 @@ a.sfdc_urban_rural as current_urban_rural,
 --
 a.LCOM_organization_type current_lcom_organization_type,
 --
-a.first_invoiced_date as first_invoiced_date
+la.total_won_opportunities, 
+la.total_open_opportunities, 
+la.latest_start_date, 
+la.latest_end_date, 
+la.latest_open_opportunities_modified_date, 
+la.first_invoiced_date, 
+la.total_training_sessions, 
+la.latest_training_session_on, 
+la.total_cases, 
+la.currently_open_cases, 
+la.latest_case_created_date, 
+la.latest_open_case_modified_date
 --
 from dim_month m
 join {{ ref("dim_account_history") }} ah
 on m.mon_lastday between ah.fromdate and ah.todate
-join alive_accounts la
+join {{ ref('dim_account_metrics')}} la
 on la.account_id=ah.account_id
 join {{ ref("dim_account") }}  a
 on a.account_id = ah.account_id
 where a.lcom_trial=false
 and a.lcom_demo=false
+and (la.has_product_usage or la.has_product_licenses or la.total_won_opportunities>0)
 )
 select
 mon ,
@@ -174,7 +177,18 @@ current_customer_level,
 current_urban_rural ,
 current_lcom_organization_type,
 --
-first_invoiced_date
+total_won_opportunities, 
+total_open_opportunities, 
+latest_start_date, 
+latest_end_date, 
+latest_open_opportunities_modified_date, 
+first_invoiced_date, 
+total_training_sessions, 
+latest_training_session_on, 
+total_cases, 
+currently_open_cases, 
+latest_case_created_date, 
+latest_open_case_modified_date
 --
 from data
 

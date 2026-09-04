@@ -11,13 +11,14 @@ Conformed DIM_ACCOUNT dimension. Account (districts and schools) data from all s
 other source and imported/integrated between the systems or
 not.](assets/accounts_created_in_different%20systems.png)
 
-Accounts can be created in Salesforce, LCom Platform, HubSpot,
-Gainsight, or other source systems and may or may not be integrated
+Accounts can be created in Salesforce, LCom Platform, HubSpot, or other source systems and may or may not be integrated
 between them.
 
 `DIM_ACCOUNT` is the **conformed account dimension**. It is designed to
 combine accounts from different source systems into a single record when
 a reliable relationship between them can be established.
+
+`DIM_ACCOUNT` provides a conformed three-level hierarchy of account_id → conformed_district_id → conformed_customer_id across Salesforce and LCom Platform. The hierarchy uses the LCom organization hierarchy to determine the district/intermediate parent when available, because licenses and usage are organized by LCom district and school relationships. For accounts without an LCom hierarchy, the Salesforce account hierarchy is used to determine the intermediate parent. The customer level is determined from the Salesforce Ultimate Parent hierarchy when available; otherwise the conformed district is treated as the customer. An account may itself represent a school, district, or customer level, so account_id, conformed_district_id, and conformed_customer_id may intentionally contain the same value. This structure allows revenue, licenses, and usage recorded at different account levels to roll up consistently without reallocating facts between hierarchy levels.
 
 ![DIM_ACCOUNT is designed to join accounts from different systems into a
 single record when

@@ -1,0 +1,114 @@
+version: 2
+
+models:
+  - name: conformed_account_hierarchy
+    description: >
+      Mapping table between Learning.com organizations from
+      content_delivery_usage.dbo.Organization and Salesforce Account records.
+    config:
+      contract:
+        enforced: false
+      tags:
+        - common
+        - staging
+
+    columns:
+      - name: account_id
+        data_type: varchar(300)
+        description: >
+          Conformed account ID. Uses the Learning.com Organization ID when an
+          LCom organization exists; otherwise uses the Salesforce Account Object ID
+          when no LCom organization is linked.
+        constraints:
+          - type: not_null
+        tests:
+          - unique
+
+      - name: lcom_organization_id
+        data_type: varchar(300)
+        description: >
+          Learning.com organization_id for a school or district from
+          content_delivery_usage.dbo.Organization. Uses a default value when no
+          LCom organization is linked to a Salesforce Account.
+        constraints:
+          - type: not_null
+
+      - name: salesforce_id
+        data_type: varchar(300)
+        description: >
+          Salesforce Account Object ID from
+          rawdata.fivetran_salesforce_quickstart.account. Uses a default value
+          when no Salesforce Account is linked to the LCom organization.
+        constraints:
+          - type: not_null
+
+      - name: sfdc_account_id
+        data_type: varchar(300)
+        description: >
+          Conformed Salesforce Account Object ID. When more than one Learning.com
+          organization is linked to the same Salesforce Account, duplicate-handling
+          rules are applied and additional LCom organizations receive a "dup-"
+          prefix in this field. Uses a default value when no Salesforce Account is
+          linked to the LCom organization.
+        constraints:
+          - type: not_null
+
+      - name: conformed_district_id
+        data_type: varchar(300)
+        description: >
+          Conformed district account ID. The parent_organization_id from
+          content_delivery_usage.dbo.Organization is used first. If the Salesforce
+          Account is not linked to an LCom organization, the immediate Salesforce
+          Account parent from rawdata.fivetran_salesforce_quickstart.account.parent_id
+          is used. This value can be the same as account_id when the account is a
+          district or customer and has no parent, or its parent is set to itself.
+        constraints:
+          - type: not_null
+
+      - name: conformed_customer_id
+        data_type: varchar(300)
+        description: >
+          Conformed customer account ID. For Salesforce Accounts linked to an
+          LCom organization, and for Salesforce Accounts without an LCom link,
+          the Salesforce Ultimate Parent Account derived from conformed_district_id
+          is used. LCom organizations without a Salesforce Account link use their
+          immediate parent district. This value can be the same as account_id when
+          the account is the ultimate parent and has no parent, or its parent is
+          set to itself.
+        constraints:
+          - type: not_null
+
+      - name: applied_rule
+        data_type: varchar(300)
+        description: >
+          Duplicate-resolution rule applied to sfdc_account_id when deciding which
+          records receive the "dup-" prefix. Districts take precedence over schools.
+          When multiple schools or multiple districts share the same salesforce_id,
+          the organization with the maximum organization_id keeps the clean
+          Salesforce ID and the remaining organizations receive the "dup-" prefix.
+
+      - name: cnt_dist_org_id_group_by_salesforce_id
+        data_type: integer
+        description: >
+          Number of distinct organization IDs associated with the salesforce_id.
+          A non-null value greater than 1 indicates duplicate organization mappings
+          for that Salesforce Account.
+
+      - name: cnt_districts_in_dups_by_salesforce_id
+        data_type: integer
+        description: >
+          Number of district organizations participating in duplicate mappings for
+          the salesforce_id.
+
+      - name: cnt_schools_in_dups_by_salesforce_id
+        data_type: integer
+        description: >
+          Number of school organizations participating in duplicate mappings for
+          the salesforce_id.
+
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null
+
