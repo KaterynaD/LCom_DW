@@ -12,11 +12,14 @@
  {% if target_db | upper == 'QA' %}
 
 --deploying stored procedure based model even with deps did not create needed models in QA automatically
-create or replace view qa.common.dim_month as select * from dw.common.dim_month  limit 10 with no schema binding;
-create or replace view qa.common.dim_district as select * from dw.common.dim_district  limit 10 with no schema binding;
-create or replace view qa.content_delivery_usage.dim_learning_object as select * from dw.content_delivery_usage.dim_learning_object  limit 10 with no schema binding;
-create or replace view qa.content_delivery_usage.dim_product_category as select * from dw.content_delivery_usage.dim_product_category limit 10   with no schema binding;
-create or replace view qa.content_delivery_usage.dim_product_category_learning_object_monthly as select * from dw.content_delivery_usage.dim_product_category_learning_object_monthly limit 10 with no schema binding;
+
+create or replace view qa.common.dim_account as select * from dw.common.dim_account  limit 10 with no schema binding;
+create or replace view qa.revenue.fact_opportunity as select * from dw.revenue.fact_opportunity  limit 10 with no schema binding;
+create or replace view qa.support.fact_case as select * from dw.support.fact_case  limit 10 with no schema binding;
+create or replace view qa.content_delivery_usage.fact_training_session as select * from dw.content_delivery_usage.fact_training_session  limit 10 with no schema binding;
+create or replace view qa.licensing.fact_license_order as select * from dw.licensing.fact_license_order  limit 10 with no schema binding;
+create or replace view qa.licensing.dim_license_order_school as select * from dw.licensing.dim_license_order_school  limit 10 with no schema binding;
+
 
  {% endif %} 
 					
