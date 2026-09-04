@@ -64,7 +64,7 @@ b.total_price<0
 select opportunity_id
 from {{ ref('int_arr_base') }} iab 
 /*won, invoiced, in a past must be in ARR calculation*/
-where stage_name ilike '%won%' and invoiced_date!='1900-01-01' and invoiced_date <= trunc(GetDate()) and start_date_sfdc <= trunc(GetDate())
+where stage_name ilike '%won%' and invoiced_date!='1900-01-01' and invoiced_date < trunc(GetDate()) and start_date_sfdc <= trunc(GetDate())
 except
 select opportunity_id
 from {{ ref('fact_arr') }}
