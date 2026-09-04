@@ -1,0 +1,1 @@
+select * from {{ ref('vw_v_dim_account_conformed_district_id') }}

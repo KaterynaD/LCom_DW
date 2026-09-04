@@ -1,0 +1,1 @@
+select * from {{ ref('vw_v_dim_account_single_district_customer') }}

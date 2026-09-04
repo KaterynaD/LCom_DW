@@ -4,20 +4,52 @@
         materialized='table',        
         dist='account_id', 
         sort='account_id',
-        post_hook=['{{ update_DIM_ACCOUNT_HISTORY_changed_UK() }}'],        
+        post_hook=['{{ update_DIM_ACCOUNT_HISTORY_changed_UK() }}'],                
 		sql_header = 'SET enable_numeric_rounding TO ON;'                          
         )
 }}
 
 
 
-with LCOM_data as (
-    select * from {{ ref('int_dim_account_lcom') }}
-), SFDC_data as (
-    select * from {{ ref('int_dim_account_sfdc') }}
-), data as (
+with  raw_data as (
 select
-    coalesce(LCOM_data.organization_id, SFDC_data.Id) as account_id,
+    cah.account_id,
+case
+    when isnull(SFDC_data.name, '{{ var("default_varchar") }}') = '{{ var("default_varchar") }}'
+        then isnull(LCOM_data.organization_name, '{{ var("default_varchar") }}')
+    else SFDC_data.name
+end as name,
+cah.conformed_district_id,
+cah.conformed_customer_id,
+case
+       when isnull(sfdc_data.billing_country, '{{ var("default_varchar") }}') = '{{ var("default_varchar") }}'
+           then isnull(LCOM_data.country_name, '{{ var("default_varchar") }}')
+       when isnull(sfdc_data.billing_country, '{{ var("default_varchar") }}') = 'United States'
+           then 'United States of America'
+       else isnull(sfdc_data.billing_country, '{{ var("default_varchar") }}')
+end as country,
+case
+        when isnull(SFDC_data.billing_state_code, '{{ var("default_varchar") }}') = '{{ var("default_varchar") }}'
+            then isnull(LCOM_data.state_province_code, '{{ var("default_varchar") }}')
+        else isnull(SFDC_data.billing_state_code, '{{ var("default_varchar") }}')
+end as state_code,
+case
+    when isnull(SFDC_data.state_initiative_c, {{ var("default_boolean") }})
+        or isnull(SFDC_data.state_initiative_school, {{ var("default_boolean") }})
+        then true
+    else false
+end as state_initiative,
+case
+        when isnull(SFDC_data.record_type_c, '{{ var("default_varchar") }}') = 'L' then isnull(SFDC_data.district_enrollment_c, {{ var("default_numeric") }})
+        else isnull(SFDC_data.school_enrollment_c, {{ var("default_numeric") }})
+end enrollment,
+case
+   when SFDC_data.record_type_c = 'L' then 'District'
+   when SFDC_data.record_type_c = 'B' then 'School'
+   when LCOM_data.organization_type = 'school' then 'School'
+   when LCOM_data.organization_type = 'district' then 'District'
+   else 'Other' 
+end as account_type,    
 --LCOM columns
 isnull(LCOM_data.organization_id, '{{ var("default_ID") }}') as  lcom_organization_id,
 isnull(LCOM_data.organization_name, '{{ var("default_varchar") }}') as  lcom_organization_name,
@@ -40,7 +72,7 @@ isnull(LCOM_data.created_datetime, '{{ var("default_date") }}') as  lcom_created
 isnull(LCOM_data.modified_datetime, '{{ var("default_date") }}')  as lcom_modified_datetime,
 isnull(LCOM_data.deleted_datetime, '{{ var("default_date") }}')  as lcom_deleted_datetime,
 --SFDC columns
-coalesce(LCOM_data.SFDC_account_id, SFDC_data.Id, '{{ var("default_varchar") }}') as SFDC_account_id,
+cah.SFDC_account_id,
 isnull(SFDC_data.name, '{{ var("default_varchar") }}') as SFDC_name,
 isnull(SFDC_data.alt_phone_c, '{{ var("default_varchar") }}') as SFDC_alt_phone,
 isnull(sfdc_data.billing_country, '{{ var("default_varchar") }}') as SFDC_billing_country,
@@ -136,33 +168,159 @@ isnull(SFDC_data.district_state_initiative_district, {{ var("default_boolean") }
 --Calculated
 case when (SFDC_data.grade_levels_c = 'High School' or (SFDC_data.grade_levels_c is null and  SFDC_data.k_12_enrollment_c>0 and SFDC_data.k_8_enrollment_c=0)) then True else False end as isHighSchool
 --
-,isnull(SFDC_data.total_won_opportunities, {{ var("default_numeric") }}) as total_won_opportunities
-,isnull(SFDC_data.total_open_opportunities, {{ var("default_numeric") }}) as total_open_opportunities
-,isnull(SFDC_data.latest_start_date, '{{ var("default_date") }}') as latest_start_date
-,isnull(SFDC_data.latest_end_date, '{{ var("default_date") }}') as latest_end_date
-,isnull(SFDC_data.latest_open_opportunities_modified_date, '{{ var("default_date") }}') as latest_open_opportunities_modified_date
-,isnull(SFDC_data.first_invoiced_date, '{{ var("default_date") }}') as first_invoiced_date
-,isnull(SFDC_data.total_training_sessions, {{ var("default_numeric") }}) as total_training_sessions
-,isnull(SFDC_data.latest_training_session_on, '{{ var("default_date") }}') as latest_training_session_on
-,isnull(SFDC_data.total_cases, {{ var("default_numeric") }}) as total_cases
-,isnull(SFDC_data.currently_open_cases, {{ var("default_numeric") }}) as currently_open_cases
-,isnull(SFDC_data.latest_case_created_date, '{{ var("default_date") }}') as latest_case_created_date
-,isnull(SFDC_data.latest_open_case_modified_date, '{{ var("default_date") }}') as latest_open_case_modified_date
 --
-FROM LCOM_data
+FROM {{ ref("conformed_account_hierarchy") }} cah
+left outer join {{ ref('int_dim_account_lcom') }} LCOM_data
+on LCOM_data.organization_id = cah.lcom_organization_id
 --
-full outer join SFDC_data
-on LCOM_data.salesforce_id = SFDC_data.Id
+left outer join {{ ref('int_dim_account_sfdc') }} SFDC_data
+on  SFDC_data.Id = cah.salesforce_id
+--
+)
+,data as (
+select
+-- LCOM columns
+data.account_id,
+data.name,
+data.conformed_district_id,
+district.name as district_name,
+data.conformed_customer_id,
+customer.name as customer_name,
+customer.sfdc_owner_id as owner_id,
+customer.SFDC_owner_name_text as owner,
+customer.country as country,
+district.state_code as state_code,
+district.state_initiative,
+district.sfdc_urban_rural as urban_rural,
+data.enrollment,
+data.account_type,
+customer.sfdc_customer_level as customer_level,
+data.lcom_organization_id,
+data.lcom_organization_name,
+data.lcom_organization_type,
+data.lcom_parent_organization_id,
+data.lcom_parent_organization_name,
+data.lcom_trial,
+data.lcom_demo,
+data.lcom_postal_code,
+data.lcom_state_province_key,
+data.lcom_state_province_code,
+data.lcom_state_province_name,
+data.lcom_country_code,
+data.lcom_country_name,
+data.lcom_alpha3_code,
+data.lcom_numeric_code,
+data.lcom_external_sis_id,
+data.lcom_nces_id,
+data.lcom_created_datetime,
+data.lcom_modified_datetime,
+data.lcom_deleted_datetime,
 
+-- SFDC columns
+data.SFDC_account_id,
+data.SFDC_name,
+data.SFDC_alt_phone,
+data.SFDC_billing_country,
+data.SFDC_billing_country_code,
+data.SFDC_billing_state,
+data.SFDC_billing_state_code,
+data.SFDC_category,
+data.SFDC_churn_date,
+data.SFDC_churned_opportunity_id,
+data.SFDC_county_name,
+data.SFDC_created_by_id,
+data.SFDC_created_date,
+data.SFDC_current_renewal_arr,
+data.SFDC_customer_type,
+data.SFDC_customer_level,
+data.SFDC_customer_level_override,
+data.SFDC_grade_levels,
+data.SFDC_de_identified_district,
+data.SFDC_description,
+data.SFDC_district_enrollment,
+data.SFDC_district_state_initiative,
+data.SFDC_k_12_enrollment,
+data.SFDC_k_5_enrollment,
+data.SFDC_k_8_enrollment,
+data.SFDC_kindergarten_enrollment,
+data.SFDC_pre_k_enrollment,
+data.SFDC_last_modified_by_id,
+data.SFDC_last_modified_date,
+data.SFDC_last_name,
+data.SFDC_lcom_account,
+data.SFDC_lcom_account_class,
+data.SFDC_lcom_account_count,
+data.SFDC_lcom_organization,
+data.SFDC_lcom_organization_count,
+data.SFDC_lcom_organization_has_parent,
+data.SFDC_name_with_lcom_organization_info,
+data.SFDC_owner_id,
+data.SFDC_owner_name_text,
+data.SFDC_parent_churned,
+data.SFDC_parent_id,
+data.SFDC_parent_name,
+data.SFDC_phone,
+data.SFDC_record_type,
+data.SFDC_school_enrollment,
+data.SFDC_state_initiative,
+data.SFDC_state_program_eligible,
+data.SFDC_ultimate_account_owner,
+data.SFDC_ultimate_parent_account,
+data.SFDC_ultimate_parent_billing_state,
+data.SFDC_ultimate_parent_id,
+data.SFDC_urban_rural,
+data.SFDC_lcom_organization_id,
+data.SFDC_technology_measure,
+data.SFDC_account_grade,
+data.SFDC_fiscal_title_i_school_yes_no,
+data.SFDC_title_iv_funding_21_st_century_grants,
+data.SFDC_title_iv_funding_student_support,
+data.SFDC_pct_asian,
+data.SFDC_pct_afro_amer,
+data.SFDC_pct_white,
+data.SFDC_pct_hisp,
+data.SFDC_pct_multi_racial,
+data.SFDC_pct_native,
+data.SFDC_pct_pacific,
+data.SFDC_district_easy_code_tam,
+data.SFDC_district_easy_tech_tam,
+data.SFDC_district_total_tam,
+data.SFDC_district_expansion_potential,
+data.SFDC_schools_in_district,
+data.SFDC_free_lunch_students,
+data.SFDC_reduced_lunch_students,
+data.SFDC_state_initiative_school,
+data.SFDC_district_state_initiative_school,
+data.SFDC_state_initiative_district,
+data.SFDC_district_state_initiative_district,
+data.isHighSchool
+ from raw_data as data
+ join raw_data as customer
+ on data.conformed_customer_id = customer.account_id
+  join raw_data as district
+ on data.conformed_district_id = district.account_id
 
-
-/*add default values for the first run only*/
+/*add default values*/
 
 union all
 /*default*/
-select 
+select
 --LCOM columns
 '{{ var("default_ID") }}' as account_id,
+'{{ var("default_varchar") }}' as name,
+'{{ var("default_ID") }}' as conformed_district_id,
+'{{ var("default_varchar") }}' as district_name,
+'{{ var("default_ID") }}' as conformed_customer_id,
+'{{ var("default_varchar") }}' as customer_name,
+'{{ var("default_varchar") }}' as owner_id,
+'{{ var("default_varchar") }}' as owner,
+'{{ var("default_varchar") }}' as country,
+'{{ var("default_varchar") }}' as state_code,
+{{ var("default_boolean") }} as state_initiative,
+'{{ var("default_varchar") }}' as urban_rural,
+{{ var("default_numeric") }} as enrollment,
+'{{ var("default_varchar") }}' as account_type,
+'{{ var("default_varchar") }}' as customer_leve,
 '{{ var("default_ID") }}' as lcom_organization_id,
 '{{ var("default_varchar") }}' as  lcom_organization_name,
 '{{ var("default_varchar") }}' as  lcom_organization_type,
@@ -267,21 +425,24 @@ select
 {{ var("default_boolean") }} as SFDC_district_state_initiative_district,
 --Calculated
 {{ var("default_boolean") }} as isHighSchool
- ,{{ var("default_numeric") }} as total_won_opportunities
- ,{{ var("default_numeric") }} as total_open_opportunities
- ,'{{ var("default_date") }}' as latest_start_date
- ,'{{ var("default_date") }}' as latest_end_date
- ,'{{ var("default_date") }}' as latest_open_opportunities_modified_date
- ,'{{ var("default_date") }}' as first_invoiced_date
- ,{{ var("default_numeric") }} as total_training_sessions
- ,'{{ var("default_date") }}' as latest_training_session_on
- ,{{ var("default_numeric") }} as total_cases
- ,{{ var("default_numeric") }} as currently_open_cases
- ,'{{ var("default_date") }}' as latest_case_created_date
- ,'{{ var("default_date") }}' as latest_open_case_modified_date
 )
 select
     account_id::varchar(300),
+    name::varchar(780),
+    conformed_district_id::varchar(300),
+    district_name::varchar(780),
+    conformed_customer_id::varchar(300),
+    customer_name::varchar(780),
+    owner_id::varchar(30),
+    owner::varchar(380),
+    country::varchar(240),
+    state_code::varchar(30) as state_code,
+    sfdc_county_name::varchar(780) as county,
+    state_initiative::boolean,
+    urban_rural :: varchar(10),
+    enrollment::integer as enrollment,
+    account_type::varchar(20) as account_type,
+    customer_level :: varchar(20),
     lcom_organization_id :: varchar(300),
     lcom_organization_name :: varchar(270),
     lcom_organization_type :: varchar(20),
@@ -317,7 +478,7 @@ select
     sfdc_created_date :: timestamp,
     round(sfdc_current_renewal_arr::numeric(38,10), 2) :: numeric(16,2) as sfdc_current_renewal_arr,
     sfdc_customer_type :: varchar(20),
-    sfdc_customer_level :: varchar(765),
+    sfdc_customer_level :: varchar(20),
     sfdc_customer_level_override :: varchar(765),
     sfdc_grade_levels :: varchar(100),
     sfdc_de_identified_district :: boolean,
@@ -353,7 +514,7 @@ select
     sfdc_ultimate_parent_account :: varchar(780),
     sfdc_ultimate_parent_billing_state :: varchar(250),
     sfdc_ultimate_parent_id :: varchar(300),
-    sfdc_urban_rural :: varchar(40),
+    sfdc_urban_rural :: varchar(10),
     sfdc_lcom_organization_id :: varchar(300),
     sfdc_technology_measure :: varchar(60),
     sfdc_account_grade :: varchar(15),
@@ -381,18 +542,6 @@ select
     sfdc_state_initiative_district :: boolean,
     sfdc_district_state_initiative_district :: boolean,
     --Calculated
-    isHighSchool:: boolean,
-    total_won_opportunities::integer,
-    total_open_opportunities::integer,
-    latest_start_date::date,
-    latest_end_date::date,
-    latest_open_opportunities_modified_date::date,
-    first_invoiced_date::date,
-    total_training_sessions::integer,
-    latest_training_session_on::date,
-    total_cases::integer,
-    currently_open_cases::integer,
-    latest_case_created_date::date,
-    latest_open_case_modified_date::date,
-    '{{ var("loaddate") }}'::timestamp as loaddate
+    isHighSchool:: boolean
+    ,'{{ var("loaddate") }}'::TIMESTAMP WITHOUT TIME ZONE as loaddate
 FROM data

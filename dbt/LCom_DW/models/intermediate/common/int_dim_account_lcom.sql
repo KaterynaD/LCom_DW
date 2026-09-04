@@ -29,9 +29,7 @@ select
     organization.nces_id,
     organization.created_datetime,
     organization.modified_datetime,
-    organization.deleted_datetime,
-    account_mapping.salesforce_id,
-    account_mapping.sfdc_account_id
+    organization.deleted_datetime
 from {{ source('dbo', 'organization') }} organization
 left outer join {{ source('dbo', 'organization') }} parent_organization
     on organization.parent_organization_id = parent_organization.organization_id
@@ -39,5 +37,4 @@ left outer join {{ source('dbo', 'state_province') }} state_province
     on state_province.state_province_key = organization.state_province_key
 left outer join {{ source('dbo', 'country') }} country
     on country.country_code = organization.country_code
-left outer join {{ ref('lcom_sfdc_account_mapping') }} account_mapping
-    on organization.organization_id = account_mapping.organization_id
+

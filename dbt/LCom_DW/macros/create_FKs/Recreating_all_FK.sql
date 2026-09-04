@@ -42,7 +42,8 @@ ALTER TABLE support.fact_case_history ADD FOREIGN KEY (account_id) REFERENCES co
 ALTER TABLE content_delivery_usage.fact_training_session ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 ALTER TABLE content_delivery_usage.fact_training_session_history ADD FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
 --
-
+ALTER TABLE reporting.dim_account_metrics ADD  FOREIGN KEY (account_id) REFERENCES common.dim_account(account_id);
+--
 
 -- TO common.dim_employee
 ALTER TABLE support.fact_case ADD FOREIGN KEY (owner_id) REFERENCES common.dim_employee(employee_id);

@@ -30,5 +30,3 @@ models:
       - name: created_datetime
       - name: modified_datetime
       - name: deleted_datetime
-      - name: salesforce_id
-      - name: sfdc_account_id
