@@ -30,9 +30,9 @@ close.mon_year mon_year
 ,ds.is_LOI
 ,coalesce(nullif(ds.EComm,'Unknown'),'Not EComm') as EComm
 ,c.sfdc_account_id as customer_id
-,c.first_invoiced_date as customer_since_date
+,ca.first_invoiced_date as customer_since_date
 ,ds.account_id
-,a.first_invoiced_date as account_customer_since_date
+,aa.first_invoiced_date as account_customer_since_date
 ,ds.bucket
 ,ds.opportunity_line_id
 ,ds.sfdc_product_id
@@ -81,11 +81,15 @@ on ds.opportunity_id = foh.opportunity_id
 and ds.close_date between foh.fromdate and foh.todate
 join {{ ref("dim_account") }} a
 on ds.account_id = a.account_id
+join {{ ref('dim_account_metrics')}} aa
+on aa.account_id=a.account_id
 join {{ ref("dim_account_history") }} ah
 on ds.account_id = ah.account_id
 and ds.close_date between ah.fromdate and ah.todate
 join {{ ref("dim_account") }} c
 on a.sfdc_ultimate_parent_id = c.sfdc_account_id
+join {{ ref('dim_account_metrics')}} ca
+on ca.account_id=c.account_id
 join {{ ref("dim_account_history") }} ch
 on c.account_id = ch.account_id
 and ds.close_date between ch.fromdate and ch.todate
