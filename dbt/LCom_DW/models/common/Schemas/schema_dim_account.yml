@@ -219,7 +219,7 @@ models:
     - type: not_null
     data_tests:
     - unique:
-        where: left(SFDC_account_id,4) != 'dup-' and SFDC_account_id!='{{ var('default_varchar')
+        where: left(SFDC_account_id,4) != 'dup-' and SFDC_account_id!='{{ var('default_ID')
           }}'
   - name: sfdc_name
     data_type: varchar(780)
