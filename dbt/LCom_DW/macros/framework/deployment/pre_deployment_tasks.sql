@@ -20,6 +20,9 @@ create or replace view qa.content_delivery_usage.fact_training_session as select
 create or replace view qa.licensing.fact_license_order as select * from dw.licensing.fact_license_order  limit 10 with no schema binding;
 create or replace view qa.licensing.dim_license_order_school as select * from dw.licensing.dim_license_order_school  limit 10 with no schema binding;
 
+create or replace view qa.revenue.fact_arr as select * from dw.revenue.fact_arr  limit 10 with no schema binding;
+create or replace view qa.staging.stg_arr_base as select * from dw.staging.stg_arr_base  limit 10 with no schema binding;
+create or replace view qa.staging.int_arr_base as select * from dw.staging.int_arr_base  limit 10 with no schema binding;
 
  {% endif %} 
 					

@@ -22,10 +22,6 @@ models:
           - type: not_null
           - type: primary_key
             warn_unenforced: false
-          - type: foreign_key
-            to: ref('dim_account')
-            to_columns: [account_id]
-            warn_unenforced: false
         data_tests:
           - unique
           - relationships:
