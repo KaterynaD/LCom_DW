@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: dim_account_metrics
-    description: Extension of the dim_account model with pre-calculated basic metrics, mostly for filtering.
+    description: Extension of the dim_account model with pre-calculated basic metrics, mostly for filtering
     config:
       contract:
         enforced: true

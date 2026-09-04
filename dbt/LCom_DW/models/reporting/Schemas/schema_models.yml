@@ -2,8 +2,14 @@
 version: 2
 models:
 
-  - name: vw_alive_accounts
+  - name: vw_engaged_accounts
     description: View to represent historical monthly and current basic info about accounts with opportunities, licenses or usage
+    config:
+      tags:
+        - rep
+
+  - name: vw_alive_accounts
+    description: Will be deleted soon when vw_engaged_accounts is ready
     config:
       tags:
         - rep

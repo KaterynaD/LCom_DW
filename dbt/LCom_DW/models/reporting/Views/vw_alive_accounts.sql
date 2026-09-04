@@ -124,7 +124,7 @@ join {{ ref("dim_account") }}  a
 on a.account_id = ah.account_id
 where a.lcom_trial=false
 and a.lcom_demo=false
-and (la.has_product_usage or la.has_product_licenses or la.total_won_opportunities>0)
+and ( la.has_product_usage or la.has_product_licenses or la.total_won_opportunities>0) 
 )
 select
 mon ,

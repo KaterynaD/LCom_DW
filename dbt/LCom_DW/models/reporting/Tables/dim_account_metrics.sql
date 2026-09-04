@@ -16,7 +16,7 @@ select
     end) as currently_open_cases,
     max(created_date)::date as latest_case_created_date,
     max(case
-        when status not in ('Closed', 'Merged', 'Resolved')
+        when status not in ('Closed', 'Merged',  'Resolved')
             then last_modified_date
     end)::date as latest_open_case_modified_date
 from {{ ref('fact_case') }}
