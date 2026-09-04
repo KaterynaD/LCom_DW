@@ -7,6 +7,7 @@
                    ]
 ) }}
 
+
 -- depends_on: {{ source('fivetran_salesforce_quickstart', 'account') }} 
 -- depends_on: {{ source('dbo', 'organization') }}
 -- depends_on: {{ source('fivetran_salesforce_quickstart', 'lcom_organization_c') }}

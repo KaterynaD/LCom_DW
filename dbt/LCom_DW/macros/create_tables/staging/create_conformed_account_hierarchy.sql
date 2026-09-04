@@ -42,7 +42,7 @@ DISTSTYLE KEY
 	)
 ;
 
-COMMENT ON table  {{target.database}}.{{custom_schema}}.conformed_account_hierarchy is 'Mapping table between content_delivery_usage.dbo.Organization  Salesforce Account tables';
+COMMENT ON table  {{target.database}}.{{custom_schema}}.conformed_account_hierarchy is 'Mapping table between content_delivery_usage.dbo.Organization  Salesforce Account tables including conformed hierarchy';
 
 COMMENT ON COLUMN {{target.database}}.{{custom_schema}}.conformed_account_hierarchy.account_id IS 'Conformed account_id which is LCom Organization ID or SFDC Account Object Id if no link to LCom Organization.';
 COMMENT ON COLUMN {{target.database}}.{{custom_schema}}.conformed_account_hierarchy.lcom_organization_id IS 'LCom organization_id (school or district) from content_delivery_usage.dbo.Organization table. Default value, if no LCom Org linked to a Salesforce Account';

@@ -11,8 +11,10 @@ LANGUAGE plpgsql
 AS $$
 begin
 	
---Salesforce ID in content_delivery_usage.dbo.organization is ignored now
---The relation is covered with Salesforce data
+/*
+ Salesforce ID in content_delivery_usage.dbo.organization is ignored now
+ The relation is covered with Salesforce data
+ */
 
 --LCom Organizations from SFDC Account: one-to-one
 drop table if exists  stg_lcom_sfdc_account_keys;

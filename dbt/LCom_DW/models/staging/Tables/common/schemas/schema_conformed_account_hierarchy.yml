@@ -4,7 +4,8 @@ models:
   - name: conformed_account_hierarchy
     description: >
       Mapping table between Learning.com organizations from
-      content_delivery_usage.dbo.Organization and Salesforce Account records.
+      content_delivery_usage.dbo.Organization and Salesforce Account records
+      including resolved conformed hierarchy
     config:
       contract:
         enforced: false
