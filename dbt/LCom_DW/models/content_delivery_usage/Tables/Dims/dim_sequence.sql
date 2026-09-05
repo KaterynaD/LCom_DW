@@ -7,7 +7,7 @@
  }}
 
 with data as (
-select 
+select distinct
 lower(s.SequenceId) Sequence_Id,
 CASE
     WHEN s.SequenceName = 'Texas Blended Learning Path' THEN 'Texas Blended Learning Path'
