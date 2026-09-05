@@ -157,8 +157,8 @@ o.name as opportunity_name,
 o.stage_name,
 a.sfdc_account_id,
 a.sfdc_state_initiative account_state_initiative,
-a.sfdc_ultimate_parent_id,
-ua.sfdc_state_initiative ultimate_parent_account_state_initiative,
+a.conformed_customer_id as sfdc_ultimate_parent_id,
+a.state_initiative ultimate_parent_account_state_initiative,
 case when o.invoiced_date='1900-01-01' then null else o.invoiced_date end as invoiced_date,
 o.close_date,
 o.start_date,
@@ -185,14 +185,14 @@ p.sfdc_product_name,
 p.lcom_suite,
 p.sfdc_product_family,
 p.sfdc_product_sub_family,
-a.sfdc_name as account_name,
-ua.sfdc_name as ultimate_parent_account_name,
-ua.sfdc_billing_state state,
-ua.sfdc_billing_country country,
-case when ua.sfdc_district_enrollment=0 then ua.sfdc_school_enrollment else ua.sfdc_district_enrollment end as district_enrollment,
-case when (ua.sfdc_state_initiative or ua.sfdc_state_initiative_school) then true else false end as state_initiative,
-ua.sfdc_urban_rural as urban_rural ,
-ua.sfdc_owner_name_text as current_account_owner_name ,
+a.name as account_name,
+a.customer_name as ultimate_parent_account_name,
+a.sfdc_billing_state state,
+a.country,
+a.enrollment as district_enrollment,
+a.state_initiative,
+a.urban_rural ,
+a.owner as current_account_owner_name ,
 o.subscription_term,
 o.progressive_billing,
 o.progressive_payment_amount_2,
@@ -207,8 +207,6 @@ case when f.arr_type!='Booking' then isnull(i.issues, 'Valid') else 'Valid' end 
 from data f
 join {{ ref('dim_account') }} a
 on f.account_id = a.account_id
-join {{ ref('dim_account') }} ua
-on a.sfdc_ultimate_parent_id = ua.sfdc_account_id
 join {{ ref('dim_sfdc_product') }} p
 on f.sfdc_product_id=p.sfdc_product_id
 left outer /*to include Target data*/ join {{ ref('fact_opportunity') }} o

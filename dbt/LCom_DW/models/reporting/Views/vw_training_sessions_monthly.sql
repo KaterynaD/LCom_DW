@@ -48,8 +48,8 @@ select
     ,ah.sfdc_account_id
     ,ah.SFDC_name account_name
     ,ah.lcom_organization_name
-    ,pa.SFDC_name ultimate_parent_account_name
-    ,pa.lcom_organization_name ultimate_parent_lcom_organization_name
+    ,a.customer_name ultimate_parent_account_name
+    ,a.customer_name ultimate_parent_lcom_organization_name
     ,a.sfdc_category    
     ,ah.sfdc_customer_level account_customer_level
     ,ah.sfdc_billing_country country
@@ -105,9 +105,7 @@ select
       on f.account_id = ah.account_id
 and case when m.mon_lastday<trunc(GETDATE()) then m.mon_lastday else trunc(GETDATE()) end between ah.fromdate and ah.todate      
     join {{ ref('dim_account') }} a
-      on f.account_id = a.account_id   
-    join {{ ref('dim_account') }} pa
-      on a.sfdc_ultimate_parent_id = pa.sfdc_account_id                
+      on f.account_id = a.account_id                  
     join {{ ref("dim_calendar") }} dc
       on trunc(f.start_date) = dc.cal_date
     join {{ ref('dim_training_session_topic_session') }} tst

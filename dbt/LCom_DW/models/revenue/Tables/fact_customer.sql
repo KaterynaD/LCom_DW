@@ -18,14 +18,12 @@ f.mon_lastday,
 f.fiscalyear,
 f.fiscalyear_mon,
 f.sfdc_product_id,
-c.account_id as customer_id,
+a.conformed_customer_id as customer_id,
 bucket, --bucket is needed to exclude true 0 ARR, non-paying customers only
 sum(f.arr_amount) arr_amount
 from {{ref("vw_fact_arr")}} f
 join {{ref("dim_account")}} a
 on f.account_id = a.account_id
-join {{ref("dim_account")}} c
-on a.sfdc_ultimate_parent_id = c.sfdc_account_id
 where  record_type='ARR'
 group by all
 having sum(f.arr_amount)!=0
@@ -58,15 +56,13 @@ d.mon_year,
 d.mon_lastday,
 d.fiscalyear,
 d.fiscalyear_mon,
-c.account_id as customer_id,
+a.conformed_customer_id as customer_id,
 sfdc_product_id
 from {{ ref('fact_opportunity') }} o
 join {{ ref('dim_opportunity_line') }} ol
 on o.opportunity_id = ol.opportunity_id
 join {{ ref('dim_account') }} a
 on o.account_id = a.account_id
-join {{ref("dim_account")}} c
-on a.sfdc_ultimate_parent_id = c.sfdc_account_id
 --Won, invoiced opportunities active at in the month
 join {{ ref('dim_month') }} d
 on d.mon_lastday between o.start_date and o.end_date

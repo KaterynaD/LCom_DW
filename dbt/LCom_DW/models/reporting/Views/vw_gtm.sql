@@ -87,7 +87,7 @@ join {{ ref("dim_account_history") }} ah
 on ds.account_id = ah.account_id
 and ds.close_date between ah.fromdate and ah.todate
 join {{ ref("dim_account") }} c
-on a.sfdc_ultimate_parent_id = c.sfdc_account_id
+on a.conformed_customer_id = c.account_id
 join {{ ref('dim_account_metrics')}} ca
 on ca.account_id=c.account_id
 join {{ ref("dim_account_history") }} ch

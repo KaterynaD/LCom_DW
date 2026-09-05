@@ -7,8 +7,8 @@
  }}
 
 select
-pah.account_id as sfdc_ultimate_parent_id,
-pah.sfdc_name as sfdc_ultimate_parent_name,
+ah.conformed_customer_id as sfdc_ultimate_parent_id,
+ah.customer_name as sfdc_ultimate_parent_name,
 fo.sfdc_account_id ,
 ah.sfdc_name,
 fo.opportunity_number ,
@@ -27,5 +27,3 @@ greatest(fo.true_arr,fo.arr, fo.arr_upsell, arr_renewal, arr_new_business) amoun
 from {{ ref("fact_opportunity") }} fo --??change/add for opportunity history
 join {{ ref("dim_account") }} ah
 on fo.account_id=ah.account_id 
-join {{ ref("dim_account") }} pah
-on ah.sfdc_ultimate_parent_id=pah.sfdc_account_id 
