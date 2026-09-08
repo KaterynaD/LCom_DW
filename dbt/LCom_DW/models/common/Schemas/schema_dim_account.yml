@@ -34,6 +34,11 @@ models:
     description: "{{ doc('column_conformed_district_id') }}"
     constraints:
     - type: not_null
+  - name: conformed_district_sfdc_account_id
+    data_type: varchar(300)
+    description: Conformed District "{{ doc('column_sfdc_account_id') }}"
+    constraints:
+    - type: not_null       
   - name: district_name
     data_type: varchar(780)
     description: "{{ doc('column_dim_account_district_name') }}"
@@ -44,6 +49,11 @@ models:
     description: "{{ doc('column_conformed_customer_id') }}"
     constraints:
     - type: not_null
+  - name: conformed_customer_sfdc_account_id
+    data_type: varchar(300)
+    description: Conformed Customer "{{ doc('column_sfdc_account_id') }}"
+    constraints:
+    - type: not_null    
   - name: customer_name
     data_type: varchar(780)
     description: "{{ doc('column_dim_account_customer_name') }}"
@@ -69,6 +79,11 @@ models:
     description: "{{ doc('column_dim_account_state_code') }}"
     constraints:
     - type: not_null
+  - name: state_name
+    data_type: varchar(30)
+    description: "{{ doc('column_dim_account_state_name') }}"
+    constraints:
+    - type: not_null    
   - name: county
     data_type: varchar(780)
     description: "{{ doc('column_dim_account_county') }}"

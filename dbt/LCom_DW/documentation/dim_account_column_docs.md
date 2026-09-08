@@ -1245,7 +1245,11 @@ Customer-level country taken from the account represented by `conformed_customer
 {% enddocs %}
 
 {% docs column_dim_account_state_code %}
-District-level state taken from the account represented by `conformed_district_id`.  LCom state/province code is used when Salesforce Billing State Code is unavailable.  
+Unknown if not the country is NOT `United States of America` than District-level state taken from the account represented by `conformed_district_id`.  LCom state/province code is used when Salesforce Billing State Code is unavailable.  
+{% enddocs %}
+
+{% docs column_dim_account_state_name %}
+Unknown if not the country is NOT `United States of America` than District-level state taken from the account represented by `conformed_district_id`.  LCom state/province name is used when Salesforce Billing State is unavailable.  
 {% enddocs %}
 
 {% docs column_dim_account_enrollment %}

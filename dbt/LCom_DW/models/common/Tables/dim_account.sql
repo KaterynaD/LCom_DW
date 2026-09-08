@@ -29,10 +29,17 @@ case
        else isnull(sfdc_data.billing_country, '{{ var("default_varchar") }}')
 end as country,
 case
+        when country != 'United States of America' then '{{ var("default_varchar") }}'
         when isnull(SFDC_data.billing_state_code, '{{ var("default_varchar") }}') = '{{ var("default_varchar") }}'
             then isnull(LCOM_data.state_province_code, '{{ var("default_varchar") }}')
         else isnull(SFDC_data.billing_state_code, '{{ var("default_varchar") }}')
 end as state_code,
+case
+        when country != 'United States of America' then '{{ var("default_varchar") }}'
+        when isnull(SFDC_data.billing_state, '{{ var("default_varchar") }}') = '{{ var("default_varchar") }}'
+            then isnull(LCOM_data.state_province_name, '{{ var("default_varchar") }}')
+        else isnull(SFDC_data.billing_state, '{{ var("default_varchar") }}')
+end as state_name,
 case
     when isnull(SFDC_data.state_initiative_c, {{ var("default_boolean") }})
         or isnull(SFDC_data.state_initiative_school, {{ var("default_boolean") }})
@@ -183,13 +190,16 @@ select
 data.account_id,
 data.name,
 data.conformed_district_id,
+district.sfdc_account_id as conformed_district_sfdc_account_id,
 district.name as district_name,
 data.conformed_customer_id,
+customer.sfdc_account_id as conformed_customer_sfdc_account_id,
 customer.name as customer_name,
 customer.sfdc_owner_id as owner_id,
 customer.SFDC_owner_name_text as owner,
 customer.country as country,
 district.state_code as state_code,
+district.state_name as state_name,
 district.state_initiative,
 district.sfdc_urban_rural as urban_rural,
 data.enrollment,
@@ -309,13 +319,16 @@ select
 '{{ var("default_ID") }}' as account_id,
 '{{ var("default_varchar") }}' as name,
 '{{ var("default_ID") }}' as conformed_district_id,
+'{{ var("default_ID") }}' as conformed_district_sdc_account_id,
 '{{ var("default_varchar") }}' as district_name,
 '{{ var("default_ID") }}' as conformed_customer_id,
+'{{ var("default_ID") }}' as conformed_customer_sdc_account_id,
 '{{ var("default_varchar") }}' as customer_name,
 '{{ var("default_varchar") }}' as owner_id,
 '{{ var("default_varchar") }}' as owner,
 '{{ var("default_varchar") }}' as country,
 '{{ var("default_varchar") }}' as state_code,
+'{{ var("default_varchar") }}' as state_name,
 {{ var("default_boolean") }} as state_initiative,
 '{{ var("default_varchar") }}' as urban_rural,
 {{ var("default_numeric") }} as enrollment,
@@ -430,13 +443,16 @@ select
     account_id::varchar(300),
     name::varchar(780),
     conformed_district_id::varchar(300),
+    conformed_district_sfdc_account_id::varchar(300),
     district_name::varchar(780),
     conformed_customer_id::varchar(300),
+    conformed_customer_sfdc_account_id::varchar(300),
     customer_name::varchar(780),
     owner_id::varchar(30),
     owner::varchar(380),
     country::varchar(240),
     state_code::varchar(30) as state_code,
+    state_name::varchar(30) as state_name,
     sfdc_county_name::varchar(780) as county,
     state_initiative::boolean,
     urban_rural :: varchar(10),
