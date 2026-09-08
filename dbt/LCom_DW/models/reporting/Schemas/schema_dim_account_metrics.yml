@@ -123,3 +123,8 @@ models:
         description: "{{ doc('column_has_product_usage') }}"
         constraints:
           - type: not_null
+      - name: loaddate
+        data_type: timestamp
+        description: "{{ doc('column_loaddate') }}"
+        constraints:
+          - type: not_null

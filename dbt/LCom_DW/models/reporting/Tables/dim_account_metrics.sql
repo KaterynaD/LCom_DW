@@ -110,6 +110,7 @@ isnull(c.latest_case_created_date,'{{ var("default_date") }}')::date as latest_c
 isnull(c.latest_open_case_modified_date,'{{ var("default_date") }}')::date as latest_open_case_modified_date,
 max(case when pl.account_id is not null then 1 else 0 end )::boolean as has_product_licenses,
 max(case when coalesce(pus.organization_school_id,pud.organization_district_id) is not null then 1 else 0 end)::boolean as has_product_usage
+,'{{ var("loaddate") }}'::TIMESTAMP WITHOUT TIME ZONE as loaddate
 from {{ ref('dim_account') }} a
 left outer join opportunities o
 on a.account_id = o.account_id
