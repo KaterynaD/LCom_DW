@@ -21,8 +21,8 @@ select * from {{ hist_relation }}
 where account_id in (
 select 
 a.account_id
-from (select account_id, lcom_organization_id, sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') h
-join (select account_id, lcom_organization_id, sfdc_account_id from {{ this }} where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') a
+from (select account_id, lcom_organization_id, sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='{{ var("default_ID") }}' and sfdc_account_id not ilike 'dup%') h
+join (select account_id, lcom_organization_id, sfdc_account_id from {{ this }} where sfdc_account_id!='{{ var("default_ID") }}' and sfdc_account_id not ilike 'dup%') a
 on h.sfdc_account_id = a.sfdc_account_id 
 where h.account_id<>a.account_id --account_id was changed in dim_account but not in the history table
 and a.account_id<>a.sfdc_account_id --it's changed from SFDC to LCom
@@ -33,8 +33,8 @@ delete from {{ hist_relation }}
 where account_id in (
 select 
 a.account_id
-from (select account_id, lcom_organization_id, sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') h
-join (select account_id, lcom_organization_id, sfdc_account_id from {{ this }} where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') a
+from (select account_id, lcom_organization_id, sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='{{ var("default_ID") }}' and sfdc_account_id not ilike 'dup%') h
+join (select account_id, lcom_organization_id, sfdc_account_id from {{ this }} where sfdc_account_id!='{{ var("default_ID") }}' and sfdc_account_id not ilike 'dup%') a
 on h.sfdc_account_id = a.sfdc_account_id 
 where h.account_id<>a.account_id --account_id was changed in dim_account but not in the history table
 and a.account_id<>a.sfdc_account_id --it's changed from SFDC to LCom
@@ -44,8 +44,8 @@ and a.account_id<>a.sfdc_account_id --it's changed from SFDC to LCom
 with data as (select 
 a.account_id,
 a.sfdc_account_id 
-from (select account_id, lcom_organization_id, sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') h
-join (select account_id, lcom_organization_id, sfdc_account_id from {{ this }} where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%') a
+from (select account_id, lcom_organization_id, sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='{{ var("default_ID") }}' and sfdc_account_id not ilike 'dup%') h
+join (select account_id, lcom_organization_id, sfdc_account_id from {{ this }} where sfdc_account_id!='{{ var("default_ID") }}' and sfdc_account_id not ilike 'dup%') a
 on h.sfdc_account_id = a.sfdc_account_id 
 where h.account_id<>a.account_id)
 update {{ hist_relation }}
@@ -58,7 +58,7 @@ where data.sfdc_account_id={{ hist_relation }}.sfdc_account_id;
 /*and not included in DIM_ACCOUNT next day               */
 delete from {{ hist_relation }}
 where account_id in (
-select sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='Unknown' and sfdc_account_id not ilike 'dup%'
+select sfdc_account_id from {{ hist_relation }} where sfdc_account_id!='{{ var("default_ID") }}' and sfdc_account_id not ilike 'dup%'
 except 
 select distinct id from {{ source('fivetran_salesforce_quickstart', 'account') }} 
 );
