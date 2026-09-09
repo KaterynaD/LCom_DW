@@ -47,6 +47,14 @@ set scd_hash = md5(coalesce(cast(stage_name as varchar ), '')
 
 ```
 
+or you can run `print_scd_hash` macro to 'scd_hash' formula
+
+```sh
+
+dbt run-operation print_scd_hash --args '{model_name: dim_account_history}'
+
+```
+
 ## Run the model in Dev environment
 
 and make sure no errors returned, the new column is populated and no new record versions created if `scd_hash` was updated. 

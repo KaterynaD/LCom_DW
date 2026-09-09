@@ -56,6 +56,24 @@ models:
         - sfdc_customer_level
         - sfdc_customer_level_override
         - lcom_parent_organization_id
+        - name
+        - conformed_district_id
+        - conformed_district_sfdc_account_id
+        - district_name
+        - conformed_customer_id
+        - conformed_customer_sfdc_account_id
+        - customer_name
+        - owner_id
+        - owner
+        - country 
+        - state_code 
+        - state_name
+        - county
+        - state_initiative
+        - urban_rural
+        - enrollment
+        - account_type
+        - customer_level
 
   config:
     contract:
@@ -354,3 +372,94 @@ models:
     description: "{{ doc('column_lcom_parent_organization_id') }}"
     constraints:
     - type: not_null
+
+  - name: name
+    data_type: varchar(780)
+    description: "{{ doc('column_dim_account_name') }}"
+    constraints:
+    - type: not_null
+  - name: conformed_district_id
+    data_type: varchar(300)
+    description: "{{ doc('column_conformed_district_id') }}"
+    constraints:
+    - type: not_null
+  - name: conformed_district_sfdc_account_id
+    data_type: varchar(300)
+    description: Conformed District "{{ doc('column_sfdc_account_id') }}"
+    constraints:
+    - type: not_null       
+  - name: district_name
+    data_type: varchar(780)
+    description: "{{ doc('column_dim_account_district_name') }}"
+    constraints:
+    - type: not_null
+  - name: conformed_customer_id
+    data_type: varchar(300)
+    description: "{{ doc('column_conformed_customer_id') }}"
+    constraints:
+    - type: not_null
+  - name: conformed_customer_sfdc_account_id
+    data_type: varchar(300)
+    description: Conformed Customer "{{ doc('column_sfdc_account_id') }}"
+    constraints:
+    - type: not_null    
+  - name: customer_name
+    data_type: varchar(780)
+    description: "{{ doc('column_dim_account_customer_name') }}"
+    constraints:
+    - type: not_null
+  - name: owner_id
+    data_type: varchar(300)
+    description: "{{ doc('column_dim_account_owner_id') }}"
+    constraints:
+    - type: not_null
+  - name: owner
+    data_type: varchar(380)
+    description: "{{ doc('column_dim_account_owner') }}"
+    constraints:
+    - type: not_null
+  - name: country
+    data_type: varchar(240)
+    description: "{{ doc('column_dim_account_country') }}"
+    constraints:
+    - type: not_null
+  - name: state_code
+    data_type: varchar(30)
+    description: "{{ doc('column_dim_account_state_code') }}"
+    constraints:
+    - type: not_null
+  - name: state_name
+    data_type: varchar(50)
+    description: "{{ doc('column_dim_account_state_name') }}"
+    constraints:
+    - type: not_null    
+  - name: county
+    data_type: varchar(780)
+    description: "{{ doc('column_dim_account_county') }}"
+    constraints:
+    - type: not_null
+  - name: state_initiative
+    data_type: boolean
+    description: "{{ doc('column_dim_account_state_initiative') }}"
+    constraints:
+    - type: not_null
+  - name: urban_rural
+    data_type: varchar(10)
+    description: "{{ doc('column_dim_account_urban_rural') }}"
+    constraints:
+    - type: not_null        
+  - name: enrollment
+    data_type: integer
+    description: "{{ doc('column_dim_account_enrollment') }}"
+    constraints:
+    - type: not_null
+  - name: account_type
+    data_type: varchar(20)
+    description: "{{ doc('column_dim_account_account_type') }}"
+    constraints:
+    - type: not_null    
+  - name: customer_level
+    data_type: varchar(20)
+    description: "{{ doc('column_dim_account_customer_level') }}"
+    constraints:
+    - type: not_null        
