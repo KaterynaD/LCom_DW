@@ -18,7 +18,23 @@ between them.
 combine accounts from different source systems into a single record when
 a reliable relationship between them can be established.
 
+## Conformed Hierarchy
+
 `DIM_ACCOUNT` provides a conformed three-level hierarchy of account_id → conformed_district_id → conformed_customer_id across Salesforce and LCom Platform. The hierarchy uses the LCom organization hierarchy to determine the district/intermediate parent when available, because licenses and usage are organized by LCom district and school relationships. For accounts without an LCom hierarchy, the Salesforce account hierarchy is used to determine the intermediate parent. The customer level is determined from the Salesforce Ultimate Parent hierarchy when available; otherwise the conformed district is treated as the customer. An account may itself represent a school, district, or customer level, so account_id, conformed_district_id, and conformed_customer_id may intentionally contain the same value. This structure allows revenue, licenses, and usage recorded at different account levels to roll up consistently without reallocating facts between hierarchy levels.
+
+## Conformed attributes
+
+- `owner_id`: Customer
+- `owner`: Customer
+- `country`: Customer
+- `state_code`: District
+- `state_name`: District
+- `county`: Account itself (school)
+- `state_initiative`: District
+- `urban_rural`: District
+- `enrollment`: Account itself (school)
+- `account_type`: Account itself (school)
+- `customer_level`: Customer
 
 ![DIM_ACCOUNT is designed to join accounts from different systems into a
 single record when
@@ -82,7 +98,7 @@ as `FACT_OPPORTUNITY`.
 Known integration exceptions are explicitly identifiable:
 
 -   LCom Organizations not linked to Salesforce use
-    `sfdc_account_id = 'Unknown'`.
+    `sfdc_account_id = '00000000-0000-0000-0000-000000000000'`.
 -   LCom Organizations with an invalid or duplicate Salesforce
     relationship use an `sfdc_account_id` with the `dup-` prefix.
 

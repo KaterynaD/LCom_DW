@@ -60,7 +60,7 @@ models:
     constraints:
     - type: not_null
   - name: owner_id
-    data_type: varchar(30)
+    data_type: varchar(300)
     description: "{{ doc('column_dim_account_owner_id') }}"
     constraints:
     - type: not_null
@@ -80,7 +80,7 @@ models:
     constraints:
     - type: not_null
   - name: state_name
-    data_type: varchar(30)
+    data_type: varchar(50)
     description: "{{ doc('column_dim_account_state_name') }}"
     constraints:
     - type: not_null    

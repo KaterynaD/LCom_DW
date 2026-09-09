@@ -1257,7 +1257,7 @@ Account-level enrollment. Salesforce District Enrollment is used for district re
 {% enddocs %}
 
 {% docs column_dim_account_county %}
-Account-level Salesforce county name.
+Account-level  Salesforce county name.
 {% enddocs %}
 
 {% docs column_lcom_postal_code %}
