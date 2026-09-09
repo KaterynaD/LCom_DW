@@ -143,7 +143,7 @@ from all_opportunities ao
 		on oc.contact_id = cor.contact_id
 		and oc.opportunity_id = cor.opportunity_id
 	left join {{ ref("dim_account") }} da
-		on o.sfdc_account_id = da.sfdc_account_id
+		on o.account_id = da.account_id
 	left join {{ ref("dim_contact") }} c
 		on oc.contact_id = c.contact_id
 	left join {{ ref("dim_campaign") }} dc
