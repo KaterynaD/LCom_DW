@@ -20,74 +20,41 @@ m.FiscalYear_mon,
 m.SchoolYear,
 m.SchoolYear_mon,
 --
-ah.lcom_organization_id as lcom_organization_id ,
-a.lcom_parent_organization_id as lcom_parent_organization_id ,
---
-ah.sfdc_parent_id,
-ah.sfdc_ultimate_parent_id,
---
 ah.account_id,
-ah.sfdc_account_id,
-ah.sfdc_name,
-ah.lcom_organization_name,
-case
-when ah.sfdc_name = 'Unknown'
-then ah.lcom_organization_name
-else ah.sfdc_name
-end as name,
-case when (ah.sfdc_state_initiative or ah.sfdc_state_initiative_school) then true else false end as state_initiative,
-case
-when ah.sfdc_billing_country = 'Unknown'
-then ah.lcom_country_name
-else ah.sfdc_billing_country
-end as country,
-case
-when ah.sfdc_billing_state_code = 'Unknown'
-then ah.lcom_state_province_code
-when ah.sfdc_billing_country = 'United States'
-then 'United States of America'
-else ah.sfdc_billing_state_code
-end as state,
-ah.sfdc_county_name as county,
-ah.sfdc_owner_name_text as owner,
-case
-when ah.sfdc_record_type = 'L' then ah.sfdc_district_enrollment
-else ah.sfdc_school_enrollment
-end as enrollment,
-case
-when ah.sfdc_record_type = 'L' then 'District'
-else 'School' END as account_type,
-ah.sfdc_urban_rural as urban_rural,
+ah.conformed_district_id as historic_conformed_district_id,
+ah.conformed_customer_id as historic_conformed_customer_id,
 --
-ah.LCOM_organization_type lcom_organization_type,
+ah.name as historic_name,
+ah.district_name as historic_district_name,
+ah.customer_name as historic_customer_name,
+ah.country as historic_country,
+ah.state_code as historic_state,
+ah.state_name as historic_state_name,
+ah.county as historic_county,
+ah.state_initiative as historic_state_initiative,
+ah.owner as historic_owner,
+ah.enrollment as historic_enrollment,
+ah.urban_rural as historic_urban_rural,
+ah.account_type as historic_account_type,
+ah.customer_level as historic_customer_level,
 --
-a.name as current_name,
-a.conformed_district_id as current_conformed_district_id,
-a.district_name as current_district_name,
-a.owner_id as current_owner_id,
-a.owner as current_owner,
-a.conformed_customer_id as current_conformed_customer_id,
-a.customer_name as current_customer_name,
-a.country as current_country,
-a.state_code as current_state,
-a.county as current_county,
-a.enrollment as current_enrollment,
-a.state_initiative as current_state_initiative,
-a.account_type current_account_type,
 --
-a.lcom_organization_id as current_lcom_organization_id ,
-a.lcom_parent_organization_id as current_lcom_parent_organization_id ,
+a.conformed_district_id,
+a.conformed_customer_id,
 --
-a.sfdc_parent_id as current_sfdc_parent_id,
-a.sfdc_ultimate_parent_id as current_sfdc_ultimate_parent_id,
---
-a.sfdc_name as current_sfdc_name,
-a.lcom_organization_name as current_lcom_organization_name ,
---
-a.sfdc_customer_level as current_customer_level,
-a.sfdc_urban_rural as current_urban_rural,
---
-a.LCOM_organization_type current_lcom_organization_type,
+a.name,
+a.district_name,
+a.customer_name ,
+a.country,
+a.state_code ,
+a.state_name,
+a.county,
+a.state_initiative,
+a.owner,
+a.enrollment,
+a.urban_rural,
+a.account_type,
+a.customer_level,
 --
 la.total_won_opportunities, 
 la.total_open_opportunities, 
@@ -114,62 +81,53 @@ and a.lcom_demo=false
 and (la.has_product_usage or la.has_product_licenses or la.total_won_opportunities>0)
 )
 select
-mon ,
-mon_year ,
+mon,
+mon_year,
 mon_lastday ,
-fiscalyear ,
-fiscalyear_mon ,
-schoolyear ,
-schoolyear_mon ,
+FiscalYear,
+FiscalYear_mon,
+SchoolYear,
+SchoolYear_mon,
 --
-account_id ,
-sfdc_account_id ,
+account_id,
+historic_conformed_district_id,
+historic_conformed_customer_id,
 --
-current_conformed_district_id,
-current_district_name,
+historic_name,
+historic_district_name,
+historic_customer_name,
+case when historic_conformed_customer_id=historic_conformed_district_id then '(Districts)' else historic_customer_name end as display_historic_customer_name,
+historic_country,
+historic_state,
+historic_state_name,
+historic_county,
+historic_state_initiative,
+historic_owner,
+case when historic_owner ilike '%integration%' or historic_owner='{{ var("default_varchar") }}' then '(Not Set)'  else historic_owner end display_historic_owner,
+historic_enrollment,
+historic_urban_rural,
+historic_account_type,
+historic_customer_level,
 --
-current_owner_id,
-case when current_owner ilike '%integration%' or current_owner='{{ var("default_varchar") }}' then '(Not Set)'  else current_owner end current_owner,
-current_conformed_customer_id,
-case when current_conformed_customer_id=current_conformed_district_id then '(Districts)' else current_customer_name end as current_customer_name,
 --
-lcom_organization_id ,
-lcom_parent_organization_id ,
+conformed_district_id,
+conformed_customer_id,
 --
-sfdc_parent_id,
-sfdc_ultimate_parent_id,
---
-sfdc_name ,
-lcom_organization_name ,
-name ,
-state_initiative ,
-country ,
-state ,
-county ,
-owner ,
-enrollment ,
-account_type ,
-urban_rural ,
-lcom_organization_type,
---
-current_lcom_organization_id ,
-current_lcom_parent_organization_id ,
---
-current_sfdc_parent_id,
-current_sfdc_ultimate_parent_id,
---
-current_sfdc_name ,
-current_lcom_organization_name ,
-current_name ,
-current_state_initiative ,
-current_country ,
-current_state ,
-current_county ,
-current_enrollment ,
-current_account_type ,
-current_customer_level,
-current_urban_rural ,
-current_lcom_organization_type,
+name,
+district_name,
+customer_name ,
+case when conformed_customer_id=conformed_district_id then '(Districts)' else customer_name end as display_customer_name,
+country,
+state_code ,
+state_name,
+county,
+state_initiative,
+owner,
+case when owner ilike '%integration%' or owner='{{ var("default_varchar") }}' then '(Not Set)'  else owner end display_owner,
+enrollment,
+urban_rural,
+account_type,
+customer_level,
 --
 total_won_opportunities, 
 total_open_opportunities, 
