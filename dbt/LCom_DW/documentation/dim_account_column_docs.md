@@ -586,29 +586,7 @@ Last Modified Date in PST
 Last Name (Used for NS Integration with Mulesoft - DO NOT EDIT)
 {% enddocs %}
 
-{% docs column_sfdc_lcom_account %}
-LCOM Account (The LCOM Account associated with this account)
-{% enddocs %}
 
-{% docs column_sfdc_lcom_account_class %}
-LCOM Account Class
-{% enddocs %}
-
-{% docs column_sfdc_lcom_account_count %}
-LCOM Account Count (Returns the count of LCOM Accounts associated with this account. This value should always be either zero or one.)
-{% enddocs %}
-
-{% docs column_sfdc_lcom_organization %}
-LCOM Organization (The associated LCOM Organization record for this account)
-{% enddocs %}
-
-{% docs column_sfdc_lcom_organization_count %}
-LCOM Organization Count (Count of associated LCOM Organizations for a given account. This field should only ever have values of 0 or 1.)
-{% enddocs %}
-
-{% docs column_sfdc_lcom_organization_has_parent %}
-LCOM Organization has Parent
-{% enddocs %}
 
 {% docs column_sfdc_learn_dash_code_sent %}
 LearnDash Code Sent

@@ -381,42 +381,6 @@ models:
     description: "{{ doc('column_sfdc_last_name') }}"
     constraints:
     - type: not_null
-  - name: sfdc_lcom_account
-    data_type: varchar(30)
-    description: "{{ doc('column_sfdc_lcom_account') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_lcom_account_class
-    data_type: varchar(780)
-    description: "{{ doc('column_sfdc_lcom_account_class') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_lcom_account_count
-    data_type: bigint
-    description: "{{ doc('column_sfdc_lcom_account_count') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_lcom_organization
-    data_type: varchar(30)
-    description: "{{ doc('column_sfdc_lcom_organization') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_lcom_organization_count
-    data_type: bigint
-    description: "{{ doc('column_sfdc_lcom_organization_count') }}"
-    constraints:
-    - type: not_null
-  - name: sfdc_lcom_organization_has_parent
-    data_type: boolean
-    description: "{{ doc('column_sfdc_lcom_organization_has_parent') }}"
-    constraints:
-    - type: not_null
-
-  - name: sfdc_name_with_lcom_organization_info
-    data_type: varchar(1280)
-    description: "{{ doc('column_sfdc_name_with_lcom_organization_info') }}"
-    constraints:
-    - type: not_null
 
 
   - name: sfdc_owner_id
@@ -497,11 +461,7 @@ models:
     description: "{{ doc('column_sfdc_urban_rural') }}"
     constraints:
     - type: not_null
-  - name: sfdc_lcom_organization_id
-    data_type: varchar(300)
-    description: "{{ doc('column_sfdc_lcom_organization_id') }}"
-    constraints:
-    - type: not_null
+
 
 
   - name: sfdc_technology_measure
