@@ -35,7 +35,7 @@
 'total_discount_amount' ],
 
 
-   updated_at='last_modified_date',
+   updated_at='loaddate',
 
    scd_id_col_name = 'opportunity_line_hist_id',
    scd_valid_from_col_name='fromdate',
