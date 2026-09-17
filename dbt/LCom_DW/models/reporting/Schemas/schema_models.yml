@@ -93,7 +93,7 @@ models:
        
 
   - name: vw_opp_number_of_students
-    description: Licenses/Students from Number of students in Closed Won Invoiced Opportunities
+    description: Licenses/Students from Number of students in NCDPI Opportunities in any stage for each month of a School/Financial Year Opportunity STart Date in
     config:
       tags:
         - rep

@@ -26,9 +26,11 @@ o.start_date,
 o.end_date
 from dim_month m
 join {{ ref("fact_opportunity") }} o
-on m.mon_lastday between o.start_date and o.end_date
-where o.stage_name='Closed Won'
-and o.invoiced_date!='{{ var("default_date") }}'
+on o.start_date between m.FiscalYear_startdate and FiscalYear_enddate
+where 
+o.amount > 0
+and o.name like '%NCDPI%'
+and o.stage_name not ilike '%lost%'
 and o.sfdc_account_id!='{{ var("default_ID") }}'
 )
 select
@@ -41,7 +43,7 @@ SchoolYear,
 SchoolYear_mon,
 account_id,
 sfdc_account_id,
-max(number_of_students) as number_of_students,
+sum(number_of_students) as number_of_students,
 max(number_of_schools) as number_of_schools
 from rawdata
 group by
