@@ -1219,7 +1219,7 @@ District-level state taken from the account represented by `conformed_district_i
 {% enddocs %}
 
 {% docs column_dim_account_country %}
-Customer-level country taken from the account represented by `conformed_customer_id`. Salesforce Billing Country is used when available; otherwise the LCom country name is used. For United States Salesforce accounts, the value is `United States of America`;
+Customer-level country taken from the account represented by `conformed_customer_id`. If customer-level country is Unknown  then district-level country is used. Salesforce Billing Country is used when available; otherwise the LCom country name is used. For United States Salesforce accounts, the value is `United States of America`;
 {% enddocs %}
 
 {% docs column_dim_account_state_code %}
@@ -1362,7 +1362,7 @@ Account type based on SFDC Record Type or LCom Organization type. The type is ma
 {% enddocs %}
 
 {% docs column_dim_account_customer_level %}
-Customer-level sfdc_customer_level taken from the account represented by `conformed_customer_id`: Combination of Salesforce Customer Level (Strategic level of customer.  Integrations: Gainsight). and Salesforce Tier (Used in approval process, automation, and dynamic viewership.) when Customer Level is blank. 
+Customer-level sfdc_customer_level taken from the account represented by `conformed_customer_id`. If customer-level sfdc_customer_level is Unknown  then district-level sfdc_customer_level is used. Combination of Salesforce Customer Level (Strategic level of customer.  Integrations: Gainsight). and Salesforce Tier (Used in approval process, automation, and dynamic viewership.) when Customer Level is blank. 
 {% enddocs %}
 
 {% docs column_dim_account_urban_rural %}

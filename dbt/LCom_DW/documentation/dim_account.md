@@ -26,7 +26,7 @@ a reliable relationship between them can be established.
 
 - `owner_id`: Customer
 - `owner`: Customer
-- `country`: Customer
+- `country`: Customer or District if Customer country is Unknown
 - `state_code`: District
 - `state_name`: District
 - `county`: Account itself (school)
@@ -34,7 +34,7 @@ a reliable relationship between them can be established.
 - `urban_rural`: District
 - `enrollment`: Account itself (school)
 - `account_type`: Account itself (school)
-- `customer_level`: Customer
+- `customer_level`: Customer or District if Customer customer_level is Unknown
 
 ![DIM_ACCOUNT is designed to join accounts from different systems into a
 single record when
