@@ -4,3 +4,4 @@ target_copy/
 Utils/
 dbt_packages/
 logs/
+dbt_internal_packages/
