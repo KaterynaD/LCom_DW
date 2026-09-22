@@ -10,6 +10,7 @@ from {{ ref("dim_month") }} c
 where mon_year between 202207 and to_char(GetDate(),'yyyymm')
 )
 --
+--
 ,data as (
 select
 m.mon,
@@ -73,7 +74,10 @@ la.latest_training_session_on,
 la.total_cases, 
 la.currently_open_cases, 
 la.latest_case_created_date, 
-la.latest_open_case_modified_date
+la.latest_open_case_modified_date,
+--
+la.has_product_usage,
+la.has_product_licenses
 --
 from dim_month m
 join {{ ref("dim_account_history") }} ah
@@ -88,7 +92,7 @@ and (la.has_product_usage or la.has_product_licenses or la.total_won_opportuniti
 )
 select
 mon,
-mon_year,
+data.mon_year,
 mon_lastday ,
 FiscalYear,
 FiscalYear_mon,
@@ -121,13 +125,13 @@ historical_customer_level,
 sfdc_account_id,
 conformed_district_id,
 conformed_district_sfdc_account_id,
-conformed_customer_id,
+data.conformed_customer_id,
 conformed_customer_sfdc_account_id,
 --
 name,
 district_name,
-customer_name ,
-case when conformed_customer_id=conformed_district_id then '(Districts)' else customer_name end as display_customer_name,
+data.customer_name ,
+case when conformed_customer_id=conformed_district_id then  data.customer_name else '(Districts)' end as display_customer_name,
 country,
 state_code ,
 state_name,
@@ -151,7 +155,11 @@ latest_training_session_on,
 total_cases, 
 currently_open_cases, 
 latest_case_created_date, 
-latest_open_case_modified_date
+latest_open_case_modified_date,
 --
+--
+has_product_usage,
+has_product_licenses
 from data
+
 
